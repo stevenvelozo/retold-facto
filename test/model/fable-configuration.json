@@ -1,0 +1,14 @@
+{
+	"Product": "RetoldFactoTest",
+	"APIServerPort": 9340,
+	"MySQL":
+		{
+			"Server": "127.0.0.1",
+			"Port": 3306,
+			"User": "root",
+			"Password": "123456789",
+			"Database": "retold_facto",
+			"ConnectionPoolLimit": 20
+		},
+	"MeadowConnectionMySQLAutoConnect": true
+}

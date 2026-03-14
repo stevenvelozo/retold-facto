@@ -1,0 +1,372 @@
+const libPictProvider = require('pict-provider');
+
+class FactoProvider extends libPictProvider
+{
+	constructor(pFable, pOptions, pServiceHash)
+	{
+		super(pFable, pOptions, pServiceHash);
+	}
+
+	// ================================================================
+	// API Helper
+	// ================================================================
+
+	api(pMethod, pPath, pBody)
+	{
+		let tmpOpts = { method: pMethod, headers: {} };
+		if (pBody)
+		{
+			tmpOpts.headers['Content-Type'] = 'application/json';
+			tmpOpts.body = JSON.stringify(pBody);
+		}
+		return fetch(pPath, tmpOpts).then(function(pResponse) { return pResponse.json(); });
+	}
+
+	setStatus(pElementId, pMessage, pType)
+	{
+		let tmpEl = document.getElementById(pElementId);
+		if (!tmpEl) return;
+		tmpEl.className = 'status ' + (pType || 'info');
+		tmpEl.textContent = pMessage;
+		tmpEl.style.display = 'block';
+	}
+
+	clearStatus(pElementId)
+	{
+		let tmpEl = document.getElementById(pElementId);
+		if (!tmpEl) return;
+		tmpEl.style.display = 'none';
+		tmpEl.textContent = '';
+	}
+
+	// ================================================================
+	// Source Operations
+	// ================================================================
+
+	loadSources()
+	{
+		return this.api('GET', '/1.0/Sources/0/100').then(
+			(pResponse) =>
+			{
+				this.pict.AppData.Facto.Sources = pResponse || [];
+			});
+	}
+
+	loadActiveSources()
+	{
+		return this.api('GET', '/facto/sources/active').then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	createSource(pSourceData)
+	{
+		return this.api('POST', '/1.0/Source', pSourceData).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	activateSource(pIDSource)
+	{
+		return this.api('PUT', `/facto/source/${pIDSource}/activate`).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	deactivateSource(pIDSource)
+	{
+		return this.api('PUT', `/facto/source/${pIDSource}/deactivate`).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	loadSourceSummary(pIDSource)
+	{
+		return this.api('GET', `/facto/source/${pIDSource}/summary`).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	// ================================================================
+	// Dataset Operations
+	// ================================================================
+
+	loadDatasets()
+	{
+		return this.api('GET', '/1.0/Datasets/0/100').then(
+			(pResponse) =>
+			{
+				this.pict.AppData.Facto.Datasets = pResponse || [];
+			});
+	}
+
+	createDataset(pDatasetData)
+	{
+		return this.api('POST', '/1.0/Dataset', pDatasetData).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	loadDatasetStats(pIDDataset)
+	{
+		return this.api('GET', `/facto/dataset/${pIDDataset}/stats`).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	loadDatasetSources(pIDDataset)
+	{
+		return this.api('GET', `/facto/dataset/${pIDDataset}/sources`).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	linkDatasetSource(pIDDataset, pIDSource, pReliabilityWeight)
+	{
+		return this.api('POST', `/facto/dataset/${pIDDataset}/source`,
+			{
+				IDSource: pIDSource,
+				ReliabilityWeight: pReliabilityWeight || 1.0
+			}).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	loadDatasetRecords(pIDDataset, pBegin, pCap)
+	{
+		return this.api('GET', `/facto/dataset/${pIDDataset}/records/${pBegin || 0}/${pCap || 50}`).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	// ================================================================
+	// Record Operations
+	// ================================================================
+
+	loadRecords(pPage)
+	{
+		let tmpPageSize = this.pict.AppData.Facto.RecordPageSize;
+		let tmpBegin = (pPage || 0) * tmpPageSize;
+		return this.api('GET', `/1.0/Records/${tmpBegin}/${tmpPageSize}`).then(
+			(pResponse) =>
+			{
+				this.pict.AppData.Facto.Records = pResponse || [];
+			});
+	}
+
+	ingestRecords(pRecords, pIDDataset, pIDSource)
+	{
+		return this.api('POST', '/facto/record/ingest',
+			{
+				Records: pRecords,
+				IDDataset: pIDDataset,
+				IDSource: pIDSource
+			}).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	loadRecordCertainty(pIDRecord)
+	{
+		return this.api('GET', `/facto/record/${pIDRecord}/certainty`).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	addRecordCertainty(pIDRecord, pCertaintyValue, pDimension, pJustification)
+	{
+		return this.api('POST', `/facto/record/${pIDRecord}/certainty`,
+			{
+				CertaintyValue: pCertaintyValue,
+				Dimension: pDimension || 'overall',
+				Justification: pJustification || ''
+			}).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	loadRecordVersions(pIDRecord)
+	{
+		return this.api('GET', `/facto/record/${pIDRecord}/versions`).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	// ================================================================
+	// Ingest Job Operations
+	// ================================================================
+
+	loadIngestJobs()
+	{
+		return this.api('GET', '/facto/ingest/jobs').then(
+			(pResponse) =>
+			{
+				this.pict.AppData.Facto.IngestJobs = (pResponse && pResponse.Jobs) ? pResponse.Jobs : [];
+			});
+	}
+
+	createIngestJob(pIDSource, pIDDataset, pConfiguration)
+	{
+		return this.api('POST', '/facto/ingest/job',
+			{
+				IDSource: pIDSource,
+				IDDataset: pIDDataset,
+				Configuration: pConfiguration || {}
+			}).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	startIngestJob(pIDIngestJob)
+	{
+		return this.api('PUT', `/facto/ingest/job/${pIDIngestJob}/start`).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	completeIngestJob(pIDIngestJob, pCounters, pStatus)
+	{
+		let tmpBody = Object.assign({}, pCounters || {});
+		if (pStatus)
+		{
+			tmpBody.Status = pStatus;
+		}
+		return this.api('PUT', `/facto/ingest/job/${pIDIngestJob}/complete`, tmpBody).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	loadIngestJobDetails(pIDIngestJob)
+	{
+		return this.api('GET', `/facto/ingest/job/${pIDIngestJob}`).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	// ================================================================
+	// Projection Operations
+	// ================================================================
+
+	loadProjections()
+	{
+		return this.api('GET', '/facto/projections').then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	loadDatasetsByType(pType)
+	{
+		return this.api('GET', `/facto/datasets/by-type/${pType}`).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	queryRecords(pParams)
+	{
+		return this.api('POST', '/facto/projections/query', pParams).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	aggregateRecords(pParams)
+	{
+		return this.api('POST', '/facto/projections/aggregate', pParams).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	queryCertainty(pParams)
+	{
+		return this.api('POST', '/facto/projections/certainty', pParams).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	compareDatasets(pDatasetIDs)
+	{
+		return this.api('POST', '/facto/projections/compare', { DatasetIDs: pDatasetIDs }).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	loadProjectionSummary()
+	{
+		return this.api('GET', '/facto/projections/summary').then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	ingestFileContent(pIDDataset, pIDSource, pContent, pFormat, pType)
+	{
+		return this.api('POST', '/facto/ingest/file',
+			{
+				IDDataset: pIDDataset || 0,
+				IDSource: pIDSource || 0,
+				Content: pContent,
+				Format: pFormat || 'Auto',
+				Type: pType || 'data'
+			}).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+}
+
+module.exports = FactoProvider;
+
+module.exports.default_configuration =
+{
+	ProviderIdentifier: 'Facto',
+	AutoInitialize: true
+};

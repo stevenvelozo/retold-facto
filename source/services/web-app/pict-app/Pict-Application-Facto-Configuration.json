@@ -1,0 +1,9 @@
+{
+	"Name": "Retold Facto",
+	"Hash": "Facto",
+	"MainViewportViewIdentifier": "Facto-Layout",
+	"MainViewportDestinationAddress": "#Facto-Application-Container",
+	"MainViewportDefaultDataAddress": "AppData.Facto",
+	"pict_configuration": { "Product": "Facto" },
+	"AutoRenderMainViewportViewAfterInitialize": false
+}

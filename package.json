@@ -1,0 +1,75 @@
+{
+	"name": "retold-facto",
+	"version": "0.0.1",
+	"description": "Data warehouse and knowledge graph storage for the Retold ecosystem.",
+	"main": "source/Retold-Facto.js",
+	"bin": {
+		"retold-facto": "bin/retold-facto.js"
+	},
+	"scripts": {
+		"start": "node bin/retold-facto.js",
+		"coverage": "npx quack coverage",
+		"test": "npx quack test",
+		"build": "npx quack build",
+		"build-test-model": "cd test && npx stricture -i model/ddl/Facto.ddl",
+		"docker-build": "docker build -t retold-facto .",
+		"docker-run": "docker run -p 8086:8086 retold-facto"
+	},
+	"mocha": {
+		"spec": "test/RetoldFacto_tests.js",
+		"diff": true,
+		"extension": [
+			"js"
+		],
+		"package": "./package.json",
+		"reporter": "spec",
+		"slow": "75",
+		"timeout": "5000",
+		"ui": "tdd",
+		"watch-files": [
+			"source/**/*.js",
+			"test/**/*.js"
+		],
+		"watch-ignore": [
+			"lib/vendor"
+		]
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/stevenvelozo/retold-facto.git"
+	},
+	"keywords": [
+		"data",
+		"warehouse",
+		"knowledge-graph",
+		"certainty",
+		"ingest"
+	],
+	"author": "Steven Velozo <steven@velozo.com> (http://velozo.com/)",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/stevenvelozo/retold-facto/issues"
+	},
+	"homepage": "https://github.com/stevenvelozo/retold-facto",
+	"devDependencies": {
+		"meadow-connection-sqlite": "^1.0.18",
+		"quackage": "^1.0.64",
+		"stricture": "^4.0.2",
+		"supertest": "^7.2.2"
+	},
+	"dependencies": {
+		"bibliograph": "^0.1.4",
+		"fable": "^3.1.63",
+		"fable-serviceproviderbase": "^3.0.19",
+		"fast-xml-parser": "^5.0.1",
+		"meadow": "^2.0.33",
+		"meadow-connection-mysql": "^1.0.14",
+		"meadow-endpoints": "^4.0.14",
+		"orator": "^6.0.4",
+		"orator-serviceserver-restify": "^2.0.9",
+		"orator-static-server": "^2.0.4",
+		"pict": "^1.0.357",
+		"stricture": "^4.0.2",
+		"xlsx": "^0.18.5"
+	}
+}
