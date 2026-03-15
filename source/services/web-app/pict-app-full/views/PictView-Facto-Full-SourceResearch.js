@@ -90,9 +90,19 @@ class FactoFullSourceResearchView extends libPictView
 
 	onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent)
 	{
-		this.pict.providers.Facto.loadCatalogEntries().then(
-			() =>
+		this._SourceLinks = {};
+
+		Promise.all([
+			this.pict.providers.Facto.loadCatalogEntries(),
+			this.pict.providers.Facto.loadCatalogSourceLinks()
+		]).then(
+			(pResults) =>
 			{
+				let tmpLinksResponse = pResults[1];
+				if (tmpLinksResponse && tmpLinksResponse.Links)
+				{
+					this._SourceLinks = tmpLinksResponse.Links;
+				}
 				this.refreshList();
 			});
 
@@ -134,6 +144,11 @@ class FactoFullSourceResearchView extends libPictView
 			tmpHtml += '<td>' + (tmpEntry.Region || '') + '</td>';
 			tmpHtml += '<td>' + tmpVerified + '</td>';
 			tmpHtml += '<td>';
+			let tmpLinkedSource = this._SourceLinks && this._SourceLinks[tmpEntry.IDSourceCatalogEntry];
+			if (tmpLinkedSource)
+			{
+				tmpHtml += '<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.PictApplication.navigateTo(\'/Source/' + tmpLinkedSource + '\')">View Source &rarr;</button> ';
+			}
 			tmpHtml += '<button class="facto-btn facto-btn-primary facto-btn-small" onclick="pict.views[\'Facto-Full-SourceResearch\'].viewEntry(' + tmpEntry.IDSourceCatalogEntry + ')">Datasets</button> ';
 			tmpHtml += '<button class="facto-btn facto-btn-danger facto-btn-small" onclick="pict.views[\'Facto-Full-SourceResearch\'].deleteEntry(' + tmpEntry.IDSourceCatalogEntry + ')">Delete</button>';
 			tmpHtml += '</td>';
@@ -198,6 +213,10 @@ class FactoFullSourceResearchView extends libPictView
 						if (tmpDS.Provisioned)
 						{
 							tmpAction = '<button class="facto-btn facto-btn-primary facto-btn-small" onclick="pict.views[\'Facto-Full-SourceResearch\'].fetchDataset(' + tmpDS.IDCatalogDatasetDefinition + ', ' + pIDEntry + ')">Fetch</button>';
+							if (tmpDS.IDSource)
+							{
+								tmpAction += ' <button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.PictApplication.navigateTo(\'/Source/' + tmpDS.IDSource + '\')">View Source &rarr;</button>';
+							}
 						}
 						else
 						{
@@ -229,7 +248,13 @@ class FactoFullSourceResearchView extends libPictView
 			{
 				if (pResponse && pResponse.Success)
 				{
-					this.setStatus('Provisioned! Source: ' + (pResponse.Source.Hash || pResponse.Source.Name) + ' (#' + pResponse.Source.IDSource + '), Dataset: ' + (pResponse.Dataset.Hash || pResponse.Dataset.Name) + ' (#' + pResponse.Dataset.IDDataset + ')', 'ok');
+					let tmpStatusEl = document.getElementById('Facto-Full-Research-Status');
+					if (tmpStatusEl)
+					{
+						tmpStatusEl.className = 'facto-status facto-status-ok';
+						tmpStatusEl.innerHTML = 'Provisioned! Source: ' + (pResponse.Source.Hash || pResponse.Source.Name) + ' (#' + pResponse.Source.IDSource + '), Dataset: ' + (pResponse.Dataset.Hash || pResponse.Dataset.Name) + ' (#' + pResponse.Dataset.IDDataset + ') &mdash; <a href="#/Source/' + pResponse.Source.IDSource + '" style="color:var(--facto-accent);text-decoration:underline;cursor:pointer;">View Source \u2192</a>';
+						tmpStatusEl.style.display = 'block';
+					}
 					this.viewEntry(pIDEntry);
 				}
 				else

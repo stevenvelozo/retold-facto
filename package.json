@@ -11,6 +11,7 @@
 		"coverage": "npx quack coverage",
 		"test": "npx quack test",
 		"build": "npx quack build",
+		"build-codemirror": "npx esbuild source/services/web-app/codemirror-entry.js --bundle --outfile=source/services/web-app/web/codemirror-bundle.js --format=iife --global-name=CodeMirrorModules --platform=browser --target=es2018",
 		"build-test-model": "cd test && npx stricture -i model/ddl/Facto.ddl",
 		"docker-build": "docker build -t retold-facto .",
 		"docker-run": "docker run -p 8386:8386 retold-facto"
@@ -58,7 +59,11 @@
 		"supertest": "^7.2.2"
 	},
 	"dependencies": {
+		"@codemirror/lang-markdown": "^6.5.0",
+		"@codemirror/state": "^6.6.0",
+		"@codemirror/view": "^6.40.0",
 		"bibliograph": "^0.1.4",
+		"codemirror": "^6.0.2",
 		"fable": "^3.1.63",
 		"fable-serviceproviderbase": "^3.0.19",
 		"fast-xml-parser": "^5.0.1",
@@ -70,6 +75,7 @@
 		"orator-static-server": "^2.0.4",
 		"pict": "^1.0.357",
 		"pict-router": "^1.0.9",
+		"pict-section-markdowneditor": "^1.0.6",
 		"pict-section-objecteditor": "^1.0.1",
 		"stricture": "^4.0.2",
 		"xlsx": "^0.18.5"

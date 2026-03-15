@@ -218,6 +218,49 @@ class FactoProvider extends libPictProvider
 	}
 
 	// ================================================================
+	// Source Documentation Operations
+	// ================================================================
+
+	loadSourceDocumentation(pIDSource)
+	{
+		return this.api('GET', `/facto/source/${pIDSource}/documentation`);
+	}
+
+	loadSourceDocument(pIDSource, pIDDoc)
+	{
+		return this.api('GET', `/facto/source/${pIDSource}/documentation/${pIDDoc}`);
+	}
+
+	createSourceDocument(pIDSource, pData)
+	{
+		return this.api('POST', `/facto/source/${pIDSource}/documentation`, pData);
+	}
+
+	updateSourceDocument(pIDSource, pIDDoc, pData)
+	{
+		return this.api('PUT', `/facto/source/${pIDSource}/documentation/${pIDDoc}`, pData);
+	}
+
+	deleteSourceDocument(pIDSource, pIDDoc)
+	{
+		return this.api('DELETE', `/facto/source/${pIDSource}/documentation/${pIDDoc}`);
+	}
+
+	// ================================================================
+	// Source Catalog Context
+	// ================================================================
+
+	loadSourceCatalogContext(pIDSource)
+	{
+		return this.api('GET', `/facto/source/${pIDSource}/catalog-context`);
+	}
+
+	loadCatalogSourceLinks()
+	{
+		return this.api('GET', '/facto/catalog/source-links');
+	}
+
+	// ================================================================
 	// Dataset Operations
 	// ================================================================
 
@@ -463,6 +506,16 @@ class FactoProvider extends libPictProvider
 			(pResponse) =>
 			{
 				return pResponse;
+			});
+	}
+
+	uploadSourceFile(pIDSource, pFilename, pContentType, pBase64Data)
+	{
+		return this.api('POST', `/facto/source/${pIDSource}/documentation/upload`,
+			{
+				Filename: pFilename,
+				ContentType: pContentType,
+				Data: pBase64Data
 			});
 	}
 

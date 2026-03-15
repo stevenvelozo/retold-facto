@@ -29,6 +29,7 @@ const libViewRecords = require('./views/PictView-Facto-Full-Records.js');
 const libViewProjections = require('./views/PictView-Facto-Full-Projections.js');
 const libViewDashboards = require('./views/PictView-Facto-Full-Dashboards.js');
 const libViewRecordViewer = require('./views/PictView-Facto-Full-RecordViewer.js');
+const libViewSourceDetail = require('./views/PictView-Facto-Full-SourceDetail.js');
 
 class FactoFullApplication extends libPictApplication
 {
@@ -62,6 +63,7 @@ class FactoFullApplication extends libPictApplication
 		this.pict.addView('Facto-Full-Projections', libViewProjections.default_configuration, libViewProjections);
 		this.pict.addView('Facto-Full-Dashboards', libViewDashboards.default_configuration, libViewDashboards);
 		this.pict.addView('Facto-Full-RecordViewer', libViewRecordViewer.default_configuration, libViewRecordViewer);
+		this.pict.addView('Facto-Full-SourceDetail', libViewSourceDetail.default_configuration, libViewSourceDetail);
 	}
 
 	onAfterInitializeAsync(fCallback)
@@ -82,6 +84,7 @@ class FactoFullApplication extends libPictApplication
 			RecordPage: 0,
 			RecordPageSize: 50,
 			CurrentRecordContent: {},
+			CurrentDocumentSegments: [],
 			CurrentTheme: 'facto-dark',
 			CurrentRoute: ''
 		};
@@ -99,6 +102,27 @@ class FactoFullApplication extends libPictApplication
 				if (tmpIDRecord)
 				{
 					tmpSelf.showRecordView(tmpIDRecord);
+				}
+			});
+
+		this.pict.providers.PictRouter.addRoute('/Source/:IDSource',
+			(pMatch) =>
+			{
+				let tmpIDSource = pMatch && pMatch.data ? pMatch.data.IDSource : null;
+				if (tmpIDSource)
+				{
+					tmpSelf.showSourceView(tmpIDSource);
+				}
+			});
+
+		this.pict.providers.PictRouter.addRoute('/Source/:IDSource/Doc/:IDDoc',
+			(pMatch) =>
+			{
+				let tmpIDSource = pMatch && pMatch.data ? pMatch.data.IDSource : null;
+				let tmpIDDoc = pMatch && pMatch.data ? pMatch.data.IDDoc : null;
+				if (tmpIDSource)
+				{
+					tmpSelf.showSourceView(tmpIDSource, tmpIDDoc);
 				}
 			});
 
@@ -126,6 +150,17 @@ class FactoFullApplication extends libPictApplication
 		}
 		// Highlight "Records" in the nav since the record viewer is a child of Records
 		this._setActiveNav('Records');
+	}
+
+	showSourceView(pIDSource, pIDDoc)
+	{
+		let tmpView = this.pict.views['Facto-Full-SourceDetail'];
+		if (tmpView)
+		{
+			tmpView.loadSource(pIDSource, pIDDoc);
+		}
+		// Highlight "SourceResearch" in the nav since source detail is a child of Source Research
+		this._setActiveNav('SourceResearch');
 	}
 
 	showView(pViewIdentifier)

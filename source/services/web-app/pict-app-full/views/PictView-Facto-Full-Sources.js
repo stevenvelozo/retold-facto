@@ -114,7 +114,8 @@ class FactoFullSourcesView extends libPictView
 			tmpHtml += '<td><span class="facto-badge facto-badge-primary">' + (tmpSource.Type || '') + '</span></td>';
 			tmpHtml += '<td style="max-width:250px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">' + (tmpSource.URL || '') + '</td>';
 			tmpHtml += '<td>' + tmpActive + '</td>';
-			tmpHtml += '<td>' + tmpToggleBtn + '</td>';
+			let tmpViewBtn = '<button class="facto-btn facto-btn-primary facto-btn-small" onclick="pict.PictApplication.navigateTo(\'/Source/' + tmpSource.IDSource + '\')">View</button>';
+			tmpHtml += '<td>' + tmpViewBtn + ' ' + tmpToggleBtn + '</td>';
 			tmpHtml += '</tr>';
 		}
 		tmpHtml += '</tbody></table>';
