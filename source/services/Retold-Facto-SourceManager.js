@@ -33,6 +33,45 @@ class RetoldFactoSourceManager extends libFableServiceProviderBase
 	{
 		let tmpRoutePrefix = this.options.RoutePrefix;
 
+		// GET /facto/source/by-hash/:Hash -- look up a source by its human-readable Hash
+		pOratorServiceServer.doGet(`${tmpRoutePrefix}/source/by-hash/:Hash`,
+			(pRequest, pResponse, fNext) =>
+			{
+				let tmpHash = pRequest.params.Hash;
+				if (!tmpHash)
+				{
+					pResponse.send({ Error: 'Hash parameter is required' });
+					return fNext();
+				}
+
+				if (!this.fable.DAL || !this.fable.DAL.Source)
+				{
+					pResponse.send({ Error: 'Source DAL not initialized' });
+					return fNext();
+				}
+
+				let tmpQuery = this.fable.DAL.Source.query.clone()
+					.addFilter('Hash', tmpHash)
+					.addFilter('Deleted', 0);
+
+				this.fable.DAL.Source.doReads(tmpQuery,
+					(pError, pQuery, pRecords) =>
+					{
+						if (pError)
+						{
+							pResponse.send({ Error: pError.message || pError });
+							return fNext();
+						}
+						if (!pRecords || pRecords.length === 0)
+						{
+							pResponse.send({ Error: `No source found with Hash "${tmpHash}"` });
+							return fNext();
+						}
+						pResponse.send({ Source: pRecords[0] });
+						return fNext();
+					});
+			});
+
 		// GET /facto/sources/active -- list all active (non-deleted) sources
 		pOratorServiceServer.doGet(`${tmpRoutePrefix}/sources/active`,
 			(pRequest, pResponse, fNext) =>

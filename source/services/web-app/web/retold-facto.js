@@ -2426,6 +2426,1701 @@
     }],
     9: [function (require, module, exports) {
       module.exports = {
+        ViewIdentifier: 'Pict-ObjectEditor',
+        DefaultRenderable: 'ObjectEditor-Container',
+        DefaultDestinationAddress: '#ObjectEditor-Container',
+        AutoRender: false,
+        // Address in AppData where the JSON object lives
+        ObjectDataAddress: false,
+        // Maximum depth to auto-expand on initial load
+        InitialExpandDepth: 1,
+        // Whether editing is enabled (vs read-only inspector mode)
+        Editable: true,
+        // Whether to show type indicator badges
+        ShowTypeIndicators: true,
+        // Indentation pixels per depth level
+        IndentPixels: 20,
+        CSS: /*css*/`
+.pict-objecteditor
+{
+	font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'JetBrains Mono', Consolas, monospace;
+	font-size: 13px;
+	line-height: 1.5;
+	color: #3D3229;
+	background: #FDFCFA;
+	border: 1px solid #E8E3DA;
+	border-radius: 6px;
+	padding: 8px 0;
+	overflow: auto;
+}
+.pict-oe-row
+{
+	display: flex;
+	align-items: center;
+	padding: 2px 12px 2px 0;
+	min-height: 26px;
+	cursor: default;
+	border-radius: 3px;
+}
+.pict-oe-row:hover
+{
+	background: #F5F0E8;
+}
+.pict-oe-toggle
+{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 16px;
+	height: 16px;
+	cursor: pointer;
+	color: #8A7F72;
+	font-size: 10px;
+	flex-shrink: 0;
+	user-select: none;
+	border-radius: 3px;
+	transition: color 0.1s;
+}
+.pict-oe-toggle:hover
+{
+	background: #E8E3DA;
+	color: #3D3229;
+}
+.pict-oe-spacer
+{
+	display: inline-block;
+	width: 16px;
+	flex-shrink: 0;
+}
+.pict-oe-key
+{
+	color: #9E6B47;
+	flex-shrink: 0;
+}
+.pict-oe-separator
+{
+	color: #8A7F72;
+	margin: 0 8px;
+	flex-shrink: 0;
+}
+.pict-oe-value
+{
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.pict-oe-value-string
+{
+	color: #2E7D74;
+}
+.pict-oe-value-string::before
+{
+	content: '"';
+	color: #A8CFC9;
+}
+.pict-oe-value-string::after
+{
+	content: '"';
+	color: #A8CFC9;
+}
+.pict-oe-value-number
+{
+	color: #3B6DAA;
+}
+.pict-oe-value-boolean
+{
+	color: #8B5E3C;
+	font-weight: 600;
+}
+.pict-oe-value-null
+{
+	color: #B0A89E;
+	font-style: italic;
+}
+.pict-oe-summary
+{
+	color: #B0A89E;
+	margin-left: 6px;
+	font-size: 12px;
+}
+.pict-oe-type-badge
+{
+	display: inline-block;
+	font-size: 9px;
+	padding: 0 4px;
+	border-radius: 3px;
+	background: #F0ECE4;
+	color: #8A7F72;
+	margin-left: 6px;
+	line-height: 16px;
+	vertical-align: middle;
+}
+.pict-oe-value-input
+{
+	background: #FFF;
+	border: 1px solid #2E7D74;
+	border-radius: 3px;
+	padding: 1px 4px;
+	font-family: inherit;
+	font-size: inherit;
+	color: inherit;
+	outline: none;
+	min-width: 80px;
+}
+.pict-oe-value-input:focus
+{
+	border-color: #3B6DAA;
+	box-shadow: 0 0 0 2px rgba(59, 109, 170, 0.15);
+}
+.pict-oe-array-index
+{
+	color: #8A7F72;
+	font-size: 11px;
+}
+.pict-oe-empty
+{
+	color: #B0A89E;
+	font-style: italic;
+	padding: 8px 12px;
+}
+.pict-oe-actions
+{
+	margin-left: auto;
+	padding-left: 12px;
+	padding-right: 4px;
+	opacity: 0.4;
+	transition: opacity 0.15s;
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	gap: 5px;
+}
+.pict-oe-row:hover .pict-oe-actions
+{
+	opacity: 1;
+}
+.pict-oe-action-btn
+{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 22px;
+	height: 22px;
+	padding: 0 5px;
+	border-radius: 3px;
+	border: 1px solid #DDD8CF;
+	background: #F5F0E8;
+	cursor: pointer;
+	font-size: 12px;
+	color: #8A7F72;
+	user-select: none;
+	box-sizing: border-box;
+}
+.pict-oe-action-btn:hover
+{
+	background: #E8E3DA;
+	border-color: #C5BFAE;
+	color: #3D3229;
+}
+.pict-oe-action-remove
+{
+	border-color: #E8C8C8;
+	background: #FAF0F0;
+	color: #A04040;
+}
+.pict-oe-action-remove:hover
+{
+	background: #F0D6D6;
+	border-color: #D4A0A0;
+	color: #A04040;
+}
+.pict-oe-action-move
+{
+	font-size: 9px;
+}
+.pict-oe-action-move:hover
+{
+	background: #D6E4F0;
+	border-color: #A8C4DA;
+	color: #3B6DAA;
+}
+.pict-oe-action-add
+{
+	border-color: #C8D8C8;
+	background: #F0F5F0;
+	color: #5A7A5A;
+}
+.pict-oe-action-add:hover
+{
+	background: #D6E8D6;
+	border-color: #A0C0A0;
+	color: #3D5C3D;
+}
+.pict-oe-key-input
+{
+	background: #FFF;
+	border: 1px solid #9E6B47;
+	border-radius: 3px;
+	padding: 1px 4px;
+	font-family: inherit;
+	font-size: inherit;
+	color: #9E6B47;
+	outline: none;
+	min-width: 60px;
+	margin-left: 6px;
+}
+.pict-oe-key-input:focus
+{
+	border-color: #3B6DAA;
+	box-shadow: 0 0 0 2px rgba(59, 109, 170, 0.15);
+}
+.pict-oe-type-select
+{
+	background: #FFF;
+	border: 1px solid #C5BFAE;
+	border-radius: 3px;
+	padding: 1px 4px;
+	font-family: inherit;
+	font-size: inherit;
+	color: #3D3229;
+	outline: none;
+	margin-left: 6px;
+	cursor: pointer;
+}
+.pict-oe-type-select:focus
+{
+	border-color: #3B6DAA;
+	box-shadow: 0 0 0 2px rgba(59, 109, 170, 0.15);
+}
+.pict-oe-root-add
+{
+	display: flex;
+	align-items: center;
+	padding: 4px 12px;
+	min-height: 26px;
+	cursor: default;
+}
+.pict-oe-root-add .pict-oe-action-btn
+{
+	width: auto;
+	white-space: nowrap;
+	padding: 0 8px;
+}
+`,
+        MacroTemplates: {
+          Node: {
+            RowOpen: '<div class="pict-oe-row" style="padding-left:{~D:Record.PaddingLeft~}px" data-path="{~D:Record.EscapedPath~}">',
+            RowClose: '</div>',
+            Toggle: '<span class="pict-oe-toggle" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].toggleNode(\'{~D:Record.EscapedPath~}\')">{~D:Record.ToggleArrow~}</span>',
+            Spacer: '<span class="pict-oe-spacer"></span>',
+            KeyName: '<span class="pict-oe-key">{~D:Record.EscapedKey~}</span>',
+            KeyIndex: '<span class="pict-oe-key"><span class="pict-oe-array-index">{~D:Record.ArrayIndex~}</span></span>',
+            Separator: '<span class="pict-oe-separator">:</span>',
+            TypeBadge: '<span class="pict-oe-type-badge">{~D:Record.TypeLabel~}</span>',
+            Summary: '<span class="pict-oe-summary">{~D:Record.SummaryText~}</span>',
+            ValueStringEditable: '<span class="pict-oe-value pict-oe-value-string" ondblclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].beginEdit(\'{~D:Record.EscapedPath~}\', \'string\')" title="{~D:Record.EscapedTitle~}">{~D:Record.EscapedValue~}</span>',
+            ValueStringReadOnly: '<span class="pict-oe-value pict-oe-value-string" title="{~D:Record.EscapedTitle~}">{~D:Record.EscapedValue~}</span>',
+            ValueNumberEditable: '<span class="pict-oe-value pict-oe-value-number" ondblclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].beginEdit(\'{~D:Record.EscapedPath~}\', \'number\')">{~D:Record.EscapedValue~}</span>',
+            ValueNumberReadOnly: '<span class="pict-oe-value pict-oe-value-number">{~D:Record.EscapedValue~}</span>',
+            ValueBooleanEditable: '<span class="pict-oe-value pict-oe-value-boolean" style="cursor:pointer" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].toggleBoolean(\'{~D:Record.EscapedPath~}\')">{~D:Record.DisplayValue~}</span>',
+            ValueBooleanReadOnly: '<span class="pict-oe-value pict-oe-value-boolean">{~D:Record.DisplayValue~}</span>',
+            ValueNull: '<span class="pict-oe-value pict-oe-value-null">null</span>',
+            ActionsOpen: '<span class="pict-oe-actions">',
+            ActionsClose: '</span>',
+            ButtonRemove: '<span class="pict-oe-action-btn pict-oe-action-remove" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].removeNode(\'{~D:Record.EscapedPath~}\')" title="Remove">\u00D7</span>',
+            ButtonAddObject: '<span class="pict-oe-action-btn pict-oe-action-add" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].beginAddToObject(\'{~D:Record.EscapedPath~}\')" title="Add">+</span>',
+            ButtonAddArray: '<span class="pict-oe-action-btn pict-oe-action-add" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].beginAddToArray(\'{~D:Record.EscapedPath~}\')" title="Add">+</span>',
+            ButtonMoveUp: '<span class="pict-oe-action-btn pict-oe-action-move" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].moveArrayElementUp(\'{~D:Record.EscapedArrayPath~}\', {~D:Record.ArrayIndex~})" title="Move up">\u25B2</span>',
+            ButtonMoveDown: '<span class="pict-oe-action-btn pict-oe-action-move" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].moveArrayElementDown(\'{~D:Record.EscapedArrayPath~}\', {~D:Record.ArrayIndex~})" title="Move down">\u25BC</span>',
+            RootAddObject: '<div class="pict-oe-root-add" data-path=""><span class="pict-oe-action-btn pict-oe-action-add" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].beginAddToObject(\'\')" title="Add property">+ add property</span></div>',
+            RootAddArray: '<div class="pict-oe-root-add" data-path=""><span class="pict-oe-action-btn pict-oe-action-add" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].beginAddToArray(\'\')" title="Add element">+ add element</span></div>'
+          }
+        },
+        Templates: [{
+          Hash: 'ObjectEditor-Container-Template',
+          Template: '<div class="pict-objecteditor" id="ObjectEditor-Tree-{~D:Context[0].Hash~}"></div>'
+        }, {
+          Hash: 'ObjectEditor-Node-String',
+          Template: '{~D:Record.Macro.RowOpen~}{~D:Record.Macro.Spacer~}{~D:Record.Macro.Key~}{~D:Record.Macro.Separator~}{~D:Record.Macro.Value~}{~D:Record.Macro.Actions~}{~D:Record.Macro.RowClose~}'
+        }, {
+          Hash: 'ObjectEditor-Node-Number',
+          Template: '{~D:Record.Macro.RowOpen~}{~D:Record.Macro.Spacer~}{~D:Record.Macro.Key~}{~D:Record.Macro.Separator~}{~D:Record.Macro.Value~}{~D:Record.Macro.Actions~}{~D:Record.Macro.RowClose~}'
+        }, {
+          Hash: 'ObjectEditor-Node-Boolean',
+          Template: '{~D:Record.Macro.RowOpen~}{~D:Record.Macro.Spacer~}{~D:Record.Macro.Key~}{~D:Record.Macro.Separator~}{~D:Record.Macro.Value~}{~D:Record.Macro.Actions~}{~D:Record.Macro.RowClose~}'
+        }, {
+          Hash: 'ObjectEditor-Node-Null',
+          Template: '{~D:Record.Macro.RowOpen~}{~D:Record.Macro.Spacer~}{~D:Record.Macro.Key~}{~D:Record.Macro.Separator~}{~D:Record.Macro.Value~}{~D:Record.Macro.Actions~}{~D:Record.Macro.RowClose~}'
+        }, {
+          Hash: 'ObjectEditor-Node-Object',
+          Template: '{~D:Record.Macro.RowOpen~}{~D:Record.Macro.Toggle~}{~D:Record.Macro.Key~}{~D:Record.Macro.TypeBadge~}{~D:Record.Macro.Summary~}{~D:Record.Macro.Actions~}{~D:Record.Macro.RowClose~}'
+        }, {
+          Hash: 'ObjectEditor-Node-Array',
+          Template: '{~D:Record.Macro.RowOpen~}{~D:Record.Macro.Toggle~}{~D:Record.Macro.Key~}{~D:Record.Macro.TypeBadge~}{~D:Record.Macro.Summary~}{~D:Record.Macro.Actions~}{~D:Record.Macro.RowClose~}'
+        }],
+        Renderables: [{
+          RenderableHash: 'ObjectEditor-Container',
+          TemplateHash: 'ObjectEditor-Container-Template',
+          DestinationAddress: '#ObjectEditor-Container',
+          RenderMethod: 'replace'
+        }]
+      };
+    }, {}],
+    10: [function (require, module, exports) {
+      // Pict Section: Object Editor
+      // A tree-based JSON object viewer and editor for Pict applications.
+
+      // The main object editor view class
+      module.exports = require('./views/PictView-ObjectEditor.js');
+
+      // Node type views
+      module.exports.PictViewObjectEditorNode = require('./views/PictView-ObjectEditor-Node.js');
+      module.exports.PictViewObjectEditorNodeString = require('./views/PictView-ObjectEditor-NodeString.js');
+      module.exports.PictViewObjectEditorNodeNumber = require('./views/PictView-ObjectEditor-NodeNumber.js');
+      module.exports.PictViewObjectEditorNodeBoolean = require('./views/PictView-ObjectEditor-NodeBoolean.js');
+      module.exports.PictViewObjectEditorNodeNull = require('./views/PictView-ObjectEditor-NodeNull.js');
+      module.exports.PictViewObjectEditorNodeObject = require('./views/PictView-ObjectEditor-NodeObject.js');
+      module.exports.PictViewObjectEditorNodeArray = require('./views/PictView-ObjectEditor-NodeArray.js');
+
+      // Default configuration
+      module.exports.default_configuration = require('./Pict-Section-ObjectEditor-DefaultConfiguration.js');
+    }, {
+      "./Pict-Section-ObjectEditor-DefaultConfiguration.js": 9,
+      "./views/PictView-ObjectEditor-Node.js": 11,
+      "./views/PictView-ObjectEditor-NodeArray.js": 12,
+      "./views/PictView-ObjectEditor-NodeBoolean.js": 13,
+      "./views/PictView-ObjectEditor-NodeNull.js": 14,
+      "./views/PictView-ObjectEditor-NodeNumber.js": 15,
+      "./views/PictView-ObjectEditor-NodeObject.js": 16,
+      "./views/PictView-ObjectEditor-NodeString.js": 17,
+      "./views/PictView-ObjectEditor.js": 18
+    }],
+    11: [function (require, module, exports) {
+      const libPictView = require('pict-view');
+
+      /**
+       * Base class for all object editor node type renderers.
+       *
+       * Each subclass implements renderNodeHTML() to return an HTML string
+       * for a single tree row.  One instance per type, not per node.
+       *
+       * Rendering uses the Pict template system with MacroTemplates defined
+       * in the view configuration.  Each macro is a Jellyfish template string
+       * compiled against the node descriptor (Record) and the ObjectEditor
+       * view (Context[0]).  Subclasses set type-specific properties on the
+       * node descriptor, call compileMacros(), then resolve a per-type
+       * template that references the compiled macros.
+       */
+      class PictViewObjectEditorNode extends libPictView {
+        constructor(pFable, pOptions, pServiceHash) {
+          super(pFable, pOptions, pServiceHash);
+          this.serviceType = 'PictViewObjectEditorNode';
+
+          // Reference to the parent ObjectEditor view; set by the orchestrator
+          this._ObjectEditorView = null;
+        }
+
+        /**
+         * Render a single tree node row as an HTML string.
+         *
+         * @param {Object} pNode - Node descriptor { Path, Key, Depth, DataType, HasChildren, ChildCount, IsExpanded, IsArrayElement, ArrayIndex }
+         * @param {*} pValue - The actual value at this node's path
+         * @param {Object} pOptions - Editor options { Editable, ShowTypeIndicators, IndentPixels, ViewHash }
+         *
+         * @return {string} HTML string for this row
+         */
+        renderNodeHTML(pNode, pValue, pOptions) {
+          return '';
+        }
+
+        // --- Macro compilation ---
+
+        /**
+         * Compile all MacroTemplates onto pNode.Macro.
+         *
+         * This sets computed display properties on the node descriptor,
+         * then resolves every MacroTemplate from the view configuration
+         * against the node (as Record) and the ObjectEditor view (as Context[0]).
+         *
+         * After this call, pNode.Macro contains the compiled HTML fragments
+         * ready to be composed by a per-type template.
+         */
+        compileMacros(pNode, pValue, pOptions) {
+          // Compute derived display properties on the node descriptor
+          pNode.PaddingLeft = pNode.Depth * pOptions.IndentPixels + 12;
+          pNode.EscapedPath = this.escapeAttribute(pNode.Path);
+          pNode.EscapedKey = this.escapeHTML(String(pNode.Key));
+          pNode.ToggleArrow = pNode.IsExpanded ? '\u25BC' : '\u25B6';
+
+          // Parse out parent array path for move buttons
+          let tmpBracketMatch = pNode.Path.match(/^(.*)\[(\d+)\]$/);
+          if (tmpBracketMatch) {
+            pNode.EscapedArrayPath = this.escapeAttribute(tmpBracketMatch[1]);
+          } else {
+            pNode.EscapedArrayPath = '';
+          }
+
+          // Compile each MacroTemplate onto pNode.Macro
+          let tmpMacroTemplates = this._ObjectEditorView.options.MacroTemplates.Node;
+          let tmpMacroKeys = Object.keys(tmpMacroTemplates);
+          pNode.Macro = {};
+          for (let i = 0; i < tmpMacroKeys.length; i++) {
+            let tmpKey = tmpMacroKeys[i];
+            pNode.Macro[tmpKey] = this.pict.parseTemplate(tmpMacroTemplates[tmpKey], pNode, null, [this._ObjectEditorView]);
+          }
+
+          // Set the Key macro conditionally: array index or key name
+          if (pNode.IsArrayElement) {
+            pNode.Macro.Key = pNode.Macro.KeyIndex;
+          } else {
+            pNode.Macro.Key = pNode.Macro.KeyName;
+          }
+
+          // Set TypeBadge to empty if ShowTypeIndicators is false
+          if (!pOptions.ShowTypeIndicators) {
+            pNode.Macro.TypeBadge = '';
+          }
+        }
+
+        /**
+         * Compose action button macros for leaf nodes.
+         * Returns a compiled HTML string for the actions area.
+         */
+        compileActions(pNode, pOptions) {
+          if (!pOptions.Editable) {
+            return '';
+          }
+          let tmpHTML = pNode.Macro.ActionsOpen;
+          if (pNode.IsArrayElement) {
+            tmpHTML += pNode.Macro.ButtonMoveUp + pNode.Macro.ButtonMoveDown;
+          }
+          tmpHTML += pNode.Macro.ButtonRemove;
+          tmpHTML += pNode.Macro.ActionsClose;
+          return tmpHTML;
+        }
+
+        /**
+         * Compose action button macros for container nodes (object/array).
+         * Includes an add button in addition to move and remove.
+         */
+        compileContainerActions(pNode, pOptions, pContainerType) {
+          if (!pOptions.Editable) {
+            return '';
+          }
+          let tmpHTML = pNode.Macro.ActionsOpen;
+          tmpHTML += pContainerType === 'array' ? pNode.Macro.ButtonAddArray : pNode.Macro.ButtonAddObject;
+          if (pNode.IsArrayElement) {
+            tmpHTML += pNode.Macro.ButtonMoveUp + pNode.Macro.ButtonMoveDown;
+          }
+          tmpHTML += pNode.Macro.ButtonRemove;
+          tmpHTML += pNode.Macro.ActionsClose;
+          return tmpHTML;
+        }
+
+        /**
+         * Escape a string for safe use in HTML attributes.
+         */
+        escapeAttribute(pString) {
+          if (typeof pString !== 'string') {
+            return '';
+          }
+          return pString.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        /**
+         * Escape a string for safe use in HTML content.
+         */
+        escapeHTML(pString) {
+          if (typeof pString !== 'string') {
+            return '';
+          }
+          return pString.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+      }
+      module.exports = PictViewObjectEditorNode;
+    }, {
+      "pict-view": 20
+    }],
+    12: [function (require, module, exports) {
+      const libPictViewObjectEditorNode = require('./PictView-ObjectEditor-Node.js');
+      class PictViewObjectEditorNodeArray extends libPictViewObjectEditorNode {
+        constructor(pFable, pOptions, pServiceHash) {
+          super(pFable, pOptions, pServiceHash);
+          this.serviceType = 'PictViewObjectEditorNodeArray';
+        }
+        renderNodeHTML(pNode, pValue, pOptions) {
+          // Set type-specific display properties on the node descriptor
+          let tmpLength = Array.isArray(pValue) ? pValue.length : 0;
+          pNode.TypeLabel = 'Array';
+          let tmpNoun = tmpLength === 1 ? 'item' : 'items';
+          pNode.SummaryText = '[' + tmpLength + ' ' + tmpNoun + ']';
+
+          // Compile all MacroTemplates onto pNode.Macro
+          this.compileMacros(pNode, pValue, pOptions);
+
+          // Compose container actions (includes add button)
+          pNode.Macro.Actions = this.compileContainerActions(pNode, pOptions, 'array');
+
+          // Render via per-type template
+          return this.pict.parseTemplate(this.pict.TemplateProvider.getTemplate('ObjectEditor-Node-Array'), pNode, null, [this._ObjectEditorView]);
+        }
+      }
+      module.exports = PictViewObjectEditorNodeArray;
+    }, {
+      "./PictView-ObjectEditor-Node.js": 11
+    }],
+    13: [function (require, module, exports) {
+      const libPictViewObjectEditorNode = require('./PictView-ObjectEditor-Node.js');
+      class PictViewObjectEditorNodeBoolean extends libPictViewObjectEditorNode {
+        constructor(pFable, pOptions, pServiceHash) {
+          super(pFable, pOptions, pServiceHash);
+          this.serviceType = 'PictViewObjectEditorNodeBoolean';
+        }
+        renderNodeHTML(pNode, pValue, pOptions) {
+          // Set type-specific display properties on the node descriptor
+          pNode.DisplayValue = pValue ? 'true' : 'false';
+
+          // Compile all MacroTemplates onto pNode.Macro
+          this.compileMacros(pNode, pValue, pOptions);
+
+          // Select editable or read-only value macro
+          pNode.Macro.Value = pOptions.Editable ? pNode.Macro.ValueBooleanEditable : pNode.Macro.ValueBooleanReadOnly;
+
+          // Compose actions
+          pNode.Macro.Actions = this.compileActions(pNode, pOptions);
+
+          // Render via per-type template
+          return this.pict.parseTemplate(this.pict.TemplateProvider.getTemplate('ObjectEditor-Node-Boolean'), pNode, null, [this._ObjectEditorView]);
+        }
+      }
+      module.exports = PictViewObjectEditorNodeBoolean;
+    }, {
+      "./PictView-ObjectEditor-Node.js": 11
+    }],
+    14: [function (require, module, exports) {
+      const libPictViewObjectEditorNode = require('./PictView-ObjectEditor-Node.js');
+      class PictViewObjectEditorNodeNull extends libPictViewObjectEditorNode {
+        constructor(pFable, pOptions, pServiceHash) {
+          super(pFable, pOptions, pServiceHash);
+          this.serviceType = 'PictViewObjectEditorNodeNull';
+        }
+        renderNodeHTML(pNode, pValue, pOptions) {
+          // Compile all MacroTemplates onto pNode.Macro
+          this.compileMacros(pNode, pValue, pOptions);
+
+          // Null always uses the static ValueNull macro
+          pNode.Macro.Value = pNode.Macro.ValueNull;
+
+          // Compose actions
+          pNode.Macro.Actions = this.compileActions(pNode, pOptions);
+
+          // Render via per-type template
+          return this.pict.parseTemplate(this.pict.TemplateProvider.getTemplate('ObjectEditor-Node-Null'), pNode, null, [this._ObjectEditorView]);
+        }
+      }
+      module.exports = PictViewObjectEditorNodeNull;
+    }, {
+      "./PictView-ObjectEditor-Node.js": 11
+    }],
+    15: [function (require, module, exports) {
+      const libPictViewObjectEditorNode = require('./PictView-ObjectEditor-Node.js');
+      class PictViewObjectEditorNodeNumber extends libPictViewObjectEditorNode {
+        constructor(pFable, pOptions, pServiceHash) {
+          super(pFable, pOptions, pServiceHash);
+          this.serviceType = 'PictViewObjectEditorNodeNumber';
+        }
+        renderNodeHTML(pNode, pValue, pOptions) {
+          // Set type-specific display properties on the node descriptor
+          pNode.EscapedValue = this.escapeHTML(String(pValue));
+
+          // Compile all MacroTemplates onto pNode.Macro
+          this.compileMacros(pNode, pValue, pOptions);
+
+          // Select editable or read-only value macro
+          pNode.Macro.Value = pOptions.Editable ? pNode.Macro.ValueNumberEditable : pNode.Macro.ValueNumberReadOnly;
+
+          // Compose actions
+          pNode.Macro.Actions = this.compileActions(pNode, pOptions);
+
+          // Render via per-type template
+          return this.pict.parseTemplate(this.pict.TemplateProvider.getTemplate('ObjectEditor-Node-Number'), pNode, null, [this._ObjectEditorView]);
+        }
+      }
+      module.exports = PictViewObjectEditorNodeNumber;
+    }, {
+      "./PictView-ObjectEditor-Node.js": 11
+    }],
+    16: [function (require, module, exports) {
+      const libPictViewObjectEditorNode = require('./PictView-ObjectEditor-Node.js');
+      class PictViewObjectEditorNodeObject extends libPictViewObjectEditorNode {
+        constructor(pFable, pOptions, pServiceHash) {
+          super(pFable, pOptions, pServiceHash);
+          this.serviceType = 'PictViewObjectEditorNodeObject';
+        }
+        renderNodeHTML(pNode, pValue, pOptions) {
+          // Set type-specific display properties on the node descriptor
+          let tmpKeyCount = 0;
+          if (pValue && typeof pValue === 'object' && !Array.isArray(pValue)) {
+            tmpKeyCount = Object.keys(pValue).length;
+          }
+          pNode.TypeLabel = 'Object';
+          let tmpNoun = tmpKeyCount === 1 ? 'key' : 'keys';
+          pNode.SummaryText = '{' + tmpKeyCount + ' ' + tmpNoun + '}';
+
+          // Compile all MacroTemplates onto pNode.Macro
+          this.compileMacros(pNode, pValue, pOptions);
+
+          // Compose container actions (includes add button)
+          pNode.Macro.Actions = this.compileContainerActions(pNode, pOptions, 'object');
+
+          // Render via per-type template
+          return this.pict.parseTemplate(this.pict.TemplateProvider.getTemplate('ObjectEditor-Node-Object'), pNode, null, [this._ObjectEditorView]);
+        }
+      }
+      module.exports = PictViewObjectEditorNodeObject;
+    }, {
+      "./PictView-ObjectEditor-Node.js": 11
+    }],
+    17: [function (require, module, exports) {
+      const libPictViewObjectEditorNode = require('./PictView-ObjectEditor-Node.js');
+      class PictViewObjectEditorNodeString extends libPictViewObjectEditorNode {
+        constructor(pFable, pOptions, pServiceHash) {
+          super(pFable, pOptions, pServiceHash);
+          this.serviceType = 'PictViewObjectEditorNodeString';
+        }
+        renderNodeHTML(pNode, pValue, pOptions) {
+          // Set type-specific display properties on the node descriptor
+          let tmpDisplayValue = typeof pValue === 'string' ? pValue : '';
+          // Truncate long strings for display
+          let tmpTruncated = tmpDisplayValue.length > 120 ? tmpDisplayValue.substring(0, 120) + '\u2026' : tmpDisplayValue;
+          pNode.EscapedValue = this.escapeHTML(tmpTruncated);
+          pNode.EscapedTitle = this.escapeAttribute(tmpDisplayValue);
+
+          // Compile all MacroTemplates onto pNode.Macro
+          this.compileMacros(pNode, pValue, pOptions);
+
+          // Select editable or read-only value macro
+          pNode.Macro.Value = pOptions.Editable ? pNode.Macro.ValueStringEditable : pNode.Macro.ValueStringReadOnly;
+
+          // Compose actions
+          pNode.Macro.Actions = this.compileActions(pNode, pOptions);
+
+          // Render via per-type template
+          return this.pict.parseTemplate(this.pict.TemplateProvider.getTemplate('ObjectEditor-Node-String'), pNode, null, [this._ObjectEditorView]);
+        }
+      }
+      module.exports = PictViewObjectEditorNodeString;
+    }, {
+      "./PictView-ObjectEditor-Node.js": 11
+    }],
+    18: [function (require, module, exports) {
+      const libPictView = require('pict-view');
+      const libNodeString = require('./PictView-ObjectEditor-NodeString.js');
+      const libNodeNumber = require('./PictView-ObjectEditor-NodeNumber.js');
+      const libNodeBoolean = require('./PictView-ObjectEditor-NodeBoolean.js');
+      const libNodeNull = require('./PictView-ObjectEditor-NodeNull.js');
+      const libNodeObject = require('./PictView-ObjectEditor-NodeObject.js');
+      const libNodeArray = require('./PictView-ObjectEditor-NodeArray.js');
+      const _DefaultConfiguration = require('../Pict-Section-ObjectEditor-DefaultConfiguration.js');
+      class PictViewObjectEditor extends libPictView {
+        constructor(pFable, pOptions, pServiceHash) {
+          let tmpOptions = Object.assign({}, _DefaultConfiguration, pOptions);
+          super(pFable, tmpOptions, pServiceHash);
+          this.initialRenderComplete = false;
+
+          // Set of expanded path strings
+          this._ExpandedPaths = new Set();
+
+          // Map of data type -> node renderer instance
+          this._NodeRenderers = {};
+        }
+        onBeforeInitialize() {
+          super.onBeforeInitialize();
+
+          // Register node type service types if they aren't already present
+          let tmpNodeTypes = {
+            'PictViewObjectEditorNodeString': libNodeString,
+            'PictViewObjectEditorNodeNumber': libNodeNumber,
+            'PictViewObjectEditorNodeBoolean': libNodeBoolean,
+            'PictViewObjectEditorNodeNull': libNodeNull,
+            'PictViewObjectEditorNodeObject': libNodeObject,
+            'PictViewObjectEditorNodeArray': libNodeArray
+          };
+          let tmpNodeTypeKeys = Object.keys(tmpNodeTypes);
+          for (let i = 0; i < tmpNodeTypeKeys.length; i++) {
+            let tmpKey = tmpNodeTypeKeys[i];
+            if (!this.fable.servicesMap.hasOwnProperty(tmpKey)) {
+              this.fable.addServiceType(tmpKey, tmpNodeTypes[tmpKey]);
+            }
+          }
+
+          // Instantiate one renderer per data type
+          this._NodeRenderers.string = this.fable.instantiateServiceProviderWithoutRegistration('PictViewObjectEditorNodeString');
+          this._NodeRenderers.number = this.fable.instantiateServiceProviderWithoutRegistration('PictViewObjectEditorNodeNumber');
+          this._NodeRenderers.boolean = this.fable.instantiateServiceProviderWithoutRegistration('PictViewObjectEditorNodeBoolean');
+          this._NodeRenderers.null = this.fable.instantiateServiceProviderWithoutRegistration('PictViewObjectEditorNodeNull');
+          this._NodeRenderers.object = this.fable.instantiateServiceProviderWithoutRegistration('PictViewObjectEditorNodeObject');
+          this._NodeRenderers.array = this.fable.instantiateServiceProviderWithoutRegistration('PictViewObjectEditorNodeArray');
+
+          // Set back-references on each renderer
+          let tmpRendererKeys = Object.keys(this._NodeRenderers);
+          for (let i = 0; i < tmpRendererKeys.length; i++) {
+            this._NodeRenderers[tmpRendererKeys[i]]._ObjectEditorView = this;
+          }
+          return super.onBeforeInitialize();
+        }
+        onAfterRender() {
+          super.onAfterRender();
+
+          // Ensure the CSS from all registered views is injected into the DOM
+          this.pict.CSSMap.injectCSS();
+          if (!this.initialRenderComplete) {
+            this.initialRenderComplete = true;
+            this.onAfterInitialRender();
+          }
+
+          // Always re-populate the tree after any render, since the container
+          // template may have been re-rendered (e.g., by the application auto-render).
+          this.renderTree();
+        }
+        onAfterInitialRender() {
+          // Expand to the configured initial depth
+          let tmpData = this._resolveObjectData();
+          if (tmpData !== null && typeof tmpData === 'object') {
+            this._expandToDepth(tmpData, '', 0, this.options.InitialExpandDepth);
+          }
+        }
+
+        // --- Public API ---
+
+        /**
+         * Toggle expand/collapse on a node path.
+         */
+        toggleNode(pPath) {
+          if (this._ExpandedPaths.has(pPath)) {
+            this._ExpandedPaths.delete(pPath);
+          } else {
+            this._ExpandedPaths.add(pPath);
+          }
+          this.renderTree();
+        }
+
+        /**
+         * Toggle a boolean value at a path.
+         */
+        toggleBoolean(pPath) {
+          let tmpData = this._resolveObjectData();
+          if (tmpData === null) {
+            return;
+          }
+          let tmpCurrentValue = this._getValueAtPath(tmpData, pPath);
+          this._setValueAtPath(tmpData, pPath, !tmpCurrentValue);
+          this.renderTree();
+        }
+
+        /**
+         * Begin inline editing of a leaf node.
+         */
+        beginEdit(pPath, pType) {
+          let tmpData = this._resolveObjectData();
+          if (tmpData === null) {
+            return;
+          }
+          let tmpCurrentValue = this._getValueAtPath(tmpData, pPath);
+          let tmpRowElement = this._getTreeElement().querySelector(`[data-path="${pPath}"]`);
+          if (!tmpRowElement) {
+            return;
+          }
+          let tmpValueSpan = tmpRowElement.querySelector('.pict-oe-value');
+          if (!tmpValueSpan) {
+            return;
+          }
+          let tmpInputType = pType === 'number' ? 'number' : 'text';
+          let tmpInputValue = tmpCurrentValue === null || tmpCurrentValue === undefined ? '' : String(tmpCurrentValue);
+          let tmpEscapedPath = tmpInputValue.replace(/"/g, '&quot;');
+          let tmpInput = document.createElement('input');
+          tmpInput.type = tmpInputType;
+          tmpInput.className = 'pict-oe-value-input';
+          tmpInput.value = tmpInputValue;
+          let tmpSelf = this;
+          let tmpCommit = function () {
+            let tmpNewValue = tmpInput.value;
+            if (pType === 'number') {
+              tmpNewValue = Number(tmpNewValue);
+              if (isNaN(tmpNewValue)) {
+                tmpNewValue = 0;
+              }
+            }
+            tmpSelf._setValueAtPath(tmpData, pPath, tmpNewValue);
+            tmpSelf.renderTree();
+          };
+          tmpInput.addEventListener('blur', tmpCommit);
+          tmpInput.addEventListener('keydown', function (pEvent) {
+            if (pEvent.key === 'Enter') {
+              tmpInput.blur();
+            } else if (pEvent.key === 'Escape') {
+              // Cancel edit, just re-render
+              tmpInput.removeEventListener('blur', tmpCommit);
+              tmpSelf.renderTree();
+            }
+          });
+          tmpValueSpan.innerHTML = '';
+          tmpValueSpan.appendChild(tmpInput);
+          tmpInput.focus();
+          tmpInput.select();
+        }
+
+        /**
+         * Set a value at a dot-path in the object data and re-render.
+         */
+        setValueAtPath(pPath, pValue) {
+          let tmpData = this._resolveObjectData();
+          if (tmpData === null) {
+            return;
+          }
+          this._setValueAtPath(tmpData, pPath, pValue);
+          this.renderTree();
+        }
+
+        /**
+         * Expand all nodes to a given depth.
+         */
+        expandToDepth(pDepth) {
+          this._ExpandedPaths.clear();
+          let tmpData = this._resolveObjectData();
+          if (tmpData !== null && typeof tmpData === 'object') {
+            this._expandToDepth(tmpData, '', 0, pDepth);
+          }
+          this.renderTree();
+        }
+
+        /**
+         * Expand all nodes in the tree.
+         */
+        expandAll() {
+          let tmpData = this._resolveObjectData();
+          if (tmpData !== null && typeof tmpData === 'object') {
+            this._expandToDepth(tmpData, '', 0, Infinity);
+          }
+          this.renderTree();
+        }
+
+        /**
+         * Collapse all nodes in the tree.
+         */
+        collapseAll() {
+          this._ExpandedPaths.clear();
+          this.renderTree();
+        }
+
+        // --- Add/Remove API ---
+
+        /**
+         * Add a property to an object at a given path.
+         */
+        addObjectProperty(pPath, pKey, pDefaultValue) {
+          let tmpData = this._resolveObjectData();
+          if (tmpData === null) {
+            return;
+          }
+          let tmpTarget = pPath ? this._getValueAtPath(tmpData, pPath) : tmpData;
+          if (tmpTarget === null || tmpTarget === undefined || typeof tmpTarget !== 'object' || Array.isArray(tmpTarget)) {
+            return;
+          }
+          let tmpValue = pDefaultValue !== undefined ? pDefaultValue : '';
+          tmpTarget[pKey] = tmpValue;
+
+          // Auto-expand the parent so the new property is visible
+          if (pPath) {
+            this._ExpandedPaths.add(pPath);
+          }
+          this.renderTree();
+        }
+
+        /**
+         * Remove a property from an object at a given path.
+         */
+        removeObjectProperty(pPath, pKey) {
+          let tmpData = this._resolveObjectData();
+          if (tmpData === null) {
+            return;
+          }
+          let tmpTarget = pPath ? this._getValueAtPath(tmpData, pPath) : tmpData;
+          if (tmpTarget === null || tmpTarget === undefined || typeof tmpTarget !== 'object' || Array.isArray(tmpTarget)) {
+            return;
+          }
+          let tmpChildPath = pPath ? pPath + '.' + pKey : pKey;
+          this._cleanupExpandedPaths(tmpChildPath);
+          delete tmpTarget[pKey];
+          this.renderTree();
+        }
+
+        /**
+         * Add an element to the end of an array at a given path.
+         */
+        addArrayElement(pPath, pDefaultValue) {
+          let tmpData = this._resolveObjectData();
+          if (tmpData === null) {
+            return;
+          }
+          let tmpTarget = pPath ? this._getValueAtPath(tmpData, pPath) : tmpData;
+          if (!Array.isArray(tmpTarget)) {
+            return;
+          }
+          let tmpValue = pDefaultValue !== undefined ? pDefaultValue : '';
+          tmpTarget.push(tmpValue);
+
+          // Auto-expand the parent so the new element is visible
+          if (pPath) {
+            this._ExpandedPaths.add(pPath);
+          }
+          this.renderTree();
+        }
+
+        /**
+         * Remove an element from an array at a given path by index.
+         */
+        removeArrayElement(pPath, pIndex) {
+          let tmpData = this._resolveObjectData();
+          if (tmpData === null) {
+            return;
+          }
+          let tmpTarget = pPath ? this._getValueAtPath(tmpData, pPath) : tmpData;
+          if (!Array.isArray(tmpTarget)) {
+            return;
+          }
+          let tmpIntIndex = parseInt(pIndex, 10);
+          if (isNaN(tmpIntIndex) || tmpIntIndex < 0 || tmpIntIndex >= tmpTarget.length) {
+            return;
+          }
+
+          // Clean up expanded paths for the removed element and shift higher indices
+          let tmpRemovedPath = pPath ? pPath + '[' + tmpIntIndex + ']' : '[' + tmpIntIndex + ']';
+          this._cleanupExpandedPaths(tmpRemovedPath);
+          this._shiftArrayExpandedPaths(pPath, tmpIntIndex, tmpTarget.length);
+          tmpTarget.splice(tmpIntIndex, 1);
+          this.renderTree();
+        }
+
+        /**
+         * Remove a node from its parent, auto-detecting whether parent is object or array.
+         * Works by parsing the path to find the parent and key/index.
+         */
+        removeNode(pPath) {
+          if (!pPath) {
+            return;
+          }
+          let tmpData = this._resolveObjectData();
+          if (tmpData === null) {
+            return;
+          }
+
+          // Determine if the last segment is a bracket index or a dot key
+          let tmpBracketMatch = pPath.match(/^(.*)\[(\d+)\]$/);
+          if (tmpBracketMatch) {
+            // Array element: parent path is the part before [N]
+            let tmpParentPath = tmpBracketMatch[1];
+            let tmpIndex = parseInt(tmpBracketMatch[2], 10);
+            this.removeArrayElement(tmpParentPath, tmpIndex);
+          } else {
+            // Object property: parent path is everything before the last dot
+            let tmpLastDot = pPath.lastIndexOf('.');
+            if (tmpLastDot === -1) {
+              // Top-level key — parent is root
+              let tmpKey = pPath;
+              this.removeObjectProperty('', tmpKey);
+            } else {
+              let tmpParentPath = pPath.substring(0, tmpLastDot);
+              let tmpKey = pPath.substring(tmpLastDot + 1);
+              this.removeObjectProperty(tmpParentPath, tmpKey);
+            }
+          }
+        }
+
+        // --- Array Reorder API ---
+
+        /**
+         * Move an array element up by one position (swap with the element before it).
+         * If already at index 0 this is a no-op.
+         */
+        moveArrayElementUp(pPath, pIndex) {
+          let tmpIntIndex = parseInt(pIndex, 10);
+          if (isNaN(tmpIntIndex) || tmpIntIndex <= 0) {
+            return;
+          }
+          this.moveArrayElementToIndex(pPath, tmpIntIndex, tmpIntIndex - 1);
+        }
+
+        /**
+         * Move an array element down by one position (swap with the element after it).
+         * If already at the last index this is a no-op.
+         */
+        moveArrayElementDown(pPath, pIndex) {
+          let tmpData = this._resolveObjectData();
+          if (tmpData === null) {
+            return;
+          }
+          let tmpTarget = pPath ? this._getValueAtPath(tmpData, pPath) : tmpData;
+          if (!Array.isArray(tmpTarget)) {
+            return;
+          }
+          let tmpIntIndex = parseInt(pIndex, 10);
+          if (isNaN(tmpIntIndex) || tmpIntIndex < 0 || tmpIntIndex >= tmpTarget.length - 1) {
+            return;
+          }
+          this.moveArrayElementToIndex(pPath, tmpIntIndex, tmpIntIndex + 1);
+        }
+
+        /**
+         * Move an array element from one index to another.
+         * If pNewIndex is out of bounds it is clamped to [0, length-1].
+         */
+        moveArrayElementToIndex(pPath, pFromIndex, pToIndex) {
+          let tmpData = this._resolveObjectData();
+          if (tmpData === null) {
+            return;
+          }
+          let tmpTarget = pPath ? this._getValueAtPath(tmpData, pPath) : tmpData;
+          if (!Array.isArray(tmpTarget)) {
+            return;
+          }
+          let tmpFrom = parseInt(pFromIndex, 10);
+          if (isNaN(tmpFrom) || tmpFrom < 0 || tmpFrom >= tmpTarget.length) {
+            return;
+          }
+          let tmpTo = parseInt(pToIndex, 10);
+          if (isNaN(tmpTo)) {
+            return;
+          }
+          // Clamp to valid range
+          if (tmpTo < 0) {
+            tmpTo = 0;
+          }
+          if (tmpTo >= tmpTarget.length) {
+            tmpTo = tmpTarget.length - 1;
+          }
+          if (tmpFrom === tmpTo) {
+            return;
+          }
+
+          // Update expanded paths before mutating the array
+          this._moveArrayExpandedPaths(pPath, tmpFrom, tmpTo, tmpTarget.length);
+
+          // Splice the element out and insert at the new position
+          let tmpElement = tmpTarget.splice(tmpFrom, 1)[0];
+          tmpTarget.splice(tmpTo, 0, tmpElement);
+          this.renderTree();
+        }
+
+        /**
+         * Begin adding a new property to an object by showing an inline key input
+         * and a type selector dropdown.
+         */
+        beginAddToObject(pPath) {
+          let tmpData = this._resolveObjectData();
+          if (tmpData === null) {
+            return;
+          }
+          let tmpTreeElement = this._getTreeElement();
+          if (!tmpTreeElement) {
+            return;
+          }
+          let tmpRowElement = tmpTreeElement.querySelector(`[data-path="${pPath}"]`);
+          if (!tmpRowElement) {
+            return;
+          }
+
+          // Create an inline input for the key name
+          let tmpInput = document.createElement('input');
+          tmpInput.type = 'text';
+          tmpInput.className = 'pict-oe-key-input';
+          tmpInput.placeholder = 'key';
+
+          // Create a type selector dropdown
+          let tmpSelect = this._createTypeSelect();
+          let tmpSelf = this;
+          let tmpCommitted = false;
+          let tmpCommit = function () {
+            if (tmpCommitted) {
+              return;
+            }
+            tmpCommitted = true;
+            let tmpKey = tmpInput.value.trim();
+            if (tmpKey) {
+              let tmpDefaultValue = tmpSelf._getDefaultValueForType(tmpSelect.value);
+              tmpSelf.addObjectProperty(pPath, tmpKey, tmpDefaultValue);
+            } else {
+              tmpSelf.renderTree();
+            }
+          };
+          tmpInput.addEventListener('keydown', function (pEvent) {
+            if (pEvent.key === 'Enter') {
+              tmpCommit();
+            } else if (pEvent.key === 'Escape') {
+              tmpCommitted = true;
+              tmpSelf.renderTree();
+            }
+          });
+          tmpSelect.addEventListener('keydown', function (pEvent) {
+            if (pEvent.key === 'Enter') {
+              tmpCommit();
+            } else if (pEvent.key === 'Escape') {
+              tmpCommitted = true;
+              tmpSelf.renderTree();
+            }
+          });
+
+          // Commit when focus leaves both elements
+          let tmpBlurTimeout = null;
+          let tmpHandleBlur = function () {
+            clearTimeout(tmpBlurTimeout);
+            tmpBlurTimeout = setTimeout(function () {
+              // Check if focus moved to the other element in the pair
+              if (document.activeElement !== tmpInput && document.activeElement !== tmpSelect) {
+                tmpCommit();
+              }
+            }, 150);
+          };
+          tmpInput.addEventListener('blur', tmpHandleBlur);
+          tmpSelect.addEventListener('blur', tmpHandleBlur);
+
+          // Insert before the actions container
+          let tmpActionsSpan = tmpRowElement.querySelector('.pict-oe-actions');
+          if (tmpActionsSpan) {
+            tmpRowElement.insertBefore(tmpInput, tmpActionsSpan);
+            tmpRowElement.insertBefore(tmpSelect, tmpActionsSpan);
+          } else {
+            tmpRowElement.appendChild(tmpInput);
+            tmpRowElement.appendChild(tmpSelect);
+          }
+          tmpInput.focus();
+        }
+
+        /**
+         * Begin adding a new element to an array by showing a type selector dropdown.
+         */
+        beginAddToArray(pPath) {
+          let tmpData = this._resolveObjectData();
+          if (tmpData === null) {
+            return;
+          }
+          let tmpTreeElement = this._getTreeElement();
+          if (!tmpTreeElement) {
+            return;
+          }
+          let tmpRowElement = tmpTreeElement.querySelector(`[data-path="${pPath}"]`);
+          if (!tmpRowElement) {
+            return;
+          }
+
+          // Create a type selector dropdown
+          let tmpSelect = this._createTypeSelect();
+          let tmpSelf = this;
+          let tmpCommitted = false;
+          let tmpCommit = function () {
+            if (tmpCommitted) {
+              return;
+            }
+            tmpCommitted = true;
+            let tmpDefaultValue = tmpSelf._getDefaultValueForType(tmpSelect.value);
+            tmpSelf.addArrayElement(pPath, tmpDefaultValue);
+          };
+          tmpSelect.addEventListener('keydown', function (pEvent) {
+            if (pEvent.key === 'Enter') {
+              tmpCommit();
+            } else if (pEvent.key === 'Escape') {
+              tmpCommitted = true;
+              tmpSelf.renderTree();
+            }
+          });
+          tmpSelect.addEventListener('blur', function () {
+            setTimeout(function () {
+              tmpCommit();
+            }, 100);
+          });
+
+          // Insert before the actions container
+          let tmpActionsSpan = tmpRowElement.querySelector('.pict-oe-actions');
+          if (tmpActionsSpan) {
+            tmpRowElement.insertBefore(tmpSelect, tmpActionsSpan);
+          } else {
+            tmpRowElement.appendChild(tmpSelect);
+          }
+          tmpSelect.focus();
+        }
+
+        /**
+         * Create a type selector <select> element for choosing the type of a new entry.
+         */
+        _createTypeSelect() {
+          let tmpSelect = document.createElement('select');
+          tmpSelect.className = 'pict-oe-type-select';
+          let tmpTypes = ['String', 'Number', 'Boolean', 'Null', 'Object', 'Array'];
+          for (let i = 0; i < tmpTypes.length; i++) {
+            let tmpOption = document.createElement('option');
+            tmpOption.value = tmpTypes[i];
+            tmpOption.textContent = tmpTypes[i];
+            tmpSelect.appendChild(tmpOption);
+          }
+          return tmpSelect;
+        }
+
+        /**
+         * Return the default value for a given type name.
+         */
+        _getDefaultValueForType(pTypeName) {
+          switch (pTypeName) {
+            case 'Number':
+              return 0;
+            case 'Boolean':
+              return false;
+            case 'Null':
+              return null;
+            case 'Object':
+              return {};
+            case 'Array':
+              return [];
+            case 'String':
+            default:
+              return '';
+          }
+        }
+
+        // --- Marshal lifecycle ---
+
+        marshalToView() {
+          this.renderTree();
+          return super.marshalToView();
+        }
+
+        // --- Tree rendering ---
+
+        /**
+         * Render the visible tree into the container element.
+         */
+        renderTree() {
+          let tmpData = this._resolveObjectData();
+          let tmpTreeElement = this._getTreeElement();
+          if (!tmpTreeElement) {
+            return;
+          }
+          if (tmpData === null || tmpData === undefined) {
+            this.pict.ContentAssignment.assignContent(tmpTreeElement, '<div class="pict-oe-empty">No data</div>');
+            return;
+          }
+          let tmpOptions = {
+            Editable: this.options.Editable,
+            ShowTypeIndicators: this.options.ShowTypeIndicators,
+            IndentPixels: this.options.IndentPixels,
+            ViewHash: this.Hash
+          };
+          let tmpHTML = '';
+          if (typeof tmpData === 'object' && !Array.isArray(tmpData)) {
+            // Render top-level object keys without a root wrapper node
+            tmpHTML = this._walkObject(tmpData, '', 0, tmpOptions, true);
+            // Add a root-level "add property" button when editable
+            if (tmpOptions.Editable) {
+              tmpHTML += this.pict.parseTemplate(this.options.MacroTemplates.Node.RootAddObject, {}, null, [this]);
+            }
+          } else if (Array.isArray(tmpData)) {
+            // Render top-level array elements without a root wrapper node
+            tmpHTML = this._walkArray(tmpData, '', 0, tmpOptions, true);
+            // Add a root-level "add element" button when editable
+            if (tmpOptions.Editable) {
+              tmpHTML += this.pict.parseTemplate(this.options.MacroTemplates.Node.RootAddArray, {}, null, [this]);
+            }
+          } else {
+            // Single primitive value at root
+            let tmpNode = {
+              Path: '',
+              Key: '(root)',
+              Depth: 0,
+              DataType: this._getJsonType(tmpData),
+              HasChildren: false,
+              ChildCount: 0,
+              IsExpanded: false,
+              IsArrayElement: false,
+              ArrayIndex: -1
+            };
+            let tmpRenderer = this._NodeRenderers[tmpNode.DataType];
+            if (tmpRenderer) {
+              tmpHTML = tmpRenderer.renderNodeHTML(tmpNode, tmpData, tmpOptions);
+            }
+          }
+          if (!tmpHTML) {
+            tmpHTML = '<div class="pict-oe-empty">Empty object</div>';
+          }
+          this.pict.ContentAssignment.assignContent(tmpTreeElement, tmpHTML);
+        }
+
+        // --- Internal tree walking ---
+
+        _walkObject(pValue, pBasePath, pDepth, pOptions, pIsRoot) {
+          let tmpHTML = '';
+          let tmpKeys = Object.keys(pValue);
+          for (let i = 0; i < tmpKeys.length; i++) {
+            let tmpKey = tmpKeys[i];
+            let tmpChildPath = pBasePath ? pBasePath + '.' + tmpKey : tmpKey;
+            let tmpChildValue = pValue[tmpKey];
+            let tmpType = this._getJsonType(tmpChildValue);
+            let tmpNode = {
+              Path: tmpChildPath,
+              Key: tmpKey,
+              Depth: pDepth,
+              DataType: tmpType,
+              HasChildren: false,
+              ChildCount: 0,
+              IsExpanded: false,
+              IsArrayElement: false,
+              ArrayIndex: -1
+            };
+            if (tmpType === 'object') {
+              let tmpChildKeys = tmpChildValue !== null ? Object.keys(tmpChildValue) : [];
+              tmpNode.HasChildren = tmpChildKeys.length > 0;
+              tmpNode.ChildCount = tmpChildKeys.length;
+              tmpNode.IsExpanded = this._ExpandedPaths.has(tmpChildPath);
+              let tmpRenderer = this._NodeRenderers.object;
+              tmpHTML += tmpRenderer.renderNodeHTML(tmpNode, tmpChildValue, pOptions);
+              if (tmpNode.IsExpanded) {
+                tmpHTML += this._walkObject(tmpChildValue, tmpChildPath, pDepth + 1, pOptions, false);
+              }
+            } else if (tmpType === 'array') {
+              tmpNode.HasChildren = tmpChildValue.length > 0;
+              tmpNode.ChildCount = tmpChildValue.length;
+              tmpNode.IsExpanded = this._ExpandedPaths.has(tmpChildPath);
+              let tmpRenderer = this._NodeRenderers.array;
+              tmpHTML += tmpRenderer.renderNodeHTML(tmpNode, tmpChildValue, pOptions);
+              if (tmpNode.IsExpanded) {
+                tmpHTML += this._walkArray(tmpChildValue, tmpChildPath, pDepth + 1, pOptions, false);
+              }
+            } else {
+              let tmpRenderer = this._NodeRenderers[tmpType];
+              if (tmpRenderer) {
+                tmpHTML += tmpRenderer.renderNodeHTML(tmpNode, tmpChildValue, pOptions);
+              }
+            }
+          }
+          return tmpHTML;
+        }
+        _walkArray(pValue, pBasePath, pDepth, pOptions, pIsRoot) {
+          let tmpHTML = '';
+          for (let i = 0; i < pValue.length; i++) {
+            let tmpChildPath = pBasePath ? pBasePath + '[' + i + ']' : '[' + i + ']';
+            let tmpChildValue = pValue[i];
+            let tmpType = this._getJsonType(tmpChildValue);
+            let tmpNode = {
+              Path: tmpChildPath,
+              Key: String(i),
+              Depth: pDepth,
+              DataType: tmpType,
+              HasChildren: false,
+              ChildCount: 0,
+              IsExpanded: false,
+              IsArrayElement: true,
+              ArrayIndex: i
+            };
+            if (tmpType === 'object') {
+              let tmpChildKeys = tmpChildValue !== null ? Object.keys(tmpChildValue) : [];
+              tmpNode.HasChildren = tmpChildKeys.length > 0;
+              tmpNode.ChildCount = tmpChildKeys.length;
+              tmpNode.IsExpanded = this._ExpandedPaths.has(tmpChildPath);
+              let tmpRenderer = this._NodeRenderers.object;
+              tmpHTML += tmpRenderer.renderNodeHTML(tmpNode, tmpChildValue, pOptions);
+              if (tmpNode.IsExpanded) {
+                tmpHTML += this._walkObject(tmpChildValue, tmpChildPath, pDepth + 1, pOptions, false);
+              }
+            } else if (tmpType === 'array') {
+              tmpNode.HasChildren = tmpChildValue.length > 0;
+              tmpNode.ChildCount = tmpChildValue.length;
+              tmpNode.IsExpanded = this._ExpandedPaths.has(tmpChildPath);
+              let tmpRenderer = this._NodeRenderers.array;
+              tmpHTML += tmpRenderer.renderNodeHTML(tmpNode, tmpChildValue, pOptions);
+              if (tmpNode.IsExpanded) {
+                tmpHTML += this._walkArray(tmpChildValue, tmpChildPath, pDepth + 1, pOptions, false);
+              }
+            } else {
+              let tmpRenderer = this._NodeRenderers[tmpType];
+              if (tmpRenderer) {
+                tmpHTML += tmpRenderer.renderNodeHTML(tmpNode, tmpChildValue, pOptions);
+              }
+            }
+          }
+          return tmpHTML;
+        }
+
+        // --- Utility methods ---
+
+        _getJsonType(pValue) {
+          if (pValue === null || pValue === undefined) {
+            return 'null';
+          }
+          if (Array.isArray(pValue)) {
+            return 'array';
+          }
+          let tmpType = typeof pValue;
+          if (tmpType === 'object') {
+            return 'object';
+          }
+          if (tmpType === 'number') {
+            return 'number';
+          }
+          if (tmpType === 'boolean') {
+            return 'boolean';
+          }
+          return 'string';
+        }
+        _resolveObjectData() {
+          if (!this.options.ObjectDataAddress) {
+            return null;
+          }
+
+          // Support "AppData.SomeKey" style addresses
+          let tmpAddress = this.options.ObjectDataAddress;
+          let tmpParts = tmpAddress.split('.');
+          let tmpCurrent = this.fable;
+          for (let i = 0; i < tmpParts.length; i++) {
+            if (tmpCurrent === null || tmpCurrent === undefined) {
+              return null;
+            }
+            tmpCurrent = tmpCurrent[tmpParts[i]];
+          }
+          return tmpCurrent;
+        }
+        _getTreeElement() {
+          let tmpElementId = 'ObjectEditor-Tree-' + this.Hash;
+          let tmpElements = this.pict.ContentAssignment.getElement('#' + tmpElementId);
+          if (tmpElements && tmpElements.length > 0) {
+            return tmpElements[0];
+          }
+          return null;
+        }
+        _getValueAtPath(pObject, pPath) {
+          if (!pPath) {
+            return pObject;
+          }
+          let tmpSegments = this._parsePath(pPath);
+          let tmpCurrent = pObject;
+          for (let i = 0; i < tmpSegments.length; i++) {
+            if (tmpCurrent === null || tmpCurrent === undefined) {
+              return undefined;
+            }
+            tmpCurrent = tmpCurrent[tmpSegments[i]];
+          }
+          return tmpCurrent;
+        }
+        _setValueAtPath(pObject, pPath, pValue) {
+          if (!pPath) {
+            return;
+          }
+          let tmpSegments = this._parsePath(pPath);
+          let tmpCurrent = pObject;
+          for (let i = 0; i < tmpSegments.length - 1; i++) {
+            if (tmpCurrent === null || tmpCurrent === undefined) {
+              return;
+            }
+            tmpCurrent = tmpCurrent[tmpSegments[i]];
+          }
+          if (tmpCurrent !== null && tmpCurrent !== undefined) {
+            tmpCurrent[tmpSegments[tmpSegments.length - 1]] = pValue;
+          }
+        }
+
+        /**
+         * Parse a dotted path with bracket notation into segments.
+         * e.g., "config.items[2].name" -> ["config", "items", 2, "name"]
+         */
+        _parsePath(pPath) {
+          let tmpSegments = [];
+          let tmpParts = pPath.split('.');
+          for (let i = 0; i < tmpParts.length; i++) {
+            let tmpPart = tmpParts[i];
+            // Check for bracket notation
+            let tmpBracketMatch = tmpPart.match(/^([^\[]*)\[(\d+)\]$/);
+            if (tmpBracketMatch) {
+              if (tmpBracketMatch[1]) {
+                tmpSegments.push(tmpBracketMatch[1]);
+              }
+              tmpSegments.push(parseInt(tmpBracketMatch[2], 10));
+            } else if (tmpPart) {
+              tmpSegments.push(tmpPart);
+            }
+          }
+          return tmpSegments;
+        }
+
+        /**
+         * Remove all expanded paths that reference a deleted subtree.
+         */
+        _cleanupExpandedPaths(pRemovedPath) {
+          let tmpToRemove = [];
+          this._ExpandedPaths.forEach(function (tmpPath) {
+            if (tmpPath === pRemovedPath || tmpPath.indexOf(pRemovedPath + '.') === 0 || tmpPath.indexOf(pRemovedPath + '[') === 0) {
+              tmpToRemove.push(tmpPath);
+            }
+          });
+          for (let i = 0; i < tmpToRemove.length; i++) {
+            this._ExpandedPaths.delete(tmpToRemove[i]);
+          }
+        }
+
+        /**
+         * After removing an array element, shift expanded paths for higher indices down by one.
+         * e.g., if we removed items[2], then items[3] becomes items[2], items[4] becomes items[3], etc.
+         */
+        _shiftArrayExpandedPaths(pArrayPath, pRemovedIndex, pOriginalLength) {
+          let tmpPrefix = pArrayPath ? pArrayPath : '';
+          for (let i = pRemovedIndex + 1; i < pOriginalLength; i++) {
+            let tmpOldPath = tmpPrefix + '[' + i + ']';
+            let tmpNewPath = tmpPrefix + '[' + (i - 1) + ']';
+
+            // Collect all expanded paths that start with the old path
+            let tmpToRename = [];
+            this._ExpandedPaths.forEach(function (tmpPath) {
+              if (tmpPath === tmpOldPath) {
+                tmpToRename.push({
+                  old: tmpPath,
+                  replacement: tmpNewPath
+                });
+              } else if (tmpPath.indexOf(tmpOldPath + '.') === 0) {
+                tmpToRename.push({
+                  old: tmpPath,
+                  replacement: tmpNewPath + tmpPath.substring(tmpOldPath.length)
+                });
+              } else if (tmpPath.indexOf(tmpOldPath + '[') === 0) {
+                tmpToRename.push({
+                  old: tmpPath,
+                  replacement: tmpNewPath + tmpPath.substring(tmpOldPath.length)
+                });
+              }
+            });
+            for (let j = 0; j < tmpToRename.length; j++) {
+              this._ExpandedPaths.delete(tmpToRename[j].old);
+              this._ExpandedPaths.add(tmpToRename[j].replacement);
+            }
+          }
+        }
+
+        /**
+         * Update expanded paths when an array element moves from one index to another.
+         * Works by collecting all paths for every index in the affected range,
+         * then remapping them to their new positions.
+         */
+        _moveArrayExpandedPaths(pArrayPath, pFromIndex, pToIndex, pLength) {
+          let tmpPrefix = pArrayPath ? pArrayPath : '';
+
+          // Determine the range of indices affected by the move
+          let tmpMinIndex = Math.min(pFromIndex, pToIndex);
+          let tmpMaxIndex = Math.max(pFromIndex, pToIndex);
+
+          // Collect all expanded paths for every index in the affected range
+          // Map: index -> array of { suffix } (the part after the [N])
+          let tmpPathsByIndex = {};
+          for (let i = tmpMinIndex; i <= tmpMaxIndex; i++) {
+            tmpPathsByIndex[i] = [];
+          }
+          let tmpToRemove = [];
+          let tmpSelf = this;
+          this._ExpandedPaths.forEach(function (tmpPath) {
+            for (let i = tmpMinIndex; i <= tmpMaxIndex; i++) {
+              let tmpIndexPath = tmpPrefix + '[' + i + ']';
+              if (tmpPath === tmpIndexPath) {
+                tmpPathsByIndex[i].push('');
+                tmpToRemove.push(tmpPath);
+              } else if (tmpPath.indexOf(tmpIndexPath + '.') === 0) {
+                tmpPathsByIndex[i].push(tmpPath.substring(tmpIndexPath.length));
+                tmpToRemove.push(tmpPath);
+              } else if (tmpPath.indexOf(tmpIndexPath + '[') === 0) {
+                tmpPathsByIndex[i].push(tmpPath.substring(tmpIndexPath.length));
+                tmpToRemove.push(tmpPath);
+              }
+            }
+          });
+
+          // Remove old paths
+          for (let i = 0; i < tmpToRemove.length; i++) {
+            this._ExpandedPaths.delete(tmpToRemove[i]);
+          }
+
+          // Compute new index mapping:
+          // When moving from -> to, the element at pFromIndex goes to pToIndex,
+          // and all elements between shift by 1 in the opposite direction.
+          let tmpNewIndexMap = {};
+          if (pFromIndex < pToIndex) {
+            // Moving forward: elements between (from+1..to) shift down by 1
+            tmpNewIndexMap[pFromIndex] = pToIndex;
+            for (let i = pFromIndex + 1; i <= pToIndex; i++) {
+              tmpNewIndexMap[i] = i - 1;
+            }
+          } else {
+            // Moving backward: elements between (to..from-1) shift up by 1
+            tmpNewIndexMap[pFromIndex] = pToIndex;
+            for (let i = pToIndex; i < pFromIndex; i++) {
+              tmpNewIndexMap[i] = i + 1;
+            }
+          }
+
+          // Re-add paths at their new indices
+          let tmpOldIndices = Object.keys(tmpPathsByIndex);
+          for (let i = 0; i < tmpOldIndices.length; i++) {
+            let tmpOldIndex = parseInt(tmpOldIndices[i], 10);
+            let tmpNewIndex = tmpNewIndexMap[tmpOldIndex];
+            let tmpSuffixes = tmpPathsByIndex[tmpOldIndex];
+            for (let j = 0; j < tmpSuffixes.length; j++) {
+              this._ExpandedPaths.add(tmpPrefix + '[' + tmpNewIndex + ']' + tmpSuffixes[j]);
+            }
+          }
+        }
+
+        /**
+         * Recursively expand paths up to a given depth.
+         */
+        _expandToDepth(pValue, pBasePath, pCurrentDepth, pMaxDepth) {
+          if (pValue === null || pValue === undefined || typeof pValue !== 'object') {
+            return;
+          }
+          if (Array.isArray(pValue)) {
+            for (let i = 0; i < pValue.length; i++) {
+              let tmpChildPath = pBasePath ? pBasePath + '[' + i + ']' : '[' + i + ']';
+              if (typeof pValue[i] === 'object' && pValue[i] !== null) {
+                // Mark this child as expanded (it's an object or array that can be toggled)
+                this._ExpandedPaths.add(tmpChildPath);
+                if (pCurrentDepth + 1 < pMaxDepth) {
+                  this._expandToDepth(pValue[i], tmpChildPath, pCurrentDepth + 1, pMaxDepth);
+                }
+              }
+            }
+          } else {
+            let tmpKeys = Object.keys(pValue);
+            for (let i = 0; i < tmpKeys.length; i++) {
+              let tmpKey = tmpKeys[i];
+              let tmpChildPath = pBasePath ? pBasePath + '.' + tmpKey : tmpKey;
+              let tmpChildValue = pValue[tmpKey];
+              if (typeof tmpChildValue === 'object' && tmpChildValue !== null) {
+                // Mark this child as expanded (it's an object or array that can be toggled)
+                this._ExpandedPaths.add(tmpChildPath);
+                if (pCurrentDepth + 1 < pMaxDepth) {
+                  this._expandToDepth(tmpChildValue, tmpChildPath, pCurrentDepth + 1, pMaxDepth);
+                }
+              }
+            }
+          }
+        }
+      }
+      module.exports = PictViewObjectEditor;
+      module.exports.default_configuration = _DefaultConfiguration;
+    }, {
+      "../Pict-Section-ObjectEditor-DefaultConfiguration.js": 9,
+      "./PictView-ObjectEditor-NodeArray.js": 12,
+      "./PictView-ObjectEditor-NodeBoolean.js": 13,
+      "./PictView-ObjectEditor-NodeNull.js": 14,
+      "./PictView-ObjectEditor-NodeNumber.js": 15,
+      "./PictView-ObjectEditor-NodeObject.js": 16,
+      "./PictView-ObjectEditor-NodeString.js": 17,
+      "pict-view": 20
+    }],
+    19: [function (require, module, exports) {
+      module.exports = {
         "name": "pict-view",
         "version": "1.0.67",
         "description": "Pict View Base Class",
@@ -2478,7 +4173,7 @@
         }
       };
     }, {}],
-    10: [function (require, module, exports) {
+    20: [function (require, module, exports) {
       const libFableServiceBase = require('fable-serviceproviderbase');
       const libPackage = require('../package.json');
       const defaultPictViewSettings = {
@@ -3642,10 +5337,10 @@
       }
       module.exports = PictView;
     }, {
-      "../package.json": 9,
+      "../package.json": 19,
       "fable-serviceproviderbase": 2
     }],
-    11: [function (require, module, exports) {
+    21: [function (require, module, exports) {
       module.exports = {
         "Name": "Retold Facto",
         "Hash": "Facto-Full",
@@ -3660,7 +5355,7 @@
         }
       };
     }, {}],
-    12: [function (require, module, exports) {
+    22: [function (require, module, exports) {
       const libPictApplication = require('pict-application');
       const libPictRouter = require('pict-router');
       const THEME_LIST = [{
@@ -3706,6 +5401,7 @@
       const libViewRecords = require('./views/PictView-Facto-Full-Records.js');
       const libViewProjections = require('./views/PictView-Facto-Full-Projections.js');
       const libViewDashboards = require('./views/PictView-Facto-Full-Dashboards.js');
+      const libViewRecordViewer = require('./views/PictView-Facto-Full-RecordViewer.js');
       class FactoFullApplication extends libPictApplication {
         constructor(pFable, pOptions, pServiceHash) {
           super(pFable, pOptions, pServiceHash);
@@ -3734,6 +5430,7 @@
           this.pict.addView('Facto-Full-Records', libViewRecords.default_configuration, libViewRecords);
           this.pict.addView('Facto-Full-Projections', libViewProjections.default_configuration, libViewProjections);
           this.pict.addView('Facto-Full-Dashboards', libViewDashboards.default_configuration, libViewDashboards);
+          this.pict.addView('Facto-Full-RecordViewer', libViewRecordViewer.default_configuration, libViewRecordViewer);
         }
         onAfterInitializeAsync(fCallback) {
           // Apply saved theme before first render
@@ -3750,18 +5447,42 @@
             SelectedDataset: null,
             RecordPage: 0,
             RecordPageSize: 50,
-            CurrentTheme: 'facto-dark'
+            CurrentRecordContent: {},
+            CurrentTheme: 'facto-dark',
+            CurrentRoute: ''
           };
 
           // Expose pict globally for inline onclick handlers
           window.pict = this.pict;
 
-          // Render the layout shell — this cascades into TopBar, BottomBar, Dashboard
+          // Register all parameterized routes BEFORE rendering the layout,
+          // so they are available when resolve() fires after the DOM is ready.
+          let tmpSelf = this;
+          this.pict.providers.PictRouter.addRoute('/Record/:IDRecord', pMatch => {
+            let tmpIDRecord = pMatch && pMatch.data ? pMatch.data.IDRecord : null;
+            if (tmpIDRecord) {
+              tmpSelf.showRecordView(tmpIDRecord);
+            }
+          });
+
+          // Render the layout shell — this cascades into TopBar, BottomBar
           this.pict.views['Facto-Full-Layout'].render();
+
+          // Resolve the router now that all routes are registered and the DOM
+          // is ready. This picks up the current hash URL for deep links / reloads.
+          this.pict.providers.PictRouter.resolve();
           return super.onAfterInitializeAsync(fCallback);
         }
         navigateTo(pRoute) {
           this.pict.providers.PictRouter.navigate(pRoute);
+        }
+        showRecordView(pIDRecord) {
+          let tmpView = this.pict.views['Facto-Full-RecordViewer'];
+          if (tmpView) {
+            tmpView.loadRecord(pIDRecord);
+          }
+          // Highlight "Records" in the nav since the record viewer is a child of Records
+          this._setActiveNav('Records');
         }
         showView(pViewIdentifier) {
           if (pViewIdentifier in this.pict.views) {
@@ -3769,6 +5490,18 @@
           } else {
             this.pict.log.warn(`View [${pViewIdentifier}] not found; falling back to dashboard.`);
             this.pict.views['Facto-Full-Dashboard'].render();
+          }
+
+          // Derive the route name from the view identifier for nav highlighting
+          // e.g. "Facto-Full-SourceResearch" → "SourceResearch"
+          let tmpRoute = pViewIdentifier.replace('Facto-Full-', '');
+          this._setActiveNav(tmpRoute);
+        }
+        _setActiveNav(pRoute) {
+          this.pict.AppData.Facto.CurrentRoute = pRoute;
+          let tmpTopBar = this.pict.views['Facto-Full-TopBar'];
+          if (tmpTopBar && typeof tmpTopBar.highlightRoute === 'function') {
+            tmpTopBar.highlightRoute(pRoute);
           }
         }
 
@@ -3796,24 +5529,25 @@
       module.exports = FactoFullApplication;
       module.exports.default_configuration = require('./Pict-Application-Facto-Full-Configuration.json');
     }, {
-      "../pict-app/providers/Pict-Provider-Facto.js": 28,
-      "./Pict-Application-Facto-Full-Configuration.json": 11,
-      "./providers/PictRouter-Facto-Configuration.json": 13,
-      "./views/PictView-Facto-Full-BottomBar.js": 14,
-      "./views/PictView-Facto-Full-Dashboard.js": 15,
-      "./views/PictView-Facto-Full-Dashboards.js": 16,
-      "./views/PictView-Facto-Full-Datasets.js": 17,
-      "./views/PictView-Facto-Full-IngestJobs.js": 18,
-      "./views/PictView-Facto-Full-Layout.js": 19,
-      "./views/PictView-Facto-Full-Projections.js": 20,
-      "./views/PictView-Facto-Full-Records.js": 21,
-      "./views/PictView-Facto-Full-SourceResearch.js": 22,
-      "./views/PictView-Facto-Full-Sources.js": 23,
-      "./views/PictView-Facto-Full-TopBar.js": 24,
+      "../pict-app/providers/Pict-Provider-Facto.js": 39,
+      "./Pict-Application-Facto-Full-Configuration.json": 21,
+      "./providers/PictRouter-Facto-Configuration.json": 23,
+      "./views/PictView-Facto-Full-BottomBar.js": 24,
+      "./views/PictView-Facto-Full-Dashboard.js": 25,
+      "./views/PictView-Facto-Full-Dashboards.js": 26,
+      "./views/PictView-Facto-Full-Datasets.js": 27,
+      "./views/PictView-Facto-Full-IngestJobs.js": 28,
+      "./views/PictView-Facto-Full-Layout.js": 29,
+      "./views/PictView-Facto-Full-Projections.js": 30,
+      "./views/PictView-Facto-Full-RecordViewer.js": 31,
+      "./views/PictView-Facto-Full-Records.js": 32,
+      "./views/PictView-Facto-Full-SourceResearch.js": 33,
+      "./views/PictView-Facto-Full-Sources.js": 34,
+      "./views/PictView-Facto-Full-TopBar.js": 35,
       "pict-application": 5,
       "pict-router": 8
     }],
-    13: [function (require, module, exports) {
+    23: [function (require, module, exports) {
       module.exports = {
         "ProviderIdentifier": "Pict-Router",
         "AutoInitialize": true,
@@ -3845,7 +5579,7 @@
         }]
       };
     }, {}],
-    14: [function (require, module, exports) {
+    24: [function (require, module, exports) {
       const libPictView = require('pict-view');
       const _ViewConfiguration = {
         ViewIdentifier: "Facto-Full-BottomBar",
@@ -3897,9 +5631,9 @@
       module.exports = FactoFullBottomBarView;
       module.exports.default_configuration = _ViewConfiguration;
     }, {
-      "pict-view": 10
+      "pict-view": 20
     }],
-    15: [function (require, module, exports) {
+    25: [function (require, module, exports) {
       const libPictView = require('pict-view');
       const _ViewConfiguration = {
         ViewIdentifier: "Facto-Full-Dashboard",
@@ -4015,9 +5749,9 @@
       module.exports = FactoFullDashboardView;
       module.exports.default_configuration = _ViewConfiguration;
     }, {
-      "pict-view": 10
+      "pict-view": 20
     }],
-    16: [function (require, module, exports) {
+    26: [function (require, module, exports) {
       const libPictView = require('pict-view');
       const _ViewConfiguration = {
         ViewIdentifier: "Facto-Full-Dashboards",
@@ -4058,9 +5792,9 @@
       module.exports = FactoFullDashboardsView;
       module.exports.default_configuration = _ViewConfiguration;
     }, {
-      "pict-view": 10
+      "pict-view": 20
     }],
-    17: [function (require, module, exports) {
+    27: [function (require, module, exports) {
       const libPictView = require('pict-view');
       const _ViewConfiguration = {
         ViewIdentifier: "Facto-Full-Datasets",
@@ -4139,13 +5873,14 @@
             tmpContainer.innerHTML = '<div class="facto-empty">No datasets yet. Add one below or provision from Source Research.</div>';
             return;
           }
-          let tmpHtml = '<table><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Description</th><th>Version Policy</th><th>Actions</th></tr></thead><tbody>';
+          let tmpHtml = '<table><thead><tr><th>ID</th><th>Hash</th><th>Name</th><th>Type</th><th>Description</th><th>Version Policy</th><th>Actions</th></tr></thead><tbody>';
           for (let i = 0; i < tmpDatasets.length; i++) {
             let tmpDS = tmpDatasets[i];
             let tmpTypeBadge = 'facto-badge-primary';
             if (tmpDS.Type === 'Projection') tmpTypeBadge = 'facto-badge-warning';else if (tmpDS.Type === 'Derived') tmpTypeBadge = 'facto-badge-muted';
             tmpHtml += '<tr>';
             tmpHtml += '<td>' + (tmpDS.IDDataset || '') + '</td>';
+            tmpHtml += '<td><code>' + (tmpDS.Hash || '-') + '</code></td>';
             tmpHtml += '<td>' + (tmpDS.Name || '') + '</td>';
             tmpHtml += '<td><span class="facto-badge ' + tmpTypeBadge + '">' + (tmpDS.Type || '') + '</span></td>';
             tmpHtml += '<td>' + (tmpDS.Description || '') + '</td>';
@@ -4203,9 +5938,9 @@
       module.exports = FactoFullDatasetsView;
       module.exports.default_configuration = _ViewConfiguration;
     }, {
-      "pict-view": 10
+      "pict-view": 20
     }],
-    18: [function (require, module, exports) {
+    28: [function (require, module, exports) {
       const libPictView = require('pict-view');
       const _ViewConfiguration = {
         ViewIdentifier: "Facto-Full-IngestJobs",
@@ -4274,9 +6009,9 @@
       module.exports = FactoFullIngestJobsView;
       module.exports.default_configuration = _ViewConfiguration;
     }, {
-      "pict-view": 10
+      "pict-view": 20
     }],
-    19: [function (require, module, exports) {
+    29: [function (require, module, exports) {
       const libPictView = require('pict-view');
       const _ViewConfiguration = {
         ViewIdentifier: "Facto-Full-Layout",
@@ -4307,25 +6042,22 @@
           this.pict.views['Facto-Full-TopBar'].render();
           this.pict.views['Facto-Full-BottomBar'].render();
 
-          // Render initial content — the dashboard
+          // Render the dashboard as default content.
+          // The application will call resolve() after this, which will
+          // override with the correct view if a hash route is present.
           this.pict.views['Facto-Full-Dashboard'].render();
 
           // Inject all view CSS into the PICT-CSS style element
           this.pict.CSSMap.injectCSS();
-
-          // Resolve the router so it picks up the current hash URL
-          if (this.pict.providers.PictRouter) {
-            this.pict.providers.PictRouter.resolve();
-          }
           return super.onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent);
         }
       }
       module.exports = FactoFullLayoutView;
       module.exports.default_configuration = _ViewConfiguration;
     }, {
-      "pict-view": 10
+      "pict-view": 20
     }],
-    20: [function (require, module, exports) {
+    30: [function (require, module, exports) {
       const libPictView = require('pict-view');
       const _ViewConfiguration = {
         ViewIdentifier: "Facto-Full-Projections",
@@ -4437,9 +6169,464 @@
       module.exports = FactoFullProjectionsView;
       module.exports.default_configuration = _ViewConfiguration;
     }, {
-      "pict-view": 10
+      "pict-view": 20
     }],
-    21: [function (require, module, exports) {
+    31: [function (require, module, exports) {
+      const libPictView = require('pict-view');
+      const libPictSectionObjectEditor = require('pict-section-objecteditor');
+      const _ViewConfiguration = {
+        ViewIdentifier: "Facto-Full-RecordViewer",
+        DefaultRenderable: "Facto-Full-RecordViewer-Content",
+        DefaultDestinationAddress: "#Facto-Full-Content-Container",
+        AutoRender: false,
+        CSS: /*css*/`
+		.facto-record-viewer-back {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.35em;
+			color: var(--facto-text-secondary);
+			cursor: pointer;
+			font-size: 0.85em;
+			margin-bottom: 0.75em;
+			transition: color 0.15s;
+		}
+		.facto-record-viewer-back:hover {
+			color: var(--facto-accent);
+		}
+		.facto-record-meta {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+			gap: 1em;
+			margin-bottom: 1.5em;
+		}
+		.facto-record-meta-card {
+			background: var(--facto-surface-elevated, #1a1e2a);
+			border: 1px solid var(--facto-border-subtle, #2a2e3a);
+			border-radius: 8px;
+			padding: 1em;
+		}
+		.facto-record-meta-card h3 {
+			margin: 0 0 0.5em;
+			font-size: 0.75em;
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+			color: var(--facto-text-tertiary, #888);
+		}
+		.facto-record-meta-row {
+			display: flex;
+			justify-content: space-between;
+			align-items: baseline;
+			padding: 0.2em 0;
+			font-size: 0.85em;
+		}
+		.facto-record-meta-label {
+			color: var(--facto-text-secondary, #aaa);
+			flex-shrink: 0;
+			margin-right: 0.75em;
+		}
+		.facto-record-meta-value {
+			color: var(--facto-text-primary, #eee);
+			text-align: right;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			font-family: 'SF Mono', Consolas, monospace;
+			font-size: 0.9em;
+		}
+		.facto-record-meta-value.facto-hash-value {
+			color: var(--facto-accent, #4a90d9);
+		}
+		.facto-record-certainty-bar {
+			height: 6px;
+			background: var(--facto-border-subtle, #2a2e3a);
+			border-radius: 3px;
+			margin-top: 0.35em;
+			overflow: hidden;
+		}
+		.facto-record-certainty-fill {
+			height: 100%;
+			border-radius: 3px;
+			transition: width 0.3s;
+		}
+		.facto-record-content-section {
+			margin-top: 1.5em;
+		}
+		.facto-record-content-section h2 {
+			font-size: 1em;
+			margin: 0 0 0.75em;
+			color: var(--facto-text-secondary, #aaa);
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+		}
+		/* Override ObjectEditor styles for dark theme compatibility */
+		.facto-record-content-section .pict-objecteditor {
+			background: var(--facto-surface-elevated, #1a1e2a);
+			border-color: var(--facto-border-subtle, #2a2e3a);
+			color: var(--facto-text-primary, #eee);
+		}
+		.facto-record-content-section .pict-oe-row:hover {
+			background: var(--facto-surface-hover, #222738);
+		}
+		.facto-record-content-section .pict-oe-key {
+			color: var(--facto-accent, #4a90d9);
+		}
+		.facto-record-content-section .pict-oe-separator {
+			color: var(--facto-text-tertiary, #888);
+		}
+		.facto-record-content-section .pict-oe-value-string {
+			color: #2ee6a8;
+		}
+		.facto-record-content-section .pict-oe-value-string::before,
+		.facto-record-content-section .pict-oe-value-string::after {
+			color: #1a8a66;
+		}
+		.facto-record-content-section .pict-oe-value-number {
+			color: #d4a0ff;
+		}
+		.facto-record-content-section .pict-oe-value-boolean {
+			color: #ffb347;
+		}
+		.facto-record-content-section .pict-oe-value-null {
+			color: var(--facto-text-tertiary, #666);
+		}
+		.facto-record-content-section .pict-oe-summary {
+			color: var(--facto-text-tertiary, #666);
+		}
+		.facto-record-content-section .pict-oe-toggle {
+			color: var(--facto-text-secondary, #aaa);
+		}
+		.facto-record-content-section .pict-oe-toggle:hover {
+			color: var(--facto-accent, #4a90d9);
+			background: var(--facto-surface-hover, #222738);
+		}
+		.facto-record-content-section .pict-oe-type-badge {
+			background: var(--facto-surface-hover, #222738);
+			color: var(--facto-text-tertiary, #888);
+		}
+		.facto-record-content-section .pict-oe-empty {
+			color: var(--facto-text-tertiary, #666);
+		}
+	`,
+        Templates: [{
+          Hash: "Facto-Full-RecordViewer-Template",
+          Template: /*html*/`
+<div class="facto-content">
+	<div class="facto-record-viewer-back" onclick="{~P~}.views['Facto-Full-RecordViewer'].goBack()">
+		&#8592; Back to Records
+	</div>
+
+	<div class="facto-content-header">
+		<h1 id="Facto-RecordViewer-Title">Record</h1>
+	</div>
+
+	<div id="Facto-RecordViewer-Loading" style="color:var(--facto-text-secondary);">Loading record...</div>
+	<div id="Facto-RecordViewer-Error" class="facto-status facto-status-error" style="display:none;"></div>
+
+	<div id="Facto-RecordViewer-MetaContainer" style="display:none;">
+		<div class="facto-record-meta" id="Facto-RecordViewer-Meta"></div>
+
+		<div class="facto-record-content-section">
+			<h2>Record Content</h2>
+			<div id="Facto-RecordViewer-ObjectEditor-Container"></div>
+		</div>
+	</div>
+</div>
+`
+        }],
+        Renderables: [{
+          RenderableHash: "Facto-Full-RecordViewer-Content",
+          TemplateHash: "Facto-Full-RecordViewer-Template",
+          DestinationAddress: "#Facto-Full-Content-Container",
+          RenderMethod: "replace"
+        }]
+      };
+      class FactoFullRecordViewerView extends libPictView {
+        constructor(pFable, pOptions, pServiceHash) {
+          super(pFable, pOptions, pServiceHash);
+          this._CurrentIDRecord = null;
+          this._ObjectEditorView = null;
+        }
+        onBeforeInitialize() {
+          super.onBeforeInitialize();
+
+          // Register the ObjectEditor view type if it isn't already present
+          if (!this.fable.servicesMap.hasOwnProperty('PictViewObjectEditor')) {
+            this.fable.addServiceType('PictViewObjectEditor', libPictSectionObjectEditor);
+          }
+          return true;
+        }
+
+        /**
+         * Navigate to a specific record by ID.
+         */
+        loadRecord(pIDRecord) {
+          this._CurrentIDRecord = pIDRecord;
+          this.render();
+        }
+        onAfterRender() {
+          super.onAfterRender();
+          if (!this._CurrentIDRecord) {
+            let tmpLoading = document.getElementById('Facto-RecordViewer-Loading');
+            if (tmpLoading) {
+              tmpLoading.textContent = 'No record selected.';
+            }
+            return;
+          }
+          this._fetchAndDisplayRecord(this._CurrentIDRecord);
+        }
+        _fetchAndDisplayRecord(pIDRecord) {
+          let tmpProvider = this.pict.providers.Facto;
+          let tmpLoadingEl = document.getElementById('Facto-RecordViewer-Loading');
+          let tmpErrorEl = document.getElementById('Facto-RecordViewer-Error');
+          let tmpMetaContainer = document.getElementById('Facto-RecordViewer-MetaContainer');
+
+          // Fetch the record, its source, its dataset, and certainty in parallel
+          let tmpRecord = null;
+          let tmpSource = null;
+          let tmpDataset = null;
+          let tmpCertainty = null;
+          let tmpIngestJob = null;
+          let tmpRecordPromise = tmpProvider.api('GET', '/1.0/Record/' + pIDRecord);
+          let tmpCertaintyPromise = tmpProvider.api('GET', '/facto/record/' + pIDRecord + '/certainty');
+          tmpRecordPromise.then(pRecordResponse => {
+            if (pRecordResponse && pRecordResponse.Error) {
+              if (tmpLoadingEl) tmpLoadingEl.style.display = 'none';
+              if (tmpErrorEl) {
+                tmpErrorEl.textContent = 'Error loading record: ' + pRecordResponse.Error;
+                tmpErrorEl.style.display = 'block';
+              }
+              return;
+            }
+            tmpRecord = pRecordResponse;
+
+            // Now fetch the related source, dataset, and ingest job
+            let tmpFetches = [];
+            if (tmpRecord.IDSource) {
+              tmpFetches.push(tmpProvider.api('GET', '/1.0/Source/' + tmpRecord.IDSource).then(pResp => {
+                tmpSource = pResp;
+              }));
+            }
+            if (tmpRecord.IDDataset) {
+              tmpFetches.push(tmpProvider.api('GET', '/1.0/Dataset/' + tmpRecord.IDDataset).then(pResp => {
+                tmpDataset = pResp;
+              }));
+            }
+            if (tmpRecord.IDIngestJob) {
+              tmpFetches.push(tmpProvider.api('GET', '/facto/ingest/job/' + tmpRecord.IDIngestJob).then(pResp => {
+                tmpIngestJob = pResp;
+              }));
+            }
+            return Promise.all(tmpFetches).then(() => {
+              return tmpCertaintyPromise;
+            }).then(pCertaintyResponse => {
+              tmpCertainty = pCertaintyResponse;
+              this._renderRecordDetail(tmpRecord, tmpSource, tmpDataset, tmpCertainty, tmpIngestJob);
+            });
+          }).catch(pError => {
+            if (tmpLoadingEl) tmpLoadingEl.style.display = 'none';
+            if (tmpErrorEl) {
+              tmpErrorEl.textContent = 'Error loading record: ' + (pError.message || pError);
+              tmpErrorEl.style.display = 'block';
+            }
+          });
+        }
+        _renderRecordDetail(pRecord, pSource, pDataset, pCertainty, pIngestJob) {
+          let tmpLoadingEl = document.getElementById('Facto-RecordViewer-Loading');
+          let tmpMetaContainer = document.getElementById('Facto-RecordViewer-MetaContainer');
+          let tmpTitleEl = document.getElementById('Facto-RecordViewer-Title');
+          if (tmpLoadingEl) tmpLoadingEl.style.display = 'none';
+          if (tmpMetaContainer) tmpMetaContainer.style.display = 'block';
+
+          // Title
+          if (tmpTitleEl) {
+            let tmpTitle = 'Record #' + pRecord.IDRecord;
+            if (pDataset && pDataset.Hash) {
+              tmpTitle += ' \u2014 ' + pDataset.Hash;
+            }
+            tmpTitleEl.textContent = tmpTitle;
+          }
+
+          // Build metadata cards
+          let tmpMetaEl = document.getElementById('Facto-RecordViewer-Meta');
+          if (tmpMetaEl) {
+            tmpMetaEl.innerHTML = this._buildMetaCards(pRecord, pSource, pDataset, pCertainty, pIngestJob);
+          }
+
+          // Parse the Content JSON and render via ObjectEditor
+          let tmpContentData = {};
+          if (pRecord.Content) {
+            try {
+              tmpContentData = JSON.parse(pRecord.Content);
+            } catch (e) {
+              tmpContentData = {
+                '_raw': pRecord.Content
+              };
+            }
+          }
+
+          // Store the parsed content in AppData so the ObjectEditor can find it
+          this.pict.AppData.Facto.CurrentRecordContent = tmpContentData;
+
+          // Create or re-render the ObjectEditor
+          this._renderObjectEditor();
+        }
+        _renderObjectEditor() {
+          let tmpEditorContainerId = 'Facto-RecordViewer-ObjectEditor-Container';
+          let tmpViewHash = 'Facto-RecordViewer-ObjectEditor';
+
+          // If we already created this view, just re-render
+          if (this.pict.views[tmpViewHash]) {
+            this.pict.views[tmpViewHash].render();
+            return;
+          }
+
+          // Create a new ObjectEditor view instance
+          let tmpEditorConfig = {
+            ViewIdentifier: tmpViewHash,
+            DefaultDestinationAddress: '#' + tmpEditorContainerId,
+            ObjectDataAddress: 'AppData.Facto.CurrentRecordContent',
+            InitialExpandDepth: 2,
+            Editable: false,
+            ShowTypeIndicators: true,
+            IndentPixels: 20,
+            Renderables: [{
+              RenderableHash: 'ObjectEditor-Container',
+              TemplateHash: 'ObjectEditor-Container-Template',
+              DestinationAddress: '#' + tmpEditorContainerId,
+              RenderMethod: 'replace'
+            }]
+          };
+          this.pict.addView(tmpViewHash, tmpEditorConfig, libPictSectionObjectEditor);
+
+          // The ObjectEditor registers node renderers in onBeforeInitialize.
+          // Since this view is created dynamically (after the app init cycle),
+          // we must explicitly trigger initialization before the first render.
+          let tmpEditorView = this.pict.views[tmpViewHash];
+          tmpEditorView.onBeforeInitialize();
+          tmpEditorView.render();
+        }
+        _buildMetaCards(pRecord, pSource, pDataset, pCertainty, pIngestJob) {
+          let tmpHtml = '';
+
+          // Record Identity card
+          tmpHtml += '<div class="facto-record-meta-card">';
+          tmpHtml += '<h3>Record Identity</h3>';
+          tmpHtml += this._metaRow('ID', pRecord.IDRecord);
+          tmpHtml += this._metaRow('GUID', pRecord.GUIDRecord, true);
+          tmpHtml += this._metaRow('Type', pRecord.Type || '\u2014');
+          tmpHtml += this._metaRow('Version', pRecord.Version || 1);
+          tmpHtml += '</div>';
+
+          // Source card
+          tmpHtml += '<div class="facto-record-meta-card">';
+          tmpHtml += '<h3>Source</h3>';
+          if (pSource && !pSource.Error) {
+            tmpHtml += this._metaRow('Name', pSource.Name || '\u2014');
+            tmpHtml += this._metaRow('Hash', pSource.Hash || '\u2014', false, true);
+            tmpHtml += this._metaRow('Type', pSource.Type || '\u2014');
+            if (pSource.URL) {
+              tmpHtml += this._metaRow('URL', pSource.URL);
+            }
+          } else {
+            tmpHtml += this._metaRow('ID', pRecord.IDSource || 0);
+          }
+          tmpHtml += '</div>';
+
+          // Dataset card
+          tmpHtml += '<div class="facto-record-meta-card">';
+          tmpHtml += '<h3>Dataset</h3>';
+          if (pDataset && !pDataset.Error) {
+            tmpHtml += this._metaRow('Name', pDataset.Name || '\u2014');
+            tmpHtml += this._metaRow('Hash', pDataset.Hash || '\u2014', false, true);
+            tmpHtml += this._metaRow('Type', pDataset.Type || '\u2014');
+            tmpHtml += this._metaRow('Version Policy', pDataset.VersionPolicy || '\u2014');
+          } else {
+            tmpHtml += this._metaRow('ID', pRecord.IDDataset || 0);
+          }
+          tmpHtml += '</div>';
+
+          // Ingest Metadata card
+          tmpHtml += '<div class="facto-record-meta-card">';
+          tmpHtml += '<h3>Ingest Metadata</h3>';
+          tmpHtml += this._metaRow('Ingest Date', this._formatDate(pRecord.IngestDate));
+          tmpHtml += this._metaRow('Ingest Job', pRecord.IDIngestJob || '\u2014');
+          if (pIngestJob && pIngestJob.Job) {
+            tmpHtml += this._metaRow('Job Status', pIngestJob.Job.Status || '\u2014');
+          }
+          tmpHtml += this._metaRow('Created', this._formatDate(pRecord.CreateDate));
+          if (pRecord.OriginCreateDate) {
+            tmpHtml += this._metaRow('Origin Date', this._formatDate(pRecord.OriginCreateDate));
+          }
+          tmpHtml += '</div>';
+
+          // Schema card
+          tmpHtml += '<div class="facto-record-meta-card">';
+          tmpHtml += '<h3>Schema</h3>';
+          tmpHtml += this._metaRow('Schema Hash', pRecord.SchemaHash || '\u2014');
+          tmpHtml += this._metaRow('Schema Version', pRecord.SchemaVersion || 0);
+          tmpHtml += '</div>';
+
+          // Certainty card
+          tmpHtml += '<div class="facto-record-meta-card">';
+          tmpHtml += '<h3>Certainty</h3>';
+          if (pCertainty && pCertainty.CertaintyIndices && pCertainty.CertaintyIndices.length > 0) {
+            for (let i = 0; i < pCertainty.CertaintyIndices.length; i++) {
+              let tmpCI = pCertainty.CertaintyIndices[i];
+              let tmpPct = Math.round((tmpCI.CertaintyValue || 0) * 100);
+              let tmpBarColor = tmpPct >= 70 ? '#28a745' : tmpPct >= 40 ? '#ffc107' : '#dc3545';
+              tmpHtml += this._metaRow(tmpCI.Dimension || 'overall', tmpPct + '%');
+              tmpHtml += '<div class="facto-record-certainty-bar"><div class="facto-record-certainty-fill" style="width:' + tmpPct + '%; background:' + tmpBarColor + ';"></div></div>';
+              if (tmpCI.Justification) {
+                tmpHtml += '<div style="font-size:0.75em; color:var(--facto-text-tertiary); margin-top:0.15em;">' + this._escapeHtml(tmpCI.Justification) + '</div>';
+              }
+            }
+          } else {
+            tmpHtml += '<div style="color:var(--facto-text-tertiary); font-size:0.85em;">No certainty data</div>';
+          }
+          tmpHtml += '</div>';
+          return tmpHtml;
+        }
+        _metaRow(pLabel, pValue, pIsGuid, pIsHash) {
+          let tmpDisplayValue = this._escapeHtml(String(pValue || ''));
+          if (pIsGuid && tmpDisplayValue.length > 16) {
+            tmpDisplayValue = '<span title="' + tmpDisplayValue + '">' + tmpDisplayValue.substring(0, 8) + '\u2026' + tmpDisplayValue.substring(tmpDisplayValue.length - 4) + '</span>';
+          }
+          let tmpValueClass = 'facto-record-meta-value';
+          if (pIsHash) {
+            tmpValueClass += ' facto-hash-value';
+          }
+          return '<div class="facto-record-meta-row"><span class="facto-record-meta-label">' + this._escapeHtml(pLabel) + '</span><span class="' + tmpValueClass + '">' + tmpDisplayValue + '</span></div>';
+        }
+        _formatDate(pDateStr) {
+          if (!pDateStr) return '\u2014';
+          try {
+            // SQLite datetimes (e.g. "2026-03-15 19:07:43") lack a timezone
+            // indicator, so new Date() would treat them as local time.
+            // Append 'Z' to interpret them as UTC, matching ISO timestamps.
+            let tmpNormalized = pDateStr;
+            if (typeof tmpNormalized === 'string' && !tmpNormalized.endsWith('Z') && !tmpNormalized.match(/[+-]\d{2}:\d{2}$/)) {
+              tmpNormalized = tmpNormalized.replace(' ', 'T') + 'Z';
+            }
+            let tmpDate = new Date(tmpNormalized);
+            return tmpDate.toLocaleString();
+          } catch (e) {
+            return pDateStr;
+          }
+        }
+        _escapeHtml(pStr) {
+          return pStr.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+        goBack() {
+          this.pict.PictApplication.navigateTo('/Records');
+        }
+      }
+      module.exports = FactoFullRecordViewerView;
+      module.exports.default_configuration = _ViewConfiguration;
+    }, {
+      "pict-section-objecteditor": 10,
+      "pict-view": 20
+    }],
+    32: [function (require, module, exports) {
       const libPictView = require('pict-view');
       const _ViewConfiguration = {
         ViewIdentifier: "Facto-Full-Records",
@@ -4513,14 +6700,14 @@
             tmpContainer.innerHTML = '<div class="facto-empty">No records found. Ingest data via Source Research or the Ingest API.</div>';
             return;
           }
-          let tmpHtml = '<table><thead><tr><th>ID</th><th>Dataset</th><th>Source</th><th>GUID</th><th>Data</th></tr></thead><tbody>';
+          let tmpHtml = '<table><thead><tr><th>ID</th><th>Dataset</th><th>Source</th><th>GUID</th><th>Data</th><th></th></tr></thead><tbody>';
           for (let i = 0; i < tmpRecords.length; i++) {
             let tmpRec = tmpRecords[i];
             let tmpData = '';
             try {
-              tmpData = JSON.stringify(JSON.parse(tmpRec.Data || '{}'));
+              tmpData = JSON.stringify(JSON.parse(tmpRec.Content || '{}'));
             } catch (e) {
-              tmpData = tmpRec.Data || '';
+              tmpData = tmpRec.Content || '';
             }
             tmpHtml += '<tr>';
             tmpHtml += '<td>' + (tmpRec.IDRecord || '') + '</td>';
@@ -4528,6 +6715,7 @@
             tmpHtml += '<td>' + (tmpRec.IDSource || '') + '</td>';
             tmpHtml += '<td style="font-size:0.8em; color:var(--facto-text-tertiary);">' + (tmpRec.GUIDRecord || '').substring(0, 8) + '...</td>';
             tmpHtml += '<td class="facto-record-data">' + tmpData + '</td>';
+            tmpHtml += '<td><button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.PictApplication.navigateTo(\'/Record/' + tmpRec.IDRecord + '\')">View</button></td>';
             tmpHtml += '</tr>';
           }
           tmpHtml += '</tbody></table>';
@@ -4551,9 +6739,9 @@
       module.exports = FactoFullRecordsView;
       module.exports.default_configuration = _ViewConfiguration;
     }, {
-      "pict-view": 10
+      "pict-view": 20
     }],
-    22: [function (require, module, exports) {
+    33: [function (require, module, exports) {
       const libPictView = require('pict-view');
       const _ViewConfiguration = {
         ViewIdentifier: "Facto-Full-SourceResearch",
@@ -4731,7 +6919,7 @@
           this.setStatus('Provisioning...', 'info');
           this.pict.providers.Facto.provisionCatalogDataset(pIDCatalogDataset).then(pResponse => {
             if (pResponse && pResponse.Success) {
-              this.setStatus('Provisioned! Source #' + pResponse.Source.IDSource + ', Dataset #' + pResponse.Dataset.IDDataset, 'ok');
+              this.setStatus('Provisioned! Source: ' + (pResponse.Source.Hash || pResponse.Source.Name) + ' (#' + pResponse.Source.IDSource + '), Dataset: ' + (pResponse.Dataset.Hash || pResponse.Dataset.Name) + ' (#' + pResponse.Dataset.IDDataset + ')', 'ok');
               this.viewEntry(pIDEntry);
             } else {
               this.setStatus('Error: ' + (pResponse && pResponse.Error || 'Unknown'), 'error');
@@ -4789,9 +6977,9 @@
       module.exports = FactoFullSourceResearchView;
       module.exports.default_configuration = _ViewConfiguration;
     }, {
-      "pict-view": 10
+      "pict-view": 20
     }],
-    23: [function (require, module, exports) {
+    34: [function (require, module, exports) {
       const libPictView = require('pict-view');
       const _ViewConfiguration = {
         ViewIdentifier: "Facto-Full-Sources",
@@ -4869,13 +7057,14 @@
             tmpContainer.innerHTML = '<div class="facto-empty">No sources yet. Add one below or provision from Source Research.</div>';
             return;
           }
-          let tmpHtml = '<table><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>URL</th><th>Active</th><th>Actions</th></tr></thead><tbody>';
+          let tmpHtml = '<table><thead><tr><th>ID</th><th>Hash</th><th>Name</th><th>Type</th><th>URL</th><th>Active</th><th>Actions</th></tr></thead><tbody>';
           for (let i = 0; i < tmpSources.length; i++) {
             let tmpSource = tmpSources[i];
             let tmpActive = tmpSource.Active ? '<span class="facto-badge facto-badge-success">Active</span>' : '<span class="facto-badge facto-badge-muted">Inactive</span>';
             let tmpToggleBtn = tmpSource.Active ? '<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.views[\'Facto-Full-Sources\'].toggleActive(' + tmpSource.IDSource + ', false)">Deactivate</button>' : '<button class="facto-btn facto-btn-success facto-btn-small" onclick="pict.views[\'Facto-Full-Sources\'].toggleActive(' + tmpSource.IDSource + ', true)">Activate</button>';
             tmpHtml += '<tr>';
             tmpHtml += '<td>' + (tmpSource.IDSource || '') + '</td>';
+            tmpHtml += '<td><code>' + (tmpSource.Hash || '-') + '</code></td>';
             tmpHtml += '<td>' + (tmpSource.Name || '') + '</td>';
             tmpHtml += '<td><span class="facto-badge facto-badge-primary">' + (tmpSource.Type || '') + '</span></td>';
             tmpHtml += '<td style="max-width:250px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">' + (tmpSource.URL || '') + '</td>';
@@ -4925,9 +7114,9 @@
       module.exports = FactoFullSourcesView;
       module.exports.default_configuration = _ViewConfiguration;
     }, {
-      "pict-view": 10
+      "pict-view": 20
     }],
-    24: [function (require, module, exports) {
+    35: [function (require, module, exports) {
       const libPictView = require('pict-view');
       const _ViewConfiguration = {
         ViewIdentifier: "Facto-Full-TopBar",
@@ -5116,13 +7305,13 @@
 	<a class="facto-topbar-brand" onclick="{~P~}.PictApplication.navigateTo('/Home')">Retold Facto</a>
 
 	<div class="facto-topbar-nav" id="Facto-Full-TopBar-Nav">
-		<a onclick="{~P~}.PictApplication.navigateTo('/SourceResearch')">Source Research</a>
-		<a onclick="{~P~}.PictApplication.navigateTo('/IngestJobs')">Ingestion Jobs</a>
-		<a onclick="{~P~}.PictApplication.navigateTo('/Sources')">Sources</a>
-		<a onclick="{~P~}.PictApplication.navigateTo('/Datasets')">Data Sets</a>
-		<a onclick="{~P~}.PictApplication.navigateTo('/Records')">Records</a>
-		<a onclick="{~P~}.PictApplication.navigateTo('/Projections')">Projections</a>
-		<a onclick="{~P~}.PictApplication.navigateTo('/Dashboards')">Dashboards</a>
+		<a data-route="SourceResearch" onclick="{~P~}.PictApplication.navigateTo('/SourceResearch')">Source Research</a>
+		<a data-route="IngestJobs" onclick="{~P~}.PictApplication.navigateTo('/IngestJobs')">Ingestion Jobs</a>
+		<a data-route="Sources" onclick="{~P~}.PictApplication.navigateTo('/Sources')">Sources</a>
+		<a data-route="Datasets" onclick="{~P~}.PictApplication.navigateTo('/Datasets')">Data Sets</a>
+		<a data-route="Records" onclick="{~P~}.PictApplication.navigateTo('/Records')">Records</a>
+		<a data-route="Projections" onclick="{~P~}.PictApplication.navigateTo('/Projections')">Projections</a>
+		<a data-route="Dashboards" onclick="{~P~}.PictApplication.navigateTo('/Dashboards')">Dashboards</a>
 	</div>
 
 	<div class="facto-topbar-right">
@@ -5182,6 +7371,18 @@
           let tmpPanel = document.getElementById('Facto-Full-Settings-Panel');
           if (tmpPanel) tmpPanel.style.display = 'none';
         }
+        highlightRoute(pRoute) {
+          let tmpNav = document.getElementById('Facto-Full-TopBar-Nav');
+          if (!tmpNav) return;
+          let tmpLinks = tmpNav.querySelectorAll('a[data-route]');
+          for (let i = 0; i < tmpLinks.length; i++) {
+            if (tmpLinks[i].getAttribute('data-route') === pRoute) {
+              tmpLinks[i].classList.add('active');
+            } else {
+              tmpLinks[i].classList.remove('active');
+            }
+          }
+        }
         _renderThemeGrid() {
           let tmpGrid = document.getElementById('Facto-Full-Settings-ThemeGrid');
           if (!tmpGrid) return;
@@ -5206,9 +7407,9 @@
       module.exports = FactoFullTopBarView;
       module.exports.default_configuration = _ViewConfiguration;
     }, {
-      "pict-view": 10
+      "pict-view": 20
     }],
-    25: [function (require, module, exports) {
+    36: [function (require, module, exports) {
       module.exports = {
         "Name": "Retold Facto",
         "Hash": "Facto",
@@ -5221,7 +7422,7 @@
         "AutoRenderMainViewportViewAfterInitialize": false
       };
     }, {}],
-    26: [function (require, module, exports) {
+    37: [function (require, module, exports) {
       const libPictApplication = require('pict-application');
       const libProvider = require('./providers/Pict-Provider-Facto.js');
       const libViewLayout = require('./views/PictView-Facto-Layout.js');
@@ -5272,18 +7473,18 @@
       module.exports = FactoApplication;
       module.exports.default_configuration = require('./Pict-Application-Facto-Configuration.json');
     }, {
-      "./Pict-Application-Facto-Configuration.json": 25,
-      "./providers/Pict-Provider-Facto.js": 28,
-      "./views/PictView-Facto-Catalog.js": 29,
-      "./views/PictView-Facto-Datasets.js": 30,
-      "./views/PictView-Facto-Ingest.js": 31,
-      "./views/PictView-Facto-Layout.js": 32,
-      "./views/PictView-Facto-Projections.js": 33,
-      "./views/PictView-Facto-Records.js": 34,
-      "./views/PictView-Facto-Sources.js": 35,
+      "./Pict-Application-Facto-Configuration.json": 36,
+      "./providers/Pict-Provider-Facto.js": 39,
+      "./views/PictView-Facto-Catalog.js": 40,
+      "./views/PictView-Facto-Datasets.js": 41,
+      "./views/PictView-Facto-Ingest.js": 42,
+      "./views/PictView-Facto-Layout.js": 43,
+      "./views/PictView-Facto-Projections.js": 44,
+      "./views/PictView-Facto-Records.js": 45,
+      "./views/PictView-Facto-Sources.js": 46,
       "pict-application": 5
     }],
-    27: [function (require, module, exports) {
+    38: [function (require, module, exports) {
       module.exports = {
         FactoApplication: require('./Pict-Application-Facto.js'),
         FactoFullApplication: require('../pict-app-full/Pict-Application-Facto-Full.js')
@@ -5293,10 +7494,10 @@
         window.FactoFullApplication = module.exports.FactoFullApplication;
       }
     }, {
-      "../pict-app-full/Pict-Application-Facto-Full.js": 12,
-      "./Pict-Application-Facto.js": 26
+      "../pict-app-full/Pict-Application-Facto-Full.js": 22,
+      "./Pict-Application-Facto.js": 37
     }],
-    28: [function (require, module, exports) {
+    39: [function (require, module, exports) {
       const libPictProvider = require('pict-provider');
       class FactoProvider extends libPictProvider {
         constructor(pFable, pOptions, pServiceHash) {
@@ -5619,7 +7820,7 @@
     }, {
       "pict-provider": 7
     }],
-    29: [function (require, module, exports) {
+    40: [function (require, module, exports) {
       const libPictView = require('pict-view');
       class FactoCatalogView extends libPictView {
         constructor(pFable, pOptions, pServiceHash) {
@@ -6026,9 +8227,9 @@
         }]
       };
     }, {
-      "pict-view": 10
+      "pict-view": 20
     }],
-    30: [function (require, module, exports) {
+    41: [function (require, module, exports) {
       const libPictView = require('pict-view');
       class FactoDatasetsView extends libPictView {
         constructor(pFable, pOptions, pServiceHash) {
@@ -6163,9 +8364,9 @@
         }]
       };
     }, {
-      "pict-view": 10
+      "pict-view": 20
     }],
-    31: [function (require, module, exports) {
+    42: [function (require, module, exports) {
       const libPictView = require('pict-view');
       class FactoIngestView extends libPictView {
         constructor(pFable, pOptions, pServiceHash) {
@@ -6363,9 +8564,9 @@
         }]
       };
     }, {
-      "pict-view": 10
+      "pict-view": 20
     }],
-    32: [function (require, module, exports) {
+    43: [function (require, module, exports) {
       const libPictView = require('pict-view');
       class FactoLayoutView extends libPictView {
         constructor(pFable, pOptions, pServiceHash) {
@@ -6531,9 +8732,9 @@ tr:hover { background: #fafafa; }
         }]
       };
     }, {
-      "pict-view": 10
+      "pict-view": 20
     }],
-    33: [function (require, module, exports) {
+    44: [function (require, module, exports) {
       const libPictView = require('pict-view');
       class FactoProjectionsView extends libPictView {
         constructor(pFable, pOptions, pServiceHash) {
@@ -6728,9 +8929,9 @@ tr:hover { background: #fafafa; }
         }]
       };
     }, {
-      "pict-view": 10
+      "pict-view": 20
     }],
-    34: [function (require, module, exports) {
+    45: [function (require, module, exports) {
       const libPictView = require('pict-view');
       class FactoRecordsView extends libPictView {
         constructor(pFable, pOptions, pServiceHash) {
@@ -6839,9 +9040,9 @@ tr:hover { background: #fafafa; }
         }]
       };
     }, {
-      "pict-view": 10
+      "pict-view": 20
     }],
-    35: [function (require, module, exports) {
+    46: [function (require, module, exports) {
       const libPictView = require('pict-view');
       class FactoSourcesView extends libPictView {
         constructor(pFable, pOptions, pServiceHash) {
@@ -6993,8 +9194,8 @@ tr:hover { background: #fafafa; }
         }]
       };
     }, {
-      "pict-view": 10
+      "pict-view": 20
     }]
-  }, {}, [27])(27);
+  }, {}, [38])(38);
 });
 //# sourceMappingURL=retold-facto.js.map

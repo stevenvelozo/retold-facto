@@ -99,7 +99,7 @@ class FactoFullSourcesView extends libPictView
 			return;
 		}
 
-		let tmpHtml = '<table><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>URL</th><th>Active</th><th>Actions</th></tr></thead><tbody>';
+		let tmpHtml = '<table><thead><tr><th>ID</th><th>Hash</th><th>Name</th><th>Type</th><th>URL</th><th>Active</th><th>Actions</th></tr></thead><tbody>';
 		for (let i = 0; i < tmpSources.length; i++)
 		{
 			let tmpSource = tmpSources[i];
@@ -109,6 +109,7 @@ class FactoFullSourcesView extends libPictView
 				: '<button class="facto-btn facto-btn-success facto-btn-small" onclick="pict.views[\'Facto-Full-Sources\'].toggleActive(' + tmpSource.IDSource + ', true)">Activate</button>';
 			tmpHtml += '<tr>';
 			tmpHtml += '<td>' + (tmpSource.IDSource || '') + '</td>';
+			tmpHtml += '<td><code>' + (tmpSource.Hash || '-') + '</code></td>';
 			tmpHtml += '<td>' + (tmpSource.Name || '') + '</td>';
 			tmpHtml += '<td><span class="facto-badge facto-badge-primary">' + (tmpSource.Type || '') + '</span></td>';
 			tmpHtml += '<td style="max-width:250px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">' + (tmpSource.URL || '') + '</td>';

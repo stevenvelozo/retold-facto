@@ -95,13 +95,13 @@ class FactoFullRecordsView extends libPictView
 			return;
 		}
 
-		let tmpHtml = '<table><thead><tr><th>ID</th><th>Dataset</th><th>Source</th><th>GUID</th><th>Data</th></tr></thead><tbody>';
+		let tmpHtml = '<table><thead><tr><th>ID</th><th>Dataset</th><th>Source</th><th>GUID</th><th>Data</th><th></th></tr></thead><tbody>';
 		for (let i = 0; i < tmpRecords.length; i++)
 		{
 			let tmpRec = tmpRecords[i];
 			let tmpData = '';
-			try { tmpData = JSON.stringify(JSON.parse(tmpRec.Data || '{}'));  }
-			catch(e) { tmpData = tmpRec.Data || ''; }
+			try { tmpData = JSON.stringify(JSON.parse(tmpRec.Content || '{}'));  }
+			catch(e) { tmpData = tmpRec.Content || ''; }
 
 			tmpHtml += '<tr>';
 			tmpHtml += '<td>' + (tmpRec.IDRecord || '') + '</td>';
@@ -109,6 +109,7 @@ class FactoFullRecordsView extends libPictView
 			tmpHtml += '<td>' + (tmpRec.IDSource || '') + '</td>';
 			tmpHtml += '<td style="font-size:0.8em; color:var(--facto-text-tertiary);">' + (tmpRec.GUIDRecord || '').substring(0, 8) + '...</td>';
 			tmpHtml += '<td class="facto-record-data">' + tmpData + '</td>';
+			tmpHtml += '<td><button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.PictApplication.navigateTo(\'/Record/' + tmpRec.IDRecord + '\')">View</button></td>';
 			tmpHtml += '</tr>';
 		}
 		tmpHtml += '</tbody></table>';

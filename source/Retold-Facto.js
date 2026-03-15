@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS Source (
 	CreateDate TEXT, CreatingIDUser INTEGER DEFAULT 0,
 	UpdateDate TEXT, UpdatingIDUser INTEGER DEFAULT 0,
 	Deleted INTEGER DEFAULT 0, DeleteDate TEXT, DeletingIDUser INTEGER DEFAULT 0,
-	Name TEXT, Type TEXT, URL TEXT, Protocol TEXT,
+	Name TEXT, Hash TEXT DEFAULT '', Type TEXT, URL TEXT, Protocol TEXT,
 	Description TEXT, Configuration TEXT, Active INTEGER DEFAULT 0
 );
 CREATE TABLE IF NOT EXISTS SourceDocumentation (
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS Dataset (
 	CreateDate TEXT, CreatingIDUser INTEGER DEFAULT 0,
 	UpdateDate TEXT, UpdatingIDUser INTEGER DEFAULT 0,
 	Deleted INTEGER DEFAULT 0, DeleteDate TEXT, DeletingIDUser INTEGER DEFAULT 0,
-	Name TEXT, Type TEXT, Description TEXT,
+	Name TEXT, Hash TEXT DEFAULT '', Type TEXT, Description TEXT,
 	SchemaHash TEXT, SchemaVersion INTEGER DEFAULT 0, SchemaDefinition TEXT,
 	VersionPolicy TEXT DEFAULT 'Append'
 );

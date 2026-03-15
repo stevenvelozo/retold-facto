@@ -79,6 +79,7 @@ suite
 								DeleteDate TEXT,
 								DeletingIDUser INTEGER DEFAULT 0,
 								Name TEXT,
+								Hash TEXT DEFAULT '',
 								Type TEXT,
 								URL TEXT,
 								Protocol TEXT,
@@ -115,6 +116,7 @@ suite
 								DeleteDate TEXT,
 								DeletingIDUser INTEGER DEFAULT 0,
 								Name TEXT,
+								Hash TEXT DEFAULT '',
 								Type TEXT,
 								Description TEXT,
 								SchemaHash TEXT,
@@ -3257,9 +3259,11 @@ suite
 									Expect(pRes.body.Source).to.be.an('object');
 									Expect(pRes.body.Source.Name).to.equal('Bureau of Labor Statistics');
 									Expect(pRes.body.Source.IDSource).to.be.greaterThan(0);
+									Expect(pRes.body.Source.Hash).to.equal('Bureau-of-Labor-Statistics');
 									Expect(pRes.body.Dataset).to.be.an('object');
 									Expect(pRes.body.Dataset.Name).to.equal('Consumer Price Index');
 									Expect(pRes.body.Dataset.IDDataset).to.be.greaterThan(0);
+									Expect(pRes.body.Dataset.Hash).to.equal('Consumer-Price-Index');
 									Expect(pRes.body.DatasetSource).to.be.an('object');
 									return fDone();
 								});

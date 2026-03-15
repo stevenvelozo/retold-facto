@@ -70,6 +70,7 @@
 		"orator-static-server": "^2.0.4",
 		"pict": "^1.0.357",
 		"pict-router": "^1.0.9",
+		"pict-section-objecteditor": "^1.0.1",
 		"stricture": "^4.0.2",
 		"xlsx": "^0.18.5"
 	}

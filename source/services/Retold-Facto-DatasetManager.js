@@ -43,6 +43,45 @@ class RetoldFactoDatasetManager extends libFableServiceProviderBase
 				return fNext();
 			});
 
+		// GET /facto/dataset/by-hash/:Hash -- look up a dataset by its human-readable Hash
+		pOratorServiceServer.doGet(`${tmpRoutePrefix}/dataset/by-hash/:Hash`,
+			(pRequest, pResponse, fNext) =>
+			{
+				let tmpHash = pRequest.params.Hash;
+				if (!tmpHash)
+				{
+					pResponse.send({ Error: 'Hash parameter is required' });
+					return fNext();
+				}
+
+				if (!this.fable.DAL || !this.fable.DAL.Dataset)
+				{
+					pResponse.send({ Error: 'Dataset DAL not initialized' });
+					return fNext();
+				}
+
+				let tmpQuery = this.fable.DAL.Dataset.query.clone()
+					.addFilter('Hash', tmpHash)
+					.addFilter('Deleted', 0);
+
+				this.fable.DAL.Dataset.doReads(tmpQuery,
+					(pError, pQuery, pRecords) =>
+					{
+						if (pError)
+						{
+							pResponse.send({ Error: pError.message || pError });
+							return fNext();
+						}
+						if (!pRecords || pRecords.length === 0)
+						{
+							pResponse.send({ Error: `No dataset found with Hash "${tmpHash}"` });
+							return fNext();
+						}
+						pResponse.send({ Dataset: pRecords[0] });
+						return fNext();
+					});
+			});
+
 		// GET /facto/dataset/:IDDataset/stats -- get dataset statistics
 		pOratorServiceServer.doGet(`${tmpRoutePrefix}/dataset/:IDDataset/stats`,
 			(pRequest, pResponse, fNext) =>

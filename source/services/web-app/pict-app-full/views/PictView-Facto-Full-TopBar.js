@@ -194,13 +194,13 @@ const _ViewConfiguration =
 	<a class="facto-topbar-brand" onclick="{~P~}.PictApplication.navigateTo('/Home')">Retold Facto</a>
 
 	<div class="facto-topbar-nav" id="Facto-Full-TopBar-Nav">
-		<a onclick="{~P~}.PictApplication.navigateTo('/SourceResearch')">Source Research</a>
-		<a onclick="{~P~}.PictApplication.navigateTo('/IngestJobs')">Ingestion Jobs</a>
-		<a onclick="{~P~}.PictApplication.navigateTo('/Sources')">Sources</a>
-		<a onclick="{~P~}.PictApplication.navigateTo('/Datasets')">Data Sets</a>
-		<a onclick="{~P~}.PictApplication.navigateTo('/Records')">Records</a>
-		<a onclick="{~P~}.PictApplication.navigateTo('/Projections')">Projections</a>
-		<a onclick="{~P~}.PictApplication.navigateTo('/Dashboards')">Dashboards</a>
+		<a data-route="SourceResearch" onclick="{~P~}.PictApplication.navigateTo('/SourceResearch')">Source Research</a>
+		<a data-route="IngestJobs" onclick="{~P~}.PictApplication.navigateTo('/IngestJobs')">Ingestion Jobs</a>
+		<a data-route="Sources" onclick="{~P~}.PictApplication.navigateTo('/Sources')">Sources</a>
+		<a data-route="Datasets" onclick="{~P~}.PictApplication.navigateTo('/Datasets')">Data Sets</a>
+		<a data-route="Records" onclick="{~P~}.PictApplication.navigateTo('/Records')">Records</a>
+		<a data-route="Projections" onclick="{~P~}.PictApplication.navigateTo('/Projections')">Projections</a>
+		<a data-route="Dashboards" onclick="{~P~}.PictApplication.navigateTo('/Dashboards')">Dashboards</a>
 	</div>
 
 	<div class="facto-topbar-right">
@@ -278,6 +278,25 @@ class FactoFullTopBarView extends libPictView
 		this._themePanelOpen = false;
 		let tmpPanel = document.getElementById('Facto-Full-Settings-Panel');
 		if (tmpPanel) tmpPanel.style.display = 'none';
+	}
+
+	highlightRoute(pRoute)
+	{
+		let tmpNav = document.getElementById('Facto-Full-TopBar-Nav');
+		if (!tmpNav) return;
+
+		let tmpLinks = tmpNav.querySelectorAll('a[data-route]');
+		for (let i = 0; i < tmpLinks.length; i++)
+		{
+			if (tmpLinks[i].getAttribute('data-route') === pRoute)
+			{
+				tmpLinks[i].classList.add('active');
+			}
+			else
+			{
+				tmpLinks[i].classList.remove('active');
+			}
+		}
 	}
 
 	_renderThemeGrid()

@@ -45,17 +45,13 @@ class FactoFullLayoutView extends libPictView
 		this.pict.views['Facto-Full-TopBar'].render();
 		this.pict.views['Facto-Full-BottomBar'].render();
 
-		// Render initial content — the dashboard
+		// Render the dashboard as default content.
+		// The application will call resolve() after this, which will
+		// override with the correct view if a hash route is present.
 		this.pict.views['Facto-Full-Dashboard'].render();
 
 		// Inject all view CSS into the PICT-CSS style element
 		this.pict.CSSMap.injectCSS();
-
-		// Resolve the router so it picks up the current hash URL
-		if (this.pict.providers.PictRouter)
-		{
-			this.pict.providers.PictRouter.resolve();
-		}
 
 		return super.onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent);
 	}

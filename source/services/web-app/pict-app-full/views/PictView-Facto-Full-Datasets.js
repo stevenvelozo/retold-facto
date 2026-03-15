@@ -100,7 +100,7 @@ class FactoFullDatasetsView extends libPictView
 			return;
 		}
 
-		let tmpHtml = '<table><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Description</th><th>Version Policy</th><th>Actions</th></tr></thead><tbody>';
+		let tmpHtml = '<table><thead><tr><th>ID</th><th>Hash</th><th>Name</th><th>Type</th><th>Description</th><th>Version Policy</th><th>Actions</th></tr></thead><tbody>';
 		for (let i = 0; i < tmpDatasets.length; i++)
 		{
 			let tmpDS = tmpDatasets[i];
@@ -110,6 +110,7 @@ class FactoFullDatasetsView extends libPictView
 
 			tmpHtml += '<tr>';
 			tmpHtml += '<td>' + (tmpDS.IDDataset || '') + '</td>';
+			tmpHtml += '<td><code>' + (tmpDS.Hash || '-') + '</code></td>';
 			tmpHtml += '<td>' + (tmpDS.Name || '') + '</td>';
 			tmpHtml += '<td><span class="facto-badge ' + tmpTypeBadge + '">' + (tmpDS.Type || '') + '</span></td>';
 			tmpHtml += '<td>' + (tmpDS.Description || '') + '</td>';

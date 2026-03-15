@@ -229,7 +229,7 @@ class FactoFullSourceResearchView extends libPictView
 			{
 				if (pResponse && pResponse.Success)
 				{
-					this.setStatus('Provisioned! Source #' + pResponse.Source.IDSource + ', Dataset #' + pResponse.Dataset.IDDataset, 'ok');
+					this.setStatus('Provisioned! Source: ' + (pResponse.Source.Hash || pResponse.Source.Name) + ' (#' + pResponse.Source.IDSource + '), Dataset: ' + (pResponse.Dataset.Hash || pResponse.Dataset.Name) + ' (#' + pResponse.Dataset.IDDataset + ')', 'ok');
 					this.viewEntry(pIDEntry);
 				}
 				else

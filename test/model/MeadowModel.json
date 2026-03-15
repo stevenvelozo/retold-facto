@@ -50,6 +50,11 @@
                     "Size": "200"
                 },
                 {
+                    "Column": "Hash",
+                    "DataType": "String",
+                    "Size": "128"
+                },
+                {
                     "Column": "Type",
                     "DataType": "String",
                     "Size": "64"
@@ -208,6 +213,11 @@
                     "Column": "Name",
                     "DataType": "String",
                     "Size": "200"
+                },
+                {
+                    "Column": "Hash",
+                    "DataType": "String",
+                    "Size": "128"
                 },
                 {
                     "Column": "Type",

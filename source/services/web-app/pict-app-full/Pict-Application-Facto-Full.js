@@ -28,6 +28,7 @@ const libViewDatasets = require('./views/PictView-Facto-Full-Datasets.js');
 const libViewRecords = require('./views/PictView-Facto-Full-Records.js');
 const libViewProjections = require('./views/PictView-Facto-Full-Projections.js');
 const libViewDashboards = require('./views/PictView-Facto-Full-Dashboards.js');
+const libViewRecordViewer = require('./views/PictView-Facto-Full-RecordViewer.js');
 
 class FactoFullApplication extends libPictApplication
 {
@@ -60,6 +61,7 @@ class FactoFullApplication extends libPictApplication
 		this.pict.addView('Facto-Full-Records', libViewRecords.default_configuration, libViewRecords);
 		this.pict.addView('Facto-Full-Projections', libViewProjections.default_configuration, libViewProjections);
 		this.pict.addView('Facto-Full-Dashboards', libViewDashboards.default_configuration, libViewDashboards);
+		this.pict.addView('Facto-Full-RecordViewer', libViewRecordViewer.default_configuration, libViewRecordViewer);
 	}
 
 	onAfterInitializeAsync(fCallback)
@@ -79,14 +81,33 @@ class FactoFullApplication extends libPictApplication
 			SelectedDataset: null,
 			RecordPage: 0,
 			RecordPageSize: 50,
-			CurrentTheme: 'facto-dark'
+			CurrentRecordContent: {},
+			CurrentTheme: 'facto-dark',
+			CurrentRoute: ''
 		};
 
 		// Expose pict globally for inline onclick handlers
 		window.pict = this.pict;
 
-		// Render the layout shell — this cascades into TopBar, BottomBar, Dashboard
+		// Register all parameterized routes BEFORE rendering the layout,
+		// so they are available when resolve() fires after the DOM is ready.
+		let tmpSelf = this;
+		this.pict.providers.PictRouter.addRoute('/Record/:IDRecord',
+			(pMatch) =>
+			{
+				let tmpIDRecord = pMatch && pMatch.data ? pMatch.data.IDRecord : null;
+				if (tmpIDRecord)
+				{
+					tmpSelf.showRecordView(tmpIDRecord);
+				}
+			});
+
+		// Render the layout shell — this cascades into TopBar, BottomBar
 		this.pict.views['Facto-Full-Layout'].render();
+
+		// Resolve the router now that all routes are registered and the DOM
+		// is ready. This picks up the current hash URL for deep links / reloads.
+		this.pict.providers.PictRouter.resolve();
 
 		return super.onAfterInitializeAsync(fCallback);
 	}
@@ -94,6 +115,17 @@ class FactoFullApplication extends libPictApplication
 	navigateTo(pRoute)
 	{
 		this.pict.providers.PictRouter.navigate(pRoute);
+	}
+
+	showRecordView(pIDRecord)
+	{
+		let tmpView = this.pict.views['Facto-Full-RecordViewer'];
+		if (tmpView)
+		{
+			tmpView.loadRecord(pIDRecord);
+		}
+		// Highlight "Records" in the nav since the record viewer is a child of Records
+		this._setActiveNav('Records');
 	}
 
 	showView(pViewIdentifier)
@@ -106,6 +138,22 @@ class FactoFullApplication extends libPictApplication
 		{
 			this.pict.log.warn(`View [${pViewIdentifier}] not found; falling back to dashboard.`);
 			this.pict.views['Facto-Full-Dashboard'].render();
+		}
+
+		// Derive the route name from the view identifier for nav highlighting
+		// e.g. "Facto-Full-SourceResearch" → "SourceResearch"
+		let tmpRoute = pViewIdentifier.replace('Facto-Full-', '');
+		this._setActiveNav(tmpRoute);
+	}
+
+	_setActiveNav(pRoute)
+	{
+		this.pict.AppData.Facto.CurrentRoute = pRoute;
+
+		let tmpTopBar = this.pict.views['Facto-Full-TopBar'];
+		if (tmpTopBar && typeof tmpTopBar.highlightRoute === 'function')
+		{
+			tmpTopBar.highlightRoute(pRoute);
 		}
 	}
 
