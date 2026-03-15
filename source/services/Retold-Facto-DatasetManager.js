@@ -264,6 +264,91 @@ class RetoldFactoDatasetManager extends libFableServiceProviderBase
 					});
 			});
 
+		// PUT /facto/dataset/:IDDataset/version-policy -- set VersionPolicy on a dataset
+		pOratorServiceServer.doPut(`${tmpRoutePrefix}/dataset/:IDDataset/version-policy`,
+			(pRequest, pResponse, fNext) =>
+			{
+				let tmpIDDataset = parseInt(pRequest.params.IDDataset, 10);
+				if (isNaN(tmpIDDataset) || tmpIDDataset < 1)
+				{
+					pResponse.send({ Error: 'Invalid IDDataset parameter' });
+					return fNext();
+				}
+
+				if (!this.fable.DAL || !this.fable.DAL.Dataset)
+				{
+					pResponse.send({ Error: 'Dataset DAL not initialized' });
+					return fNext();
+				}
+
+				let tmpBody = pRequest.body || {};
+				let tmpPolicy = tmpBody.VersionPolicy;
+
+				if (tmpPolicy !== 'Append' && tmpPolicy !== 'Replace')
+				{
+					pResponse.send({ Error: "VersionPolicy must be 'Append' or 'Replace'" });
+					return fNext();
+				}
+
+				let tmpQuery = this.fable.DAL.Dataset.query.clone()
+					.addRecord({ IDDataset: tmpIDDataset, VersionPolicy: tmpPolicy });
+
+				this.fable.DAL.Dataset.doUpdate(tmpQuery,
+					(pError, pQuery, pQueryRead, pRecord) =>
+					{
+						if (pError)
+						{
+							this.fable.log.error(`DatasetManager error setting VersionPolicy for dataset ${tmpIDDataset}: ${pError}`);
+							pResponse.send({ Error: pError.message || pError });
+							return fNext();
+						}
+						pResponse.send({ Success: true, Dataset: pRecord });
+						return fNext();
+					});
+			});
+
+		// GET /facto/dataset/:IDDataset/versions -- list version history (IngestJobs) for a dataset
+		pOratorServiceServer.doGet(`${tmpRoutePrefix}/dataset/:IDDataset/versions`,
+			(pRequest, pResponse, fNext) =>
+			{
+				let tmpIDDataset = parseInt(pRequest.params.IDDataset, 10);
+				if (isNaN(tmpIDDataset) || tmpIDDataset < 1)
+				{
+					pResponse.send({ Error: 'Invalid IDDataset parameter', Versions: [] });
+					return fNext();
+				}
+
+				if (!this.fable.DAL || !this.fable.DAL.IngestJob)
+				{
+					pResponse.send({ Error: 'IngestJob DAL not initialized', Versions: [] });
+					return fNext();
+				}
+
+				let tmpQuery = this.fable.DAL.IngestJob.query.clone()
+					.addFilter('IDDataset', tmpIDDataset)
+					.addFilter('Deleted', 0);
+
+				this.fable.DAL.IngestJob.doReads(tmpQuery,
+					(pError, pQuery, pRecords) =>
+					{
+						if (pError)
+						{
+							this.fable.log.error(`DatasetManager error listing versions for dataset ${tmpIDDataset}: ${pError}`);
+							pResponse.send({ Error: pError.message || pError, Versions: [] });
+							return fNext();
+						}
+
+						// Sort by DatasetVersion descending
+						pRecords.sort((a, b) =>
+						{
+							return (parseInt(b.DatasetVersion, 10) || 0) - (parseInt(a.DatasetVersion, 10) || 0);
+						});
+
+						pResponse.send({ IDDataset: tmpIDDataset, Count: pRecords.length, Versions: pRecords });
+						return fNext();
+					});
+			});
+
 		this.fable.log.info(`DatasetManager routes connected at ${tmpRoutePrefix}/dataset(s)/*`);
 	}
 }

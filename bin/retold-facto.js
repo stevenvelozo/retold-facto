@@ -127,7 +127,7 @@ Commands:
 
 Options:
   --config, -c <path>      Path to a JSON config file
-  --port, -p <port>        Override the API server port (default: 8086)
+  --port, -p <port>        Override the API server port (default: 8386)
   --db, -d <path>          Path to SQLite database file (default: ./data/facto.sqlite)
   --log, -l [path]         Write log output to a file
   --help, -h               Show this help
@@ -159,7 +159,7 @@ let _Settings = (
 	{
 		Product: 'RetoldFacto',
 		ProductVersion: '0.0.1',
-		APIServerPort: _CLIPort || parseInt(process.env.PORT, 10) || 8086,
+		APIServerPort: _CLIPort || parseInt(process.env.PORT, 10) || 8386,
 		LogStreams:
 			[
 				{
@@ -271,16 +271,10 @@ function commandServe()
 					DatasetManager: true,
 					IngestEngine: true,
 					ProjectionEngine: true,
+					CatalogManager: true,
 					WebUI: true
 				}
 		});
-
-	// Enable JSON body parsing for POST/PUT requests
-	tmpFactoService.onBeforeInitialize = (fCallback) =>
-	{
-		_Fable.OratorServiceServer.server.use(_Fable.OratorServiceServer.bodyParser());
-		return fCallback();
-	};
 
 	tmpFactoService.initializeService(
 		(pInitError) =>
@@ -293,7 +287,7 @@ function commandServe()
 			_Fable.log.info(`Retold Facto running on port ${_Settings.APIServerPort}`);
 			_Fable.log.info(`API:     http://localhost:${_Settings.APIServerPort}/1.0/`);
 			_Fable.log.info(`Facto:   http://localhost:${_Settings.APIServerPort}/facto/`);
-			_Fable.log.info(`Web UI:  http://localhost:${_Settings.APIServerPort}/facto/app/`);
+			_Fable.log.info(`Web UI:  http://localhost:${_Settings.APIServerPort}/`);
 		});
 }
 

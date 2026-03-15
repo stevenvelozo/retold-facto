@@ -13,7 +13,7 @@
 		"build": "npx quack build",
 		"build-test-model": "cd test && npx stricture -i model/ddl/Facto.ddl",
 		"docker-build": "docker build -t retold-facto .",
-		"docker-run": "docker run -p 8086:8086 retold-facto"
+		"docker-run": "docker run -p 8386:8386 retold-facto"
 	},
 	"mocha": {
 		"spec": "test/RetoldFacto_tests.js",

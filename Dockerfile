@@ -21,6 +21,6 @@ COPY --from=builder /app/source/ source/
 COPY --from=builder /app/bin/ bin/
 COPY --from=builder /app/test/model/ test/model/
 
-EXPOSE 8086
+EXPOSE 8386
 
 CMD ["node", "bin/retold-facto.js", "serve"]

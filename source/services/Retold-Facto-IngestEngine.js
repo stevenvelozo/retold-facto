@@ -8,8 +8,11 @@
  * @author Steven Velozo <steven@velozo.com>
  */
 const libFableServiceProviderBase = require('fable-serviceproviderbase');
+const libCrypto = require('crypto');
 const libFs = require('fs');
 const libPath = require('path');
+const libHttp = require('http');
+const libHttps = require('https');
 
 const defaultIngestEngineOptions = (
 	{
@@ -63,6 +66,216 @@ class RetoldFactoIngestEngine extends libFableServiceProviderBase
 					{
 						return fCallback(pUpdateError);
 					});
+			});
+	}
+
+	/**
+	 * Compute a SHA-256 content signature for a piece of raw content.
+	 *
+	 * @param {string|Buffer} pContent - Raw content to hash
+	 * @returns {string} Hex-encoded SHA-256 hash
+	 */
+	computeContentSignature(pContent)
+	{
+		return libCrypto.createHash('sha256').update(pContent).digest('hex');
+	}
+
+	/**
+	 * Get the next dataset version number for a given dataset.
+	 * Queries IngestJob for the max DatasetVersion and returns max + 1.
+	 *
+	 * @param {number} pIDDataset - Dataset ID
+	 * @param {function} fCallback - Callback(pError, pNextVersion)
+	 */
+	getNextDatasetVersion(pIDDataset, fCallback)
+	{
+		if (!this.fable.DAL || !this.fable.DAL.IngestJob)
+		{
+			return fCallback(null, 1);
+		}
+
+		let tmpQuery = this.fable.DAL.IngestJob.query.clone()
+			.addFilter('IDDataset', pIDDataset)
+			.addFilter('Deleted', 0);
+
+		this.fable.DAL.IngestJob.doReads(tmpQuery,
+			(pError, pQuery, pRecords) =>
+			{
+				if (pError || !pRecords || pRecords.length === 0)
+				{
+					return fCallback(null, 1);
+				}
+
+				let tmpMaxVersion = 0;
+				for (let i = 0; i < pRecords.length; i++)
+				{
+					let tmpVersion = parseInt(pRecords[i].DatasetVersion, 10) || 0;
+					if (tmpVersion > tmpMaxVersion)
+					{
+						tmpMaxVersion = tmpVersion;
+					}
+				}
+				return fCallback(null, tmpMaxVersion + 1);
+			});
+	}
+
+	/**
+	 * Check if an identical content signature already exists for a dataset.
+	 *
+	 * @param {number} pIDDataset - Dataset ID
+	 * @param {string} pSignature - SHA-256 hex hash
+	 * @param {function} fCallback - Callback(pError, pResult) where pResult = { isDuplicate, matchingVersion }
+	 */
+	checkDuplicateSignature(pIDDataset, pSignature, fCallback)
+	{
+		if (!this.fable.DAL || !this.fable.DAL.IngestJob)
+		{
+			return fCallback(null, { isDuplicate: false, matchingVersion: null });
+		}
+
+		let tmpQuery = this.fable.DAL.IngestJob.query.clone()
+			.addFilter('IDDataset', pIDDataset)
+			.addFilter('ContentSignature', pSignature)
+			.addFilter('Deleted', 0);
+
+		this.fable.DAL.IngestJob.doReads(tmpQuery,
+			(pError, pQuery, pRecords) =>
+			{
+				if (pError || !pRecords || pRecords.length === 0)
+				{
+					return fCallback(null, { isDuplicate: false, matchingVersion: null });
+				}
+
+				return fCallback(null,
+					{
+						isDuplicate: true,
+						matchingVersion: parseInt(pRecords[0].DatasetVersion, 10) || 0
+					});
+			});
+	}
+
+	/**
+	 * Enforce the dataset's VersionPolicy before a new import.
+	 * If 'Replace': soft-delete all existing Records for the dataset.
+	 * If 'Append': no-op.
+	 *
+	 * @param {number} pIDDataset - Dataset ID
+	 * @param {function} fCallback - Callback(pError)
+	 */
+	enforceVersionPolicy(pIDDataset, fCallback)
+	{
+		if (!this.fable.DAL || !this.fable.DAL.Dataset || !this.fable.DAL.Record)
+		{
+			return fCallback();
+		}
+
+		// Read the Dataset to get its VersionPolicy
+		let tmpDatasetQuery = this.fable.DAL.Dataset.query.clone()
+			.addFilter('IDDataset', pIDDataset);
+
+		this.fable.DAL.Dataset.doRead(tmpDatasetQuery,
+			(pError, pQuery, pDataset) =>
+			{
+				if (pError || !pDataset)
+				{
+					return fCallback();
+				}
+
+				let tmpPolicy = pDataset.VersionPolicy || 'Append';
+
+				if (tmpPolicy !== 'Replace')
+				{
+					return fCallback();
+				}
+
+				// Soft-delete all existing non-deleted records for this dataset
+				let tmpRecordQuery = this.fable.DAL.Record.query.clone()
+					.addFilter('IDDataset', pIDDataset)
+					.addFilter('Deleted', 0);
+
+				this.fable.DAL.Record.doReads(tmpRecordQuery,
+					(pReadError, pReadQuery, pRecords) =>
+					{
+						if (pReadError || !pRecords || pRecords.length === 0)
+						{
+							return fCallback();
+						}
+
+						let tmpAnticipate = this.fable.newAnticipate();
+
+						for (let i = 0; i < pRecords.length; i++)
+						{
+							let tmpRecord = pRecords[i];
+							tmpAnticipate.anticipate(
+								(fStep) =>
+								{
+									let tmpDeleteQuery = this.fable.DAL.Record.query.clone()
+										.addRecord(
+											{
+												IDRecord: tmpRecord.IDRecord,
+												Deleted: 1,
+												DeleteDate: new Date().toISOString()
+											});
+
+									this.fable.DAL.Record.doUpdate(tmpDeleteQuery,
+										(pDelError) =>
+										{
+											return fStep();
+										});
+								});
+						}
+
+						tmpAnticipate.wait(
+							(pWaitError) =>
+							{
+								this.fable.log.info(`VersionPolicy Replace: soft-deleted ${pRecords.length} existing records for dataset ${pIDDataset}`);
+								return fCallback();
+							});
+					});
+			});
+	}
+
+	/**
+	 * Create an IngestJob record for a content import.
+	 *
+	 * @param {object} pJobData - { IDDataset, IDSource, DatasetVersion, ContentSignature, RecordCount, Format }
+	 * @param {function} fCallback - Callback(pError, pIngestJob)
+	 */
+	createIngestJob(pJobData, fCallback)
+	{
+		if (!this.fable.DAL || !this.fable.DAL.IngestJob)
+		{
+			return fCallback(null, null);
+		}
+
+		let tmpJobRecord = {
+			IDDataset: pJobData.IDDataset || 0,
+			IDSource: pJobData.IDSource || 0,
+			Status: 'Completed',
+			StartDate: new Date().toISOString(),
+			EndDate: new Date().toISOString(),
+			RecordsProcessed: pJobData.RecordCount || 0,
+			RecordsCreated: pJobData.RecordCount || 0,
+			RecordsUpdated: 0,
+			RecordsErrored: pJobData.ErrorCount || 0,
+			DatasetVersion: pJobData.DatasetVersion || 0,
+			ContentSignature: pJobData.ContentSignature || '',
+			Configuration: JSON.stringify({ Format: pJobData.Format || 'unknown' }),
+			Log: `[${new Date().toISOString()}] Auto-created by ingest (v${pJobData.DatasetVersion || 0})\n`
+		};
+
+		let tmpQuery = this.fable.DAL.IngestJob.query.clone()
+			.addRecord(tmpJobRecord);
+
+		this.fable.DAL.IngestJob.doCreate(tmpQuery,
+			(pError, pQuery, pQueryRead, pRecord) =>
+			{
+				if (pError)
+				{
+					this.fable.log.error(`Error creating IngestJob: ${pError}`);
+					return fCallback(pError);
+				}
+				return fCallback(null, pRecord);
 			});
 	}
 
@@ -320,17 +533,95 @@ class RetoldFactoIngestEngine extends libFableServiceProviderBase
 	}
 
 	/**
+	 * Navigate a nested object using a dot-separated path with optional
+	 * array index notation (e.g. "Results.series[0].data").
+	 *
+	 * @param {object} pObject - The object to navigate
+	 * @param {string} pPath - Dot-separated path, segments may include [n]
+	 * @returns {*} The resolved value, or null if the path is invalid
+	 * @private
+	 */
+	_resolveDataPath(pObject, pPath)
+	{
+		if (!pPath || typeof pPath !== 'string')
+		{
+			return pObject;
+		}
+
+		let tmpSegments = pPath.split('.');
+		let tmpCurrent = pObject;
+
+		for (let i = 0; i < tmpSegments.length; i++)
+		{
+			if (tmpCurrent === null || tmpCurrent === undefined || typeof tmpCurrent !== 'object')
+			{
+				return null;
+			}
+
+			let tmpSegment = tmpSegments[i];
+			// Check for array index notation: name[index]
+			let tmpMatch = tmpSegment.match(/^([^\[]+)\[(\d+)\]$/);
+			if (tmpMatch)
+			{
+				let tmpKey = tmpMatch[1];
+				let tmpIndex = parseInt(tmpMatch[2], 10);
+				if (!(tmpKey in tmpCurrent) || !Array.isArray(tmpCurrent[tmpKey]))
+				{
+					return null;
+				}
+				tmpCurrent = tmpCurrent[tmpKey][tmpIndex];
+			}
+			else
+			{
+				if (!(tmpSegment in tmpCurrent))
+				{
+					return null;
+				}
+				tmpCurrent = tmpCurrent[tmpSegment];
+			}
+		}
+
+		return tmpCurrent;
+	}
+
+	/**
 	 * Parse a JSON string into an array of objects.
 	 * Handles both arrays and single objects.
 	 *
 	 * @param {string} pJSONContent - Raw JSON text
+	 * @param {object} [pOptions] - Options: dataPath (dot-separated path to records array)
 	 * @param {function} fCallback - Callback(pError, pRecords)
 	 */
-	parseJSON(pJSONContent, fCallback)
+	parseJSON(pJSONContent, pOptions, fCallback)
 	{
+		if (typeof pOptions === 'function')
+		{
+			fCallback = pOptions;
+			pOptions = {};
+		}
+
 		try
 		{
 			let tmpParsed = JSON.parse(pJSONContent);
+
+			// If a dataPath is specified, navigate to it first
+			if (pOptions && pOptions.dataPath)
+			{
+				let tmpResolved = this._resolveDataPath(tmpParsed, pOptions.dataPath);
+				if (tmpResolved === null || tmpResolved === undefined)
+				{
+					return fCallback(new Error(`dataPath '${pOptions.dataPath}' not found in JSON`));
+				}
+				if (Array.isArray(tmpResolved))
+				{
+					return fCallback(null, tmpResolved);
+				}
+				if (typeof tmpResolved === 'object')
+				{
+					return fCallback(null, [tmpResolved]);
+				}
+				return fCallback(new Error(`dataPath '${pOptions.dataPath}' resolved to a non-object value`));
+			}
 
 			if (Array.isArray(tmpParsed))
 			{
@@ -362,6 +653,316 @@ class RetoldFactoIngestEngine extends libFableServiceProviderBase
 		catch (pError)
 		{
 			return fCallback(pError);
+		}
+	}
+
+	/**
+	 * Download content from a URL using Node's built-in http/https.
+	 * Follows 3xx redirects (up to 5 hops), has a 30-second timeout.
+	 *
+	 * @param {string} pURL - The URL to download
+	 * @param {function} fCallback - Callback(pError, pBuffer)
+	 */
+	downloadURL(pURL, fCallback)
+	{
+		let tmpMaxRedirects = 5;
+
+		let tmpDoRequest = (pRequestURL, pRedirectCount) =>
+		{
+			if (pRedirectCount > tmpMaxRedirects)
+			{
+				return fCallback(new Error('Too many redirects (max ' + tmpMaxRedirects + ')'));
+			}
+
+			let tmpLib = pRequestURL.startsWith('https') ? libHttps : libHttp;
+
+			let tmpRequest = tmpLib.get(pRequestURL,
+				(pResponse) =>
+				{
+					// Follow redirects
+					if (pResponse.statusCode >= 300 && pResponse.statusCode < 400 && pResponse.headers.location)
+					{
+						let tmpRedirectURL = pResponse.headers.location;
+						// Handle relative redirect URLs
+						if (tmpRedirectURL.startsWith('/'))
+						{
+							let tmpParsed = new URL(pRequestURL);
+							tmpRedirectURL = tmpParsed.protocol + '//' + tmpParsed.host + tmpRedirectURL;
+						}
+						pResponse.resume();
+						return tmpDoRequest(tmpRedirectURL, pRedirectCount + 1);
+					}
+
+					if (pResponse.statusCode !== 200)
+					{
+						pResponse.resume();
+						return fCallback(new Error('HTTP ' + pResponse.statusCode + ' from ' + pRequestURL));
+					}
+
+					let tmpChunks = [];
+					pResponse.on('data',
+						(pChunk) =>
+						{
+							tmpChunks.push(pChunk);
+						});
+					pResponse.on('end',
+						() =>
+						{
+							return fCallback(null, Buffer.concat(tmpChunks));
+						});
+					pResponse.on('error',
+						(pStreamError) =>
+						{
+							return fCallback(pStreamError);
+						});
+				});
+
+			tmpRequest.on('error',
+				(pRequestError) =>
+				{
+					return fCallback(pRequestError);
+				});
+
+			tmpRequest.setTimeout(30000,
+				() =>
+				{
+					tmpRequest.destroy();
+					return fCallback(new Error('Request timeout after 30 seconds'));
+				});
+		};
+
+		tmpDoRequest(pURL, 0);
+	}
+
+	/**
+	 * Ingest raw content (string or Buffer) into a dataset from a source.
+	 * Parses the content, runs the version/signature pipeline, and creates
+	 * Record rows with CertaintyIndex entries.
+	 *
+	 * @param {string|Buffer} pContent - Raw content to ingest
+	 * @param {number} pIDDataset - Target dataset ID
+	 * @param {number} pIDSource - Source ID
+	 * @param {object} [pOptions] - Options: format, type, delimiter, stripCommentLines, dataPath, recordPath, columns
+	 * @param {function} fCallback - Callback(pError, pResult)
+	 */
+	ingestContent(pContent, pIDDataset, pIDSource, pOptions, fCallback)
+	{
+		if (typeof pOptions === 'function')
+		{
+			fCallback = pOptions;
+			pOptions = {};
+		}
+
+		let tmpFormat = (pOptions && pOptions.format) ? pOptions.format.toLowerCase() : '';
+		let tmpRecordType = (pOptions && pOptions.type) ? pOptions.type : 'ingest';
+		let tmpDelimiter = (pOptions && pOptions.delimiter) ? pOptions.delimiter : ',';
+		let tmpStripComments = (pOptions && pOptions.stripCommentLines) ? true : false;
+		let tmpDataPath = (pOptions && pOptions.dataPath) ? pOptions.dataPath : '';
+		let tmpRecordPath = (pOptions && pOptions.recordPath) ? pOptions.recordPath : '';
+		let tmpColumns = (pOptions && pOptions.columns) ? pOptions.columns : null;
+
+		let tmpContentString = (Buffer.isBuffer(pContent)) ? pContent.toString('utf8') : pContent;
+
+		// Auto-detect format if not specified
+		if (!tmpFormat)
+		{
+			let tmpTrimmed = tmpContentString.trim();
+			if (tmpTrimmed.startsWith('[') || tmpTrimmed.startsWith('{'))
+			{
+				tmpFormat = 'json';
+			}
+			else if (tmpTrimmed.startsWith('<?xml') || tmpTrimmed.startsWith('<'))
+			{
+				tmpFormat = 'xml';
+			}
+			else
+			{
+				tmpFormat = 'csv';
+			}
+		}
+
+		// Compute content signature
+		let tmpSignature = this.computeContentSignature(tmpContentString);
+
+		let tmpParseCallback = (pParseError, pParsedRecords) =>
+		{
+			if (pParseError)
+			{
+				return fCallback(new Error('Parse error: ' + pParseError.message));
+			}
+
+			if (!pParsedRecords || pParsedRecords.length === 0)
+			{
+				return fCallback(null, { Ingested: 0, Errors: 0, Total: 0, Format: tmpFormat });
+			}
+
+			// Version/signature pipeline
+			let tmpVersionAnticipate = this.fable.newAnticipate();
+			let tmpDatasetVersion = 1;
+			let tmpDuplicateResult = { isDuplicate: false, matchingVersion: null };
+			let tmpIngestJob = null;
+
+			tmpVersionAnticipate.anticipate(
+				(fStep) =>
+				{
+					this.getNextDatasetVersion(pIDDataset,
+						(pError, pNextVersion) =>
+						{
+							tmpDatasetVersion = pNextVersion || 1;
+							return fStep();
+						});
+				});
+
+			tmpVersionAnticipate.anticipate(
+				(fStep) =>
+				{
+					this.checkDuplicateSignature(pIDDataset, tmpSignature,
+						(pError, pResult) =>
+						{
+							if (pResult)
+							{
+								tmpDuplicateResult = pResult;
+								if (pResult.isDuplicate)
+								{
+									this.fable.log.warn(`Duplicate content detected for dataset ${pIDDataset} (matches version ${pResult.matchingVersion})`);
+								}
+							}
+							return fStep();
+						});
+				});
+
+			tmpVersionAnticipate.anticipate(
+				(fStep) =>
+				{
+					this.enforceVersionPolicy(pIDDataset, fStep);
+				});
+
+			tmpVersionAnticipate.anticipate(
+				(fStep) =>
+				{
+					this.createIngestJob(
+						{
+							IDDataset: pIDDataset,
+							IDSource: pIDSource,
+							DatasetVersion: tmpDatasetVersion,
+							ContentSignature: tmpSignature,
+							RecordCount: pParsedRecords.length,
+							Format: tmpFormat
+						},
+						(pError, pJob) =>
+						{
+							tmpIngestJob = pJob;
+							return fStep();
+						});
+				});
+
+			tmpVersionAnticipate.wait(
+				(pVersionError) =>
+				{
+					let tmpAnticipate = this.fable.newAnticipate();
+					let tmpIngested = 0;
+					let tmpErrors = 0;
+					let tmpIngestedRecords = [];
+					let tmpIDIngestJob = (tmpIngestJob) ? tmpIngestJob.IDIngestJob : 0;
+
+					for (let i = 0; i < pParsedRecords.length; i++)
+					{
+						let tmpRowData = pParsedRecords[i];
+
+						tmpAnticipate.anticipate(
+							(fStepCallback) =>
+							{
+								let tmpRecordData = {
+									IDDataset: pIDDataset,
+									IDSource: pIDSource,
+									Type: tmpRecordType,
+									Version: tmpDatasetVersion,
+									IDIngestJob: tmpIDIngestJob,
+									IngestDate: new Date().toISOString(),
+									Content: (typeof tmpRowData === 'string') ? tmpRowData : JSON.stringify(tmpRowData)
+								};
+
+								let tmpQuery = this.fable.DAL.Record.query.clone()
+									.addRecord(tmpRecordData);
+
+								this.fable.DAL.Record.doCreate(tmpQuery,
+									(pCreateError, pQuery, pQueryRead, pRecord) =>
+									{
+										if (pCreateError)
+										{
+											tmpErrors++;
+											return fStepCallback();
+										}
+
+										tmpIngested++;
+										tmpIngestedRecords.push(pRecord);
+
+										let tmpCertaintyValue = this.options.DefaultCertaintyValue || 0.5;
+										let tmpCIQuery = this.fable.DAL.CertaintyIndex.query.clone()
+											.addRecord(
+												{
+													IDRecord: pRecord.IDRecord,
+													CertaintyValue: tmpCertaintyValue,
+													Dimension: 'overall',
+													Justification: 'Default ingest certainty'
+												});
+
+										this.fable.DAL.CertaintyIndex.doCreate(tmpCIQuery,
+											(pCIError) =>
+											{
+												return fStepCallback();
+											});
+									});
+							});
+					}
+
+					tmpAnticipate.wait(
+						(pWaitError) =>
+						{
+							return fCallback(null,
+								{
+									Ingested: tmpIngested,
+									Errors: tmpErrors,
+									Total: pParsedRecords.length,
+									Records: tmpIngestedRecords,
+									Format: tmpFormat,
+									DatasetVersion: tmpDatasetVersion,
+									ContentSignature: tmpSignature,
+									IsDuplicate: tmpDuplicateResult.isDuplicate,
+									IngestJob: tmpIngestJob
+								});
+						});
+				});
+		};
+
+		if (tmpFormat === 'csv')
+		{
+			this.parseCSV(tmpContentString, { delimiter: tmpDelimiter, stripCommentLines: tmpStripComments }, tmpParseCallback);
+		}
+		else if (tmpFormat === 'json')
+		{
+			this.parseJSON(tmpContentString, { dataPath: tmpDataPath }, tmpParseCallback);
+		}
+		else if (tmpFormat === 'xml')
+		{
+			this.parseXML(tmpContentString, { recordPath: tmpRecordPath }, tmpParseCallback);
+		}
+		else if (tmpFormat === 'excel')
+		{
+			let tmpBuffer = Buffer.isBuffer(pContent) ? pContent : Buffer.from(pContent, 'base64');
+			this.parseExcel(tmpBuffer, {}, tmpParseCallback);
+		}
+		else if (tmpFormat === 'fixed-width' || tmpFormat === 'other')
+		{
+			if (!tmpColumns)
+			{
+				return fCallback(new Error('Columns specification required for fixed-width format'));
+			}
+			this.parseFixedWidth(tmpContentString, { columns: tmpColumns }, tmpParseCallback);
+		}
+		else
+		{
+			return fCallback(new Error('Unsupported format: ' + tmpFormat));
 		}
 	}
 
@@ -443,6 +1044,10 @@ class RetoldFactoIngestEngine extends libFableServiceProviderBase
 			return fCallback(pReadError);
 		}
 
+		// Compute content signature from raw content
+		let tmpContentForSignature = (tmpFormat === 'excel') ? tmpContent : tmpContent;
+		let tmpSignature = this.computeContentSignature(tmpContentForSignature);
+
 		// Parse based on format
 		let tmpParseCallback = (pParseError, pParsedRecords) =>
 		{
@@ -456,74 +1061,148 @@ class RetoldFactoIngestEngine extends libFableServiceProviderBase
 				return fCallback(null, { Ingested: 0, Errors: 0, Total: 0 });
 			}
 
-			// Ingest each parsed record into the Record table
-			let tmpAnticipate = this.fable.newAnticipate();
-			let tmpIngested = 0;
-			let tmpErrors = 0;
-			let tmpIngestedRecords = [];
+			// Version/signature pipeline
+			let tmpVersionAnticipate = this.fable.newAnticipate();
+			let tmpDatasetVersion = 1;
+			let tmpDuplicateResult = { isDuplicate: false, matchingVersion: null };
+			let tmpIngestJob = null;
 
-			for (let i = 0; i < pParsedRecords.length; i++)
-			{
-				let tmpRowData = pParsedRecords[i];
+			// Step 1: Get next version
+			tmpVersionAnticipate.anticipate(
+				(fStep) =>
+				{
+					this.getNextDatasetVersion(pIDDataset,
+						(pError, pNextVersion) =>
+						{
+							tmpDatasetVersion = pNextVersion || 1;
+							return fStep();
+						});
+				});
 
-				tmpAnticipate.anticipate(
-					(fStepCallback) =>
-					{
-						let tmpRecordData = {
+			// Step 2: Check for duplicate signature
+			tmpVersionAnticipate.anticipate(
+				(fStep) =>
+				{
+					this.checkDuplicateSignature(pIDDataset, tmpSignature,
+						(pError, pResult) =>
+						{
+							if (pResult)
+							{
+								tmpDuplicateResult = pResult;
+								if (pResult.isDuplicate)
+								{
+									this.fable.log.warn(`Duplicate content detected for dataset ${pIDDataset} (matches version ${pResult.matchingVersion})`);
+								}
+							}
+							return fStep();
+						});
+				});
+
+			// Step 3: Enforce version policy
+			tmpVersionAnticipate.anticipate(
+				(fStep) =>
+				{
+					this.enforceVersionPolicy(pIDDataset, fStep);
+				});
+
+			// Step 4: Create IngestJob, then create records
+			tmpVersionAnticipate.anticipate(
+				(fStep) =>
+				{
+					this.createIngestJob(
+						{
 							IDDataset: pIDDataset,
 							IDSource: pIDSource,
-							Type: tmpRecordType,
-							Version: 1,
-							IngestDate: new Date().toISOString(),
-							Content: (typeof tmpRowData === 'string') ? tmpRowData : JSON.stringify(tmpRowData)
-						};
+							DatasetVersion: tmpDatasetVersion,
+							ContentSignature: tmpSignature,
+							RecordCount: pParsedRecords.length,
+							Format: tmpFormat
+						},
+						(pError, pJob) =>
+						{
+							tmpIngestJob = pJob;
+							return fStep();
+						});
+				});
 
-						let tmpQuery = this.fable.DAL.Record.query.clone()
-							.addRecord(tmpRecordData);
+			tmpVersionAnticipate.wait(
+				(pVersionError) =>
+				{
+					// Now create the records with version info
+					let tmpAnticipate = this.fable.newAnticipate();
+					let tmpIngested = 0;
+					let tmpErrors = 0;
+					let tmpIngestedRecords = [];
+					let tmpIDIngestJob = (tmpIngestJob) ? tmpIngestJob.IDIngestJob : 0;
 
-						this.fable.DAL.Record.doCreate(tmpQuery,
-							(pCreateError, pQuery, pQueryRead, pRecord) =>
+					for (let i = 0; i < pParsedRecords.length; i++)
+					{
+						let tmpRowData = pParsedRecords[i];
+
+						tmpAnticipate.anticipate(
+							(fStepCallback) =>
 							{
-								if (pCreateError)
-								{
-									tmpErrors++;
-									return fStepCallback();
-								}
+								let tmpRecordData = {
+									IDDataset: pIDDataset,
+									IDSource: pIDSource,
+									Type: tmpRecordType,
+									Version: tmpDatasetVersion,
+									IDIngestJob: tmpIDIngestJob,
+									IngestDate: new Date().toISOString(),
+									Content: (typeof tmpRowData === 'string') ? tmpRowData : JSON.stringify(tmpRowData)
+								};
 
-								tmpIngested++;
-								tmpIngestedRecords.push(pRecord);
+								let tmpQuery = this.fable.DAL.Record.query.clone()
+									.addRecord(tmpRecordData);
 
-								// Auto-create certainty index
-								let tmpCertaintyValue = this.options.DefaultCertaintyValue || 0.5;
-								let tmpCIQuery = this.fable.DAL.CertaintyIndex.query.clone()
-									.addRecord(
-										{
-											IDRecord: pRecord.IDRecord,
-											CertaintyValue: tmpCertaintyValue,
-											Dimension: 'overall',
-											Justification: 'Default file-ingest certainty'
-										});
-
-								this.fable.DAL.CertaintyIndex.doCreate(tmpCIQuery,
-									(pCIError) =>
+								this.fable.DAL.Record.doCreate(tmpQuery,
+									(pCreateError, pQuery, pQueryRead, pRecord) =>
 									{
-										return fStepCallback();
+										if (pCreateError)
+										{
+											tmpErrors++;
+											return fStepCallback();
+										}
+
+										tmpIngested++;
+										tmpIngestedRecords.push(pRecord);
+
+										// Auto-create certainty index
+										let tmpCertaintyValue = this.options.DefaultCertaintyValue || 0.5;
+										let tmpCIQuery = this.fable.DAL.CertaintyIndex.query.clone()
+											.addRecord(
+												{
+													IDRecord: pRecord.IDRecord,
+													CertaintyValue: tmpCertaintyValue,
+													Dimension: 'overall',
+													Justification: 'Default file-ingest certainty'
+												});
+
+										this.fable.DAL.CertaintyIndex.doCreate(tmpCIQuery,
+											(pCIError) =>
+											{
+												return fStepCallback();
+											});
 									});
 							});
-					});
-			}
+					}
 
-			tmpAnticipate.wait(
-				(pWaitError) =>
-				{
-					return fCallback(null,
+					tmpAnticipate.wait(
+						(pWaitError) =>
 						{
-							Ingested: tmpIngested,
-							Errors: tmpErrors,
-							Total: pParsedRecords.length,
-							Records: tmpIngestedRecords,
-							Format: tmpFormat,
-							FilePath: pFilePath
+							return fCallback(null,
+								{
+									Ingested: tmpIngested,
+									Errors: tmpErrors,
+									Total: pParsedRecords.length,
+									Records: tmpIngestedRecords,
+									Format: tmpFormat,
+									FilePath: pFilePath,
+									DatasetVersion: tmpDatasetVersion,
+									ContentSignature: tmpSignature,
+									IsDuplicate: tmpDuplicateResult.isDuplicate,
+									IngestJob: tmpIngestJob
+								});
 						});
 				});
 		};
@@ -797,14 +1476,7 @@ class RetoldFactoIngestEngine extends libFableServiceProviderBase
 				}
 
 				let tmpBody = pRequest.body || {};
-				let tmpIDDataset = parseInt(tmpBody.IDDataset, 10) || 0;
-				let tmpIDSource = parseInt(tmpBody.IDSource, 10) || 0;
-				let tmpFormat = (tmpBody.Format || '').toLowerCase();
-				let tmpRecordType = tmpBody.Type || 'file-ingest';
-				let tmpDelimiter = tmpBody.Delimiter || ',';
 				let tmpContent = tmpBody.Content || '';
-				let tmpColumns = tmpBody.Columns || null;
-				let tmpStripComments = tmpBody.StripCommentLines || false;
 
 				if (!tmpContent)
 				{
@@ -812,149 +1484,29 @@ class RetoldFactoIngestEngine extends libFableServiceProviderBase
 					return fNext();
 				}
 
-				if (!tmpFormat)
-				{
-					// Attempt auto-detect
-					let tmpTrimmed = tmpContent.trim();
-					if (tmpTrimmed.startsWith('[') || tmpTrimmed.startsWith('{'))
-					{
-						tmpFormat = 'json';
-					}
-					else if (tmpTrimmed.startsWith('<?xml') || tmpTrimmed.startsWith('<'))
-					{
-						tmpFormat = 'xml';
-					}
-					else
-					{
-						tmpFormat = 'csv';
-					}
-				}
+				let tmpIDDataset = parseInt(tmpBody.IDDataset, 10) || 0;
+				let tmpIDSource = parseInt(tmpBody.IDSource, 10) || 0;
 
-				let tmpParseCallback = (pParseError, pParsedRecords) =>
-				{
-					if (pParseError)
-					{
-						pResponse.send({ Error: 'Parse error: ' + pParseError.message, Ingested: 0 });
-						return fNext();
-					}
-
-					if (!pParsedRecords || pParsedRecords.length === 0)
-					{
-						pResponse.send({ Ingested: 0, Errors: 0, Total: 0, Format: tmpFormat });
-						return fNext();
-					}
-
-					let tmpAnticipate = this.fable.newAnticipate();
-					let tmpIngested = 0;
-					let tmpErrors = 0;
-					let tmpIngestedRecords = [];
-
-					for (let i = 0; i < pParsedRecords.length; i++)
-					{
-						let tmpRowData = pParsedRecords[i];
-
-						tmpAnticipate.anticipate(
-							(fStepCallback) =>
-							{
-								let tmpRecordData = {
-									IDDataset: tmpIDDataset,
-									IDSource: tmpIDSource,
-									Type: tmpRecordType,
-									Version: 1,
-									IngestDate: new Date().toISOString(),
-									Content: (typeof tmpRowData === 'string') ? tmpRowData : JSON.stringify(tmpRowData)
-								};
-
-								let tmpQuery = this.fable.DAL.Record.query.clone()
-									.addRecord(tmpRecordData);
-
-								this.fable.DAL.Record.doCreate(tmpQuery,
-									(pCreateError, pQuery, pQueryRead, pRecord) =>
-									{
-										if (pCreateError)
-										{
-											tmpErrors++;
-											return fStepCallback();
-										}
-
-										tmpIngested++;
-										tmpIngestedRecords.push(pRecord);
-
-										// Auto-create certainty index
-										let tmpCertaintyValue = this.options.DefaultCertaintyValue || 0.5;
-										let tmpCIQuery = this.fable.DAL.CertaintyIndex.query.clone()
-											.addRecord(
-												{
-													IDRecord: pRecord.IDRecord,
-													CertaintyValue: tmpCertaintyValue,
-													Dimension: 'overall',
-													Justification: 'Default file-ingest certainty'
-												});
-
-										this.fable.DAL.CertaintyIndex.doCreate(tmpCIQuery,
-											(pCIError) =>
-											{
-												return fStepCallback();
-											});
-									});
-							});
-					}
-
-					tmpAnticipate.wait(
-						(pWaitError) =>
-						{
-							pResponse.send(
-								{
-									Ingested: tmpIngested,
-									Errors: tmpErrors,
-									Total: pParsedRecords.length,
-									Records: tmpIngestedRecords,
-									Format: tmpFormat
-								});
-							return fNext();
-						});
+				let tmpOptions = {
+					format: (tmpBody.Format || '').toLowerCase(),
+					type: tmpBody.Type || 'file-ingest',
+					delimiter: tmpBody.Delimiter || ',',
+					stripCommentLines: tmpBody.StripCommentLines || false,
+					columns: tmpBody.Columns || null,
+					dataPath: tmpBody.DataPath || ''
 				};
 
-				if (tmpFormat === 'csv')
-				{
-					this.parseCSV(tmpContent, { delimiter: tmpDelimiter, stripCommentLines: tmpStripComments }, tmpParseCallback);
-				}
-				else if (tmpFormat === 'json')
-				{
-					this.parseJSON(tmpContent, tmpParseCallback);
-				}
-				else if (tmpFormat === 'xml')
-				{
-					this.parseXML(tmpContent, {}, tmpParseCallback);
-				}
-				else if (tmpFormat === 'excel')
-				{
-					// Excel content comes as base64-encoded
-					try
+				this.ingestContent(tmpContent, tmpIDDataset, tmpIDSource, tmpOptions,
+					(pError, pResult) =>
 					{
-						let tmpBuffer = Buffer.from(tmpContent, 'base64');
-						this.parseExcel(tmpBuffer, {}, tmpParseCallback);
-					}
-					catch (pDecodeError)
-					{
-						pResponse.send({ Error: 'Failed to decode base64 Excel content: ' + pDecodeError.message, Ingested: 0 });
+						if (pError)
+						{
+							pResponse.send({ Error: pError.message, Ingested: 0 });
+							return fNext();
+						}
+						pResponse.send(pResult);
 						return fNext();
-					}
-				}
-				else if (tmpFormat === 'fixed-width')
-				{
-					if (!tmpColumns)
-					{
-						pResponse.send({ Error: 'Columns specification required for fixed-width format (array of {name, start, width})', Ingested: 0 });
-						return fNext();
-					}
-					this.parseFixedWidth(tmpContent, { columns: tmpColumns }, tmpParseCallback);
-				}
-				else
-				{
-					pResponse.send({ Error: `Unsupported format: ${tmpFormat}`, Ingested: 0 });
-					return fNext();
-				}
+					});
 			});
 
 		// GET /facto/ingest/statuses -- list valid job statuses

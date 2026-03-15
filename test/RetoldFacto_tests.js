@@ -119,7 +119,8 @@ suite
 								Description TEXT,
 								SchemaHash TEXT,
 								SchemaVersion INTEGER DEFAULT 0,
-								SchemaDefinition TEXT
+								SchemaDefinition TEXT,
+								VersionPolicy TEXT DEFAULT 'Append'
 							);
 							CREATE TABLE IF NOT EXISTS DatasetSource (
 								IDDatasetSource INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -151,6 +152,7 @@ suite
 								SchemaHash TEXT,
 								SchemaVersion INTEGER DEFAULT 0,
 								Version INTEGER DEFAULT 1,
+								IDIngestJob INTEGER DEFAULT 0,
 								IngestDate TEXT,
 								OriginCreateDate TEXT,
 								RepresentedTimeStampStart INTEGER DEFAULT 0,
@@ -208,7 +210,54 @@ suite
 								RecordsUpdated INTEGER DEFAULT 0,
 								RecordsErrored INTEGER DEFAULT 0,
 								Configuration TEXT,
-								Log TEXT
+								Log TEXT,
+								DatasetVersion INTEGER DEFAULT 0,
+								ContentSignature TEXT DEFAULT ''
+							);
+							CREATE TABLE IF NOT EXISTS SourceCatalogEntry (
+								IDSourceCatalogEntry INTEGER PRIMARY KEY AUTOINCREMENT,
+								GUIDSourceCatalogEntry TEXT,
+								CreateDate TEXT,
+								CreatingIDUser INTEGER DEFAULT 0,
+								UpdateDate TEXT,
+								UpdatingIDUser INTEGER DEFAULT 0,
+								Deleted INTEGER DEFAULT 0,
+								DeleteDate TEXT,
+								DeletingIDUser INTEGER DEFAULT 0,
+								Agency TEXT,
+								Name TEXT,
+								Type TEXT,
+								URL TEXT,
+								Protocol TEXT,
+								Category TEXT,
+								Region TEXT,
+								UpdateFrequency TEXT,
+								Description TEXT,
+								Notes TEXT,
+								Verified INTEGER DEFAULT 0
+							);
+							CREATE TABLE IF NOT EXISTS CatalogDatasetDefinition (
+								IDCatalogDatasetDefinition INTEGER PRIMARY KEY AUTOINCREMENT,
+								GUIDCatalogDatasetDefinition TEXT,
+								CreateDate TEXT,
+								CreatingIDUser INTEGER DEFAULT 0,
+								UpdateDate TEXT,
+								UpdatingIDUser INTEGER DEFAULT 0,
+								Deleted INTEGER DEFAULT 0,
+								DeleteDate TEXT,
+								DeletingIDUser INTEGER DEFAULT 0,
+								IDSourceCatalogEntry INTEGER DEFAULT 0,
+								Name TEXT,
+								Format TEXT,
+								MimeType TEXT,
+								EndpointURL TEXT,
+								Description TEXT,
+								ParseOptions TEXT,
+								AuthRequirements TEXT,
+								VersionPolicy TEXT DEFAULT 'Append',
+								Provisioned INTEGER DEFAULT 0,
+								IDSource INTEGER DEFAULT 0,
+								IDDataset INTEGER DEFAULT 0
 							);
 						`);
 
@@ -233,6 +282,7 @@ suite
 										DatasetManager: true,
 										IngestEngine: true,
 										ProjectionEngine: true,
+										CatalogManager: true,
 										WebUI: false
 									}
 							});
@@ -241,6 +291,7 @@ suite
 						_RetoldFacto.onBeforeInitialize = (fCallback) =>
 						{
 							_Fable.OratorServiceServer.server.use(_Fable.OratorServiceServer.bodyParser());
+							_Fable.OratorServiceServer.server.use(require('restify').plugins.queryParser());
 							return fCallback();
 						};
 
@@ -299,7 +350,7 @@ suite
 				);
 				test
 				(
-					'The entity list should contain all 8 entities',
+					'The entity list should contain all 10 entities',
 					function()
 					{
 						Expect(_RetoldFacto.entityList).to.be.an('array');
@@ -311,7 +362,9 @@ suite
 						Expect(_RetoldFacto.entityList).to.include('RecordBinary');
 						Expect(_RetoldFacto.entityList).to.include('CertaintyIndex');
 						Expect(_RetoldFacto.entityList).to.include('IngestJob');
-						Expect(_RetoldFacto.entityList.length).to.equal(8);
+						Expect(_RetoldFacto.entityList).to.include('SourceCatalogEntry');
+						Expect(_RetoldFacto.entityList).to.include('CatalogDatasetDefinition');
+						Expect(_RetoldFacto.entityList.length).to.equal(10);
 					}
 				);
 				test
@@ -2360,6 +2413,1267 @@ suite
 									Expect(pResponse.body.Ingested).to.equal(2);
 									return fDone();
 								});
+					}
+				);
+			}
+		);
+		suite
+		(
+			'Dataset Versioning',
+			function()
+			{
+				test
+				(
+					'ingest should auto-create IngestJob with DatasetVersion=1',
+					function(fDone)
+					{
+						this.timeout(10000);
+
+						// Create a dedicated dataset for version testing
+						_SuperTest.post('/1.0/Dataset')
+							.send({ Name: 'Version Test Dataset', Type: 'Raw', Description: 'Testing versioning' })
+							.expect(200)
+							.end(
+								(pError, pResponse) =>
+								{
+									Expect(pError).to.not.exist;
+									let tmpIDDataset = pResponse.body.IDDataset;
+									Expect(tmpIDDataset).to.be.greaterThan(0);
+
+									// Ingest CSV data
+									_SuperTest.post('/facto/ingest/file')
+										.send(
+											{
+												Content: 'name,value\nAlpha,100\nBeta,200\n',
+												Format: 'csv',
+												IDDataset: tmpIDDataset,
+												IDSource: 1
+											})
+										.expect(200)
+										.end(
+											(pIngestError, pIngestResponse) =>
+											{
+												Expect(pIngestError).to.not.exist;
+												Expect(pIngestResponse.body.Ingested).to.equal(2);
+												Expect(pIngestResponse.body.DatasetVersion).to.equal(1);
+												Expect(pIngestResponse.body.ContentSignature).to.be.a('string');
+												Expect(pIngestResponse.body.ContentSignature.length).to.equal(64);
+												Expect(pIngestResponse.body.IngestJob).to.exist;
+												Expect(pIngestResponse.body.IngestJob.DatasetVersion).to.equal(1);
+												return fDone();
+											});
+								});
+					}
+				);
+				test
+				(
+					'second ingest should auto-increment to DatasetVersion=2',
+					function(fDone)
+					{
+						this.timeout(10000);
+
+						_SuperTest.post('/1.0/Dataset')
+							.send({ Name: 'Version Increment Dataset', Type: 'Raw', Description: 'Testing version increment' })
+							.expect(200)
+							.end(
+								(pError, pResponse) =>
+								{
+									let tmpIDDataset = pResponse.body.IDDataset;
+
+									// First ingest
+									_SuperTest.post('/facto/ingest/file')
+										.send(
+											{
+												Content: 'a,b\n1,2\n',
+												Format: 'csv',
+												IDDataset: tmpIDDataset,
+												IDSource: 1
+											})
+										.expect(200)
+										.end(
+											(pErr1, pRes1) =>
+											{
+												Expect(pRes1.body.DatasetVersion).to.equal(1);
+
+												// Second ingest (different content)
+												_SuperTest.post('/facto/ingest/file')
+													.send(
+														{
+															Content: 'a,b\n3,4\n5,6\n',
+															Format: 'csv',
+															IDDataset: tmpIDDataset,
+															IDSource: 1
+														})
+													.expect(200)
+													.end(
+														(pErr2, pRes2) =>
+														{
+															Expect(pRes2.body.DatasetVersion).to.equal(2);
+															Expect(pRes2.body.Ingested).to.equal(2);
+															return fDone();
+														});
+											});
+								});
+					}
+				);
+				test
+				(
+					'records should have correct IDIngestJob FK',
+					function(fDone)
+					{
+						this.timeout(10000);
+
+						_SuperTest.post('/1.0/Dataset')
+							.send({ Name: 'IngestJob FK Dataset', Type: 'Raw', Description: 'Testing IDIngestJob on records' })
+							.expect(200)
+							.end(
+								(pError, pResponse) =>
+								{
+									let tmpIDDataset = pResponse.body.IDDataset;
+
+									_SuperTest.post('/facto/ingest/file')
+										.send(
+											{
+												Content: 'x,y\n10,20\n',
+												Format: 'csv',
+												IDDataset: tmpIDDataset,
+												IDSource: 1
+											})
+										.expect(200)
+										.end(
+											(pErr, pRes) =>
+											{
+												Expect(pRes.body.IngestJob).to.exist;
+												let tmpIDIngestJob = pRes.body.IngestJob.IDIngestJob;
+												Expect(tmpIDIngestJob).to.be.greaterThan(0);
+
+												// Check the records have the correct IDIngestJob
+												Expect(pRes.body.Records).to.be.an('array');
+												Expect(pRes.body.Records.length).to.equal(1);
+												Expect(parseInt(pRes.body.Records[0].IDIngestJob, 10)).to.equal(tmpIDIngestJob);
+												return fDone();
+											});
+								});
+					}
+				);
+			}
+		);
+		suite
+		(
+			'Content Signatures',
+			function()
+			{
+				test
+				(
+					'identical content should produce isDuplicate=true on second ingest',
+					function(fDone)
+					{
+						this.timeout(10000);
+
+						let tmpContent = 'col1,col2\nfoo,bar\nbaz,qux\n';
+
+						_SuperTest.post('/1.0/Dataset')
+							.send({ Name: 'Duplicate Sig Dataset', Type: 'Raw', Description: 'Testing duplicate signatures' })
+							.expect(200)
+							.end(
+								(pError, pResponse) =>
+								{
+									let tmpIDDataset = pResponse.body.IDDataset;
+
+									// First ingest
+									_SuperTest.post('/facto/ingest/file')
+										.send({ Content: tmpContent, Format: 'csv', IDDataset: tmpIDDataset, IDSource: 1 })
+										.expect(200)
+										.end(
+											(pErr1, pRes1) =>
+											{
+												Expect(pRes1.body.IsDuplicate).to.equal(false);
+												let tmpSig1 = pRes1.body.ContentSignature;
+
+												// Second ingest with identical content
+												_SuperTest.post('/facto/ingest/file')
+													.send({ Content: tmpContent, Format: 'csv', IDDataset: tmpIDDataset, IDSource: 1 })
+													.expect(200)
+													.end(
+														(pErr2, pRes2) =>
+														{
+															Expect(pRes2.body.IsDuplicate).to.equal(true);
+															Expect(pRes2.body.ContentSignature).to.equal(tmpSig1);
+															Expect(pRes2.body.DatasetVersion).to.equal(2);
+															return fDone();
+														});
+											});
+								});
+					}
+				);
+				test
+				(
+					'different content should produce isDuplicate=false',
+					function(fDone)
+					{
+						this.timeout(10000);
+
+						_SuperTest.post('/1.0/Dataset')
+							.send({ Name: 'Different Sig Dataset', Type: 'Raw', Description: 'Testing different signatures' })
+							.expect(200)
+							.end(
+								(pError, pResponse) =>
+								{
+									let tmpIDDataset = pResponse.body.IDDataset;
+
+									_SuperTest.post('/facto/ingest/file')
+										.send({ Content: 'a,b\n1,2\n', Format: 'csv', IDDataset: tmpIDDataset, IDSource: 1 })
+										.expect(200)
+										.end(
+											(pErr1, pRes1) =>
+											{
+												let tmpSig1 = pRes1.body.ContentSignature;
+
+												_SuperTest.post('/facto/ingest/file')
+													.send({ Content: 'a,b\n3,4\n', Format: 'csv', IDDataset: tmpIDDataset, IDSource: 1 })
+													.expect(200)
+													.end(
+														(pErr2, pRes2) =>
+														{
+															Expect(pRes2.body.IsDuplicate).to.equal(false);
+															Expect(pRes2.body.ContentSignature).to.not.equal(tmpSig1);
+															return fDone();
+														});
+											});
+								});
+					}
+				);
+			}
+		);
+		suite
+		(
+			'Version Policy',
+			function()
+			{
+				test
+				(
+					'PUT /facto/dataset/:id/version-policy should set policy',
+					function(fDone)
+					{
+						_SuperTest.post('/1.0/Dataset')
+							.send({ Name: 'Policy Test Dataset', Type: 'Raw', Description: 'Testing VersionPolicy' })
+							.expect(200)
+							.end(
+								(pError, pResponse) =>
+								{
+									let tmpIDDataset = pResponse.body.IDDataset;
+
+									_SuperTest.put(`/facto/dataset/${tmpIDDataset}/version-policy`)
+										.send({ VersionPolicy: 'Replace' })
+										.expect(200)
+										.end(
+											(pErr, pRes) =>
+											{
+												Expect(pRes.body.Success).to.equal(true);
+												Expect(pRes.body.Dataset.VersionPolicy).to.equal('Replace');
+												return fDone();
+											});
+								});
+					}
+				);
+				test
+				(
+					'PUT /facto/dataset/:id/version-policy should reject invalid policy',
+					function(fDone)
+					{
+						_SuperTest.post('/1.0/Dataset')
+							.send({ Name: 'Invalid Policy Dataset', Type: 'Raw', Description: 'Testing invalid policy' })
+							.expect(200)
+							.end(
+								(pError, pResponse) =>
+								{
+									let tmpIDDataset = pResponse.body.IDDataset;
+
+									_SuperTest.put(`/facto/dataset/${tmpIDDataset}/version-policy`)
+										.send({ VersionPolicy: 'InvalidValue' })
+										.expect(200)
+										.end(
+											(pErr, pRes) =>
+											{
+												Expect(pRes.body.Error).to.exist;
+												return fDone();
+											});
+								});
+					}
+				);
+				test
+				(
+					'Replace policy should soft-delete old records on re-import',
+					function(fDone)
+					{
+						this.timeout(10000);
+
+						_SuperTest.post('/1.0/Dataset')
+							.send({ Name: 'Replace Policy Dataset', Type: 'Raw', Description: 'Testing Replace policy' })
+							.expect(200)
+							.end(
+								(pError, pResponse) =>
+								{
+									let tmpIDDataset = pResponse.body.IDDataset;
+
+									// Set policy to Replace
+									_SuperTest.put(`/facto/dataset/${tmpIDDataset}/version-policy`)
+										.send({ VersionPolicy: 'Replace' })
+										.expect(200)
+										.end(
+											() =>
+											{
+												// Ingest v1 (3 records)
+												_SuperTest.post('/facto/ingest/file')
+													.send({ Content: 'a,b\n1,2\n3,4\n5,6\n', Format: 'csv', IDDataset: tmpIDDataset, IDSource: 1 })
+													.expect(200)
+													.end(
+														(pErr1, pRes1) =>
+														{
+															Expect(pRes1.body.Ingested).to.equal(3);
+															Expect(pRes1.body.DatasetVersion).to.equal(1);
+
+															// Ingest v2 (2 records) — v1 records should be soft-deleted
+															_SuperTest.post('/facto/ingest/file')
+																.send({ Content: 'a,b\n7,8\n9,10\n', Format: 'csv', IDDataset: tmpIDDataset, IDSource: 1 })
+																.expect(200)
+																.end(
+																	(pErr2, pRes2) =>
+																	{
+																		Expect(pRes2.body.Ingested).to.equal(2);
+																		Expect(pRes2.body.DatasetVersion).to.equal(2);
+
+																		// Count active records — should be 2 (only v2)
+																		_SuperTest.get(`/facto/dataset/${tmpIDDataset}/stats`)
+																			.expect(200)
+																			.end(
+																				(pErr3, pRes3) =>
+																				{
+																					Expect(pRes3.body.RecordCount).to.equal(2);
+																					return fDone();
+																				});
+																	});
+														});
+											});
+								});
+					}
+				);
+			}
+		);
+		suite
+		(
+			'Dataset Version History',
+			function()
+			{
+				test
+				(
+					'GET /facto/dataset/:id/versions should return version history',
+					function(fDone)
+					{
+						this.timeout(10000);
+
+						_SuperTest.post('/1.0/Dataset')
+							.send({ Name: 'Version History Dataset', Type: 'Raw', Description: 'Testing version history' })
+							.expect(200)
+							.end(
+								(pError, pResponse) =>
+								{
+									let tmpIDDataset = pResponse.body.IDDataset;
+
+									// Ingest v1
+									_SuperTest.post('/facto/ingest/file')
+										.send({ Content: 'k,v\na,1\n', Format: 'csv', IDDataset: tmpIDDataset, IDSource: 1 })
+										.expect(200)
+										.end(
+											() =>
+											{
+												// Ingest v2
+												_SuperTest.post('/facto/ingest/file')
+													.send({ Content: 'k,v\nb,2\n', Format: 'csv', IDDataset: tmpIDDataset, IDSource: 1 })
+													.expect(200)
+													.end(
+														() =>
+														{
+															// Ingest v3
+															_SuperTest.post('/facto/ingest/file')
+																.send({ Content: 'k,v\nc,3\n', Format: 'csv', IDDataset: tmpIDDataset, IDSource: 1 })
+																.expect(200)
+																.end(
+																	() =>
+																	{
+																		// Get version history
+																		_SuperTest.get(`/facto/dataset/${tmpIDDataset}/versions`)
+																			.expect(200)
+																			.end(
+																				(pErr, pRes) =>
+																				{
+																					Expect(pRes.body.Count).to.equal(3);
+																					Expect(pRes.body.Versions).to.be.an('array');
+																					Expect(pRes.body.Versions.length).to.equal(3);
+
+																					// Should be sorted DESC
+																					Expect(parseInt(pRes.body.Versions[0].DatasetVersion, 10)).to.equal(3);
+																					Expect(parseInt(pRes.body.Versions[1].DatasetVersion, 10)).to.equal(2);
+																					Expect(parseInt(pRes.body.Versions[2].DatasetVersion, 10)).to.equal(1);
+
+																					// Each should have a ContentSignature
+																					Expect(pRes.body.Versions[0].ContentSignature).to.be.a('string');
+																					Expect(pRes.body.Versions[0].ContentSignature.length).to.equal(64);
+
+																					return fDone();
+																				});
+																	});
+														});
+											});
+								});
+					}
+				);
+			}
+		);
+
+		// ================================================================
+		// Source Catalog - CRUD
+		// ================================================================
+		suite
+		(
+			'Source Catalog CRUD',
+			function()
+			{
+				let _CatalogEntryID = 0;
+
+				test
+				(
+					'Create a catalog entry',
+					function(fDone)
+					{
+						_SuperTest
+							.post('/facto/catalog/entry')
+							.send(
+								{
+									Agency: 'US Geological Survey (USGS)',
+									Name: 'USGS Data Portal',
+									Type: 'API',
+									URL: 'https://waterservices.usgs.gov',
+									Protocol: 'HTTPS',
+									Category: 'Science',
+									Region: 'US',
+									UpdateFrequency: 'Continuous',
+									Description: 'Geological and hydrological data',
+									Notes: 'Free, no auth required',
+									Verified: true
+								})
+							.end(
+								(pError, pRes) =>
+								{
+									Expect(pRes.body.Success).to.equal(true);
+									Expect(pRes.body.Entry).to.be.an('object');
+									Expect(pRes.body.Entry.IDSourceCatalogEntry).to.be.greaterThan(0);
+									Expect(pRes.body.Entry.Agency).to.equal('US Geological Survey (USGS)');
+									Expect(pRes.body.Entry.Verified).to.equal(1);
+									_CatalogEntryID = pRes.body.Entry.IDSourceCatalogEntry;
+									return fDone();
+								});
+					}
+				);
+
+				test
+				(
+					'Read catalog entry back',
+					function(fDone)
+					{
+						_SuperTest
+							.get(`/facto/catalog/entry/${_CatalogEntryID}`)
+							.end(
+								(pError, pRes) =>
+								{
+									Expect(pRes.body.Entry).to.be.an('object');
+									Expect(pRes.body.Entry.Agency).to.equal('US Geological Survey (USGS)');
+									Expect(pRes.body.Entry.Category).to.equal('Science');
+									Expect(pRes.body.Datasets).to.be.an('array');
+									return fDone();
+								});
+					}
+				);
+
+				test
+				(
+					'Update catalog entry',
+					function(fDone)
+					{
+						_SuperTest
+							.put(`/facto/catalog/entry/${_CatalogEntryID}`)
+							.send({ Category: 'Earth Science', Notes: 'Updated notes' })
+							.end(
+								(pError, pRes) =>
+								{
+									Expect(pRes.body.Success).to.equal(true);
+									return fDone();
+								});
+					}
+				);
+
+				test
+				(
+					'List catalog entries',
+					function(fDone)
+					{
+						_SuperTest
+							.get('/facto/catalog/entries')
+							.end(
+								(pError, pRes) =>
+								{
+									Expect(pRes.body.Count).to.be.greaterThan(0);
+									Expect(pRes.body.Entries).to.be.an('array');
+									return fDone();
+								});
+					}
+				);
+
+				test
+				(
+					'Soft-delete catalog entry',
+					function(fDone)
+					{
+						_SuperTest
+							.delete(`/facto/catalog/entry/${_CatalogEntryID}`)
+							.end(
+								(pError, pRes) =>
+								{
+								Expect(pRes.body.Success).to.equal(true);
+									Expect(pRes.body.Deleted).to.equal(_CatalogEntryID);
+
+									// Verify it no longer appears in listing
+									_SuperTest
+										.get('/facto/catalog/entries')
+										.end(
+											(pError2, pRes2) =>
+											{
+												let tmpFound = pRes2.body.Entries.filter((e) => e.IDSourceCatalogEntry === _CatalogEntryID);
+												Expect(tmpFound.length).to.equal(0);
+												return fDone();
+											});
+								});
+					}
+				);
+			}
+		);
+
+		// ================================================================
+		// Source Catalog - Dataset Definitions
+		// ================================================================
+		suite
+		(
+			'Catalog Dataset Definitions',
+			function()
+			{
+				let _CatalogEntryID = 0;
+				let _CatalogDatasetID = 0;
+
+				test
+				(
+					'Create catalog entry for dataset tests',
+					function(fDone)
+					{
+						_SuperTest
+							.post('/facto/catalog/entry')
+							.send(
+								{
+									Agency: 'NOAA',
+									Name: 'National Weather Service',
+									Type: 'API',
+									URL: 'https://www.weather.gov',
+									Category: 'Weather'
+								})
+							.end(
+								(pError, pRes) =>
+								{
+									Expect(pRes.body.Success).to.equal(true);
+									_CatalogEntryID = pRes.body.Entry.IDSourceCatalogEntry;
+									return fDone();
+								});
+					}
+				);
+
+				test
+				(
+					'Add dataset definition to catalog entry',
+					function(fDone)
+					{
+						_SuperTest
+							.post(`/facto/catalog/entry/${_CatalogEntryID}/dataset`)
+							.send(
+								{
+									Name: 'Weather Stations',
+									Format: 'fixed-width',
+									MimeType: 'text/plain',
+									EndpointURL: 'https://www.weather.gov/stations.dat',
+									Description: 'NOAA weather station master list',
+									ParseOptions: JSON.stringify({ columns: [{ name: 'StationID', start: 1, width: 11 }] }),
+									AuthRequirements: 'None',
+									VersionPolicy: 'Append'
+								})
+							.end(
+								(pError, pRes) =>
+								{
+									Expect(pRes.body.Success).to.equal(true);
+									Expect(pRes.body.DatasetDefinition).to.be.an('object');
+									Expect(pRes.body.DatasetDefinition.IDCatalogDatasetDefinition).to.be.greaterThan(0);
+									Expect(pRes.body.DatasetDefinition.Format).to.equal('fixed-width');
+									Expect(pRes.body.DatasetDefinition.Provisioned).to.equal(0);
+									_CatalogDatasetID = pRes.body.DatasetDefinition.IDCatalogDatasetDefinition;
+									return fDone();
+								});
+					}
+				);
+
+				test
+				(
+					'List dataset definitions for entry',
+					function(fDone)
+					{
+						_SuperTest
+							.get(`/facto/catalog/entry/${_CatalogEntryID}/datasets`)
+							.end(
+								(pError, pRes) =>
+								{
+									Expect(pRes.body.Count).to.equal(1);
+									Expect(pRes.body.Datasets).to.be.an('array');
+									Expect(pRes.body.Datasets[0].Name).to.equal('Weather Stations');
+									return fDone();
+								});
+					}
+				);
+
+				test
+				(
+					'Update dataset definition',
+					function(fDone)
+					{
+						_SuperTest
+							.put(`/facto/catalog/dataset/${_CatalogDatasetID}`)
+							.send({ Description: 'Updated description', VersionPolicy: 'Replace' })
+							.end(
+								(pError, pRes) =>
+								{
+									Expect(pRes.body.Success).to.equal(true);
+									return fDone();
+								});
+					}
+				);
+
+				test
+				(
+					'Soft-delete dataset definition',
+					function(fDone)
+					{
+						_SuperTest
+							.delete(`/facto/catalog/dataset/${_CatalogDatasetID}`)
+							.end(
+								(pError, pRes) =>
+								{
+									Expect(pRes.body.Success).to.equal(true);
+
+									// Verify it no longer appears
+									_SuperTest
+										.get(`/facto/catalog/entry/${_CatalogEntryID}/datasets`)
+										.end(
+											(pError2, pRes2) =>
+											{
+												Expect(pRes2.body.Count).to.equal(0);
+												return fDone();
+											});
+								});
+					}
+				);
+			}
+		);
+
+		// ================================================================
+		// Source Catalog - Search
+		// ================================================================
+		suite
+		(
+			'Catalog Search',
+			function()
+			{
+				test
+				(
+					'Create entries for search tests',
+					function(fDone)
+					{
+						_SuperTest
+							.post('/facto/catalog/entry')
+							.send({ Agency: 'EPA', Name: 'Environmental Data', Category: 'Environment', Region: 'US' })
+							.end(
+								(pError, pRes) =>
+								{
+									Expect(pRes.body.Success).to.equal(true);
+									_SuperTest
+										.post('/facto/catalog/entry')
+										.send({ Agency: 'NASA', Name: 'Space Science Data', Category: 'Space', Region: 'Global' })
+										.end(
+											(pError2, pRes2) =>
+											{
+												Expect(pRes2.body.Success).to.equal(true);
+												_SuperTest
+													.post('/facto/catalog/entry')
+													.send({ Agency: 'CDC', Name: 'Health Statistics', Category: 'Health', Region: 'US' })
+													.end(
+														(pError3, pRes3) =>
+														{
+															Expect(pRes3.body.Success).to.equal(true);
+															return fDone();
+														});
+											});
+								});
+					}
+				);
+
+				test
+				(
+					'Search by name',
+					function(fDone)
+					{
+						_SuperTest
+							.get('/facto/catalog/search?q=Space')
+							.end(
+								(pError, pRes) =>
+								{
+									Expect(pRes.body.Query).to.equal('space');
+									Expect(pRes.body.Count).to.be.greaterThan(0);
+									let tmpNames = pRes.body.Entries.map((e) => e.Name);
+									Expect(tmpNames).to.include('Space Science Data');
+									return fDone();
+								});
+					}
+				);
+
+				test
+				(
+					'Search by category',
+					function(fDone)
+					{
+						_SuperTest
+							.get('/facto/catalog/search?q=health')
+							.end(
+								(pError, pRes) =>
+								{
+									Expect(pRes.body.Count).to.be.greaterThan(0);
+									let tmpCategories = pRes.body.Entries.map((e) => e.Category);
+									Expect(tmpCategories).to.include('Health');
+									return fDone();
+								});
+					}
+				);
+
+				test
+				(
+					'Empty search returns all non-deleted entries',
+					function(fDone)
+					{
+						_SuperTest
+							.get('/facto/catalog/search')
+							.end(
+								(pError, pRes) =>
+								{
+									Expect(pRes.body.Query).to.equal('');
+									// Should include NOAA, EPA, NASA, CDC (not the deleted USGS)
+									Expect(pRes.body.Count).to.be.greaterThan(2);
+									return fDone();
+								});
+					}
+				);
+			}
+		);
+
+		// ================================================================
+		// Source Catalog - Provision
+		// ================================================================
+		suite
+		(
+			'Catalog Provision',
+			function()
+			{
+				let _ProvisionEntryID = 0;
+				let _ProvisionDatasetID = 0;
+
+				test
+				(
+					'Create catalog entry and dataset for provisioning',
+					function(fDone)
+					{
+						_SuperTest
+							.post('/facto/catalog/entry')
+							.send(
+								{
+									Agency: 'Bureau of Labor Statistics',
+									Name: 'BLS Data Portal',
+									Type: 'API',
+									URL: 'https://www.bls.gov',
+									Protocol: 'HTTPS',
+									Category: 'Economics'
+								})
+							.end(
+								(pError, pRes) =>
+								{
+									Expect(pRes.body.Success).to.equal(true);
+									_ProvisionEntryID = pRes.body.Entry.IDSourceCatalogEntry;
+
+									_SuperTest
+										.post(`/facto/catalog/entry/${_ProvisionEntryID}/dataset`)
+										.send(
+											{
+												Name: 'Consumer Price Index',
+												Format: 'csv',
+												MimeType: 'text/csv',
+												EndpointURL: 'https://www.bls.gov/cpi/data.csv',
+												Description: 'Monthly CPI data',
+												ParseOptions: '{}',
+												AuthRequirements: 'None',
+												VersionPolicy: 'Append'
+											})
+										.end(
+											(pError2, pRes2) =>
+											{
+												Expect(pRes2.body.Success).to.equal(true);
+												_ProvisionDatasetID = pRes2.body.DatasetDefinition.IDCatalogDatasetDefinition;
+												return fDone();
+											});
+								});
+					}
+				);
+
+				test
+				(
+					'Provision creates runtime Source, Dataset, and DatasetSource',
+					function(fDone)
+					{
+						_SuperTest
+							.post(`/facto/catalog/dataset/${_ProvisionDatasetID}/provision`)
+							.end(
+								(pError, pRes) =>
+								{
+									Expect(pRes.body.Success).to.equal(true);
+									Expect(pRes.body.Source).to.be.an('object');
+									Expect(pRes.body.Source.Name).to.equal('Bureau of Labor Statistics');
+									Expect(pRes.body.Source.IDSource).to.be.greaterThan(0);
+									Expect(pRes.body.Dataset).to.be.an('object');
+									Expect(pRes.body.Dataset.Name).to.equal('Consumer Price Index');
+									Expect(pRes.body.Dataset.IDDataset).to.be.greaterThan(0);
+									Expect(pRes.body.DatasetSource).to.be.an('object');
+									return fDone();
+								});
+					}
+				);
+
+				test
+				(
+					'CatalogDatasetDefinition is marked as provisioned',
+					function(fDone)
+					{
+						_SuperTest
+							.get(`/facto/catalog/entry/${_ProvisionEntryID}/datasets`)
+							.end(
+								(pError, pRes) =>
+								{
+									Expect(pRes.body.Count).to.equal(1);
+									let tmpDef = pRes.body.Datasets[0];
+									Expect(tmpDef.Provisioned).to.equal(1);
+									Expect(tmpDef.IDSource).to.be.greaterThan(0);
+									Expect(tmpDef.IDDataset).to.be.greaterThan(0);
+									return fDone();
+								});
+					}
+				);
+
+				test
+				(
+					'Provisioning again is idempotent (reuses existing Source and Dataset)',
+					function(fDone)
+					{
+						_SuperTest
+							.post(`/facto/catalog/dataset/${_ProvisionDatasetID}/provision`)
+							.end(
+								(pError, pRes) =>
+								{
+									Expect(pRes.body.Success).to.equal(true);
+									// Source and Dataset should have the same IDs
+									Expect(pRes.body.Source.Name).to.equal('Bureau of Labor Statistics');
+									Expect(pRes.body.Dataset.Name).to.equal('Consumer Price Index');
+									return fDone();
+								});
+					}
+				);
+			}
+		);
+
+		// ================================================================
+		// Source Catalog - Import / Export
+		// ================================================================
+		suite
+		(
+			'Catalog Import/Export',
+			function()
+			{
+				test
+				(
+					'Import catalog entries with datasets',
+					function(fDone)
+					{
+						let tmpImportData = [
+							{
+								Agency: 'Import Test Agency A',
+								Name: 'Agency A Portal',
+								Type: 'API',
+								Category: 'Test',
+								Datasets: [
+									{
+										Name: 'Dataset Alpha',
+										Format: 'csv',
+										EndpointURL: 'https://example.com/alpha.csv',
+										VersionPolicy: 'Append'
+									},
+									{
+										Name: 'Dataset Beta',
+										Format: 'json',
+										EndpointURL: 'https://example.com/beta.json',
+										VersionPolicy: 'Replace'
+									}
+								]
+							},
+							{
+								Agency: 'Import Test Agency B',
+								Name: 'Agency B Portal',
+								Type: 'File',
+								Category: 'Test',
+								Datasets: [
+									{
+										Name: 'Dataset Gamma',
+										Format: 'xml',
+										EndpointURL: 'https://example.com/gamma.xml'
+									}
+								]
+							}
+						];
+
+						_SuperTest
+							.post('/facto/catalog/import')
+							.send(tmpImportData)
+							.end(
+								(pError, pRes) =>
+								{
+									Expect(pRes.body.Success).to.equal(true);
+									Expect(pRes.body.EntriesCreated).to.equal(2);
+									Expect(pRes.body.DatasetsCreated).to.equal(3);
+									Expect(pRes.body.Errors).to.equal(0);
+									return fDone();
+								});
+					}
+				);
+
+				test
+				(
+					'Export catalog contains imported entries',
+					function(fDone)
+					{
+						_SuperTest
+							.get('/facto/catalog/export')
+							.end(
+								(pError, pRes) =>
+								{
+									Expect(pRes.body.Count).to.be.greaterThan(0);
+									Expect(pRes.body.Entries).to.be.an('array');
+
+									// Find our imported entries
+									let tmpAgencyA = pRes.body.Entries.find((e) => e.Agency === 'Import Test Agency A');
+									Expect(tmpAgencyA).to.be.an('object');
+									Expect(tmpAgencyA.Datasets).to.be.an('array');
+									Expect(tmpAgencyA.Datasets.length).to.equal(2);
+
+									let tmpAgencyB = pRes.body.Entries.find((e) => e.Agency === 'Import Test Agency B');
+									Expect(tmpAgencyB).to.be.an('object');
+									Expect(tmpAgencyB.Datasets.length).to.equal(1);
+									Expect(tmpAgencyB.Datasets[0].Name).to.equal('Dataset Gamma');
+
+									return fDone();
+								});
+					}
+				);
+			}
+		);
+
+		suite
+		(
+			'parseJSON dataPath',
+			() =>
+			{
+				test
+				(
+					'parseJSON with simple dataPath extracts nested array',
+					function(fDone)
+					{
+						let tmpJSON = JSON.stringify({
+							metadata: { page: 1 },
+							data: [
+								{ id: 1, name: 'Alpha' },
+								{ id: 2, name: 'Beta' }
+							]
+						});
+
+						_Fable.RetoldFactoIngestEngine.parseJSON(tmpJSON, { dataPath: 'data' },
+							(pError, pRecords) =>
+							{
+								Expect(pError).to.be.null;
+								Expect(pRecords).to.be.an('array');
+								Expect(pRecords.length).to.equal(2);
+								Expect(pRecords[0].name).to.equal('Alpha');
+								return fDone();
+							});
+					}
+				);
+
+				test
+				(
+					'parseJSON with deep dataPath including array index',
+					function(fDone)
+					{
+						let tmpJSON = JSON.stringify({
+							Results: {
+								series: [
+									{
+										seriesID: 'CUUR0000SA0',
+										data: [
+											{ year: '2024', value: '310.1' },
+											{ year: '2023', value: '305.2' }
+										]
+									}
+								]
+							}
+						});
+
+						_Fable.RetoldFactoIngestEngine.parseJSON(tmpJSON, { dataPath: 'Results.series[0].data' },
+							(pError, pRecords) =>
+							{
+								Expect(pError).to.be.null;
+								Expect(pRecords).to.be.an('array');
+								Expect(pRecords.length).to.equal(2);
+								Expect(pRecords[0].year).to.equal('2024');
+								Expect(pRecords[1].value).to.equal('305.2');
+								return fDone();
+							});
+					}
+				);
+
+				test
+				(
+					'parseJSON backward compatibility (no options)',
+					function(fDone)
+					{
+						let tmpJSON = JSON.stringify({
+							data: [{ x: 1 }, { x: 2 }]
+						});
+
+						_Fable.RetoldFactoIngestEngine.parseJSON(tmpJSON,
+							(pError, pRecords) =>
+							{
+								Expect(pError).to.be.null;
+								Expect(pRecords).to.be.an('array');
+								Expect(pRecords.length).to.equal(2);
+								return fDone();
+							});
+					}
+				);
+
+				test
+				(
+					'parseJSON with invalid dataPath returns error',
+					function(fDone)
+					{
+						let tmpJSON = JSON.stringify({ foo: { bar: 1 } });
+
+						_Fable.RetoldFactoIngestEngine.parseJSON(tmpJSON, { dataPath: 'missing.path' },
+							(pError, pRecords) =>
+							{
+								Expect(pError).to.be.an('error');
+								Expect(pError.message).to.contain('not found');
+								return fDone();
+							});
+					}
+				);
+
+				test
+				(
+					'_resolveDataPath handles empty path',
+					function(fDone)
+					{
+						let tmpObj = { a: 1 };
+						let tmpResult = _Fable.RetoldFactoIngestEngine._resolveDataPath(tmpObj, '');
+						Expect(tmpResult).to.deep.equal(tmpObj);
+						return fDone();
+					}
+				);
+			}
+		);
+
+		suite
+		(
+			'Catalog Fetch',
+			() =>
+			{
+				let _FetchCatalogEntryID;
+				let _FetchCatalogDatasetID;
+
+				test
+				(
+					'Create catalog entry and dataset for fetch testing',
+					function(fDone)
+					{
+						_SuperTest
+							.post('/facto/catalog/entry')
+							.send({
+								Agency: 'Fetch Test Agency',
+								Name: 'Fetch Test Portal',
+								Type: 'API',
+								URL: 'https://example.invalid',
+								Protocol: 'HTTPS',
+								Category: 'Testing'
+							})
+							.end(
+								(pError, pRes) =>
+								{
+									Expect(pRes.body.Success).to.equal(true);
+									_FetchCatalogEntryID = pRes.body.Entry.IDSourceCatalogEntry;
+
+									_SuperTest
+										.post('/facto/catalog/entry/' + _FetchCatalogEntryID + '/dataset')
+										.send({
+											Name: 'Fetch Test Dataset',
+											Format: 'csv',
+											EndpointURL: 'https://example.invalid/data.csv',
+											Description: 'Test dataset for fetch tests',
+											VersionPolicy: 'Append'
+										})
+										.end(
+											(pError2, pRes2) =>
+											{
+												Expect(pRes2.body.Success).to.equal(true);
+												_FetchCatalogDatasetID = pRes2.body.DatasetDefinition.IDCatalogDatasetDefinition;
+												return fDone();
+											});
+								});
+					}
+				);
+
+				test
+				(
+					'Fetch rejects non-provisioned dataset definition',
+					function(fDone)
+					{
+						_SuperTest
+							.post('/facto/catalog/dataset/' + _FetchCatalogDatasetID + '/fetch')
+							.end(
+								(pError, pRes) =>
+								{
+									Expect(pRes.body.Error).to.contain('provisioned');
+									return fDone();
+								});
+					}
+				);
+
+				test
+				(
+					'Provision dataset for fetch testing',
+					function(fDone)
+					{
+						_SuperTest
+							.post('/facto/catalog/dataset/' + _FetchCatalogDatasetID + '/provision')
+							.end(
+								(pError, pRes) =>
+								{
+									Expect(pRes.body.Success).to.equal(true);
+									return fDone();
+								});
+					}
+				);
+
+				test
+				(
+					'Fetch with unreachable URL returns download error',
+					function(fDone)
+					{
+						this.timeout(35000);
+						_SuperTest
+							.post('/facto/catalog/dataset/' + _FetchCatalogDatasetID + '/fetch')
+							.end(
+								(pError, pRes) =>
+								{
+									Expect(pRes.body.Error).to.be.a('string');
+									Expect(pRes.body.Error).to.contain('Download failed');
+									return fDone();
+								});
+					}
+				);
+
+				test
+				(
+					'Fetch rejects invalid dataset definition ID',
+					function(fDone)
+					{
+						_SuperTest
+							.post('/facto/catalog/dataset/99999/fetch')
+							.end(
+								(pError, pRes) =>
+								{
+									Expect(pRes.body.Error).to.be.a('string');
+									return fDone();
+								});
+					}
+				);
+
+				test
+				(
+					'ingestContent works with CSV string directly',
+					function(fDone)
+					{
+						let tmpCSV = 'name,value\nAlpha,100\nBeta,200\nGamma,300';
+
+						_Fable.RetoldFactoIngestEngine.ingestContent(tmpCSV, 1, 1,
+							{ format: 'csv', type: 'test-ingest' },
+							(pError, pResult) =>
+							{
+								Expect(pError).to.be.null;
+								Expect(pResult.Ingested).to.equal(3);
+								Expect(pResult.Format).to.equal('csv');
+								Expect(pResult.DatasetVersion).to.be.a('number');
+								Expect(pResult.ContentSignature).to.be.a('string');
+								Expect(pResult.IngestJob).to.be.an('object');
+								return fDone();
+							});
+					}
+				);
+
+				test
+				(
+					'ingestContent works with JSON string and dataPath',
+					function(fDone)
+					{
+						let tmpJSON = JSON.stringify({
+							metadata: { count: 2 },
+							data: [
+								{ id: 1, val: 'x' },
+								{ id: 2, val: 'y' }
+							]
+						});
+
+						_Fable.RetoldFactoIngestEngine.ingestContent(tmpJSON, 1, 1,
+							{ format: 'json', dataPath: 'data' },
+							(pError, pResult) =>
+							{
+								Expect(pError).to.be.null;
+								Expect(pResult.Ingested).to.equal(2);
+								Expect(pResult.Format).to.equal('json');
+								return fDone();
+							});
 					}
 				);
 			}

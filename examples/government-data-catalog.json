@@ -1,0 +1,137 @@
+[
+	{
+		"Agency": "US Geological Survey",
+		"Name": "USGS Earthquake Hazards Program",
+		"Type": "API",
+		"URL": "https://earthquake.usgs.gov",
+		"Protocol": "HTTPS",
+		"Category": "Science",
+		"Region": "Global",
+		"UpdateFrequency": "Continuous",
+		"Description": "Real-time earthquake data via GeoJSON, CSV, and KML feeds from the USGS Earthquake Hazards Program.",
+		"Notes": "Free, no auth required. Public domain data.",
+		"Verified": true,
+		"Datasets": [
+			{
+				"Name": "USGS Earthquakes (Past 7 Days)",
+				"Format": "csv",
+				"MimeType": "text/csv",
+				"EndpointURL": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.csv",
+				"Description": "All earthquakes worldwide in the past 7 days. Updates every 5 minutes. Fields: time, latitude, longitude, depth, mag, magType, nst, gap, dmin, rms, net, id, updated, place, type.",
+				"ParseOptions": "{}",
+				"AuthRequirements": "None",
+				"VersionPolicy": "Append"
+			}
+		]
+	},
+	{
+		"Agency": "US Treasury Department",
+		"Name": "Treasury Fiscal Data API",
+		"Type": "API",
+		"URL": "https://api.fiscaldata.treasury.gov",
+		"Protocol": "HTTPS",
+		"Category": "Finance",
+		"Region": "US",
+		"UpdateFrequency": "Daily",
+		"Description": "Programmatic access to federal financial data including national debt, exchange rates, and government spending.",
+		"Notes": "Free, no auth required. Supports JSON, CSV, XML output formats.",
+		"Verified": true,
+		"Datasets": [
+			{
+				"Name": "Treasury Debt to the Penny",
+				"Format": "json",
+				"MimeType": "application/json",
+				"EndpointURL": "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/debt_to_penny?page[size]=100&format=json",
+				"Description": "Daily US national debt figures showing total public debt outstanding. Fields: record_date, debt_held_public_amt, intragov_hold_amt, tot_pub_debt_out_amt.",
+				"ParseOptions": "{\"dataPath\": \"data\"}",
+				"AuthRequirements": "None",
+				"VersionPolicy": "Append"
+			},
+			{
+				"Name": "Treasury Exchange Rates",
+				"Format": "xml",
+				"MimeType": "application/xml",
+				"EndpointURL": "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/od/rates_of_exchange?page[size]=50&format=xml",
+				"Description": "Foreign currency exchange rates used for federal government reporting. Fields: record_date, country, currency, exchange_rate, effective_date.",
+				"ParseOptions": "{}",
+				"AuthRequirements": "None",
+				"VersionPolicy": "Append"
+			}
+		]
+	},
+	{
+		"Agency": "US Geological Survey",
+		"Name": "USGS National Water Information System",
+		"Type": "API",
+		"URL": "https://waterservices.usgs.gov",
+		"Protocol": "HTTPS",
+		"Category": "Science",
+		"Region": "US",
+		"UpdateFrequency": "Continuous",
+		"Description": "Real-time water data from thousands of monitoring stations including streamflow, water levels, and water quality.",
+		"Notes": "Free, no auth required. RDB tab-delimited format with comment headers.",
+		"Verified": true,
+		"Datasets": [
+			{
+				"Name": "USGS Streamflow - Potomac River",
+				"Format": "csv",
+				"MimeType": "text/tab-separated-values",
+				"EndpointURL": "https://waterservices.usgs.gov/nwis/iv/?format=rdb&sites=01646500&period=P1D&parameterCd=00060",
+				"Description": "Real-time streamflow (discharge) data for the Potomac River at Little Falls, DC. Site 01646500, Parameter 00060 (cubic feet per second). Updates every 15 minutes.",
+				"ParseOptions": "{\"delimiter\": \"\\t\", \"stripCommentLines\": true}",
+				"AuthRequirements": "None",
+				"VersionPolicy": "Append"
+			}
+		]
+	},
+	{
+		"Agency": "Bureau of Labor Statistics",
+		"Name": "BLS Public Data API",
+		"Type": "API",
+		"URL": "https://api.bls.gov/publicAPI/v2",
+		"Protocol": "HTTPS",
+		"Category": "Economics",
+		"Region": "US",
+		"UpdateFrequency": "Monthly",
+		"Description": "Economic time series data including employment, prices, compensation, and productivity statistics.",
+		"Notes": "Free for limited requests. Registration key available for higher rate limits.",
+		"Verified": true,
+		"Datasets": [
+			{
+				"Name": "BLS Consumer Price Index",
+				"Format": "json",
+				"MimeType": "application/json",
+				"EndpointURL": "https://api.bls.gov/publicAPI/v2/timeseries/data/CUUR0000SA0",
+				"Description": "Consumer Price Index for All Urban Consumers (CPI-U), all items, US city average. Series CUUR0000SA0. Fields: year, period, periodName, value, footnotes.",
+				"ParseOptions": "{\"dataPath\": \"Results.series[0].data\"}",
+				"AuthRequirements": "None (optional API key for higher limits)",
+				"VersionPolicy": "Append"
+			}
+		]
+	},
+	{
+		"Agency": "National Oceanic and Atmospheric Administration",
+		"Name": "NOAA National Centers for Environmental Information",
+		"Type": "File",
+		"URL": "https://www.ncei.noaa.gov",
+		"Protocol": "HTTPS",
+		"Category": "Climate",
+		"Region": "Global",
+		"UpdateFrequency": "Daily",
+		"Description": "Global Historical Climatology Network (GHCN) and other climate datasets from NOAA NCEI.",
+		"Notes": "Free, no auth required. Fixed-width, CSV, and NetCDF formats available.",
+		"Verified": true,
+		"Datasets": [
+			{
+				"Name": "NOAA Weather Station Inventory",
+				"Format": "other",
+				"MimeType": "text/plain",
+				"EndpointURL": "https://www.ncei.noaa.gov/pub/data/ghcn/daily/ghcnd-stations.txt",
+				"Description": "GHCN-Daily weather station inventory. Fixed-width format with ~120,000+ stations globally. Columns: ID (11), Latitude (8), Longitude (9), Elevation (6), State (2), Name (30), GSN Flag (3), HCN Flag (3), WMO ID (5).",
+				"ParseOptions": "{\"columns\": [{\"name\": \"ID\", \"start\": 1, \"width\": 11}, {\"name\": \"Latitude\", \"start\": 13, \"width\": 8}, {\"name\": \"Longitude\", \"start\": 22, \"width\": 9}, {\"name\": \"Elevation\", \"start\": 32, \"width\": 6}, {\"name\": \"State\", \"start\": 39, \"width\": 2}, {\"name\": \"Name\", \"start\": 42, \"width\": 30}, {\"name\": \"GSNFlag\", \"start\": 73, \"width\": 3}, {\"name\": \"HCNFlag\", \"start\": 77, \"width\": 3}, {\"name\": \"WMOId\", \"start\": 81, \"width\": 5}]}",
+				"AuthRequirements": "None",
+				"VersionPolicy": "Replace"
+			}
+		]
+	}
+]

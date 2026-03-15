@@ -50,6 +50,7 @@ $Type 32
 $SchemaHash 64
 #SchemaVersion
 *SchemaDefinition
+$VersionPolicy 16
 
 !DatasetSource
 @IDDatasetSource
@@ -81,6 +82,7 @@ $Type 64
 $SchemaHash 64
 #SchemaVersion
 #Version
+#IDIngestJob
 &IngestDate
 &OriginCreateDate
 #RepresentedTimeStampStart
@@ -139,3 +141,50 @@ $Status 32
 #RecordsErrored
 *Configuration
 *Log
+#DatasetVersion
+$ContentSignature 128
+
+!SourceCatalogEntry
+@IDSourceCatalogEntry
+%GUIDSourceCatalogEntry
+&CreateDate
+#CreatingIDUser
+&UpdateDate
+#UpdatingIDUser
+^Deleted
+&DeleteDate
+#DeletingIDUser
+$Agency 200
+$Name 200
+$Type 64
+$URL 512
+$Protocol 32
+$Category 128
+$Region 128
+$UpdateFrequency 64
+*Description
+*Notes
+^Verified
+
+!CatalogDatasetDefinition
+@IDCatalogDatasetDefinition
+%GUIDCatalogDatasetDefinition
+&CreateDate
+#CreatingIDUser
+&UpdateDate
+#UpdatingIDUser
+^Deleted
+&DeleteDate
+#DeletingIDUser
+#IDSourceCatalogEntry -> IDSourceCatalogEntry
+$Name 200
+$Format 32
+$MimeType 128
+$EndpointURL 512
+*Description
+*ParseOptions
+*AuthRequirements
+$VersionPolicy 16
+^Provisioned
+#IDSource
+#IDDataset

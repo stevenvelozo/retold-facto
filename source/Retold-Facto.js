@@ -22,6 +22,7 @@ const libRetoldFactoRecordManager = require('./services/Retold-Facto-RecordManag
 const libRetoldFactoDatasetManager = require('./services/Retold-Facto-DatasetManager.js');
 const libRetoldFactoIngestEngine = require('./services/Retold-Facto-IngestEngine.js');
 const libRetoldFactoProjectionEngine = require('./services/Retold-Facto-ProjectionEngine.js');
+const libRetoldFactoCatalogManager = require('./services/Retold-Facto-CatalogManager.js');
 
 // Embedded schema SQL for auto-creation when using SQLite
 const FACTO_SCHEMA_SQL = `
@@ -50,7 +51,8 @@ CREATE TABLE IF NOT EXISTS Dataset (
 	UpdateDate TEXT, UpdatingIDUser INTEGER DEFAULT 0,
 	Deleted INTEGER DEFAULT 0, DeleteDate TEXT, DeletingIDUser INTEGER DEFAULT 0,
 	Name TEXT, Type TEXT, Description TEXT,
-	SchemaHash TEXT, SchemaVersion INTEGER DEFAULT 0, SchemaDefinition TEXT
+	SchemaHash TEXT, SchemaVersion INTEGER DEFAULT 0, SchemaDefinition TEXT,
+	VersionPolicy TEXT DEFAULT 'Append'
 );
 CREATE TABLE IF NOT EXISTS DatasetSource (
 	IDDatasetSource INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -69,7 +71,8 @@ CREATE TABLE IF NOT EXISTS Record (
 	Deleted INTEGER DEFAULT 0, DeleteDate TEXT, DeletingIDUser INTEGER DEFAULT 0,
 	IDDataset INTEGER DEFAULT 0, IDSource INTEGER DEFAULT 0,
 	Type TEXT, SchemaHash TEXT, SchemaVersion INTEGER DEFAULT 0,
-	Version INTEGER DEFAULT 1, IngestDate TEXT, OriginCreateDate TEXT,
+	Version INTEGER DEFAULT 1, IDIngestJob INTEGER DEFAULT 0,
+	IngestDate TEXT, OriginCreateDate TEXT,
 	RepresentedTimeStampStart INTEGER DEFAULT 0,
 	RepresentedTimeStampStop INTEGER DEFAULT 0,
 	RepresentedDuration INTEGER DEFAULT 0, Content TEXT
@@ -102,7 +105,31 @@ CREATE TABLE IF NOT EXISTS IngestJob (
 	Status TEXT, StartDate TEXT, EndDate TEXT,
 	RecordsProcessed INTEGER DEFAULT 0, RecordsCreated INTEGER DEFAULT 0,
 	RecordsUpdated INTEGER DEFAULT 0, RecordsErrored INTEGER DEFAULT 0,
-	Configuration TEXT, Log TEXT
+	Configuration TEXT, Log TEXT,
+	DatasetVersion INTEGER DEFAULT 0, ContentSignature TEXT DEFAULT ''
+);
+CREATE TABLE IF NOT EXISTS SourceCatalogEntry (
+	IDSourceCatalogEntry INTEGER PRIMARY KEY AUTOINCREMENT,
+	GUIDSourceCatalogEntry TEXT,
+	CreateDate TEXT, CreatingIDUser INTEGER DEFAULT 0,
+	UpdateDate TEXT, UpdatingIDUser INTEGER DEFAULT 0,
+	Deleted INTEGER DEFAULT 0, DeleteDate TEXT, DeletingIDUser INTEGER DEFAULT 0,
+	Agency TEXT, Name TEXT, Type TEXT, URL TEXT, Protocol TEXT,
+	Category TEXT, Region TEXT, UpdateFrequency TEXT,
+	Description TEXT, Notes TEXT, Verified INTEGER DEFAULT 0
+);
+CREATE TABLE IF NOT EXISTS CatalogDatasetDefinition (
+	IDCatalogDatasetDefinition INTEGER PRIMARY KEY AUTOINCREMENT,
+	GUIDCatalogDatasetDefinition TEXT,
+	CreateDate TEXT, CreatingIDUser INTEGER DEFAULT 0,
+	UpdateDate TEXT, UpdatingIDUser INTEGER DEFAULT 0,
+	Deleted INTEGER DEFAULT 0, DeleteDate TEXT, DeletingIDUser INTEGER DEFAULT 0,
+	IDSourceCatalogEntry INTEGER DEFAULT 0, Name TEXT, Format TEXT,
+	MimeType TEXT, EndpointURL TEXT, Description TEXT,
+	ParseOptions TEXT, AuthRequirements TEXT,
+	VersionPolicy TEXT DEFAULT 'Append',
+	Provisioned INTEGER DEFAULT 0,
+	IDSource INTEGER DEFAULT 0, IDDataset INTEGER DEFAULT 0
 );
 `;
 
@@ -136,6 +163,8 @@ const defaultFactoSettings = (
 				IngestEngine: true,
 				// Projection engine API (/facto/projection/*)
 				ProjectionEngine: true,
+				// Catalog manager API (/facto/catalog/*)
+				CatalogManager: true,
 				// Web UI
 				WebUI: true
 			},
@@ -206,6 +235,12 @@ class RetoldFacto extends libFableServiceProviderBase
 
 		this.fable.serviceManager.addServiceType('RetoldFactoProjectionEngine', libRetoldFactoProjectionEngine);
 		this.fable.serviceManager.instantiateServiceProvider('RetoldFactoProjectionEngine',
+			{
+				RoutePrefix: this.options.Facto.RoutePrefix
+			});
+
+		this.fable.serviceManager.addServiceType('RetoldFactoCatalogManager', libRetoldFactoCatalogManager);
+		this.fable.serviceManager.instantiateServiceProvider('RetoldFactoCatalogManager',
 			{
 				RoutePrefix: this.options.Facto.RoutePrefix
 			});
@@ -448,7 +483,7 @@ class RetoldFacto extends libFableServiceProviderBase
 			this.fable.log.info(`Retold Facto is initializing...`);
 
 			// Log endpoint configuration
-			let tmpGroupNames = ['MeadowEndpoints', 'SourceManager', 'RecordManager', 'DatasetManager', 'IngestEngine', 'ProjectionEngine', 'WebUI'];
+			let tmpGroupNames = ['MeadowEndpoints', 'SourceManager', 'RecordManager', 'DatasetManager', 'IngestEngine', 'ProjectionEngine', 'CatalogManager', 'WebUI'];
 			let tmpEnabledGroups = [];
 			let tmpDisabledGroups = [];
 			for (let i = 0; i < tmpGroupNames.length; i++)
@@ -481,6 +516,15 @@ class RetoldFacto extends libFableServiceProviderBase
 					{
 						return fInitCallback();
 					}
+				});
+
+			// Enable JSON body parsing and query string parsing
+			tmpAnticipate.anticipate(
+				(fInitCallback) =>
+				{
+					this.fable.OratorServiceServer.server.use(this.fable.OratorServiceServer.bodyParser());
+					this.fable.OratorServiceServer.server.use(require('restify').plugins.queryParser());
+					return fInitCallback();
 				});
 
 			tmpAnticipate.anticipate(this.initializePersistenceEngine.bind(this));
@@ -525,6 +569,11 @@ class RetoldFacto extends libFableServiceProviderBase
 					if (this.isEndpointGroupEnabled('ProjectionEngine'))
 					{
 						this.fable.RetoldFactoProjectionEngine.connectRoutes(this.fable.OratorServiceServer);
+					}
+
+					if (this.isEndpointGroupEnabled('CatalogManager'))
+					{
+						this.fable.RetoldFactoCatalogManager.connectRoutes(this.fable.OratorServiceServer);
 					}
 
 					return fInitCallback();
@@ -583,7 +632,7 @@ class RetoldFacto extends libFableServiceProviderBase
 
 					if (tmpPictMinJsPath)
 					{
-						this.fable.OratorServiceServer.doGet('/facto/app/pict.min.js',
+						this.fable.OratorServiceServer.doGet('/pict.min.js',
 							(pRequest, pResponse, fNext) =>
 							{
 								libFs.readFile(tmpPictMinJsPath, 'utf8',
@@ -603,7 +652,7 @@ class RetoldFacto extends libFableServiceProviderBase
 
 					this.fable.serviceManager.addServiceType('OratorStaticServer', libOratorStaticServer);
 					let tmpStaticServer = this.fable.serviceManager.instantiateServiceProvider('OratorStaticServer');
-					tmpStaticServer.addStaticRoute(tmpWebAppPath, 'index.html', '/facto/app', '/facto/app');
+					tmpStaticServer.addStaticRoute(tmpWebAppPath, 'index.html', '/*', '/');
 
 					return fInitCallback();
 				});

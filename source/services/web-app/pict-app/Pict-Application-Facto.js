@@ -8,6 +8,7 @@ const libViewRecords = require('./views/PictView-Facto-Records.js');
 const libViewDatasets = require('./views/PictView-Facto-Datasets.js');
 const libViewIngest = require('./views/PictView-Facto-Ingest.js');
 const libViewProjections = require('./views/PictView-Facto-Projections.js');
+const libViewCatalog = require('./views/PictView-Facto-Catalog.js');
 
 class FactoApplication extends libPictApplication
 {
@@ -25,6 +26,7 @@ class FactoApplication extends libPictApplication
 		this.pict.addView('Facto-Datasets', libViewDatasets.default_configuration, libViewDatasets);
 		this.pict.addView('Facto-Ingest', libViewIngest.default_configuration, libViewIngest);
 		this.pict.addView('Facto-Projections', libViewProjections.default_configuration, libViewProjections);
+		this.pict.addView('Facto-Catalog', libViewCatalog.default_configuration, libViewCatalog);
 	}
 
 	onAfterInitializeAsync(fCallback)
@@ -32,6 +34,7 @@ class FactoApplication extends libPictApplication
 		// Centralized application state
 		this.pict.AppData.Facto =
 		{
+			CatalogEntries: [],
 			Sources: [],
 			Datasets: [],
 			Records: [],

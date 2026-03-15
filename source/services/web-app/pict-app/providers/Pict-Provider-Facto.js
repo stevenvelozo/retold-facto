@@ -19,7 +19,33 @@ class FactoProvider extends libPictProvider
 			tmpOpts.headers['Content-Type'] = 'application/json';
 			tmpOpts.body = JSON.stringify(pBody);
 		}
-		return fetch(pPath, tmpOpts).then(function(pResponse) { return pResponse.json(); });
+		return fetch(pPath, tmpOpts).then(
+			function(pResponse)
+			{
+				return pResponse.text().then(
+					function(pText)
+					{
+						let tmpData;
+						try
+						{
+							tmpData = JSON.parse(pText);
+						}
+						catch (pParseError)
+						{
+							return { Error: 'HTTP ' + pResponse.status + ' (non-JSON): ' + pText.substring(0, 200) };
+						}
+						// Translate Restify error format {code, message} to {Error}
+						if (!pResponse.ok && tmpData && tmpData.code && !tmpData.Error)
+						{
+							tmpData.Error = tmpData.code + ': ' + (tmpData.message || 'HTTP ' + pResponse.status);
+						}
+						return tmpData;
+					});
+			}).catch(
+			function(pError)
+			{
+				return { Error: pError.message || 'Network error' };
+			});
 	}
 
 	setStatus(pElementId, pMessage, pType)
@@ -37,6 +63,100 @@ class FactoProvider extends libPictProvider
 		if (!tmpEl) return;
 		tmpEl.style.display = 'none';
 		tmpEl.textContent = '';
+	}
+
+	// ================================================================
+	// Catalog Operations
+	// ================================================================
+
+	loadCatalogEntries()
+	{
+		return this.api('GET', '/facto/catalog/entries').then(
+			(pResponse) =>
+			{
+				this.pict.AppData.Facto.CatalogEntries = (pResponse && pResponse.Entries) ? pResponse.Entries : [];
+			});
+	}
+
+	searchCatalog(pQuery)
+	{
+		return this.api('GET', '/facto/catalog/search?q=' + encodeURIComponent(pQuery)).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	createCatalogEntry(pData)
+	{
+		return this.api('POST', '/facto/catalog/entry', pData).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	deleteCatalogEntry(pIDEntry)
+	{
+		return this.api('DELETE', '/facto/catalog/entry/' + pIDEntry).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	loadCatalogEntryDatasets(pIDEntry)
+	{
+		return this.api('GET', '/facto/catalog/entry/' + pIDEntry + '/datasets').then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	addCatalogDataset(pIDEntry, pData)
+	{
+		return this.api('POST', '/facto/catalog/entry/' + pIDEntry + '/dataset', pData).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	provisionCatalogDataset(pIDCatalogDataset)
+	{
+		return this.api('POST', '/facto/catalog/dataset/' + pIDCatalogDataset + '/provision').then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	fetchCatalogDataset(pIDCatalogDataset)
+	{
+		return this.api('POST', '/facto/catalog/dataset/' + pIDCatalogDataset + '/fetch').then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	importCatalog(pEntries)
+	{
+		return this.api('POST', '/facto/catalog/import', pEntries).then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
+	}
+
+	exportCatalog()
+	{
+		return this.api('GET', '/facto/catalog/export').then(
+			(pResponse) =>
+			{
+				return pResponse;
+			});
 	}
 
 	// ================================================================

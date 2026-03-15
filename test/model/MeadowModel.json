@@ -1,0 +1,867 @@
+{
+    "Tables": {
+        "Source": {
+            "TableName": "Source",
+            "Domain": "Default",
+            "Columns": [
+                {
+                    "Column": "IDSource",
+                    "DataType": "ID"
+                },
+                {
+                    "Column": "GUIDSource",
+                    "DataType": "GUID",
+                    "Size": "36"
+                },
+                {
+                    "Column": "CreateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "CreatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "UpdateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "UpdatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Deleted",
+                    "DataType": "Boolean"
+                },
+                {
+                    "Column": "DeleteDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "DeletingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Name",
+                    "DataType": "String",
+                    "Size": "200"
+                },
+                {
+                    "Column": "Type",
+                    "DataType": "String",
+                    "Size": "64"
+                },
+                {
+                    "Column": "URL",
+                    "DataType": "String",
+                    "Size": "512"
+                },
+                {
+                    "Column": "Protocol",
+                    "DataType": "String",
+                    "Size": "32"
+                },
+                {
+                    "Column": "Description",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "Configuration",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "Active",
+                    "DataType": "Boolean"
+                }
+            ],
+            "Description": ""
+        },
+        "SourceDocumentation": {
+            "TableName": "SourceDocumentation",
+            "Domain": "Default",
+            "Columns": [
+                {
+                    "Column": "IDSourceDocumentation",
+                    "DataType": "ID"
+                },
+                {
+                    "Column": "GUIDSourceDocumentation",
+                    "DataType": "GUID",
+                    "Size": "36"
+                },
+                {
+                    "Column": "CreateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "CreatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "UpdateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "UpdatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Deleted",
+                    "DataType": "Boolean"
+                },
+                {
+                    "Column": "DeleteDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "DeletingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "IDSource",
+                    "DataType": "Numeric",
+                    "Size": "int",
+                    "Join": "IDSource"
+                },
+                {
+                    "Column": "Name",
+                    "DataType": "String",
+                    "Size": "200"
+                },
+                {
+                    "Column": "DocumentType",
+                    "DataType": "String",
+                    "Size": "64"
+                },
+                {
+                    "Column": "MimeType",
+                    "DataType": "String",
+                    "Size": "128"
+                },
+                {
+                    "Column": "StorageKey",
+                    "DataType": "String",
+                    "Size": "256"
+                },
+                {
+                    "Column": "Description",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "Content",
+                    "DataType": "Text"
+                }
+            ],
+            "Description": ""
+        },
+        "Dataset": {
+            "TableName": "Dataset",
+            "Domain": "Default",
+            "Columns": [
+                {
+                    "Column": "IDDataset",
+                    "DataType": "ID"
+                },
+                {
+                    "Column": "GUIDDataset",
+                    "DataType": "GUID",
+                    "Size": "36"
+                },
+                {
+                    "Column": "CreateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "CreatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "UpdateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "UpdatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Deleted",
+                    "DataType": "Boolean"
+                },
+                {
+                    "Column": "DeleteDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "DeletingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Name",
+                    "DataType": "String",
+                    "Size": "200"
+                },
+                {
+                    "Column": "Type",
+                    "DataType": "String",
+                    "Size": "32"
+                },
+                {
+                    "Column": "Description",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "SchemaHash",
+                    "DataType": "String",
+                    "Size": "64"
+                },
+                {
+                    "Column": "SchemaVersion",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "SchemaDefinition",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "VersionPolicy",
+                    "DataType": "String",
+                    "Size": "16"
+                }
+            ],
+            "Description": ""
+        },
+        "DatasetSource": {
+            "TableName": "DatasetSource",
+            "Domain": "Default",
+            "Columns": [
+                {
+                    "Column": "IDDatasetSource",
+                    "DataType": "ID"
+                },
+                {
+                    "Column": "GUIDDatasetSource",
+                    "DataType": "GUID",
+                    "Size": "36"
+                },
+                {
+                    "Column": "CreateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "CreatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "UpdateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "UpdatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Deleted",
+                    "DataType": "Boolean"
+                },
+                {
+                    "Column": "DeleteDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "DeletingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "IDDataset",
+                    "DataType": "Numeric",
+                    "Size": "int",
+                    "Join": "IDDataset"
+                },
+                {
+                    "Column": "IDSource",
+                    "DataType": "Numeric",
+                    "Size": "int",
+                    "Join": "IDSource"
+                },
+                {
+                    "Column": "ReliabilityWeight",
+                    "DataType": "Decimal",
+                    "Size": "5,4"
+                }
+            ],
+            "Description": ""
+        },
+        "Record": {
+            "TableName": "Record",
+            "Domain": "Default",
+            "Columns": [
+                {
+                    "Column": "IDRecord",
+                    "DataType": "ID"
+                },
+                {
+                    "Column": "GUIDRecord",
+                    "DataType": "GUID",
+                    "Size": "36"
+                },
+                {
+                    "Column": "CreateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "CreatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "UpdateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "UpdatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Deleted",
+                    "DataType": "Boolean"
+                },
+                {
+                    "Column": "DeleteDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "DeletingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "IDDataset",
+                    "DataType": "Numeric",
+                    "Size": "int",
+                    "Join": "IDDataset"
+                },
+                {
+                    "Column": "IDSource",
+                    "DataType": "Numeric",
+                    "Size": "int",
+                    "Join": "IDSource"
+                },
+                {
+                    "Column": "Type",
+                    "DataType": "String",
+                    "Size": "64"
+                },
+                {
+                    "Column": "SchemaHash",
+                    "DataType": "String",
+                    "Size": "64"
+                },
+                {
+                    "Column": "SchemaVersion",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Version",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "IDIngestJob",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "IngestDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "OriginCreateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "RepresentedTimeStampStart",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "RepresentedTimeStampStop",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "RepresentedDuration",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Content",
+                    "DataType": "Text"
+                }
+            ],
+            "Description": ""
+        },
+        "RecordBinary": {
+            "TableName": "RecordBinary",
+            "Domain": "Default",
+            "Columns": [
+                {
+                    "Column": "IDRecordBinary",
+                    "DataType": "ID"
+                },
+                {
+                    "Column": "GUIDRecordBinary",
+                    "DataType": "GUID",
+                    "Size": "36"
+                },
+                {
+                    "Column": "CreateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "CreatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "UpdateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "UpdatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Deleted",
+                    "DataType": "Boolean"
+                },
+                {
+                    "Column": "DeleteDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "DeletingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "IDRecord",
+                    "DataType": "Numeric",
+                    "Size": "int",
+                    "Join": "IDRecord"
+                },
+                {
+                    "Column": "MimeType",
+                    "DataType": "String",
+                    "Size": "128"
+                },
+                {
+                    "Column": "StorageKey",
+                    "DataType": "String",
+                    "Size": "256"
+                },
+                {
+                    "Column": "FileSize",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                }
+            ],
+            "Description": ""
+        },
+        "CertaintyIndex": {
+            "TableName": "CertaintyIndex",
+            "Domain": "Default",
+            "Columns": [
+                {
+                    "Column": "IDCertaintyIndex",
+                    "DataType": "ID"
+                },
+                {
+                    "Column": "GUIDCertaintyIndex",
+                    "DataType": "GUID",
+                    "Size": "36"
+                },
+                {
+                    "Column": "CreateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "CreatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "UpdateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "UpdatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Deleted",
+                    "DataType": "Boolean"
+                },
+                {
+                    "Column": "DeleteDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "DeletingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "IDRecord",
+                    "DataType": "Numeric",
+                    "Size": "int",
+                    "Join": "IDRecord"
+                },
+                {
+                    "Column": "CertaintyValue",
+                    "DataType": "Decimal",
+                    "Size": "5,4"
+                },
+                {
+                    "Column": "Dimension",
+                    "DataType": "String",
+                    "Size": "128"
+                },
+                {
+                    "Column": "Justification",
+                    "DataType": "Text"
+                }
+            ],
+            "Description": ""
+        },
+        "IngestJob": {
+            "TableName": "IngestJob",
+            "Domain": "Default",
+            "Columns": [
+                {
+                    "Column": "IDIngestJob",
+                    "DataType": "ID"
+                },
+                {
+                    "Column": "GUIDIngestJob",
+                    "DataType": "GUID",
+                    "Size": "36"
+                },
+                {
+                    "Column": "CreateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "CreatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "UpdateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "UpdatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Deleted",
+                    "DataType": "Boolean"
+                },
+                {
+                    "Column": "DeleteDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "DeletingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "IDSource",
+                    "DataType": "Numeric",
+                    "Size": "int",
+                    "Join": "IDSource"
+                },
+                {
+                    "Column": "IDDataset",
+                    "DataType": "Numeric",
+                    "Size": "int",
+                    "Join": "IDDataset"
+                },
+                {
+                    "Column": "Status",
+                    "DataType": "String",
+                    "Size": "32"
+                },
+                {
+                    "Column": "StartDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "EndDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "RecordsProcessed",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "RecordsCreated",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "RecordsUpdated",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "RecordsErrored",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Configuration",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "Log",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "DatasetVersion",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "ContentSignature",
+                    "DataType": "String",
+                    "Size": "128"
+                }
+            ],
+            "Description": ""
+        },
+        "SourceCatalogEntry": {
+            "TableName": "SourceCatalogEntry",
+            "Domain": "Default",
+            "Columns": [
+                {
+                    "Column": "IDSourceCatalogEntry",
+                    "DataType": "ID"
+                },
+                {
+                    "Column": "GUIDSourceCatalogEntry",
+                    "DataType": "GUID",
+                    "Size": "36"
+                },
+                {
+                    "Column": "CreateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "CreatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "UpdateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "UpdatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Deleted",
+                    "DataType": "Boolean"
+                },
+                {
+                    "Column": "DeleteDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "DeletingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Agency",
+                    "DataType": "String",
+                    "Size": "200"
+                },
+                {
+                    "Column": "Name",
+                    "DataType": "String",
+                    "Size": "200"
+                },
+                {
+                    "Column": "Type",
+                    "DataType": "String",
+                    "Size": "64"
+                },
+                {
+                    "Column": "URL",
+                    "DataType": "String",
+                    "Size": "512"
+                },
+                {
+                    "Column": "Protocol",
+                    "DataType": "String",
+                    "Size": "32"
+                },
+                {
+                    "Column": "Category",
+                    "DataType": "String",
+                    "Size": "128"
+                },
+                {
+                    "Column": "Region",
+                    "DataType": "String",
+                    "Size": "128"
+                },
+                {
+                    "Column": "UpdateFrequency",
+                    "DataType": "String",
+                    "Size": "64"
+                },
+                {
+                    "Column": "Description",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "Notes",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "Verified",
+                    "DataType": "Boolean"
+                }
+            ],
+            "Description": ""
+        },
+        "CatalogDatasetDefinition": {
+            "TableName": "CatalogDatasetDefinition",
+            "Domain": "Default",
+            "Columns": [
+                {
+                    "Column": "IDCatalogDatasetDefinition",
+                    "DataType": "ID"
+                },
+                {
+                    "Column": "GUIDCatalogDatasetDefinition",
+                    "DataType": "GUID",
+                    "Size": "36"
+                },
+                {
+                    "Column": "CreateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "CreatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "UpdateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "UpdatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Deleted",
+                    "DataType": "Boolean"
+                },
+                {
+                    "Column": "DeleteDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "DeletingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "IDSourceCatalogEntry",
+                    "DataType": "Numeric",
+                    "Size": "int",
+                    "Join": "IDSourceCatalogEntry"
+                },
+                {
+                    "Column": "Name",
+                    "DataType": "String",
+                    "Size": "200"
+                },
+                {
+                    "Column": "Format",
+                    "DataType": "String",
+                    "Size": "32"
+                },
+                {
+                    "Column": "MimeType",
+                    "DataType": "String",
+                    "Size": "128"
+                },
+                {
+                    "Column": "EndpointURL",
+                    "DataType": "String",
+                    "Size": "512"
+                },
+                {
+                    "Column": "Description",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "ParseOptions",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "AuthRequirements",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "VersionPolicy",
+                    "DataType": "String",
+                    "Size": "16"
+                },
+                {
+                    "Column": "Provisioned",
+                    "DataType": "Boolean"
+                },
+                {
+                    "Column": "IDSource",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "IDDataset",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                }
+            ],
+            "Description": ""
+        }
+    }
+}
