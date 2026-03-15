@@ -1,0 +1,407 @@
+/* ================================================================
+   Retold Facto — Base Styles
+   ================================================================ */
+
+/* Reset */
+*,
+*::before,
+*::after {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html {
+	font-size: 16px;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+body {
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+	background: var(--facto-bg-base);
+	color: var(--facto-text);
+	line-height: 1.6;
+	min-height: 100vh;
+}
+
+/* ================================================================
+   Layout
+   ================================================================ */
+
+#Facto-Full-Application-Container {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+#Facto-Full-TopBar-Container {
+	flex-shrink: 0;
+}
+
+#Facto-Full-Content-Container {
+	flex: 1;
+}
+
+#Facto-Full-BottomBar-Container {
+	flex-shrink: 0;
+}
+
+/* ================================================================
+   Typography
+   ================================================================ */
+
+h1, h2, h3, h4, h5, h6 {
+	color: var(--facto-text-heading);
+	font-weight: 600;
+	line-height: 1.3;
+}
+
+h1 { font-size: 1.75em; margin-bottom: 0.5em; }
+h2 { font-size: 1.4em; margin-bottom: 0.4em; }
+h3 { font-size: 1.15em; margin-bottom: 0.3em; }
+h4 { font-size: 1em; margin-bottom: 0.25em; }
+
+a {
+	color: var(--facto-link);
+	text-decoration: none;
+	cursor: pointer;
+}
+
+a:hover {
+	color: var(--facto-link-hover);
+}
+
+p {
+	margin-bottom: 0.75em;
+}
+
+code, pre {
+	font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+	font-size: 0.9em;
+}
+
+pre {
+	background: var(--facto-bg-code);
+	border: 1px solid var(--facto-border-subtle);
+	border-radius: 6px;
+	padding: 1em;
+	overflow-x: auto;
+}
+
+code {
+	background: var(--facto-bg-code);
+	padding: 0.15em 0.4em;
+	border-radius: 3px;
+}
+
+/* ================================================================
+   Buttons
+   ================================================================ */
+
+button, .facto-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4em;
+	padding: 0.5em 1em;
+	border: 1px solid transparent;
+	border-radius: 6px;
+	font-size: 0.9em;
+	font-weight: 500;
+	cursor: pointer;
+	transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+	line-height: 1.4;
+}
+
+button:hover {
+	opacity: 0.9;
+}
+
+button:active {
+	opacity: 0.8;
+}
+
+button:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.facto-btn-primary, button.primary {
+	background: var(--facto-btn-primary-bg);
+	color: var(--facto-btn-primary-text);
+	border-color: var(--facto-btn-primary-bg);
+}
+
+.facto-btn-secondary, button.secondary {
+	background: var(--facto-btn-secondary-bg);
+	color: var(--facto-btn-secondary-text);
+	border-color: var(--facto-border);
+}
+
+.facto-btn-success, button.success {
+	background: var(--facto-success);
+	color: #fff;
+}
+
+.facto-btn-danger, button.danger {
+	background: var(--facto-error);
+	color: #fff;
+}
+
+.facto-btn-small {
+	padding: 0.3em 0.7em;
+	font-size: 0.8em;
+}
+
+/* ================================================================
+   Forms
+   ================================================================ */
+
+input[type="text"],
+input[type="number"],
+input[type="url"],
+input[type="email"],
+input[type="search"],
+textarea,
+select {
+	width: 100%;
+	padding: 0.5em 0.75em;
+	background: var(--facto-bg-input);
+	color: var(--facto-text);
+	border: 1px solid var(--facto-border);
+	border-radius: 6px;
+	font-size: 0.9em;
+	font-family: inherit;
+	line-height: 1.5;
+	margin-bottom: 0.5em;
+	transition: border-color 0.15s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+	outline: none;
+	border-color: var(--facto-border-focus);
+}
+
+label {
+	display: block;
+	font-size: 0.85em;
+	font-weight: 500;
+	color: var(--facto-text-secondary);
+	margin-bottom: 0.25em;
+}
+
+/* ================================================================
+   Tables
+   ================================================================ */
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.9em;
+}
+
+thead {
+	background: var(--facto-table-header-bg);
+}
+
+th {
+	text-align: left;
+	padding: 0.6em 0.75em;
+	font-weight: 600;
+	color: var(--facto-text-heading);
+	border-bottom: 2px solid var(--facto-border);
+	white-space: nowrap;
+}
+
+td {
+	padding: 0.5em 0.75em;
+	border-bottom: 1px solid var(--facto-border-subtle);
+	vertical-align: top;
+}
+
+tbody tr:nth-child(even) {
+	background: var(--facto-table-stripe);
+}
+
+tbody tr:hover {
+	background: var(--facto-table-row-hover);
+}
+
+/* ================================================================
+   Cards
+   ================================================================ */
+
+.facto-card {
+	background: var(--facto-bg-surface);
+	border: 1px solid var(--facto-border-subtle);
+	border-radius: 8px;
+	padding: 1.25em;
+	transition: border-color 0.15s;
+}
+
+.facto-card:hover {
+	border-color: var(--facto-border);
+}
+
+.facto-card-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+	gap: 1em;
+}
+
+/* ================================================================
+   Status / Alerts
+   ================================================================ */
+
+.facto-status {
+	padding: 0.6em 1em;
+	border-radius: 6px;
+	font-size: 0.9em;
+	margin-bottom: 0.75em;
+}
+
+.facto-status-ok {
+	background: color-mix(in srgb, var(--facto-success) 15%, transparent);
+	color: var(--facto-success);
+	border: 1px solid color-mix(in srgb, var(--facto-success) 30%, transparent);
+}
+
+.facto-status-error {
+	background: color-mix(in srgb, var(--facto-error) 15%, transparent);
+	color: var(--facto-error);
+	border: 1px solid color-mix(in srgb, var(--facto-error) 30%, transparent);
+}
+
+.facto-status-warn {
+	background: color-mix(in srgb, var(--facto-warning) 15%, transparent);
+	color: var(--facto-warning);
+	border: 1px solid color-mix(in srgb, var(--facto-warning) 30%, transparent);
+}
+
+.facto-status-info {
+	background: color-mix(in srgb, var(--facto-info) 15%, transparent);
+	color: var(--facto-info);
+	border: 1px solid color-mix(in srgb, var(--facto-info) 30%, transparent);
+}
+
+/* ================================================================
+   Badges
+   ================================================================ */
+
+.facto-badge {
+	display: inline-block;
+	padding: 0.15em 0.5em;
+	border-radius: 4px;
+	font-size: 0.75em;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+}
+
+.facto-badge-primary { background: var(--facto-brand); color: #fff; }
+.facto-badge-success { background: var(--facto-success); color: #fff; }
+.facto-badge-warning { background: var(--facto-warning); color: #000; }
+.facto-badge-error { background: var(--facto-error); color: #fff; }
+.facto-badge-muted { background: var(--facto-bg-elevated); color: var(--facto-text-secondary); }
+
+/* ================================================================
+   Inline form groups
+   ================================================================ */
+
+.facto-inline-group {
+	display: flex;
+	gap: 1em;
+	margin-bottom: 0.75em;
+}
+
+.facto-inline-group > div {
+	flex: 1;
+}
+
+/* ================================================================
+   Content sections
+   ================================================================ */
+
+.facto-content {
+	padding: 2em;
+	max-width: 1400px;
+	margin: 0 auto;
+}
+
+.facto-content-header {
+	margin-bottom: 1.5em;
+	padding-bottom: 1em;
+	border-bottom: 1px solid var(--facto-border-subtle);
+}
+
+.facto-content-header p {
+	color: var(--facto-text-secondary);
+	margin-bottom: 0;
+}
+
+.facto-section {
+	margin-bottom: 2em;
+}
+
+.facto-section-title {
+	font-size: 1em;
+	font-weight: 600;
+	color: var(--facto-text-heading);
+	margin-bottom: 0.75em;
+	padding-bottom: 0.4em;
+	border-bottom: 1px solid var(--facto-border-subtle);
+}
+
+/* ================================================================
+   Empty states
+   ================================================================ */
+
+.facto-empty {
+	text-align: center;
+	padding: 3em 1em;
+	color: var(--facto-text-tertiary);
+	font-style: italic;
+}
+
+/* ================================================================
+   Scrollbar
+   ================================================================ */
+
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: var(--facto-scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--facto-scrollbar-thumb);
+	border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--facto-scrollbar-thumb-hover);
+}
+
+/* ================================================================
+   Responsive
+   ================================================================ */
+
+@media (max-width: 768px) {
+	.facto-content {
+		padding: 1em;
+	}
+
+	.facto-inline-group {
+		flex-direction: column;
+		gap: 0;
+	}
+
+	.facto-card-grid {
+		grid-template-columns: 1fr;
+	}
+}

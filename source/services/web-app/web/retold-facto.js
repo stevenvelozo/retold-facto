@@ -183,6 +183,493 @@
       "../package.json": 1
     }],
     3: [function (require, module, exports) {
+      !function (t, n) {
+        "object" == typeof exports && "object" == typeof module ? module.exports = n() : "function" == typeof define && define.amd ? define("Navigo", [], n) : "object" == typeof exports ? exports.Navigo = n() : t.Navigo = n();
+      }("undefined" != typeof self ? self : this, function () {
+        return function () {
+          "use strict";
+
+          var t = {
+              407: function (t, n, e) {
+                e.d(n, {
+                  default: function () {
+                    return N;
+                  }
+                });
+                var o = /([:*])(\w+)/g,
+                  r = /\*/g,
+                  i = /\/\?/g;
+                function a(t) {
+                  return void 0 === t && (t = "/"), v() ? location.pathname + location.search + location.hash : t;
+                }
+                function s(t) {
+                  return t.replace(/\/+$/, "").replace(/^\/+/, "");
+                }
+                function c(t) {
+                  return "string" == typeof t;
+                }
+                function u(t) {
+                  return t && t.indexOf("#") >= 0 && t.split("#").pop() || "";
+                }
+                function h(t) {
+                  var n = s(t).split(/\?(.*)?$/);
+                  return [s(n[0]), n.slice(1).join("")];
+                }
+                function f(t) {
+                  for (var n = {}, e = t.split("&"), o = 0; o < e.length; o++) {
+                    var r = e[o].split("=");
+                    if ("" !== r[0]) {
+                      var i = decodeURIComponent(r[0]);
+                      n[i] ? (Array.isArray(n[i]) || (n[i] = [n[i]]), n[i].push(decodeURIComponent(r[1] || ""))) : n[i] = decodeURIComponent(r[1] || "");
+                    }
+                  }
+                  return n;
+                }
+                function l(t, n) {
+                  var e,
+                    a = h(s(t.currentLocationPath)),
+                    l = a[0],
+                    p = a[1],
+                    d = "" === p ? null : f(p),
+                    v = [];
+                  if (c(n.path)) {
+                    if (e = "(?:/^|^)" + s(n.path).replace(o, function (t, n, e) {
+                      return v.push(e), "([^/]+)";
+                    }).replace(r, "?(?:.*)").replace(i, "/?([^/]+|)") + "$", "" === s(n.path) && "" === s(l)) return {
+                      url: l,
+                      queryString: p,
+                      hashString: u(t.to),
+                      route: n,
+                      data: null,
+                      params: d
+                    };
+                  } else e = n.path;
+                  var g = new RegExp(e, ""),
+                    m = l.match(g);
+                  if (m) {
+                    var y = c(n.path) ? function (t, n) {
+                      return 0 === n.length ? null : t ? t.slice(1, t.length).reduce(function (t, e, o) {
+                        return null === t && (t = {}), t[n[o]] = decodeURIComponent(e), t;
+                      }, null) : null;
+                    }(m, v) : m.groups ? m.groups : m.slice(1);
+                    return {
+                      url: s(l.replace(new RegExp("^" + t.instance.root), "")),
+                      queryString: p,
+                      hashString: u(t.to),
+                      route: n,
+                      data: y,
+                      params: d
+                    };
+                  }
+                  return !1;
+                }
+                function p() {
+                  return !("undefined" == typeof window || !window.history || !window.history.pushState);
+                }
+                function d(t, n) {
+                  return void 0 === t[n] || !0 === t[n];
+                }
+                function v() {
+                  return "undefined" != typeof window;
+                }
+                function g(t, n) {
+                  return void 0 === t && (t = []), void 0 === n && (n = {}), t.filter(function (t) {
+                    return t;
+                  }).forEach(function (t) {
+                    ["before", "after", "already", "leave"].forEach(function (e) {
+                      t[e] && (n[e] || (n[e] = []), n[e].push(t[e]));
+                    });
+                  }), n;
+                }
+                function m(t, n, e) {
+                  var o = n || {},
+                    r = 0;
+                  !function n() {
+                    t[r] ? Array.isArray(t[r]) ? (t.splice.apply(t, [r, 1].concat(t[r][0](o) ? t[r][1] : t[r][2])), n()) : t[r](o, function (t) {
+                      void 0 === t || !0 === t ? (r += 1, n()) : e && e(o);
+                    }) : e && e(o);
+                  }();
+                }
+                function y(t, n) {
+                  void 0 === t.currentLocationPath && (t.currentLocationPath = t.to = a(t.instance.root)), t.currentLocationPath = t.instance._checkForAHash(t.currentLocationPath), n();
+                }
+                function _(t, n) {
+                  for (var e = 0; e < t.instance.routes.length; e++) {
+                    var o = l(t, t.instance.routes[e]);
+                    if (o && (t.matches || (t.matches = []), t.matches.push(o), "ONE" === t.resolveOptions.strategy)) return void n();
+                  }
+                  n();
+                }
+                function k(t, n) {
+                  t.navigateOptions && (void 0 !== t.navigateOptions.shouldResolve && console.warn('"shouldResolve" is deprecated. Please check the documentation.'), void 0 !== t.navigateOptions.silent && console.warn('"silent" is deprecated. Please check the documentation.')), n();
+                }
+                function O(t, n) {
+                  !0 === t.navigateOptions.force ? (t.instance._setCurrent([t.instance._pathToMatchObject(t.to)]), n(!1)) : n();
+                }
+                m.if = function (t, n, e) {
+                  return Array.isArray(n) || (n = [n]), Array.isArray(e) || (e = [e]), [t, n, e];
+                };
+                var w = v(),
+                  L = p();
+                function b(t, n) {
+                  if (d(t.navigateOptions, "updateBrowserURL")) {
+                    var e = ("/" + t.to).replace(/\/\//g, "/"),
+                      o = w && t.resolveOptions && !0 === t.resolveOptions.hash;
+                    L ? (history[t.navigateOptions.historyAPIMethod || "pushState"](t.navigateOptions.stateObj || {}, t.navigateOptions.title || "", o ? "#" + e : e), location && location.hash && (t.instance.__freezeListening = !0, setTimeout(function () {
+                      if (!o) {
+                        var n = location.hash;
+                        location.hash = "", location.hash = n;
+                      }
+                      t.instance.__freezeListening = !1;
+                    }, 1))) : w && (window.location.href = t.to);
+                  }
+                  n();
+                }
+                function A(t, n) {
+                  var e = t.instance;
+                  e.lastResolved() ? m(e.lastResolved().map(function (n) {
+                    return function (e, o) {
+                      if (n.route.hooks && n.route.hooks.leave) {
+                        var r = !1,
+                          i = t.instance.matchLocation(n.route.path, t.currentLocationPath, !1);
+                        r = "*" !== n.route.path ? !i : !(t.matches && t.matches.find(function (t) {
+                          return n.route.path === t.route.path;
+                        })), d(t.navigateOptions, "callHooks") && r ? m(n.route.hooks.leave.map(function (n) {
+                          return function (e, o) {
+                            return n(function (n) {
+                              !1 === n ? t.instance.__markAsClean(t) : o();
+                            }, t.matches && t.matches.length > 0 ? 1 === t.matches.length ? t.matches[0] : t.matches : void 0);
+                          };
+                        }).concat([function () {
+                          return o();
+                        }])) : o();
+                      } else o();
+                    };
+                  }), {}, function () {
+                    return n();
+                  }) : n();
+                }
+                function P(t, n) {
+                  d(t.navigateOptions, "updateState") && t.instance._setCurrent(t.matches), n();
+                }
+                var R = [function (t, n) {
+                    var e = t.instance.lastResolved();
+                    if (e && e[0] && e[0].route === t.match.route && e[0].url === t.match.url && e[0].queryString === t.match.queryString) return e.forEach(function (n) {
+                      n.route.hooks && n.route.hooks.already && d(t.navigateOptions, "callHooks") && n.route.hooks.already.forEach(function (n) {
+                        return n(t.match);
+                      });
+                    }), void n(!1);
+                    n();
+                  }, function (t, n) {
+                    t.match.route.hooks && t.match.route.hooks.before && d(t.navigateOptions, "callHooks") ? m(t.match.route.hooks.before.map(function (n) {
+                      return function (e, o) {
+                        return n(function (n) {
+                          !1 === n ? t.instance.__markAsClean(t) : o();
+                        }, t.match);
+                      };
+                    }).concat([function () {
+                      return n();
+                    }])) : n();
+                  }, function (t, n) {
+                    d(t.navigateOptions, "callHandler") && t.match.route.handler(t.match), t.instance.updatePageLinks(), n();
+                  }, function (t, n) {
+                    t.match.route.hooks && t.match.route.hooks.after && d(t.navigateOptions, "callHooks") && t.match.route.hooks.after.forEach(function (n) {
+                      return n(t.match);
+                    }), n();
+                  }],
+                  S = [A, function (t, n) {
+                    var e = t.instance._notFoundRoute;
+                    if (e) {
+                      t.notFoundHandled = !0;
+                      var o = h(t.currentLocationPath),
+                        r = o[0],
+                        i = o[1],
+                        a = u(t.to);
+                      e.path = s(r);
+                      var c = {
+                        url: e.path,
+                        queryString: i,
+                        hashString: a,
+                        data: null,
+                        route: e,
+                        params: "" !== i ? f(i) : null
+                      };
+                      t.matches = [c], t.match = c;
+                    }
+                    n();
+                  }, m.if(function (t) {
+                    return t.notFoundHandled;
+                  }, R.concat([P]), [function (t, n) {
+                    t.resolveOptions && !1 !== t.resolveOptions.noMatchWarning && void 0 !== t.resolveOptions.noMatchWarning || console.warn('Navigo: "' + t.currentLocationPath + "\" didn't match any of the registered routes."), n();
+                  }, function (t, n) {
+                    t.instance._setCurrent(null), n();
+                  }])];
+                function E() {
+                  return (E = Object.assign || function (t) {
+                    for (var n = 1; n < arguments.length; n++) {
+                      var e = arguments[n];
+                      for (var o in e) Object.prototype.hasOwnProperty.call(e, o) && (t[o] = e[o]);
+                    }
+                    return t;
+                  }).apply(this, arguments);
+                }
+                function x(t, n) {
+                  var e = 0;
+                  A(t, function o() {
+                    e !== t.matches.length ? m(R, E({}, t, {
+                      match: t.matches[e]
+                    }), function () {
+                      e += 1, o();
+                    }) : P(t, n);
+                  });
+                }
+                function H(t) {
+                  t.instance.__markAsClean(t);
+                }
+                function j() {
+                  return (j = Object.assign || function (t) {
+                    for (var n = 1; n < arguments.length; n++) {
+                      var e = arguments[n];
+                      for (var o in e) Object.prototype.hasOwnProperty.call(e, o) && (t[o] = e[o]);
+                    }
+                    return t;
+                  }).apply(this, arguments);
+                }
+                var C = "[data-navigo]";
+                function N(t, n) {
+                  var e,
+                    o = n || {
+                      strategy: "ONE",
+                      hash: !1,
+                      noMatchWarning: !1,
+                      linksSelector: C
+                    },
+                    r = this,
+                    i = "/",
+                    d = null,
+                    w = [],
+                    L = !1,
+                    A = p(),
+                    P = v();
+                  function R(t) {
+                    return t.indexOf("#") >= 0 && (t = !0 === o.hash ? t.split("#")[1] || "/" : t.split("#")[0]), t;
+                  }
+                  function E(t) {
+                    return s(i + "/" + s(t));
+                  }
+                  function N(t, n, e, o) {
+                    return t = c(t) ? E(t) : t, {
+                      name: o || s(String(t)),
+                      path: t,
+                      handler: n,
+                      hooks: g(e)
+                    };
+                  }
+                  function U(t, n) {
+                    if (!r.__dirty) {
+                      r.__dirty = !0, t = t ? s(i) + "/" + s(t) : void 0;
+                      var e = {
+                        instance: r,
+                        to: t,
+                        currentLocationPath: t,
+                        navigateOptions: {},
+                        resolveOptions: j({}, o, n)
+                      };
+                      return m([y, _, m.if(function (t) {
+                        var n = t.matches;
+                        return n && n.length > 0;
+                      }, x, S)], e, H), !!e.matches && e.matches;
+                    }
+                    r.__waiting.push(function () {
+                      return r.resolve(t, n);
+                    });
+                  }
+                  function q(t, n) {
+                    if (r.__dirty) r.__waiting.push(function () {
+                      return r.navigate(t, n);
+                    });else {
+                      r.__dirty = !0, t = s(i) + "/" + s(t);
+                      var e = {
+                        instance: r,
+                        to: t,
+                        navigateOptions: n || {},
+                        resolveOptions: n && n.resolveOptions ? n.resolveOptions : o,
+                        currentLocationPath: R(t)
+                      };
+                      m([k, O, _, m.if(function (t) {
+                        var n = t.matches;
+                        return n && n.length > 0;
+                      }, x, S), b, H], e, H);
+                    }
+                  }
+                  function F() {
+                    if (P) return (P ? [].slice.call(document.querySelectorAll(o.linksSelector || C)) : []).forEach(function (t) {
+                      "false" !== t.getAttribute("data-navigo") && "_blank" !== t.getAttribute("target") ? t.hasListenerAttached || (t.hasListenerAttached = !0, t.navigoHandler = function (n) {
+                        if ((n.ctrlKey || n.metaKey) && "a" === n.target.tagName.toLowerCase()) return !1;
+                        var e = t.getAttribute("href");
+                        if (null == e) return !1;
+                        if (e.match(/^(http|https)/) && "undefined" != typeof URL) try {
+                          var o = new URL(e);
+                          e = o.pathname + o.search;
+                        } catch (t) {}
+                        var i = function (t) {
+                          if (!t) return {};
+                          var n,
+                            e = t.split(","),
+                            o = {};
+                          return e.forEach(function (t) {
+                            var e = t.split(":").map(function (t) {
+                              return t.replace(/(^ +| +$)/g, "");
+                            });
+                            switch (e[0]) {
+                              case "historyAPIMethod":
+                                o.historyAPIMethod = e[1];
+                                break;
+                              case "resolveOptionsStrategy":
+                                n || (n = {}), n.strategy = e[1];
+                                break;
+                              case "resolveOptionsHash":
+                                n || (n = {}), n.hash = "true" === e[1];
+                                break;
+                              case "updateBrowserURL":
+                              case "callHandler":
+                              case "updateState":
+                              case "force":
+                                o[e[0]] = "true" === e[1];
+                            }
+                          }), n && (o.resolveOptions = n), o;
+                        }(t.getAttribute("data-navigo-options"));
+                        L || (n.preventDefault(), n.stopPropagation(), r.navigate(s(e), i));
+                      }, t.addEventListener("click", t.navigoHandler)) : t.hasListenerAttached && t.removeEventListener("click", t.navigoHandler);
+                    }), r;
+                  }
+                  function I(t, n, e) {
+                    var o = w.find(function (n) {
+                        return n.name === t;
+                      }),
+                      r = null;
+                    if (o) {
+                      if (r = o.path, n) for (var a in n) r = r.replace(":" + a, n[a]);
+                      r = r.match(/^\//) ? r : "/" + r;
+                    }
+                    return r && e && !e.includeRoot && (r = r.replace(new RegExp("^/" + i), "")), r;
+                  }
+                  function M(t) {
+                    var n = h(s(t)),
+                      o = n[0],
+                      r = n[1],
+                      i = "" === r ? null : f(r);
+                    return {
+                      url: o,
+                      queryString: r,
+                      hashString: u(t),
+                      route: N(o, function () {}, [e], o),
+                      data: null,
+                      params: i
+                    };
+                  }
+                  function T(t, n, e) {
+                    return "string" == typeof n && (n = z(n)), n ? (n.hooks[t] || (n.hooks[t] = []), n.hooks[t].push(e), function () {
+                      n.hooks[t] = n.hooks[t].filter(function (t) {
+                        return t !== e;
+                      });
+                    }) : (console.warn("Route doesn't exists: " + n), function () {});
+                  }
+                  function z(t) {
+                    return "string" == typeof t ? w.find(function (n) {
+                      return n.name === E(t);
+                    }) : w.find(function (n) {
+                      return n.handler === t;
+                    });
+                  }
+                  t ? i = s(t) : console.warn('Navigo requires a root path in its constructor. If not provided will use "/" as default.'), this.root = i, this.routes = w, this.destroyed = L, this.current = d, this.__freezeListening = !1, this.__waiting = [], this.__dirty = !1, this.__markAsClean = function (t) {
+                    t.instance.__dirty = !1, t.instance.__waiting.length > 0 && t.instance.__waiting.shift()();
+                  }, this.on = function (t, n, o) {
+                    var r = this;
+                    return "object" != typeof t || t instanceof RegExp ? ("function" == typeof t && (o = n, n = t, t = i), w.push(N(t, n, [e, o])), this) : (Object.keys(t).forEach(function (n) {
+                      if ("function" == typeof t[n]) r.on(n, t[n]);else {
+                        var o = t[n],
+                          i = o.uses,
+                          a = o.as,
+                          s = o.hooks;
+                        w.push(N(n, i, [e, s], a));
+                      }
+                    }), this);
+                  }, this.off = function (t) {
+                    return this.routes = w = w.filter(function (n) {
+                      return c(t) ? s(n.path) !== s(t) : "function" == typeof t ? t !== n.handler : String(n.path) !== String(t);
+                    }), this;
+                  }, this.resolve = U, this.navigate = q, this.navigateByName = function (t, n, e) {
+                    var o = I(t, n);
+                    return null !== o && (q(o.replace(new RegExp("^/?" + i), ""), e), !0);
+                  }, this.destroy = function () {
+                    this.routes = w = [], A && window.removeEventListener("popstate", this.__popstateListener), this.destroyed = L = !0;
+                  }, this.notFound = function (t, n) {
+                    return r._notFoundRoute = N("*", t, [e, n], "__NOT_FOUND__"), this;
+                  }, this.updatePageLinks = F, this.link = function (t) {
+                    return "/" + i + "/" + s(t);
+                  }, this.hooks = function (t) {
+                    return e = t, this;
+                  }, this.extractGETParameters = function (t) {
+                    return h(R(t));
+                  }, this.lastResolved = function () {
+                    return d;
+                  }, this.generate = I, this.getLinkPath = function (t) {
+                    return t.getAttribute("href");
+                  }, this.match = function (t) {
+                    var n = {
+                      instance: r,
+                      currentLocationPath: t,
+                      to: t,
+                      navigateOptions: {},
+                      resolveOptions: o
+                    };
+                    return _(n, function () {}), !!n.matches && n.matches;
+                  }, this.matchLocation = function (t, n, e) {
+                    void 0 === n || void 0 !== e && !e || (n = E(n));
+                    var o = {
+                      instance: r,
+                      to: n,
+                      currentLocationPath: n
+                    };
+                    return y(o, function () {}), "string" == typeof t && (t = void 0 === e || e ? E(t) : t), l(o, {
+                      name: String(t),
+                      path: t,
+                      handler: function () {},
+                      hooks: {}
+                    }) || !1;
+                  }, this.getCurrentLocation = function () {
+                    return M(s(a(i)).replace(new RegExp("^" + i), ""));
+                  }, this.addBeforeHook = T.bind(this, "before"), this.addAfterHook = T.bind(this, "after"), this.addAlreadyHook = T.bind(this, "already"), this.addLeaveHook = T.bind(this, "leave"), this.getRoute = z, this._pathToMatchObject = M, this._clean = s, this._checkForAHash = R, this._setCurrent = function (t) {
+                    return d = r.current = t;
+                  }, function () {
+                    A && (this.__popstateListener = function () {
+                      r.__freezeListening || U();
+                    }, window.addEventListener("popstate", this.__popstateListener));
+                  }.call(this), F.call(this);
+                }
+              }
+            },
+            n = {};
+          function e(o) {
+            if (n[o]) return n[o].exports;
+            var r = n[o] = {
+              exports: {}
+            };
+            return t[o](r, r.exports, e), r.exports;
+          }
+          return e.d = function (t, n) {
+            for (var o in n) e.o(n, o) && !e.o(t, o) && Object.defineProperty(t, o, {
+              enumerable: !0,
+              get: n[o]
+            });
+          }, e.o = function (t, n) {
+            return Object.prototype.hasOwnProperty.call(t, n);
+          }, e(407);
+        }().default;
+      });
+    }, {}],
+    4: [function (require, module, exports) {
       module.exports = {
         "name": "pict-application",
         "version": "1.0.33",
@@ -237,7 +724,7 @@
         }
       };
     }, {}],
-    4: [function (require, module, exports) {
+    5: [function (require, module, exports) {
       const libFableServiceBase = require('fable-serviceproviderbase');
       const libPackage = require('../package.json');
       const defaultPictSettings = {
@@ -1469,10 +1956,10 @@
       }
       module.exports = PictApplication;
     }, {
-      "../package.json": 3,
+      "../package.json": 4,
       "fable-serviceproviderbase": 2
     }],
-    5: [function (require, module, exports) {
+    6: [function (require, module, exports) {
       module.exports = {
         "name": "pict-provider",
         "version": "1.0.12",
@@ -1524,7 +2011,7 @@
         }
       };
     }, {}],
-    6: [function (require, module, exports) {
+    7: [function (require, module, exports) {
       const libFableServiceBase = require('fable-serviceproviderbase');
       const libPackage = require('../package.json');
       const defaultPictProviderSettings = {
@@ -1813,10 +2300,131 @@
       }
       module.exports = PictProvider;
     }, {
-      "../package.json": 5,
+      "../package.json": 6,
       "fable-serviceproviderbase": 2
     }],
-    7: [function (require, module, exports) {
+    8: [function (require, module, exports) {
+      const libPictProvider = require('pict-provider');
+      const libNavigo = require('navigo');
+      const _DEFAULT_PROVIDER_CONFIGURATION = {
+        ProviderIdentifier: 'Pict-Router',
+        AutoInitialize: true,
+        AutoInitializeOrdinal: 0,
+        // When true, addRoute() will NOT auto-resolve after each route is added.
+        // This is useful in auth-gated SPAs where routes should only resolve after
+        // the DOM is ready (e.g. after login).  Can also be set globally via
+        // pict.settings.RouterSkipRouteResolveOnAdd — either one enables the skip.
+        SkipRouteResolveOnAdd: false
+      };
+      class PictRouter extends libPictProvider {
+        constructor(pFable, pOptions, pServiceHash) {
+          let tmpOptions = Object.assign({}, _DEFAULT_PROVIDER_CONFIGURATION, pOptions);
+          super(pFable, tmpOptions, pServiceHash);
+
+          // Initialize the navigo router and set the base path to '/'
+          this.router = new libNavigo('/', {
+            strategy: 'ONE',
+            hash: true
+          });
+          if (this.options.Routes) {
+            for (let i = 0; i < this.options.Routes.length; i++) {
+              if (this.options.Routes[i].path && this.options.Routes[i].template) {
+                this.addRoute(this.options.Routes[i].path, this.options.Routes[i].template);
+              } else if (this.options.Routes[i].path && this.options.Routes[i].render) {
+                this.addRoute(this.options.Routes[i].path, this.options.Routes[i].render);
+              } else {
+                this.pict.log.warn(`Route ${i} is missing a render function or template string.`);
+              }
+            }
+          }
+
+          // This is the route to render after load
+          this.afterPersistView = '/Manyfest/Overview';
+        }
+        get currentScope() {
+          return this.AppData?.ManyfestRecord?.Scope ?? 'Default';
+        }
+        forwardToScopedRoute(pData) {
+          this.navigate(`${pData.url}/${this.currentScope}`);
+        }
+        onInitializeAsync(fCallback) {
+          return super.onInitializeAsync(fCallback);
+        }
+
+        /**
+         * Add a route to the router.
+         */
+        addRoute(pRoute, pRenderable) {
+          if (typeof pRenderable === 'function') {
+            this.router.on(pRoute, pRenderable);
+          } else if (typeof pRenderable === 'string') {
+            // Run this as a template, allowing some whack things with functions in template expressions.
+            this.router.on(pRoute, pData => {
+              this.pict.parseTemplate(pRenderable, pData, null, this.pict);
+            });
+          } else {
+            // renderable isn't usable!
+            this.pict.log.warn(`Route ${pRoute} has an invalid renderable.`);
+            return;
+          }
+
+          // By default, resolve after each route is added (legacy behavior).
+          // Applications can skip this by setting SkipRouteResolveOnAdd: true in
+          // the provider config JSON, or globally via
+          // pict.settings.RouterSkipRouteResolveOnAdd.  Either one will prevent
+          // premature route resolution before views are rendered.
+          if (!this.options.SkipRouteResolveOnAdd && !this.pict.settings.RouterSkipRouteResolveOnAdd) {
+            this.resolve();
+          }
+        }
+
+        /**
+         * Navigate to a given route (set the browser URL string, add to history, trigger router)
+         * 
+         * @param {string} pRoute - The route to navigate to
+         */
+        navigate(pRoute) {
+          this.router.navigate(pRoute);
+        }
+
+        /**
+         * Navigate to the route currently in the browser's location hash.
+         *
+         * This is useful in auth-gated SPAs: when the user pastes a deep-link
+         * (e.g. #/Books) and then logs in, calling navigateCurrent() will force
+         * the router to fire the handler for whatever hash is already in the URL.
+         * Unlike resolve(), navigate() always triggers the handler even if Navigo
+         * has already "consumed" that URL.
+         *
+         * If the hash is empty or just "#/", this is a no-op and returns false.
+         *
+         * @returns {boolean} true if a route was navigated to, false otherwise
+         */
+        navigateCurrent() {
+          let tmpHash = typeof window !== 'undefined' && window.location ? window.location.hash : '';
+          if (tmpHash && tmpHash.length > 2 && tmpHash !== '#/') {
+            let tmpRoute = tmpHash.replace(/^#/, '');
+            this.navigate(tmpRoute);
+            return true;
+          }
+          return false;
+        }
+
+        /**
+         * Trigger the router resolving logic; this is expected to be called after all routes are added (to go to the default route).
+         *
+         */
+        resolve() {
+          this.router.resolve();
+        }
+      }
+      module.exports = PictRouter;
+      module.exports.default_configuration = _DEFAULT_PROVIDER_CONFIGURATION;
+    }, {
+      "navigo": 3,
+      "pict-provider": 7
+    }],
+    9: [function (require, module, exports) {
       module.exports = {
         "name": "pict-view",
         "version": "1.0.67",
@@ -1870,7 +2478,7 @@
         }
       };
     }, {}],
-    8: [function (require, module, exports) {
+    10: [function (require, module, exports) {
       const libFableServiceBase = require('fable-serviceproviderbase');
       const libPackage = require('../package.json');
       const defaultPictViewSettings = {
@@ -3034,10 +3642,1573 @@
       }
       module.exports = PictView;
     }, {
-      "../package.json": 7,
+      "../package.json": 9,
       "fable-serviceproviderbase": 2
     }],
-    9: [function (require, module, exports) {
+    11: [function (require, module, exports) {
+      module.exports = {
+        "Name": "Retold Facto",
+        "Hash": "Facto-Full",
+        "MainViewportViewIdentifier": "Facto-Full-Layout",
+        "MainViewportDestinationAddress": "#Facto-Full-Application-Container",
+        "MainViewportDefaultDataAddress": "AppData.Facto",
+        "AutoSolveAfterInitialize": true,
+        "AutoRenderMainViewportViewAfterInitialize": false,
+        "AutoRenderViewsAfterInitialize": false,
+        "pict_configuration": {
+          "Product": "Retold-Facto-Full"
+        }
+      };
+    }, {}],
+    12: [function (require, module, exports) {
+      const libPictApplication = require('pict-application');
+      const libPictRouter = require('pict-router');
+      const THEME_LIST = [{
+        Key: 'facto-dark',
+        Label: 'Facto Dark',
+        Colors: ['#12151e', '#4a90d9', '#28a745', '#dc3545', '#6366f1']
+      }, {
+        Key: 'facto-light',
+        Label: 'Facto Light',
+        Colors: ['#f5f6f8', '#3b82f6', '#22c55e', '#ef4444', '#6366f1']
+      }, {
+        Key: 'midnight-blue',
+        Label: 'Midnight Blue',
+        Colors: ['#0a0e1a', '#3b82f6', '#10b981', '#f87171', '#60a5fa']
+      }, {
+        Key: 'slate',
+        Label: 'Slate',
+        Colors: ['#1e2228', '#6b8aae', '#5ea37a', '#c85a5a', '#82a0c4']
+      }, {
+        Key: 'warm-earth',
+        Label: 'Warm Earth',
+        Colors: ['#1a1610', '#c4956a', '#8a9a5a', '#b04050', '#4a9090']
+      }, {
+        Key: 'high-contrast',
+        Label: 'High Contrast',
+        Colors: ['#000000', '#58a6ff', '#3fb950', '#f85149', '#d29922']
+      }];
+
+      // Shared provider (same API layer as accordion app)
+      const libProvider = require('../pict-app/providers/Pict-Provider-Facto.js');
+
+      // Shell views
+      const libViewLayout = require('./views/PictView-Facto-Full-Layout.js');
+      const libViewTopBar = require('./views/PictView-Facto-Full-TopBar.js');
+      const libViewBottomBar = require('./views/PictView-Facto-Full-BottomBar.js');
+
+      // Content views
+      const libViewDashboard = require('./views/PictView-Facto-Full-Dashboard.js');
+      const libViewSourceResearch = require('./views/PictView-Facto-Full-SourceResearch.js');
+      const libViewIngestJobs = require('./views/PictView-Facto-Full-IngestJobs.js');
+      const libViewSources = require('./views/PictView-Facto-Full-Sources.js');
+      const libViewDatasets = require('./views/PictView-Facto-Full-Datasets.js');
+      const libViewRecords = require('./views/PictView-Facto-Full-Records.js');
+      const libViewProjections = require('./views/PictView-Facto-Full-Projections.js');
+      const libViewDashboards = require('./views/PictView-Facto-Full-Dashboards.js');
+      class FactoFullApplication extends libPictApplication {
+        constructor(pFable, pOptions, pServiceHash) {
+          super(pFable, pOptions, pServiceHash);
+
+          // Skip premature route resolution during addRoute(); the Layout view
+          // calls resolve() explicitly after the DOM is ready.
+          this.pict.settings.RouterSkipRouteResolveOnAdd = true;
+
+          // Register the shared API provider
+          this.pict.addProvider('Facto', libProvider.default_configuration, libProvider);
+
+          // Register router
+          this.pict.addProvider('PictRouter', require('./providers/PictRouter-Facto-Configuration.json'), libPictRouter);
+
+          // Shell views
+          this.pict.addView('Facto-Full-Layout', libViewLayout.default_configuration, libViewLayout);
+          this.pict.addView('Facto-Full-TopBar', libViewTopBar.default_configuration, libViewTopBar);
+          this.pict.addView('Facto-Full-BottomBar', libViewBottomBar.default_configuration, libViewBottomBar);
+
+          // Content views
+          this.pict.addView('Facto-Full-Dashboard', libViewDashboard.default_configuration, libViewDashboard);
+          this.pict.addView('Facto-Full-SourceResearch', libViewSourceResearch.default_configuration, libViewSourceResearch);
+          this.pict.addView('Facto-Full-IngestJobs', libViewIngestJobs.default_configuration, libViewIngestJobs);
+          this.pict.addView('Facto-Full-Sources', libViewSources.default_configuration, libViewSources);
+          this.pict.addView('Facto-Full-Datasets', libViewDatasets.default_configuration, libViewDatasets);
+          this.pict.addView('Facto-Full-Records', libViewRecords.default_configuration, libViewRecords);
+          this.pict.addView('Facto-Full-Projections', libViewProjections.default_configuration, libViewProjections);
+          this.pict.addView('Facto-Full-Dashboards', libViewDashboards.default_configuration, libViewDashboards);
+        }
+        onAfterInitializeAsync(fCallback) {
+          // Apply saved theme before first render
+          this.loadSavedTheme();
+
+          // Initialize application state
+          this.pict.AppData.Facto = {
+            CatalogEntries: [],
+            Sources: [],
+            Datasets: [],
+            Records: [],
+            IngestJobs: [],
+            SelectedSource: null,
+            SelectedDataset: null,
+            RecordPage: 0,
+            RecordPageSize: 50,
+            CurrentTheme: 'facto-dark'
+          };
+
+          // Expose pict globally for inline onclick handlers
+          window.pict = this.pict;
+
+          // Render the layout shell — this cascades into TopBar, BottomBar, Dashboard
+          this.pict.views['Facto-Full-Layout'].render();
+          return super.onAfterInitializeAsync(fCallback);
+        }
+        navigateTo(pRoute) {
+          this.pict.providers.PictRouter.navigate(pRoute);
+        }
+        showView(pViewIdentifier) {
+          if (pViewIdentifier in this.pict.views) {
+            this.pict.views[pViewIdentifier].render();
+          } else {
+            this.pict.log.warn(`View [${pViewIdentifier}] not found; falling back to dashboard.`);
+            this.pict.views['Facto-Full-Dashboard'].render();
+          }
+        }
+
+        // --- Theme ---
+        applyTheme(pThemeKey) {
+          let tmpThemeKey = pThemeKey || 'facto-dark';
+          if (tmpThemeKey === 'facto-dark') {
+            delete document.body.dataset.theme;
+          } else {
+            document.body.dataset.theme = tmpThemeKey;
+          }
+          localStorage.setItem('facto-theme', tmpThemeKey);
+          if (this.pict.AppData.Facto) {
+            this.pict.AppData.Facto.CurrentTheme = tmpThemeKey;
+          }
+        }
+        loadSavedTheme() {
+          let tmpSavedTheme = localStorage.getItem('facto-theme') || 'facto-dark';
+          this.applyTheme(tmpSavedTheme);
+        }
+        getThemeList() {
+          return THEME_LIST;
+        }
+      }
+      module.exports = FactoFullApplication;
+      module.exports.default_configuration = require('./Pict-Application-Facto-Full-Configuration.json');
+    }, {
+      "../pict-app/providers/Pict-Provider-Facto.js": 28,
+      "./Pict-Application-Facto-Full-Configuration.json": 11,
+      "./providers/PictRouter-Facto-Configuration.json": 13,
+      "./views/PictView-Facto-Full-BottomBar.js": 14,
+      "./views/PictView-Facto-Full-Dashboard.js": 15,
+      "./views/PictView-Facto-Full-Dashboards.js": 16,
+      "./views/PictView-Facto-Full-Datasets.js": 17,
+      "./views/PictView-Facto-Full-IngestJobs.js": 18,
+      "./views/PictView-Facto-Full-Layout.js": 19,
+      "./views/PictView-Facto-Full-Projections.js": 20,
+      "./views/PictView-Facto-Full-Records.js": 21,
+      "./views/PictView-Facto-Full-SourceResearch.js": 22,
+      "./views/PictView-Facto-Full-Sources.js": 23,
+      "./views/PictView-Facto-Full-TopBar.js": 24,
+      "pict-application": 5,
+      "pict-router": 8
+    }],
+    13: [function (require, module, exports) {
+      module.exports = {
+        "ProviderIdentifier": "Pict-Router",
+        "AutoInitialize": true,
+        "AutoInitializeOrdinal": 0,
+        "Routes": [{
+          "path": "/Home",
+          "template": "{~LV:Pict.PictApplication.showView(`Facto-Full-Dashboard`)~}"
+        }, {
+          "path": "/SourceResearch",
+          "template": "{~LV:Pict.PictApplication.showView(`Facto-Full-SourceResearch`)~}"
+        }, {
+          "path": "/IngestJobs",
+          "template": "{~LV:Pict.PictApplication.showView(`Facto-Full-IngestJobs`)~}"
+        }, {
+          "path": "/Sources",
+          "template": "{~LV:Pict.PictApplication.showView(`Facto-Full-Sources`)~}"
+        }, {
+          "path": "/Datasets",
+          "template": "{~LV:Pict.PictApplication.showView(`Facto-Full-Datasets`)~}"
+        }, {
+          "path": "/Records",
+          "template": "{~LV:Pict.PictApplication.showView(`Facto-Full-Records`)~}"
+        }, {
+          "path": "/Projections",
+          "template": "{~LV:Pict.PictApplication.showView(`Facto-Full-Projections`)~}"
+        }, {
+          "path": "/Dashboards",
+          "template": "{~LV:Pict.PictApplication.showView(`Facto-Full-Dashboards`)~}"
+        }]
+      };
+    }, {}],
+    14: [function (require, module, exports) {
+      const libPictView = require('pict-view');
+      const _ViewConfiguration = {
+        ViewIdentifier: "Facto-Full-BottomBar",
+        DefaultRenderable: "Facto-Full-BottomBar-Content",
+        DefaultDestinationAddress: "#Facto-Full-BottomBar-Container",
+        AutoRender: false,
+        CSS: /*css*/`
+		.facto-bottombar {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 0.6em 1.25em;
+			background: var(--facto-topbar-bg);
+			border-top: 1px solid var(--facto-border-subtle);
+			font-size: 0.78em;
+			color: var(--facto-text-tertiary);
+		}
+
+		.facto-bottombar a {
+			color: var(--facto-text-tertiary);
+			text-decoration: none;
+		}
+
+		.facto-bottombar a:hover {
+			color: var(--facto-text-secondary);
+		}
+	`,
+        Templates: [{
+          Hash: "Facto-Full-BottomBar-Template",
+          Template: /*html*/`
+<div class="facto-bottombar">
+	<span>Retold Facto Data Warehouse</span>
+	<span>Retold</span>
+</div>
+`
+        }],
+        Renderables: [{
+          RenderableHash: "Facto-Full-BottomBar-Content",
+          TemplateHash: "Facto-Full-BottomBar-Template",
+          DestinationAddress: "#Facto-Full-BottomBar-Container",
+          RenderMethod: "replace"
+        }]
+      };
+      class FactoFullBottomBarView extends libPictView {
+        constructor(pFable, pOptions, pServiceHash) {
+          super(pFable, pOptions, pServiceHash);
+        }
+      }
+      module.exports = FactoFullBottomBarView;
+      module.exports.default_configuration = _ViewConfiguration;
+    }, {
+      "pict-view": 10
+    }],
+    15: [function (require, module, exports) {
+      const libPictView = require('pict-view');
+      const _ViewConfiguration = {
+        ViewIdentifier: "Facto-Full-Dashboard",
+        DefaultRenderable: "Facto-Full-Dashboard-Content",
+        DefaultDestinationAddress: "#Facto-Full-Content-Container",
+        AutoRender: false,
+        CSS: /*css*/`
+		.facto-dashboard-stat {
+			text-align: center;
+		}
+
+		.facto-dashboard-stat-value {
+			font-size: 2em;
+			font-weight: 700;
+			color: var(--facto-text-heading);
+			line-height: 1.2;
+		}
+
+		.facto-dashboard-stat-label {
+			font-size: 0.85em;
+			color: var(--facto-text-secondary);
+			margin-top: 0.3em;
+		}
+
+		.facto-dashboard-actions {
+			display: flex;
+			gap: 0.75em;
+			flex-wrap: wrap;
+		}
+	`,
+        Templates: [{
+          Hash: "Facto-Full-Dashboard-Template",
+          Template: /*html*/`
+<div class="facto-content">
+	<div class="facto-content-header">
+		<h1>Dashboard</h1>
+		<p>Retold Facto data warehouse overview.</p>
+	</div>
+
+	<div class="facto-card-grid" id="Facto-Full-Dashboard-Cards">
+		<div class="facto-card facto-dashboard-stat">
+			<div class="facto-dashboard-stat-value" id="Facto-Full-Dash-SourceCount">--</div>
+			<div class="facto-dashboard-stat-label">Sources</div>
+		</div>
+		<div class="facto-card facto-dashboard-stat">
+			<div class="facto-dashboard-stat-value" id="Facto-Full-Dash-DatasetCount">--</div>
+			<div class="facto-dashboard-stat-label">Datasets</div>
+		</div>
+		<div class="facto-card facto-dashboard-stat">
+			<div class="facto-dashboard-stat-value" id="Facto-Full-Dash-RecordCount">--</div>
+			<div class="facto-dashboard-stat-label">Records</div>
+		</div>
+		<div class="facto-card facto-dashboard-stat">
+			<div class="facto-dashboard-stat-value" id="Facto-Full-Dash-IngestCount">--</div>
+			<div class="facto-dashboard-stat-label">Ingest Jobs</div>
+		</div>
+		<div class="facto-card facto-dashboard-stat">
+			<div class="facto-dashboard-stat-value" id="Facto-Full-Dash-CatalogCount">--</div>
+			<div class="facto-dashboard-stat-label">Catalog Entries</div>
+		</div>
+	</div>
+
+	<div class="facto-section" style="margin-top:2em;">
+		<div class="facto-section-title">Quick Actions</div>
+		<div class="facto-dashboard-actions">
+			<button class="facto-btn facto-btn-primary" onclick="{~P~}.PictApplication.navigateTo('/SourceResearch')">Source Research</button>
+			<button class="facto-btn facto-btn-primary" onclick="{~P~}.PictApplication.navigateTo('/Sources')">Manage Sources</button>
+			<button class="facto-btn facto-btn-primary" onclick="{~P~}.PictApplication.navigateTo('/Records')">Browse Records</button>
+			<button class="facto-btn facto-btn-secondary" onclick="window.location.href='/simple/'">Simple View</button>
+		</div>
+	</div>
+</div>
+`
+        }],
+        Renderables: [{
+          RenderableHash: "Facto-Full-Dashboard-Content",
+          TemplateHash: "Facto-Full-Dashboard-Template",
+          DestinationAddress: "#Facto-Full-Content-Container",
+          RenderMethod: "replace"
+        }]
+      };
+      class FactoFullDashboardView extends libPictView {
+        constructor(pFable, pOptions, pServiceHash) {
+          super(pFable, pOptions, pServiceHash);
+        }
+        onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent) {
+          let tmpProvider = this.pict.providers.Facto;
+
+          // Load counts in parallel
+          tmpProvider.loadSources().then(() => {
+            let tmpEl = document.getElementById('Facto-Full-Dash-SourceCount');
+            if (tmpEl) tmpEl.textContent = (this.pict.AppData.Facto.Sources || []).length;
+          });
+          tmpProvider.loadDatasets().then(() => {
+            let tmpEl = document.getElementById('Facto-Full-Dash-DatasetCount');
+            if (tmpEl) tmpEl.textContent = (this.pict.AppData.Facto.Datasets || []).length;
+          });
+          tmpProvider.loadRecords().then(() => {
+            let tmpEl = document.getElementById('Facto-Full-Dash-RecordCount');
+            if (tmpEl) tmpEl.textContent = (this.pict.AppData.Facto.Records || []).length;
+          });
+          tmpProvider.loadIngestJobs().then(() => {
+            let tmpEl = document.getElementById('Facto-Full-Dash-IngestCount');
+            if (tmpEl) tmpEl.textContent = (this.pict.AppData.Facto.IngestJobs || []).length;
+          });
+          tmpProvider.loadCatalogEntries().then(() => {
+            let tmpEl = document.getElementById('Facto-Full-Dash-CatalogCount');
+            if (tmpEl) tmpEl.textContent = (this.pict.AppData.Facto.CatalogEntries || []).length;
+          });
+          return super.onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent);
+        }
+      }
+      module.exports = FactoFullDashboardView;
+      module.exports.default_configuration = _ViewConfiguration;
+    }, {
+      "pict-view": 10
+    }],
+    16: [function (require, module, exports) {
+      const libPictView = require('pict-view');
+      const _ViewConfiguration = {
+        ViewIdentifier: "Facto-Full-Dashboards",
+        DefaultRenderable: "Facto-Full-Dashboards-Content",
+        DefaultDestinationAddress: "#Facto-Full-Content-Container",
+        AutoRender: false,
+        Templates: [{
+          Hash: "Facto-Full-Dashboards-Template",
+          Template: /*html*/`
+<div class="facto-content">
+	<div class="facto-content-header">
+		<h1>Dashboards</h1>
+		<p>Custom analytics dashboards and data visualizations.</p>
+	</div>
+
+	<div class="facto-empty" style="padding:4em 1em;">
+		<h3 style="margin-bottom:0.5em; color:var(--facto-text-secondary);">Coming Soon</h3>
+		<p style="color:var(--facto-text-tertiary); max-width:500px; margin:0 auto;">
+			Custom dashboards with charts, data visualizations, and configurable widgets will be available in a future release.
+			For now, use the <a onclick="pict.PictApplication.navigateTo('/Projections')" style="cursor:pointer;">Projections</a> view to query and aggregate data.
+		</p>
+	</div>
+</div>
+`
+        }],
+        Renderables: [{
+          RenderableHash: "Facto-Full-Dashboards-Content",
+          TemplateHash: "Facto-Full-Dashboards-Template",
+          DestinationAddress: "#Facto-Full-Content-Container",
+          RenderMethod: "replace"
+        }]
+      };
+      class FactoFullDashboardsView extends libPictView {
+        constructor(pFable, pOptions, pServiceHash) {
+          super(pFable, pOptions, pServiceHash);
+        }
+      }
+      module.exports = FactoFullDashboardsView;
+      module.exports.default_configuration = _ViewConfiguration;
+    }, {
+      "pict-view": 10
+    }],
+    17: [function (require, module, exports) {
+      const libPictView = require('pict-view');
+      const _ViewConfiguration = {
+        ViewIdentifier: "Facto-Full-Datasets",
+        DefaultRenderable: "Facto-Full-Datasets-Content",
+        DefaultDestinationAddress: "#Facto-Full-Content-Container",
+        AutoRender: false,
+        Templates: [{
+          Hash: "Facto-Full-Datasets-Template",
+          Template: /*html*/`
+<div class="facto-content">
+	<div class="facto-content-header">
+		<h1>Data Sets</h1>
+		<p>Manage datasets and their configurations.</p>
+	</div>
+
+	<div id="Facto-Full-Datasets-List"></div>
+	<div id="Facto-Full-Datasets-Stats" style="display:none; margin-top:1.25em; padding-top:1.25em; border-top:1px solid var(--facto-border-subtle);"></div>
+
+	<div class="facto-section" style="margin-top:2em;">
+		<div class="facto-section-title">Add Dataset</div>
+		<div class="facto-inline-group">
+			<div>
+				<label>Name</label>
+				<input type="text" id="Facto-Full-Dataset-Name" placeholder="Dataset name">
+			</div>
+			<div>
+				<label>Type</label>
+				<select id="Facto-Full-Dataset-Type">
+					<option value="Raw">Raw</option>
+					<option value="Compositional">Compositional</option>
+					<option value="Projection">Projection</option>
+					<option value="Derived">Derived</option>
+				</select>
+			</div>
+			<div>
+				<label>Description</label>
+				<input type="text" id="Facto-Full-Dataset-Desc" placeholder="Description">
+			</div>
+		</div>
+		<button class="facto-btn facto-btn-primary" onclick="{~P~}.views['Facto-Full-Datasets'].addDataset()">Add Dataset</button>
+	</div>
+
+	<div id="Facto-Full-Datasets-Status" class="facto-status" style="display:none;"></div>
+</div>
+`
+        }],
+        Renderables: [{
+          RenderableHash: "Facto-Full-Datasets-Content",
+          TemplateHash: "Facto-Full-Datasets-Template",
+          DestinationAddress: "#Facto-Full-Content-Container",
+          RenderMethod: "replace"
+        }]
+      };
+      class FactoFullDatasetsView extends libPictView {
+        constructor(pFable, pOptions, pServiceHash) {
+          super(pFable, pOptions, pServiceHash);
+        }
+        onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent) {
+          this.pict.providers.Facto.loadDatasets().then(() => {
+            this.refreshList();
+          });
+          return super.onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent);
+        }
+        setStatus(pMessage, pType) {
+          let tmpEl = document.getElementById('Facto-Full-Datasets-Status');
+          if (!tmpEl) return;
+          tmpEl.className = 'facto-status facto-status-' + (pType || 'info');
+          tmpEl.textContent = pMessage;
+          tmpEl.style.display = 'block';
+        }
+        refreshList() {
+          let tmpContainer = document.getElementById('Facto-Full-Datasets-List');
+          if (!tmpContainer) return;
+          let tmpDatasets = this.pict.AppData.Facto.Datasets;
+          if (!tmpDatasets || tmpDatasets.length === 0) {
+            tmpContainer.innerHTML = '<div class="facto-empty">No datasets yet. Add one below or provision from Source Research.</div>';
+            return;
+          }
+          let tmpHtml = '<table><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Description</th><th>Version Policy</th><th>Actions</th></tr></thead><tbody>';
+          for (let i = 0; i < tmpDatasets.length; i++) {
+            let tmpDS = tmpDatasets[i];
+            let tmpTypeBadge = 'facto-badge-primary';
+            if (tmpDS.Type === 'Projection') tmpTypeBadge = 'facto-badge-warning';else if (tmpDS.Type === 'Derived') tmpTypeBadge = 'facto-badge-muted';
+            tmpHtml += '<tr>';
+            tmpHtml += '<td>' + (tmpDS.IDDataset || '') + '</td>';
+            tmpHtml += '<td>' + (tmpDS.Name || '') + '</td>';
+            tmpHtml += '<td><span class="facto-badge ' + tmpTypeBadge + '">' + (tmpDS.Type || '') + '</span></td>';
+            tmpHtml += '<td>' + (tmpDS.Description || '') + '</td>';
+            tmpHtml += '<td>' + (tmpDS.VersionPolicy || 'Append') + '</td>';
+            tmpHtml += '<td><button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.views[\'Facto-Full-Datasets\'].viewStats(' + tmpDS.IDDataset + ')">Stats</button></td>';
+            tmpHtml += '</tr>';
+          }
+          tmpHtml += '</tbody></table>';
+          tmpContainer.innerHTML = tmpHtml;
+        }
+        viewStats(pIDDataset) {
+          let tmpStatsContainer = document.getElementById('Facto-Full-Datasets-Stats');
+          if (!tmpStatsContainer) return;
+          tmpStatsContainer.style.display = 'block';
+          tmpStatsContainer.innerHTML = '<p style="color:var(--facto-text-secondary);">Loading stats for Dataset #' + pIDDataset + '...</p>';
+          this.pict.providers.Facto.loadDatasetStats(pIDDataset).then(pResponse => {
+            if (pResponse) {
+              let tmpHtml = '<h3>Dataset #' + pIDDataset + ' Statistics</h3>';
+              tmpHtml += '<div class="facto-card-grid" style="margin-top:0.75em;">';
+              tmpHtml += '<div class="facto-card facto-dashboard-stat"><div class="facto-dashboard-stat-value">' + (pResponse.RecordCount || 0) + '</div><div class="facto-dashboard-stat-label">Records</div></div>';
+              tmpHtml += '<div class="facto-card facto-dashboard-stat"><div class="facto-dashboard-stat-value">' + (pResponse.SourceCount || 0) + '</div><div class="facto-dashboard-stat-label">Sources</div></div>';
+              tmpHtml += '<div class="facto-card facto-dashboard-stat"><div class="facto-dashboard-stat-value">' + (pResponse.CurrentVersion || 0) + '</div><div class="facto-dashboard-stat-label">Current Version</div></div>';
+              tmpHtml += '</div>';
+              tmpHtml += '<div style="margin-top:0.75em;"><button class="facto-btn facto-btn-secondary" onclick="document.getElementById(\'Facto-Full-Datasets-Stats\').style.display=\'none\'">Close</button></div>';
+              tmpStatsContainer.innerHTML = tmpHtml;
+            }
+          });
+        }
+        addDataset() {
+          let tmpName = (document.getElementById('Facto-Full-Dataset-Name') || {}).value || '';
+          let tmpType = (document.getElementById('Facto-Full-Dataset-Type') || {}).value || '';
+          let tmpDesc = (document.getElementById('Facto-Full-Dataset-Desc') || {}).value || '';
+          if (!tmpName) {
+            this.setStatus('Dataset name is required', 'warn');
+            return;
+          }
+          this.pict.providers.Facto.createDataset({
+            Name: tmpName,
+            Type: tmpType,
+            Description: tmpDesc
+          }).then(pResponse => {
+            if (pResponse && pResponse.IDDataset) {
+              this.setStatus('Dataset created: ' + tmpName, 'ok');
+              document.getElementById('Facto-Full-Dataset-Name').value = '';
+              document.getElementById('Facto-Full-Dataset-Desc').value = '';
+              return this.pict.providers.Facto.loadDatasets();
+            } else {
+              this.setStatus('Error creating dataset', 'error');
+            }
+          }).then(() => {
+            this.refreshList();
+          });
+        }
+      }
+      module.exports = FactoFullDatasetsView;
+      module.exports.default_configuration = _ViewConfiguration;
+    }, {
+      "pict-view": 10
+    }],
+    18: [function (require, module, exports) {
+      const libPictView = require('pict-view');
+      const _ViewConfiguration = {
+        ViewIdentifier: "Facto-Full-IngestJobs",
+        DefaultRenderable: "Facto-Full-IngestJobs-Content",
+        DefaultDestinationAddress: "#Facto-Full-Content-Container",
+        AutoRender: false,
+        Templates: [{
+          Hash: "Facto-Full-IngestJobs-Template",
+          Template: /*html*/`
+<div class="facto-content">
+	<div class="facto-content-header">
+		<h1>Ingestion Jobs</h1>
+		<p>Monitor and manage data ingestion jobs.</p>
+	</div>
+
+	<div id="Facto-Full-IngestJobs-List"></div>
+	<div id="Facto-Full-IngestJobs-Status" class="facto-status" style="display:none;"></div>
+</div>
+`
+        }],
+        Renderables: [{
+          RenderableHash: "Facto-Full-IngestJobs-Content",
+          TemplateHash: "Facto-Full-IngestJobs-Template",
+          DestinationAddress: "#Facto-Full-Content-Container",
+          RenderMethod: "replace"
+        }]
+      };
+      class FactoFullIngestJobsView extends libPictView {
+        constructor(pFable, pOptions, pServiceHash) {
+          super(pFable, pOptions, pServiceHash);
+        }
+        onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent) {
+          this.pict.providers.Facto.loadIngestJobs().then(() => {
+            this.refreshList();
+          });
+          return super.onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent);
+        }
+        refreshList() {
+          let tmpContainer = document.getElementById('Facto-Full-IngestJobs-List');
+          if (!tmpContainer) return;
+          let tmpJobs = this.pict.AppData.Facto.IngestJobs;
+          if (!tmpJobs || tmpJobs.length === 0) {
+            tmpContainer.innerHTML = '<div class="facto-empty">No ingestion jobs yet. Jobs are created automatically when data is ingested.</div>';
+            return;
+          }
+          let tmpHtml = '<table><thead><tr><th>ID</th><th>Source</th><th>Dataset</th><th>Status</th><th>Version</th><th>Records</th><th>Errors</th><th>Created</th></tr></thead><tbody>';
+          for (let i = 0; i < tmpJobs.length; i++) {
+            let tmpJob = tmpJobs[i];
+            let tmpStatusBadge = 'facto-badge-muted';
+            if (tmpJob.Status === 'Complete') tmpStatusBadge = 'facto-badge-success';else if (tmpJob.Status === 'Running') tmpStatusBadge = 'facto-badge-primary';else if (tmpJob.Status === 'Error') tmpStatusBadge = 'facto-badge-error';
+            tmpHtml += '<tr>';
+            tmpHtml += '<td>' + (tmpJob.IDIngestJob || '') + '</td>';
+            tmpHtml += '<td>' + (tmpJob.IDSource || '') + '</td>';
+            tmpHtml += '<td>' + (tmpJob.IDDataset || '') + '</td>';
+            tmpHtml += '<td><span class="facto-badge ' + tmpStatusBadge + '">' + (tmpJob.Status || 'Pending') + '</span></td>';
+            tmpHtml += '<td>' + (tmpJob.DatasetVersion || '') + '</td>';
+            tmpHtml += '<td>' + (tmpJob.RecordsIngested || 0) + '</td>';
+            tmpHtml += '<td>' + (tmpJob.RecordsErrored || 0) + '</td>';
+            tmpHtml += '<td>' + (tmpJob.CreatingIDUser ? new Date(tmpJob.CreateDate).toLocaleString() : tmpJob.CreateDate || '') + '</td>';
+            tmpHtml += '</tr>';
+          }
+          tmpHtml += '</tbody></table>';
+          tmpContainer.innerHTML = tmpHtml;
+        }
+      }
+      module.exports = FactoFullIngestJobsView;
+      module.exports.default_configuration = _ViewConfiguration;
+    }, {
+      "pict-view": 10
+    }],
+    19: [function (require, module, exports) {
+      const libPictView = require('pict-view');
+      const _ViewConfiguration = {
+        ViewIdentifier: "Facto-Full-Layout",
+        DefaultRenderable: "Facto-Full-Layout-Shell",
+        DefaultDestinationAddress: "#Facto-Full-Application-Container",
+        AutoRender: false,
+        Templates: [{
+          Hash: "Facto-Full-Layout-Shell-Template",
+          Template: /*html*/`
+<div id="Facto-Full-TopBar-Container"></div>
+<div id="Facto-Full-Content-Container"></div>
+<div id="Facto-Full-BottomBar-Container"></div>
+`
+        }],
+        Renderables: [{
+          RenderableHash: "Facto-Full-Layout-Shell",
+          TemplateHash: "Facto-Full-Layout-Shell-Template",
+          DestinationAddress: "#Facto-Full-Application-Container",
+          RenderMethod: "replace"
+        }]
+      };
+      class FactoFullLayoutView extends libPictView {
+        constructor(pFable, pOptions, pServiceHash) {
+          super(pFable, pOptions, pServiceHash);
+        }
+        onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent) {
+          // Render shell views
+          this.pict.views['Facto-Full-TopBar'].render();
+          this.pict.views['Facto-Full-BottomBar'].render();
+
+          // Render initial content — the dashboard
+          this.pict.views['Facto-Full-Dashboard'].render();
+
+          // Inject all view CSS into the PICT-CSS style element
+          this.pict.CSSMap.injectCSS();
+
+          // Resolve the router so it picks up the current hash URL
+          if (this.pict.providers.PictRouter) {
+            this.pict.providers.PictRouter.resolve();
+          }
+          return super.onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent);
+        }
+      }
+      module.exports = FactoFullLayoutView;
+      module.exports.default_configuration = _ViewConfiguration;
+    }, {
+      "pict-view": 10
+    }],
+    20: [function (require, module, exports) {
+      const libPictView = require('pict-view');
+      const _ViewConfiguration = {
+        ViewIdentifier: "Facto-Full-Projections",
+        DefaultRenderable: "Facto-Full-Projections-Content",
+        DefaultDestinationAddress: "#Facto-Full-Content-Container",
+        AutoRender: false,
+        CSS: /*css*/`
+		.facto-projection-results {
+			margin-top: 1.25em;
+			padding-top: 1.25em;
+			border-top: 1px solid var(--facto-border-subtle);
+		}
+		.facto-projection-results pre {
+			max-height: 400px;
+			overflow: auto;
+		}
+	`,
+        Templates: [{
+          Hash: "Facto-Full-Projections-Template",
+          Template: /*html*/`
+<div class="facto-content">
+	<div class="facto-content-header">
+		<h1>Projections</h1>
+		<p>Query, aggregate, and compare records across datasets.</p>
+	</div>
+
+	<div class="facto-section">
+		<div class="facto-section-title">Warehouse Summary</div>
+		<div id="Facto-Full-Projections-Summary" class="facto-card-grid"></div>
+	</div>
+
+	<div class="facto-section" style="margin-top:1.5em;">
+		<div class="facto-section-title">Query Records</div>
+		<div class="facto-inline-group">
+			<div>
+				<label>Dataset ID</label>
+				<input type="number" id="Facto-Full-Proj-DatasetID" placeholder="e.g. 1">
+			</div>
+			<div>
+				<label>Type Filter</label>
+				<select id="Facto-Full-Proj-Type">
+					<option value="">All</option>
+					<option value="Raw">Raw</option>
+					<option value="Compositional">Compositional</option>
+					<option value="Projection">Projection</option>
+				</select>
+			</div>
+		</div>
+		<button class="facto-btn facto-btn-primary" onclick="{~P~}.views['Facto-Full-Projections'].runQuery()">Run Query</button>
+		<button class="facto-btn facto-btn-secondary" onclick="{~P~}.views['Facto-Full-Projections'].runAggregate()">Aggregate</button>
+	</div>
+
+	<div id="Facto-Full-Projections-Results" class="facto-projection-results" style="display:none;"></div>
+</div>
+`
+        }],
+        Renderables: [{
+          RenderableHash: "Facto-Full-Projections-Content",
+          TemplateHash: "Facto-Full-Projections-Template",
+          DestinationAddress: "#Facto-Full-Content-Container",
+          RenderMethod: "replace"
+        }]
+      };
+      class FactoFullProjectionsView extends libPictView {
+        constructor(pFable, pOptions, pServiceHash) {
+          super(pFable, pOptions, pServiceHash);
+        }
+        onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent) {
+          this.pict.providers.Facto.loadProjectionSummary().then(pResponse => {
+            let tmpContainer = document.getElementById('Facto-Full-Projections-Summary');
+            if (!tmpContainer || !pResponse) return;
+            let tmpHtml = '';
+            tmpHtml += '<div class="facto-card facto-dashboard-stat"><div class="facto-dashboard-stat-value">' + (pResponse.TotalRecords || 0) + '</div><div class="facto-dashboard-stat-label">Total Records</div></div>';
+            tmpHtml += '<div class="facto-card facto-dashboard-stat"><div class="facto-dashboard-stat-value">' + (pResponse.TotalDatasets || 0) + '</div><div class="facto-dashboard-stat-label">Total Datasets</div></div>';
+            tmpHtml += '<div class="facto-card facto-dashboard-stat"><div class="facto-dashboard-stat-value">' + (pResponse.TotalSources || 0) + '</div><div class="facto-dashboard-stat-label">Total Sources</div></div>';
+            tmpContainer.innerHTML = tmpHtml;
+          });
+          return super.onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent);
+        }
+        runQuery() {
+          let tmpDatasetID = parseInt((document.getElementById('Facto-Full-Proj-DatasetID') || {}).value) || 0;
+          let tmpType = (document.getElementById('Facto-Full-Proj-Type') || {}).value || '';
+          let tmpParams = {};
+          if (tmpDatasetID) tmpParams.IDDataset = tmpDatasetID;
+          if (tmpType) tmpParams.Type = tmpType;
+          this.pict.providers.Facto.queryRecords(tmpParams).then(pResponse => {
+            this._showResults('Query Results', pResponse);
+          });
+        }
+        runAggregate() {
+          let tmpDatasetID = parseInt((document.getElementById('Facto-Full-Proj-DatasetID') || {}).value) || 0;
+          let tmpParams = {};
+          if (tmpDatasetID) tmpParams.IDDataset = tmpDatasetID;
+          this.pict.providers.Facto.aggregateRecords(tmpParams).then(pResponse => {
+            this._showResults('Aggregate Results', pResponse);
+          });
+        }
+        _showResults(pTitle, pData) {
+          let tmpContainer = document.getElementById('Facto-Full-Projections-Results');
+          if (!tmpContainer) return;
+          tmpContainer.style.display = 'block';
+          let tmpRecordCount = pData && pData.Records ? pData.Records.length : pData && pData.Aggregations ? pData.Aggregations.length : 0;
+          let tmpHtml = '<h3>' + pTitle + ' (' + tmpRecordCount + ')</h3>';
+          tmpHtml += '<pre>' + JSON.stringify(pData, null, 2) + '</pre>';
+          tmpHtml += '<button class="facto-btn facto-btn-secondary" style="margin-top:0.5em;" onclick="document.getElementById(\'Facto-Full-Projections-Results\').style.display=\'none\'">Close</button>';
+          tmpContainer.innerHTML = tmpHtml;
+        }
+      }
+      module.exports = FactoFullProjectionsView;
+      module.exports.default_configuration = _ViewConfiguration;
+    }, {
+      "pict-view": 10
+    }],
+    21: [function (require, module, exports) {
+      const libPictView = require('pict-view');
+      const _ViewConfiguration = {
+        ViewIdentifier: "Facto-Full-Records",
+        DefaultRenderable: "Facto-Full-Records-Content",
+        DefaultDestinationAddress: "#Facto-Full-Content-Container",
+        AutoRender: false,
+        CSS: /*css*/`
+		.facto-records-pager {
+			display: flex;
+			align-items: center;
+			gap: 0.75em;
+			margin-bottom: 1em;
+		}
+		.facto-records-pager span {
+			font-size: 0.85em;
+			color: var(--facto-text-secondary);
+		}
+		.facto-record-data {
+			max-width: 400px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			font-family: 'SF Mono', Consolas, monospace;
+			font-size: 0.8em;
+			color: var(--facto-text-secondary);
+		}
+	`,
+        Templates: [{
+          Hash: "Facto-Full-Records-Template",
+          Template: /*html*/`
+<div class="facto-content">
+	<div class="facto-content-header">
+		<h1>Records</h1>
+		<p>Browse ingested records across all datasets.</p>
+	</div>
+
+	<div class="facto-records-pager">
+		<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="{~P~}.views['Facto-Full-Records'].prevPage()">Previous</button>
+		<span id="Facto-Full-Records-PageInfo">Page 1</span>
+		<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="{~P~}.views['Facto-Full-Records'].nextPage()">Next</button>
+	</div>
+
+	<div id="Facto-Full-Records-List"></div>
+</div>
+`
+        }],
+        Renderables: [{
+          RenderableHash: "Facto-Full-Records-Content",
+          TemplateHash: "Facto-Full-Records-Template",
+          DestinationAddress: "#Facto-Full-Content-Container",
+          RenderMethod: "replace"
+        }]
+      };
+      class FactoFullRecordsView extends libPictView {
+        constructor(pFable, pOptions, pServiceHash) {
+          super(pFable, pOptions, pServiceHash);
+        }
+        onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent) {
+          this.pict.providers.Facto.loadRecords(this.pict.AppData.Facto.RecordPage).then(() => {
+            this.refreshList();
+          });
+          return super.onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent);
+        }
+        refreshList() {
+          let tmpContainer = document.getElementById('Facto-Full-Records-List');
+          if (!tmpContainer) return;
+          let tmpRecords = this.pict.AppData.Facto.Records;
+          let tmpPageInfo = document.getElementById('Facto-Full-Records-PageInfo');
+          if (tmpPageInfo) tmpPageInfo.textContent = 'Page ' + ((this.pict.AppData.Facto.RecordPage || 0) + 1);
+          if (!tmpRecords || tmpRecords.length === 0) {
+            tmpContainer.innerHTML = '<div class="facto-empty">No records found. Ingest data via Source Research or the Ingest API.</div>';
+            return;
+          }
+          let tmpHtml = '<table><thead><tr><th>ID</th><th>Dataset</th><th>Source</th><th>GUID</th><th>Data</th></tr></thead><tbody>';
+          for (let i = 0; i < tmpRecords.length; i++) {
+            let tmpRec = tmpRecords[i];
+            let tmpData = '';
+            try {
+              tmpData = JSON.stringify(JSON.parse(tmpRec.Data || '{}'));
+            } catch (e) {
+              tmpData = tmpRec.Data || '';
+            }
+            tmpHtml += '<tr>';
+            tmpHtml += '<td>' + (tmpRec.IDRecord || '') + '</td>';
+            tmpHtml += '<td>' + (tmpRec.IDDataset || '') + '</td>';
+            tmpHtml += '<td>' + (tmpRec.IDSource || '') + '</td>';
+            tmpHtml += '<td style="font-size:0.8em; color:var(--facto-text-tertiary);">' + (tmpRec.GUIDRecord || '').substring(0, 8) + '...</td>';
+            tmpHtml += '<td class="facto-record-data">' + tmpData + '</td>';
+            tmpHtml += '</tr>';
+          }
+          tmpHtml += '</tbody></table>';
+          tmpContainer.innerHTML = tmpHtml;
+        }
+        prevPage() {
+          if (this.pict.AppData.Facto.RecordPage > 0) {
+            this.pict.AppData.Facto.RecordPage--;
+            this.pict.providers.Facto.loadRecords(this.pict.AppData.Facto.RecordPage).then(() => {
+              this.refreshList();
+            });
+          }
+        }
+        nextPage() {
+          this.pict.AppData.Facto.RecordPage++;
+          this.pict.providers.Facto.loadRecords(this.pict.AppData.Facto.RecordPage).then(() => {
+            this.refreshList();
+          });
+        }
+      }
+      module.exports = FactoFullRecordsView;
+      module.exports.default_configuration = _ViewConfiguration;
+    }, {
+      "pict-view": 10
+    }],
+    22: [function (require, module, exports) {
+      const libPictView = require('pict-view');
+      const _ViewConfiguration = {
+        ViewIdentifier: "Facto-Full-SourceResearch",
+        DefaultRenderable: "Facto-Full-SourceResearch-Content",
+        DefaultDestinationAddress: "#Facto-Full-Content-Container",
+        AutoRender: false,
+        CSS: /*css*/`
+		.facto-research-search {
+			display: flex;
+			gap: 0.75em;
+			margin-bottom: 1.25em;
+		}
+		.facto-research-search input {
+			flex: 1;
+			margin-bottom: 0;
+		}
+		.facto-research-detail {
+			margin-top: 1.25em;
+			padding-top: 1.25em;
+			border-top: 1px solid var(--facto-border-subtle);
+		}
+		.facto-research-import textarea {
+			width: 100%;
+			font-family: 'SF Mono', Consolas, monospace;
+			font-size: 0.85em;
+			padding: 0.75em;
+			background: var(--facto-bg-input);
+			color: var(--facto-text);
+			border: 1px solid var(--facto-border);
+			border-radius: 6px;
+			margin-bottom: 0.5em;
+		}
+	`,
+        Templates: [{
+          Hash: "Facto-Full-SourceResearch-Template",
+          Template: /*html*/`
+<div class="facto-content">
+	<div class="facto-content-header">
+		<h1>Source Research</h1>
+		<p>Research and catalog potential data sources before provisioning them as runtime Sources and Datasets.</p>
+	</div>
+
+	<div class="facto-research-search">
+		<input type="text" id="Facto-Full-Research-Search" placeholder="Search catalog by name, agency, category, or description...">
+		<button class="facto-btn facto-btn-primary" onclick="{~P~}.views['Facto-Full-SourceResearch'].searchCatalog()">Search</button>
+	</div>
+
+	<div id="Facto-Full-Research-List"></div>
+	<div id="Facto-Full-Research-Detail" class="facto-research-detail" style="display:none;"></div>
+	<div id="Facto-Full-Research-Status" class="facto-status" style="display:none;"></div>
+
+	<div class="facto-section" style="margin-top:2em;">
+		<div class="facto-section-title">Import / Export</div>
+		<div class="facto-research-import">
+			<textarea id="Facto-Full-Research-ImportJSON" rows="4" placeholder="Paste JSON array of catalog entries here..."></textarea>
+			<button class="facto-btn facto-btn-primary" onclick="{~P~}.views['Facto-Full-SourceResearch'].importCatalog()">Import JSON</button>
+			<button class="facto-btn facto-btn-secondary" onclick="{~P~}.views['Facto-Full-SourceResearch'].exportCatalog()">Export Catalog</button>
+		</div>
+	</div>
+</div>
+`
+        }],
+        Renderables: [{
+          RenderableHash: "Facto-Full-SourceResearch-Content",
+          TemplateHash: "Facto-Full-SourceResearch-Template",
+          DestinationAddress: "#Facto-Full-Content-Container",
+          RenderMethod: "replace"
+        }]
+      };
+      class FactoFullSourceResearchView extends libPictView {
+        constructor(pFable, pOptions, pServiceHash) {
+          super(pFable, pOptions, pServiceHash);
+        }
+        onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent) {
+          this.pict.providers.Facto.loadCatalogEntries().then(() => {
+            this.refreshList();
+          });
+          return super.onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent);
+        }
+        setStatus(pMessage, pType) {
+          let tmpEl = document.getElementById('Facto-Full-Research-Status');
+          if (!tmpEl) return;
+          tmpEl.className = 'facto-status facto-status-' + (pType || 'info');
+          tmpEl.textContent = pMessage;
+          tmpEl.style.display = 'block';
+        }
+        refreshList() {
+          let tmpContainer = document.getElementById('Facto-Full-Research-List');
+          if (!tmpContainer) return;
+          let tmpEntries = this.pict.AppData.Facto.CatalogEntries;
+          if (!tmpEntries || tmpEntries.length === 0) {
+            tmpContainer.innerHTML = '<div class="facto-empty">No catalog entries yet. Import a catalog or add sources manually.</div>';
+            return;
+          }
+          let tmpHtml = '<table><thead><tr><th>ID</th><th>Agency</th><th>Name</th><th>Type</th><th>Category</th><th>Region</th><th>Verified</th><th>Actions</th></tr></thead><tbody>';
+          for (let i = 0; i < tmpEntries.length; i++) {
+            let tmpEntry = tmpEntries[i];
+            let tmpVerified = tmpEntry.Verified ? '<span class="facto-badge facto-badge-success">Yes</span>' : '<span class="facto-badge facto-badge-muted">No</span>';
+            tmpHtml += '<tr>';
+            tmpHtml += '<td>' + (tmpEntry.IDSourceCatalogEntry || '') + '</td>';
+            tmpHtml += '<td>' + (tmpEntry.Agency || '') + '</td>';
+            tmpHtml += '<td>' + (tmpEntry.Name || '') + '</td>';
+            tmpHtml += '<td><span class="facto-badge facto-badge-primary">' + (tmpEntry.Type || '') + '</span></td>';
+            tmpHtml += '<td>' + (tmpEntry.Category || '') + '</td>';
+            tmpHtml += '<td>' + (tmpEntry.Region || '') + '</td>';
+            tmpHtml += '<td>' + tmpVerified + '</td>';
+            tmpHtml += '<td>';
+            tmpHtml += '<button class="facto-btn facto-btn-primary facto-btn-small" onclick="pict.views[\'Facto-Full-SourceResearch\'].viewEntry(' + tmpEntry.IDSourceCatalogEntry + ')">Datasets</button> ';
+            tmpHtml += '<button class="facto-btn facto-btn-danger facto-btn-small" onclick="pict.views[\'Facto-Full-SourceResearch\'].deleteEntry(' + tmpEntry.IDSourceCatalogEntry + ')">Delete</button>';
+            tmpHtml += '</td>';
+            tmpHtml += '</tr>';
+          }
+          tmpHtml += '</tbody></table>';
+          tmpContainer.innerHTML = tmpHtml;
+        }
+        searchCatalog() {
+          let tmpQuery = (document.getElementById('Facto-Full-Research-Search') || {}).value || '';
+          if (!tmpQuery) {
+            this.pict.providers.Facto.loadCatalogEntries().then(() => {
+              this.refreshList();
+            });
+            return;
+          }
+          this.pict.providers.Facto.searchCatalog(tmpQuery).then(pResponse => {
+            this.pict.AppData.Facto.CatalogEntries = pResponse && pResponse.Entries ? pResponse.Entries : [];
+            this.refreshList();
+          });
+        }
+        deleteEntry(pIDEntry) {
+          if (!confirm('Remove this catalog entry?')) return;
+          this.pict.providers.Facto.deleteCatalogEntry(pIDEntry).then(() => {
+            return this.pict.providers.Facto.loadCatalogEntries();
+          }).then(() => {
+            this.refreshList();
+            this.setStatus('Entry removed', 'ok');
+          });
+        }
+        viewEntry(pIDEntry) {
+          let tmpDetail = document.getElementById('Facto-Full-Research-Detail');
+          if (!tmpDetail) return;
+          tmpDetail.style.display = 'block';
+          this.pict.providers.Facto.loadCatalogEntryDatasets(pIDEntry).then(pResponse => {
+            let tmpDatasets = pResponse && pResponse.Datasets ? pResponse.Datasets : [];
+            let tmpHtml = '<h3>Dataset Definitions for Entry #' + pIDEntry + '</h3>';
+            if (tmpDatasets.length === 0) {
+              tmpHtml += '<div class="facto-empty">No dataset definitions yet.</div>';
+            } else {
+              tmpHtml += '<table><thead><tr><th>ID</th><th>Name</th><th>Format</th><th>Endpoint URL</th><th>Policy</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
+              for (let i = 0; i < tmpDatasets.length; i++) {
+                let tmpDS = tmpDatasets[i];
+                let tmpStatus = tmpDS.Provisioned ? '<span class="facto-badge facto-badge-success">Provisioned</span>' : '<span class="facto-badge facto-badge-muted">Not provisioned</span>';
+                let tmpAction = '';
+                if (tmpDS.Provisioned) {
+                  tmpAction = '<button class="facto-btn facto-btn-primary facto-btn-small" onclick="pict.views[\'Facto-Full-SourceResearch\'].fetchDataset(' + tmpDS.IDCatalogDatasetDefinition + ', ' + pIDEntry + ')">Fetch</button>';
+                } else {
+                  tmpAction = '<button class="facto-btn facto-btn-success facto-btn-small" onclick="pict.views[\'Facto-Full-SourceResearch\'].provisionDataset(' + tmpDS.IDCatalogDatasetDefinition + ', ' + pIDEntry + ')">Provision</button>';
+                }
+                tmpHtml += '<tr>';
+                tmpHtml += '<td>' + (tmpDS.IDCatalogDatasetDefinition || '') + '</td>';
+                tmpHtml += '<td>' + (tmpDS.Name || '') + '</td>';
+                tmpHtml += '<td><span class="facto-badge facto-badge-primary">' + (tmpDS.Format || '') + '</span></td>';
+                tmpHtml += '<td style="max-width:250px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">' + (tmpDS.EndpointURL || '') + '</td>';
+                tmpHtml += '<td>' + (tmpDS.VersionPolicy || 'Append') + '</td>';
+                tmpHtml += '<td>' + tmpStatus + '</td>';
+                tmpHtml += '<td>' + tmpAction + '</td>';
+                tmpHtml += '</tr>';
+              }
+              tmpHtml += '</tbody></table>';
+            }
+            tmpHtml += '<div style="margin-top:1em;"><button class="facto-btn facto-btn-secondary" onclick="document.getElementById(\'Facto-Full-Research-Detail\').style.display=\'none\'">Close</button></div>';
+            tmpDetail.innerHTML = tmpHtml;
+          });
+        }
+        provisionDataset(pIDCatalogDataset, pIDEntry) {
+          this.setStatus('Provisioning...', 'info');
+          this.pict.providers.Facto.provisionCatalogDataset(pIDCatalogDataset).then(pResponse => {
+            if (pResponse && pResponse.Success) {
+              this.setStatus('Provisioned! Source #' + pResponse.Source.IDSource + ', Dataset #' + pResponse.Dataset.IDDataset, 'ok');
+              this.viewEntry(pIDEntry);
+            } else {
+              this.setStatus('Error: ' + (pResponse && pResponse.Error || 'Unknown'), 'error');
+            }
+          });
+        }
+        fetchDataset(pIDCatalogDataset, pIDEntry) {
+          this.setStatus('Fetching data from endpoint...', 'info');
+          this.pict.providers.Facto.fetchCatalogDataset(pIDCatalogDataset).then(pResponse => {
+            if (pResponse && pResponse.Success) {
+              let tmpMsg = 'Fetched! ' + pResponse.Ingested + ' records ingested (v' + pResponse.DatasetVersion + ', ' + pResponse.Format + ')';
+              if (pResponse.IsDuplicate) tmpMsg += ' [duplicate content]';
+              this.setStatus(tmpMsg, 'ok');
+              this.viewEntry(pIDEntry);
+            } else {
+              this.setStatus('Fetch error: ' + (pResponse && pResponse.Error || 'Unknown'), 'error');
+            }
+          });
+        }
+        importCatalog() {
+          let tmpTextArea = document.getElementById('Facto-Full-Research-ImportJSON');
+          if (!tmpTextArea || !tmpTextArea.value) {
+            this.setStatus('Paste JSON to import', 'warn');
+            return;
+          }
+          let tmpEntries;
+          try {
+            tmpEntries = JSON.parse(tmpTextArea.value);
+          } catch (pErr) {
+            this.setStatus('Invalid JSON: ' + pErr.message, 'error');
+            return;
+          }
+          this.pict.providers.Facto.importCatalog(tmpEntries).then(pResponse => {
+            if (pResponse && pResponse.Success) {
+              this.setStatus('Imported ' + pResponse.EntriesCreated + ' entries with ' + pResponse.DatasetsCreated + ' datasets', 'ok');
+              tmpTextArea.value = '';
+              return this.pict.providers.Facto.loadCatalogEntries();
+            } else {
+              this.setStatus('Import error: ' + (pResponse && pResponse.Error || 'Unknown'), 'error');
+            }
+          }).then(() => {
+            this.refreshList();
+          });
+        }
+        exportCatalog() {
+          this.pict.providers.Facto.exportCatalog().then(pResponse => {
+            let tmpTextArea = document.getElementById('Facto-Full-Research-ImportJSON');
+            if (tmpTextArea) {
+              tmpTextArea.value = JSON.stringify(pResponse && pResponse.Entries ? pResponse.Entries : pResponse, null, 2);
+            }
+            this.setStatus('Catalog exported to JSON text area', 'ok');
+          });
+        }
+      }
+      module.exports = FactoFullSourceResearchView;
+      module.exports.default_configuration = _ViewConfiguration;
+    }, {
+      "pict-view": 10
+    }],
+    23: [function (require, module, exports) {
+      const libPictView = require('pict-view');
+      const _ViewConfiguration = {
+        ViewIdentifier: "Facto-Full-Sources",
+        DefaultRenderable: "Facto-Full-Sources-Content",
+        DefaultDestinationAddress: "#Facto-Full-Content-Container",
+        AutoRender: false,
+        Templates: [{
+          Hash: "Facto-Full-Sources-Template",
+          Template: /*html*/`
+<div class="facto-content">
+	<div class="facto-content-header">
+		<h1>Sources</h1>
+		<p>Manage data sources that feed into the warehouse.</p>
+	</div>
+
+	<div id="Facto-Full-Sources-List"></div>
+
+	<div class="facto-section" style="margin-top:2em;">
+		<div class="facto-section-title">Add Source</div>
+		<div class="facto-inline-group">
+			<div>
+				<label>Name</label>
+				<input type="text" id="Facto-Full-Source-Name" placeholder="Source name">
+			</div>
+			<div>
+				<label>Type</label>
+				<select id="Facto-Full-Source-Type">
+					<option value="API">API</option>
+					<option value="File">File</option>
+					<option value="Database">Database</option>
+					<option value="Manual">Manual</option>
+				</select>
+			</div>
+			<div>
+				<label>URL</label>
+				<input type="text" id="Facto-Full-Source-URL" placeholder="https://...">
+			</div>
+		</div>
+		<button class="facto-btn facto-btn-primary" onclick="{~P~}.views['Facto-Full-Sources'].addSource()">Add Source</button>
+	</div>
+
+	<div id="Facto-Full-Sources-Status" class="facto-status" style="display:none;"></div>
+</div>
+`
+        }],
+        Renderables: [{
+          RenderableHash: "Facto-Full-Sources-Content",
+          TemplateHash: "Facto-Full-Sources-Template",
+          DestinationAddress: "#Facto-Full-Content-Container",
+          RenderMethod: "replace"
+        }]
+      };
+      class FactoFullSourcesView extends libPictView {
+        constructor(pFable, pOptions, pServiceHash) {
+          super(pFable, pOptions, pServiceHash);
+        }
+        onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent) {
+          this.pict.providers.Facto.loadSources().then(() => {
+            this.refreshList();
+          });
+          return super.onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent);
+        }
+        setStatus(pMessage, pType) {
+          let tmpEl = document.getElementById('Facto-Full-Sources-Status');
+          if (!tmpEl) return;
+          tmpEl.className = 'facto-status facto-status-' + (pType || 'info');
+          tmpEl.textContent = pMessage;
+          tmpEl.style.display = 'block';
+        }
+        refreshList() {
+          let tmpContainer = document.getElementById('Facto-Full-Sources-List');
+          if (!tmpContainer) return;
+          let tmpSources = this.pict.AppData.Facto.Sources;
+          if (!tmpSources || tmpSources.length === 0) {
+            tmpContainer.innerHTML = '<div class="facto-empty">No sources yet. Add one below or provision from Source Research.</div>';
+            return;
+          }
+          let tmpHtml = '<table><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>URL</th><th>Active</th><th>Actions</th></tr></thead><tbody>';
+          for (let i = 0; i < tmpSources.length; i++) {
+            let tmpSource = tmpSources[i];
+            let tmpActive = tmpSource.Active ? '<span class="facto-badge facto-badge-success">Active</span>' : '<span class="facto-badge facto-badge-muted">Inactive</span>';
+            let tmpToggleBtn = tmpSource.Active ? '<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.views[\'Facto-Full-Sources\'].toggleActive(' + tmpSource.IDSource + ', false)">Deactivate</button>' : '<button class="facto-btn facto-btn-success facto-btn-small" onclick="pict.views[\'Facto-Full-Sources\'].toggleActive(' + tmpSource.IDSource + ', true)">Activate</button>';
+            tmpHtml += '<tr>';
+            tmpHtml += '<td>' + (tmpSource.IDSource || '') + '</td>';
+            tmpHtml += '<td>' + (tmpSource.Name || '') + '</td>';
+            tmpHtml += '<td><span class="facto-badge facto-badge-primary">' + (tmpSource.Type || '') + '</span></td>';
+            tmpHtml += '<td style="max-width:250px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">' + (tmpSource.URL || '') + '</td>';
+            tmpHtml += '<td>' + tmpActive + '</td>';
+            tmpHtml += '<td>' + tmpToggleBtn + '</td>';
+            tmpHtml += '</tr>';
+          }
+          tmpHtml += '</tbody></table>';
+          tmpContainer.innerHTML = tmpHtml;
+        }
+        toggleActive(pIDSource, pActivate) {
+          let tmpPromise = pActivate ? this.pict.providers.Facto.activateSource(pIDSource) : this.pict.providers.Facto.deactivateSource(pIDSource);
+          tmpPromise.then(() => {
+            return this.pict.providers.Facto.loadSources();
+          }).then(() => {
+            this.refreshList();
+            this.setStatus(pActivate ? 'Source activated' : 'Source deactivated', 'ok');
+          });
+        }
+        addSource() {
+          let tmpName = (document.getElementById('Facto-Full-Source-Name') || {}).value || '';
+          let tmpType = (document.getElementById('Facto-Full-Source-Type') || {}).value || '';
+          let tmpURL = (document.getElementById('Facto-Full-Source-URL') || {}).value || '';
+          if (!tmpName) {
+            this.setStatus('Source name is required', 'warn');
+            return;
+          }
+          this.pict.providers.Facto.createSource({
+            Name: tmpName,
+            Type: tmpType,
+            URL: tmpURL,
+            Active: 1
+          }).then(pResponse => {
+            if (pResponse && pResponse.IDSource) {
+              this.setStatus('Source created: ' + tmpName, 'ok');
+              document.getElementById('Facto-Full-Source-Name').value = '';
+              document.getElementById('Facto-Full-Source-URL').value = '';
+              return this.pict.providers.Facto.loadSources();
+            } else {
+              this.setStatus('Error creating source', 'error');
+            }
+          }).then(() => {
+            this.refreshList();
+          });
+        }
+      }
+      module.exports = FactoFullSourcesView;
+      module.exports.default_configuration = _ViewConfiguration;
+    }, {
+      "pict-view": 10
+    }],
+    24: [function (require, module, exports) {
+      const libPictView = require('pict-view');
+      const _ViewConfiguration = {
+        ViewIdentifier: "Facto-Full-TopBar",
+        DefaultRenderable: "Facto-Full-TopBar-Content",
+        DefaultDestinationAddress: "#Facto-Full-TopBar-Container",
+        AutoRender: false,
+        CSS: /*css*/`
+		.facto-topbar {
+			display: flex;
+			align-items: center;
+			height: 48px;
+			background: var(--facto-topbar-bg);
+			padding: 0 1.25em;
+			border-bottom: 1px solid var(--facto-border-subtle);
+			position: sticky;
+			top: 0;
+			z-index: 100;
+		}
+
+		.facto-topbar-brand {
+			font-size: 1.05em;
+			font-weight: 700;
+			color: var(--facto-text-heading);
+			cursor: pointer;
+			margin-right: 2em;
+			white-space: nowrap;
+			text-decoration: none;
+		}
+
+		.facto-topbar-brand:hover {
+			color: var(--facto-brand);
+		}
+
+		.facto-topbar-nav {
+			display: flex;
+			align-items: center;
+			gap: 0.15em;
+			flex: 1;
+			overflow-x: auto;
+		}
+
+		.facto-topbar-nav a {
+			padding: 0.35em 0.7em;
+			font-size: 0.85em;
+			font-weight: 500;
+			color: var(--facto-topbar-text);
+			text-decoration: none;
+			border-radius: 5px;
+			white-space: nowrap;
+			cursor: pointer;
+			transition: color 0.12s, background 0.12s;
+		}
+
+		.facto-topbar-nav a:hover {
+			color: var(--facto-topbar-hover);
+			background: rgba(255,255,255,0.06);
+		}
+
+		.facto-topbar-nav a.active {
+			color: var(--facto-topbar-active);
+			background: rgba(255,255,255,0.08);
+		}
+
+		.facto-topbar-right {
+			display: flex;
+			align-items: center;
+			gap: 0.75em;
+			margin-left: auto;
+		}
+
+		.facto-topbar-simple-link {
+			font-size: 0.75em;
+			color: var(--facto-topbar-text);
+			text-decoration: none;
+			opacity: 0.6;
+		}
+
+		.facto-topbar-simple-link:hover {
+			opacity: 1;
+		}
+
+		/* Settings gear */
+		.facto-settings-wrap {
+			position: relative;
+		}
+
+		.facto-settings-gear {
+			background: none;
+			border: none;
+			padding: 0.3em;
+			cursor: pointer;
+			color: var(--facto-topbar-text);
+			display: flex;
+			align-items: center;
+			border-radius: 4px;
+			transition: color 0.12s;
+		}
+
+		.facto-settings-gear:hover {
+			color: var(--facto-topbar-hover);
+		}
+
+		.facto-settings-gear svg {
+			width: 20px;
+			height: 20px;
+			fill: currentColor;
+		}
+
+		/* Settings panel */
+		.facto-settings-panel {
+			position: absolute;
+			top: 100%;
+			right: 0;
+			margin-top: 0.5em;
+			background: var(--facto-bg-surface);
+			border: 1px solid var(--facto-border);
+			border-radius: 8px;
+			padding: 1em;
+			min-width: 220px;
+			box-shadow: var(--facto-shadow-heavy);
+			z-index: 200;
+		}
+
+		.facto-settings-panel-title {
+			font-size: 0.8em;
+			font-weight: 600;
+			color: var(--facto-text-secondary);
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+			margin-bottom: 0.75em;
+		}
+
+		.facto-theme-grid {
+			display: flex;
+			flex-direction: column;
+			gap: 0.4em;
+		}
+
+		.facto-theme-swatch {
+			display: flex;
+			align-items: center;
+			gap: 0.6em;
+			padding: 0.4em 0.5em;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background 0.12s;
+		}
+
+		.facto-theme-swatch:hover {
+			background: var(--facto-bg-elevated);
+		}
+
+		.facto-theme-swatch.active {
+			background: var(--facto-bg-elevated);
+			outline: 2px solid var(--facto-brand);
+			outline-offset: -2px;
+		}
+
+		.facto-theme-swatch-colors {
+			display: flex;
+			gap: 3px;
+		}
+
+		.facto-theme-swatch-dot {
+			width: 14px;
+			height: 14px;
+			border-radius: 50%;
+			border: 1px solid rgba(255,255,255,0.1);
+		}
+
+		.facto-theme-swatch-label {
+			font-size: 0.82em;
+			color: var(--facto-text);
+		}
+
+		@media (max-width: 900px) {
+			.facto-topbar-nav {
+				display: none;
+			}
+		}
+	`,
+        Templates: [{
+          Hash: "Facto-Full-TopBar-Template",
+          Template: /*html*/`
+<div class="facto-topbar">
+	<a class="facto-topbar-brand" onclick="{~P~}.PictApplication.navigateTo('/Home')">Retold Facto</a>
+
+	<div class="facto-topbar-nav" id="Facto-Full-TopBar-Nav">
+		<a onclick="{~P~}.PictApplication.navigateTo('/SourceResearch')">Source Research</a>
+		<a onclick="{~P~}.PictApplication.navigateTo('/IngestJobs')">Ingestion Jobs</a>
+		<a onclick="{~P~}.PictApplication.navigateTo('/Sources')">Sources</a>
+		<a onclick="{~P~}.PictApplication.navigateTo('/Datasets')">Data Sets</a>
+		<a onclick="{~P~}.PictApplication.navigateTo('/Records')">Records</a>
+		<a onclick="{~P~}.PictApplication.navigateTo('/Projections')">Projections</a>
+		<a onclick="{~P~}.PictApplication.navigateTo('/Dashboards')">Dashboards</a>
+	</div>
+
+	<div class="facto-topbar-right">
+		<a class="facto-topbar-simple-link" href="/simple/">Simple View</a>
+
+		<div class="facto-settings-wrap">
+			<button class="facto-settings-gear" onclick="{~P~}.views['Facto-Full-TopBar'].toggleThemePanel()">
+				<svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.49.49 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.48.48 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.49.49 0 00-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6A3.6 3.6 0 1112 8.4a3.6 3.6 0 010 7.2z"/></svg>
+			</button>
+
+			<div class="facto-settings-panel" id="Facto-Full-Settings-Panel" style="display:none;">
+				<div class="facto-settings-panel-title">Theme</div>
+				<div class="facto-theme-grid" id="Facto-Full-Settings-ThemeGrid"></div>
+			</div>
+		</div>
+	</div>
+</div>
+`
+        }],
+        Renderables: [{
+          RenderableHash: "Facto-Full-TopBar-Content",
+          TemplateHash: "Facto-Full-TopBar-Template",
+          DestinationAddress: "#Facto-Full-TopBar-Container",
+          RenderMethod: "replace"
+        }]
+      };
+      class FactoFullTopBarView extends libPictView {
+        constructor(pFable, pOptions, pServiceHash) {
+          super(pFable, pOptions, pServiceHash);
+          this._themePanelOpen = false;
+        }
+        onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent) {
+          this._renderThemeGrid();
+
+          // Close theme panel on outside click
+          document.addEventListener('click', pEvent => {
+            if (!this._themePanelOpen) return;
+            let tmpWrap = pEvent.target.closest('.facto-settings-wrap');
+            if (!tmpWrap) {
+              this._themePanelOpen = false;
+              let tmpPanel = document.getElementById('Facto-Full-Settings-Panel');
+              if (tmpPanel) tmpPanel.style.display = 'none';
+            }
+          });
+          return super.onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent);
+        }
+        toggleThemePanel() {
+          let tmpPanel = document.getElementById('Facto-Full-Settings-Panel');
+          if (!tmpPanel) return;
+          this._themePanelOpen = !this._themePanelOpen;
+          tmpPanel.style.display = this._themePanelOpen ? 'block' : 'none';
+        }
+        selectTheme(pThemeKey) {
+          this.pict.PictApplication.applyTheme(pThemeKey);
+          this._renderThemeGrid();
+          this._themePanelOpen = false;
+          let tmpPanel = document.getElementById('Facto-Full-Settings-Panel');
+          if (tmpPanel) tmpPanel.style.display = 'none';
+        }
+        _renderThemeGrid() {
+          let tmpGrid = document.getElementById('Facto-Full-Settings-ThemeGrid');
+          if (!tmpGrid) return;
+          let tmpThemes = this.pict.PictApplication.getThemeList();
+          let tmpCurrentTheme = this.pict.AppData.Facto.CurrentTheme || 'facto-dark';
+          let tmpHtml = '';
+          for (let i = 0; i < tmpThemes.length; i++) {
+            let tmpTheme = tmpThemes[i];
+            let tmpActiveClass = tmpTheme.Key === tmpCurrentTheme ? ' active' : '';
+            tmpHtml += '<div class="facto-theme-swatch' + tmpActiveClass + '" onclick="pict.views[\'Facto-Full-TopBar\'].selectTheme(\'' + tmpTheme.Key + '\')">';
+            tmpHtml += '<div class="facto-theme-swatch-colors">';
+            for (let c = 0; c < tmpTheme.Colors.length; c++) {
+              tmpHtml += '<div class="facto-theme-swatch-dot" style="background:' + tmpTheme.Colors[c] + ';"></div>';
+            }
+            tmpHtml += '</div>';
+            tmpHtml += '<div class="facto-theme-swatch-label">' + tmpTheme.Label + '</div>';
+            tmpHtml += '</div>';
+          }
+          tmpGrid.innerHTML = tmpHtml;
+        }
+      }
+      module.exports = FactoFullTopBarView;
+      module.exports.default_configuration = _ViewConfiguration;
+    }, {
+      "pict-view": 10
+    }],
+    25: [function (require, module, exports) {
       module.exports = {
         "Name": "Retold Facto",
         "Hash": "Facto",
@@ -3050,7 +5221,7 @@
         "AutoRenderMainViewportViewAfterInitialize": false
       };
     }, {}],
-    10: [function (require, module, exports) {
+    26: [function (require, module, exports) {
       const libPictApplication = require('pict-application');
       const libProvider = require('./providers/Pict-Provider-Facto.js');
       const libViewLayout = require('./views/PictView-Facto-Layout.js');
@@ -3101,28 +5272,31 @@
       module.exports = FactoApplication;
       module.exports.default_configuration = require('./Pict-Application-Facto-Configuration.json');
     }, {
-      "./Pict-Application-Facto-Configuration.json": 9,
-      "./providers/Pict-Provider-Facto.js": 12,
-      "./views/PictView-Facto-Catalog.js": 13,
-      "./views/PictView-Facto-Datasets.js": 14,
-      "./views/PictView-Facto-Ingest.js": 15,
-      "./views/PictView-Facto-Layout.js": 16,
-      "./views/PictView-Facto-Projections.js": 17,
-      "./views/PictView-Facto-Records.js": 18,
-      "./views/PictView-Facto-Sources.js": 19,
-      "pict-application": 4
+      "./Pict-Application-Facto-Configuration.json": 25,
+      "./providers/Pict-Provider-Facto.js": 28,
+      "./views/PictView-Facto-Catalog.js": 29,
+      "./views/PictView-Facto-Datasets.js": 30,
+      "./views/PictView-Facto-Ingest.js": 31,
+      "./views/PictView-Facto-Layout.js": 32,
+      "./views/PictView-Facto-Projections.js": 33,
+      "./views/PictView-Facto-Records.js": 34,
+      "./views/PictView-Facto-Sources.js": 35,
+      "pict-application": 5
     }],
-    11: [function (require, module, exports) {
+    27: [function (require, module, exports) {
       module.exports = {
-        FactoApplication: require('./Pict-Application-Facto.js')
+        FactoApplication: require('./Pict-Application-Facto.js'),
+        FactoFullApplication: require('../pict-app-full/Pict-Application-Facto-Full.js')
       };
       if (typeof window !== 'undefined') {
         window.FactoApplication = module.exports.FactoApplication;
+        window.FactoFullApplication = module.exports.FactoFullApplication;
       }
     }, {
-      "./Pict-Application-Facto.js": 10
+      "../pict-app-full/Pict-Application-Facto-Full.js": 12,
+      "./Pict-Application-Facto.js": 26
     }],
-    12: [function (require, module, exports) {
+    28: [function (require, module, exports) {
       const libPictProvider = require('pict-provider');
       class FactoProvider extends libPictProvider {
         constructor(pFable, pOptions, pServiceHash) {
@@ -3443,9 +5617,9 @@
         AutoInitialize: true
       };
     }, {
-      "pict-provider": 6
+      "pict-provider": 7
     }],
-    13: [function (require, module, exports) {
+    29: [function (require, module, exports) {
       const libPictView = require('pict-view');
       class FactoCatalogView extends libPictView {
         constructor(pFable, pOptions, pServiceHash) {
@@ -3852,9 +6026,9 @@
         }]
       };
     }, {
-      "pict-view": 8
+      "pict-view": 10
     }],
-    14: [function (require, module, exports) {
+    30: [function (require, module, exports) {
       const libPictView = require('pict-view');
       class FactoDatasetsView extends libPictView {
         constructor(pFable, pOptions, pServiceHash) {
@@ -3989,9 +6163,9 @@
         }]
       };
     }, {
-      "pict-view": 8
+      "pict-view": 10
     }],
-    15: [function (require, module, exports) {
+    31: [function (require, module, exports) {
       const libPictView = require('pict-view');
       class FactoIngestView extends libPictView {
         constructor(pFable, pOptions, pServiceHash) {
@@ -4189,9 +6363,9 @@
         }]
       };
     }, {
-      "pict-view": 8
+      "pict-view": 10
     }],
-    16: [function (require, module, exports) {
+    32: [function (require, module, exports) {
       const libPictView = require('pict-view');
       class FactoLayoutView extends libPictView {
         constructor(pFable, pOptions, pServiceHash) {
@@ -4357,9 +6531,9 @@ tr:hover { background: #fafafa; }
         }]
       };
     }, {
-      "pict-view": 8
+      "pict-view": 10
     }],
-    17: [function (require, module, exports) {
+    33: [function (require, module, exports) {
       const libPictView = require('pict-view');
       class FactoProjectionsView extends libPictView {
         constructor(pFable, pOptions, pServiceHash) {
@@ -4554,9 +6728,9 @@ tr:hover { background: #fafafa; }
         }]
       };
     }, {
-      "pict-view": 8
+      "pict-view": 10
     }],
-    18: [function (require, module, exports) {
+    34: [function (require, module, exports) {
       const libPictView = require('pict-view');
       class FactoRecordsView extends libPictView {
         constructor(pFable, pOptions, pServiceHash) {
@@ -4665,9 +6839,9 @@ tr:hover { background: #fafafa; }
         }]
       };
     }, {
-      "pict-view": 8
+      "pict-view": 10
     }],
-    19: [function (require, module, exports) {
+    35: [function (require, module, exports) {
       const libPictView = require('pict-view');
       class FactoSourcesView extends libPictView {
         constructor(pFable, pOptions, pServiceHash) {
@@ -4819,8 +6993,8 @@ tr:hover { background: #fafafa; }
         }]
       };
     }, {
-      "pict-view": 8
+      "pict-view": 10
     }]
-  }, {}, [11])(11);
+  }, {}, [27])(27);
 });
 //# sourceMappingURL=retold-facto.js.map

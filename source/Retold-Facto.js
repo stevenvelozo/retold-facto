@@ -652,6 +652,12 @@ class RetoldFacto extends libFableServiceProviderBase
 
 					this.fable.serviceManager.addServiceType('OratorStaticServer', libOratorStaticServer);
 					let tmpStaticServer = this.fable.serviceManager.instantiateServiceProvider('OratorStaticServer');
+
+					// Serve the accordion (simple) app at /simple/*
+					let tmpSimpleWebAppPath = libPath.join(tmpWebAppPath, 'simple');
+					tmpStaticServer.addStaticRoute(tmpSimpleWebAppPath, 'index.html', '/simple/*', '/simple/');
+
+					// Serve the full app at /* (registered after /simple/* so it doesn't shadow it)
 					tmpStaticServer.addStaticRoute(tmpWebAppPath, 'index.html', '/*', '/');
 
 					return fInitCallback();

@@ -1,0 +1,40 @@
+{
+	"ProviderIdentifier": "Pict-Router",
+	"AutoInitialize": true,
+	"AutoInitializeOrdinal": 0,
+	"Routes":
+	[
+		{
+			"path": "/Home",
+			"template": "{~LV:Pict.PictApplication.showView(`Facto-Full-Dashboard`)~}"
+		},
+		{
+			"path": "/SourceResearch",
+			"template": "{~LV:Pict.PictApplication.showView(`Facto-Full-SourceResearch`)~}"
+		},
+		{
+			"path": "/IngestJobs",
+			"template": "{~LV:Pict.PictApplication.showView(`Facto-Full-IngestJobs`)~}"
+		},
+		{
+			"path": "/Sources",
+			"template": "{~LV:Pict.PictApplication.showView(`Facto-Full-Sources`)~}"
+		},
+		{
+			"path": "/Datasets",
+			"template": "{~LV:Pict.PictApplication.showView(`Facto-Full-Datasets`)~}"
+		},
+		{
+			"path": "/Records",
+			"template": "{~LV:Pict.PictApplication.showView(`Facto-Full-Records`)~}"
+		},
+		{
+			"path": "/Projections",
+			"template": "{~LV:Pict.PictApplication.showView(`Facto-Full-Projections`)~}"
+		},
+		{
+			"path": "/Dashboards",
+			"template": "{~LV:Pict.PictApplication.showView(`Facto-Full-Dashboards`)~}"
+		}
+	]
+}

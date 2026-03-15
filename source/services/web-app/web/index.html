@@ -1,17 +1,26 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Retold Facto</title>
-<style id="PICT-CSS"></style>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="Retold Facto Data Warehouse">
+	<title>Retold Facto</title>
+	<link href="css/facto.css" rel="stylesheet">
+	<link href="css/facto-themes.css" rel="stylesheet">
+	<style id="PICT-CSS"></style>
+	<script>
+		(function(){
+			var t=localStorage.getItem('facto-theme');
+			if(t&&t!=='facto-dark')document.body.dataset.theme=t;
+		})();
+	</script>
 </head>
 <body>
-<div id="Facto-Application-Container"></div>
-<script src="pict.min.js"></script>
-<script src="retold-facto.js"></script>
-<script>
-Pict.safeLoadPictApplication(FactoApplication, 2);
-</script>
+	<div id="Facto-Full-Application-Container"></div>
+	<script src="pict.min.js" type="text/javascript"></script>
+	<script src="retold-facto.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		Pict.safeLoadPictApplication(FactoFullApplication, 2);
+	</script>
 </body>
 </html>

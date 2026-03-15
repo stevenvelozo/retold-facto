@@ -1,0 +1,315 @@
+/* ================================================================
+   Retold Facto — Theme Definitions
+   ================================================================ */
+
+/* ----------------------------------------------------------------
+   Default Theme: Facto Dark
+   ---------------------------------------------------------------- */
+:root {
+	--facto-bg-base: #12151e;
+	--facto-bg-surface: #1a1e2e;
+	--facto-bg-elevated: #242940;
+	--facto-bg-input: #1e2235;
+	--facto-bg-code: #161a28;
+
+	--facto-border: #2e3450;
+	--facto-border-subtle: #252a3e;
+	--facto-border-focus: #4a90d9;
+
+	--facto-text: #c8cdd8;
+	--facto-text-heading: #e0e4ee;
+	--facto-text-secondary: #8890a8;
+	--facto-text-tertiary: #5c6480;
+
+	--facto-brand: #4a90d9;
+	--facto-brand-hover: #5ea0e9;
+
+	--facto-link: #5e9ee6;
+	--facto-link-hover: #7eb4f0;
+
+	--facto-btn-primary-bg: #4a90d9;
+	--facto-btn-primary-text: #ffffff;
+	--facto-btn-secondary-bg: #242940;
+	--facto-btn-secondary-text: #c8cdd8;
+
+	--facto-success: #28a745;
+	--facto-error: #dc3545;
+	--facto-warning: #e6a817;
+	--facto-info: #4a90d9;
+
+	--facto-topbar-bg: #0e1018;
+	--facto-topbar-text: #8890a8;
+	--facto-topbar-hover: #c8cdd8;
+	--facto-topbar-active: #4a90d9;
+
+	--facto-table-header-bg: #1a1e2e;
+	--facto-table-stripe: rgba(255,255,255,0.02);
+	--facto-table-row-hover: rgba(74,144,217,0.08);
+
+	--facto-scrollbar-track: #12151e;
+	--facto-scrollbar-thumb: #2e3450;
+	--facto-scrollbar-thumb-hover: #3e4560;
+
+	--facto-shadow: 0 2px 8px rgba(0,0,0,0.3);
+	--facto-shadow-heavy: 0 4px 16px rgba(0,0,0,0.5);
+}
+
+/* ----------------------------------------------------------------
+   Facto Light
+   ---------------------------------------------------------------- */
+body[data-theme="facto-light"] {
+	--facto-bg-base: #f5f6f8;
+	--facto-bg-surface: #ffffff;
+	--facto-bg-elevated: #f0f1f4;
+	--facto-bg-input: #ffffff;
+	--facto-bg-code: #f0f1f4;
+
+	--facto-border: #d0d4dc;
+	--facto-border-subtle: #e4e6ec;
+	--facto-border-focus: #3b82f6;
+
+	--facto-text: #2d3748;
+	--facto-text-heading: #1a202c;
+	--facto-text-secondary: #718096;
+	--facto-text-tertiary: #a0aec0;
+
+	--facto-brand: #3b82f6;
+	--facto-brand-hover: #2563eb;
+
+	--facto-link: #3b82f6;
+	--facto-link-hover: #2563eb;
+
+	--facto-btn-primary-bg: #3b82f6;
+	--facto-btn-primary-text: #ffffff;
+	--facto-btn-secondary-bg: #edf2f7;
+	--facto-btn-secondary-text: #4a5568;
+
+	--facto-success: #22c55e;
+	--facto-error: #ef4444;
+	--facto-warning: #f59e0b;
+	--facto-info: #3b82f6;
+
+	--facto-topbar-bg: #1e293b;
+	--facto-topbar-text: #94a3b8;
+	--facto-topbar-hover: #f1f5f9;
+	--facto-topbar-active: #60a5fa;
+
+	--facto-table-header-bg: #f7fafc;
+	--facto-table-stripe: rgba(0,0,0,0.02);
+	--facto-table-row-hover: rgba(59,130,246,0.06);
+
+	--facto-scrollbar-track: #f5f6f8;
+	--facto-scrollbar-thumb: #cbd5e0;
+	--facto-scrollbar-thumb-hover: #a0aec0;
+
+	--facto-shadow: 0 2px 8px rgba(0,0,0,0.08);
+	--facto-shadow-heavy: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+/* ----------------------------------------------------------------
+   Midnight Blue
+   ---------------------------------------------------------------- */
+body[data-theme="midnight-blue"] {
+	--facto-bg-base: #0a0e1a;
+	--facto-bg-surface: #111828;
+	--facto-bg-elevated: #1a2340;
+	--facto-bg-input: #0f1525;
+	--facto-bg-code: #0d1220;
+
+	--facto-border: #1e2d50;
+	--facto-border-subtle: #162040;
+	--facto-border-focus: #3b82f6;
+
+	--facto-text: #b0c0e0;
+	--facto-text-heading: #d0ddf0;
+	--facto-text-secondary: #6880a8;
+	--facto-text-tertiary: #485878;
+
+	--facto-brand: #3b82f6;
+	--facto-brand-hover: #60a5fa;
+
+	--facto-link: #60a5fa;
+	--facto-link-hover: #93c5fd;
+
+	--facto-btn-primary-bg: #3b82f6;
+	--facto-btn-primary-text: #ffffff;
+	--facto-btn-secondary-bg: #1a2340;
+	--facto-btn-secondary-text: #b0c0e0;
+
+	--facto-success: #10b981;
+	--facto-error: #f87171;
+	--facto-warning: #fbbf24;
+	--facto-info: #60a5fa;
+
+	--facto-topbar-bg: #060810;
+	--facto-topbar-text: #6880a8;
+	--facto-topbar-hover: #d0ddf0;
+	--facto-topbar-active: #60a5fa;
+
+	--facto-table-header-bg: #111828;
+	--facto-table-stripe: rgba(255,255,255,0.015);
+	--facto-table-row-hover: rgba(59,130,246,0.1);
+
+	--facto-scrollbar-track: #0a0e1a;
+	--facto-scrollbar-thumb: #1e2d50;
+	--facto-scrollbar-thumb-hover: #2e4070;
+
+	--facto-shadow: 0 2px 8px rgba(0,0,0,0.4);
+	--facto-shadow-heavy: 0 4px 16px rgba(0,0,0,0.6);
+}
+
+/* ----------------------------------------------------------------
+   Slate
+   ---------------------------------------------------------------- */
+body[data-theme="slate"] {
+	--facto-bg-base: #1e2228;
+	--facto-bg-surface: #272c34;
+	--facto-bg-elevated: #31373f;
+	--facto-bg-input: #23282f;
+	--facto-bg-code: #1a1f25;
+
+	--facto-border: #3a4048;
+	--facto-border-subtle: #2f353d;
+	--facto-border-focus: #6b8aae;
+
+	--facto-text: #b8bfc8;
+	--facto-text-heading: #d4dae0;
+	--facto-text-secondary: #7f8a98;
+	--facto-text-tertiary: #5a6470;
+
+	--facto-brand: #6b8aae;
+	--facto-brand-hover: #82a0c4;
+
+	--facto-link: #82a0c4;
+	--facto-link-hover: #a0bada;
+
+	--facto-btn-primary-bg: #6b8aae;
+	--facto-btn-primary-text: #ffffff;
+	--facto-btn-secondary-bg: #31373f;
+	--facto-btn-secondary-text: #b8bfc8;
+
+	--facto-success: #5ea37a;
+	--facto-error: #c85a5a;
+	--facto-warning: #c4a03a;
+	--facto-info: #6b8aae;
+
+	--facto-topbar-bg: #16191e;
+	--facto-topbar-text: #7f8a98;
+	--facto-topbar-hover: #d4dae0;
+	--facto-topbar-active: #82a0c4;
+
+	--facto-table-header-bg: #272c34;
+	--facto-table-stripe: rgba(255,255,255,0.02);
+	--facto-table-row-hover: rgba(107,138,174,0.08);
+
+	--facto-scrollbar-track: #1e2228;
+	--facto-scrollbar-thumb: #3a4048;
+	--facto-scrollbar-thumb-hover: #4a5058;
+
+	--facto-shadow: 0 2px 8px rgba(0,0,0,0.25);
+	--facto-shadow-heavy: 0 4px 16px rgba(0,0,0,0.4);
+}
+
+/* ----------------------------------------------------------------
+   Warm Earth
+   ---------------------------------------------------------------- */
+body[data-theme="warm-earth"] {
+	--facto-bg-base: #1a1610;
+	--facto-bg-surface: #241e16;
+	--facto-bg-elevated: #2e2618;
+	--facto-bg-input: #201a12;
+	--facto-bg-code: #16120e;
+
+	--facto-border: #3a3020;
+	--facto-border-subtle: #2e2618;
+	--facto-border-focus: #c4956a;
+
+	--facto-text: #c8b8a0;
+	--facto-text-heading: #e0d0b8;
+	--facto-text-secondary: #907860;
+	--facto-text-tertiary: #685840;
+
+	--facto-brand: #c4956a;
+	--facto-brand-hover: #d4a57a;
+
+	--facto-link: #d4a57a;
+	--facto-link-hover: #e0b890;
+
+	--facto-btn-primary-bg: #c4956a;
+	--facto-btn-primary-text: #1a1610;
+	--facto-btn-secondary-bg: #2e2618;
+	--facto-btn-secondary-text: #c8b8a0;
+
+	--facto-success: #8a9a5a;
+	--facto-error: #b04050;
+	--facto-warning: #c4a030;
+	--facto-info: #4a9090;
+
+	--facto-topbar-bg: #120e08;
+	--facto-topbar-text: #907860;
+	--facto-topbar-hover: #e0d0b8;
+	--facto-topbar-active: #d4a57a;
+
+	--facto-table-header-bg: #241e16;
+	--facto-table-stripe: rgba(255,255,255,0.02);
+	--facto-table-row-hover: rgba(196,149,106,0.08);
+
+	--facto-scrollbar-track: #1a1610;
+	--facto-scrollbar-thumb: #3a3020;
+	--facto-scrollbar-thumb-hover: #4a4030;
+
+	--facto-shadow: 0 2px 8px rgba(0,0,0,0.35);
+	--facto-shadow-heavy: 0 4px 16px rgba(0,0,0,0.5);
+}
+
+/* ----------------------------------------------------------------
+   High Contrast
+   ---------------------------------------------------------------- */
+body[data-theme="high-contrast"] {
+	--facto-bg-base: #000000;
+	--facto-bg-surface: #0a0a0a;
+	--facto-bg-elevated: #1a1a1a;
+	--facto-bg-input: #0a0a0a;
+	--facto-bg-code: #0a0a0a;
+
+	--facto-border: #444444;
+	--facto-border-subtle: #2a2a2a;
+	--facto-border-focus: #ffffff;
+
+	--facto-text: #e8e8e8;
+	--facto-text-heading: #ffffff;
+	--facto-text-secondary: #b0b0b0;
+	--facto-text-tertiary: #808080;
+
+	--facto-brand: #58a6ff;
+	--facto-brand-hover: #79b8ff;
+
+	--facto-link: #58a6ff;
+	--facto-link-hover: #79b8ff;
+
+	--facto-btn-primary-bg: #58a6ff;
+	--facto-btn-primary-text: #000000;
+	--facto-btn-secondary-bg: #1a1a1a;
+	--facto-btn-secondary-text: #e8e8e8;
+
+	--facto-success: #3fb950;
+	--facto-error: #f85149;
+	--facto-warning: #d29922;
+	--facto-info: #58a6ff;
+
+	--facto-topbar-bg: #000000;
+	--facto-topbar-text: #b0b0b0;
+	--facto-topbar-hover: #ffffff;
+	--facto-topbar-active: #58a6ff;
+
+	--facto-table-header-bg: #0a0a0a;
+	--facto-table-stripe: rgba(255,255,255,0.04);
+	--facto-table-row-hover: rgba(88,166,255,0.12);
+
+	--facto-scrollbar-track: #000000;
+	--facto-scrollbar-thumb: #444444;
+	--facto-scrollbar-thumb-hover: #666666;
+
+	--facto-shadow: 0 2px 8px rgba(0,0,0,0.5);
+	--facto-shadow-heavy: 0 4px 16px rgba(0,0,0,0.7);
+}

@@ -1,0 +1,14 @@
+{
+	"Name": "Retold Facto",
+	"Hash": "Facto-Full",
+	"MainViewportViewIdentifier": "Facto-Full-Layout",
+	"MainViewportDestinationAddress": "#Facto-Full-Application-Container",
+	"MainViewportDefaultDataAddress": "AppData.Facto",
+	"AutoSolveAfterInitialize": true,
+	"AutoRenderMainViewportViewAfterInitialize": false,
+	"AutoRenderViewsAfterInitialize": false,
+	"pict_configuration":
+	{
+		"Product": "Retold-Facto-Full"
+	}
+}
