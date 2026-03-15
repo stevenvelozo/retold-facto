@@ -22,7 +22,7 @@ const _ViewConfiguration =
 			transition: color 0.15s;
 		}
 		.facto-record-viewer-back:hover {
-			color: var(--facto-accent);
+			color: var(--facto-brand);
 		}
 		.facto-record-meta {
 			display: grid;
@@ -31,7 +31,7 @@ const _ViewConfiguration =
 			margin-bottom: 1.5em;
 		}
 		.facto-record-meta-card {
-			background: var(--facto-surface-elevated, #1a1e2a);
+			background: var(--facto-bg-elevated, #1a1e2a);
 			border: 1px solid var(--facto-border-subtle, #2a2e3a);
 			border-radius: 8px;
 			padding: 1em;
@@ -56,7 +56,7 @@ const _ViewConfiguration =
 			margin-right: 0.75em;
 		}
 		.facto-record-meta-value {
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 			text-align: right;
 			overflow: hidden;
 			text-overflow: ellipsis;
@@ -65,7 +65,7 @@ const _ViewConfiguration =
 			font-size: 0.9em;
 		}
 		.facto-record-meta-value.facto-hash-value {
-			color: var(--facto-accent, #4a90d9);
+			color: var(--facto-brand, #4a90d9);
 		}
 		.facto-record-certainty-bar {
 			height: 6px;
@@ -91,15 +91,15 @@ const _ViewConfiguration =
 		}
 		/* Override ObjectEditor styles for dark theme compatibility */
 		.facto-record-content-section .pict-objecteditor {
-			background: var(--facto-surface-elevated, #1a1e2a);
+			background: var(--facto-bg-elevated, #1a1e2a);
 			border-color: var(--facto-border-subtle, #2a2e3a);
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 		}
 		.facto-record-content-section .pict-oe-row:hover {
-			background: var(--facto-surface-hover, #222738);
+			background: var(--facto-table-row-hover, #222738);
 		}
 		.facto-record-content-section .pict-oe-key {
-			color: var(--facto-accent, #4a90d9);
+			color: var(--facto-brand, #4a90d9);
 		}
 		.facto-record-content-section .pict-oe-separator {
 			color: var(--facto-text-tertiary, #888);
@@ -127,11 +127,11 @@ const _ViewConfiguration =
 			color: var(--facto-text-secondary, #aaa);
 		}
 		.facto-record-content-section .pict-oe-toggle:hover {
-			color: var(--facto-accent, #4a90d9);
-			background: var(--facto-surface-hover, #222738);
+			color: var(--facto-brand, #4a90d9);
+			background: var(--facto-table-row-hover, #222738);
 		}
 		.facto-record-content-section .pict-oe-type-badge {
-			background: var(--facto-surface-hover, #222738);
+			background: var(--facto-table-row-hover, #222738);
 			color: var(--facto-text-tertiary, #888);
 		}
 		.facto-record-content-section .pict-oe-empty {

@@ -3,6 +3,7 @@ const libPictRouter = require('pict-router');
 
 const THEME_LIST =
 [
+	{ Key: 'turquoise-deluxe', Label: 'Turquoise Deluxe', Colors: ['#f6f0e4', '#18a5a0', '#3a9468', '#c44836', '#12908c'] },
 	{ Key: 'facto-dark', Label: 'Facto Dark', Colors: ['#12151e', '#4a90d9', '#28a745', '#dc3545', '#6366f1'] },
 	{ Key: 'facto-light', Label: 'Facto Light', Colors: ['#f5f6f8', '#3b82f6', '#22c55e', '#ef4444', '#6366f1'] },
 	{ Key: 'midnight-blue', Label: 'Midnight Blue', Colors: ['#0a0e1a', '#3b82f6', '#10b981', '#f87171', '#60a5fa'] },
@@ -85,7 +86,7 @@ class FactoFullApplication extends libPictApplication
 			RecordPageSize: 50,
 			CurrentRecordContent: {},
 			CurrentDocumentSegments: [],
-			CurrentTheme: 'facto-dark',
+			CurrentTheme: 'turquoise-deluxe',
 			CurrentRoute: ''
 		};
 
@@ -195,9 +196,9 @@ class FactoFullApplication extends libPictApplication
 	// --- Theme ---
 	applyTheme(pThemeKey)
 	{
-		let tmpThemeKey = pThemeKey || 'facto-dark';
+		let tmpThemeKey = pThemeKey || 'turquoise-deluxe';
 
-		if (tmpThemeKey === 'facto-dark')
+		if (tmpThemeKey === 'turquoise-deluxe')
 		{
 			delete document.body.dataset.theme;
 		}
@@ -216,7 +217,7 @@ class FactoFullApplication extends libPictApplication
 
 	loadSavedTheme()
 	{
-		let tmpSavedTheme = localStorage.getItem('facto-theme') || 'facto-dark';
+		let tmpSavedTheme = localStorage.getItem('facto-theme') || 'turquoise-deluxe';
 		this.applyTheme(tmpSavedTheme);
 	}
 

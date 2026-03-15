@@ -23,12 +23,12 @@ const _ViewConfiguration =
 			transition: color 0.15s;
 		}
 		.facto-source-detail-back:hover {
-			color: var(--facto-accent);
+			color: var(--facto-brand);
 		}
 
 		/* Research context section */
 		.facto-research-context {
-			background: var(--facto-surface-elevated, #1a1e2a);
+			background: var(--facto-bg-elevated, #1a1e2a);
 			border: 1px solid var(--facto-border-subtle, #2a2e3a);
 			border-radius: 8px;
 			padding: 1em;
@@ -47,13 +47,13 @@ const _ViewConfiguration =
 			line-height: 1.6;
 		}
 		.facto-research-context-detail strong {
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 		}
 		.facto-research-context-note {
 			margin-top: 0.5em;
 			padding: 0.5em 0.75em;
-			background: rgba(74, 144, 217, 0.08);
-			border-left: 3px solid var(--facto-accent, #4a90d9);
+			background: var(--facto-brand-a08);
+			border-left: 3px solid var(--facto-brand, #4a90d9);
 			border-radius: 0 4px 4px 0;
 			font-size: 0.85em;
 			color: var(--facto-text-secondary, #aaa);
@@ -102,18 +102,18 @@ const _ViewConfiguration =
 			color: var(--facto-text-tertiary, #888);
 		}
 		.facto-edit-toggle:hover {
-			border-color: var(--facto-accent, #4a90d9);
-			color: var(--facto-accent, #4a90d9);
+			border-color: var(--facto-brand, #4a90d9);
+			color: var(--facto-brand, #4a90d9);
 		}
 		.facto-edit-toggle.active {
-			background: rgba(74, 144, 217, 0.15);
-			border-color: var(--facto-accent, #4a90d9);
-			color: var(--facto-accent, #4a90d9);
+			background: var(--facto-brand-a15);
+			border-color: var(--facto-brand, #4a90d9);
+			color: var(--facto-brand, #4a90d9);
 		}
 
 		/* Read-only rendered content */
 		.facto-doc-content-wrap {
-			background: var(--facto-surface-elevated, #1a1e2a);
+			background: var(--facto-bg-elevated, #1a1e2a);
 			border: 1px solid var(--facto-border-subtle, #2a2e3a);
 			border-radius: 8px;
 			padding: 1.5em 2em;
@@ -121,21 +121,21 @@ const _ViewConfiguration =
 		}
 		.facto-doc-content-wrap h1 {
 			font-size: 1.75em;
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 			border-bottom: 1px solid var(--facto-border-subtle, #2a2e3a);
 			padding-bottom: 0.3em;
 			margin-top: 0;
 		}
 		.facto-doc-content-wrap h2 {
 			font-size: 1.4em;
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 			border-bottom: 1px solid var(--facto-border-subtle, #2a2e3a);
 			padding-bottom: 0.25em;
 			margin-top: 1.5em;
 		}
 		.facto-doc-content-wrap h3 {
 			font-size: 1.15em;
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 			margin-top: 1.25em;
 		}
 		.facto-doc-content-wrap h4,
@@ -150,11 +150,11 @@ const _ViewConfiguration =
 			margin: 0.75em 0;
 		}
 		.facto-doc-content-wrap a {
-			color: var(--facto-accent, #4a90d9);
+			color: var(--facto-brand, #4a90d9);
 		}
 		.facto-doc-content-wrap code {
-			background: rgba(74, 144, 217, 0.1);
-			color: var(--facto-accent, #4a90d9);
+			background: var(--facto-brand-a10);
+			color: var(--facto-brand, #4a90d9);
 			padding: 0.15em 0.35em;
 			border-radius: 3px;
 			font-size: 0.9em;
@@ -165,7 +165,7 @@ const _ViewConfiguration =
 			border-radius: 6px;
 			padding: 1em;
 			overflow-x: auto;
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 		}
 		.facto-doc-content-wrap pre code {
 			background: transparent;
@@ -173,11 +173,11 @@ const _ViewConfiguration =
 			color: inherit;
 		}
 		.facto-doc-content-wrap blockquote {
-			border-left: 3px solid var(--facto-accent, #4a90d9);
+			border-left: 3px solid var(--facto-brand, #4a90d9);
 			padding: 0.5em 1em;
 			margin: 1em 0;
 			color: var(--facto-text-tertiary, #888);
-			background: rgba(74, 144, 217, 0.05);
+			background: var(--facto-brand-a05);
 			border-radius: 0 4px 4px 0;
 		}
 		.facto-doc-content-wrap table {
@@ -192,7 +192,7 @@ const _ViewConfiguration =
 		}
 		.facto-doc-content-wrap table th {
 			background: rgba(255, 255, 255, 0.03);
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 		}
 		.facto-doc-content-wrap img {
 			max-width: 100%;
@@ -219,7 +219,7 @@ const _ViewConfiguration =
 		}
 		.facto-doc-item {
 			padding: 0.4em 0.75em;
-			background: var(--facto-surface-elevated, #1a1e2a);
+			background: var(--facto-bg-elevated, #1a1e2a);
 			border: 1px solid var(--facto-border-subtle, #2a2e3a);
 			border-radius: 6px;
 			font-size: 0.85em;
@@ -228,16 +228,16 @@ const _ViewConfiguration =
 			transition: border-color 0.15s, color 0.15s;
 		}
 		.facto-doc-item:hover {
-			border-color: var(--facto-accent, #4a90d9);
-			color: var(--facto-text-primary, #eee);
+			border-color: var(--facto-brand, #4a90d9);
+			color: var(--facto-text-heading, #eee);
 		}
 		.facto-doc-item.active {
-			border-color: var(--facto-accent, #4a90d9);
-			color: var(--facto-accent, #4a90d9);
-			background: rgba(74, 144, 217, 0.1);
+			border-color: var(--facto-brand, #4a90d9);
+			color: var(--facto-brand, #4a90d9);
+			background: var(--facto-brand-a10);
 		}
 		.facto-doc-editor-wrap {
-			background: var(--facto-surface-elevated, #1a1e2a);
+			background: var(--facto-bg-elevated, #1a1e2a);
 			border: 1px solid var(--facto-border-subtle, #2a2e3a);
 			border-radius: 8px;
 			padding: 1em;
@@ -252,12 +252,12 @@ const _ViewConfiguration =
 		.facto-doc-name {
 			font-size: 0.9em;
 			font-weight: 600;
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 		}
 		.facto-doc-name-input {
 			font-size: 0.9em;
 			font-weight: 600;
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 			background: var(--facto-bg-input, #0d1117);
 			border: 1px solid var(--facto-border, #3a3e4a);
 			border-radius: 4px;
@@ -265,7 +265,7 @@ const _ViewConfiguration =
 			width: 250px;
 		}
 		.facto-doc-name-input:focus {
-			border-color: var(--facto-accent, #4a90d9);
+			border-color: var(--facto-brand, #4a90d9);
 			outline: none;
 		}
 		.facto-doc-new-input {
@@ -304,9 +304,9 @@ const _ViewConfiguration =
 			color: var(--facto-text-secondary, #aaa);
 		}
 		.facto-editor-ctrl-btn.active {
-			background: rgba(74, 144, 217, 0.12);
-			border-color: var(--facto-accent, #4a90d9);
-			color: var(--facto-accent, #4a90d9);
+			background: var(--facto-brand-a12);
+			border-color: var(--facto-brand, #4a90d9);
+			color: var(--facto-brand, #4a90d9);
 		}
 		.facto-editor-ctrl-sep {
 			width: 1px;
@@ -335,7 +335,7 @@ const _ViewConfiguration =
 		}
 		.facto-settings-gear:hover,
 		.facto-settings-gear.active {
-			color: var(--facto-accent, #4a90d9);
+			color: var(--facto-brand, #4a90d9);
 		}
 		.facto-settings-gear svg {
 			width: 18px;
@@ -359,7 +359,7 @@ const _ViewConfiguration =
 			top: 36px;
 			right: 0;
 			width: 260px;
-			background: var(--facto-surface-elevated, #1a1e2a);
+			background: var(--facto-bg-elevated, #1a1e2a);
 			border: 1px solid var(--facto-border, #3a3e4a);
 			border-radius: 8px;
 			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
@@ -381,7 +381,7 @@ const _ViewConfiguration =
 			right: 10px;
 			width: 10px;
 			height: 10px;
-			background: var(--facto-surface-elevated, #1a1e2a);
+			background: var(--facto-bg-elevated, #1a1e2a);
 			border-left: 1px solid var(--facto-border, #3a3e4a);
 			border-top: 1px solid var(--facto-border, #3a3e4a);
 			transform: rotate(45deg);
@@ -415,7 +415,7 @@ const _ViewConfiguration =
 		.facto-settings-checkbox {
 			width: 15px;
 			height: 15px;
-			accent-color: var(--facto-accent, #4a90d9);
+			accent-color: var(--facto-brand, #4a90d9);
 			cursor: pointer;
 			flex-shrink: 0;
 		}
@@ -468,7 +468,7 @@ const _ViewConfiguration =
 			background: var(--facto-border, #3a3e4a);
 		}
 		.facto-doc-editor-wrap .pict-mde-segment.pict-mde-active .pict-mde-drag-handle {
-			background: rgba(74, 144, 217, 0.25);
+			background: var(--facto-brand-a25);
 		}
 
 		/* Left control buttons */
@@ -476,33 +476,40 @@ const _ViewConfiguration =
 			color: var(--facto-text-tertiary, #666);
 		}
 		.facto-doc-editor-wrap .pict-mde-left-btn:hover {
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 		}
 		.facto-doc-editor-wrap .pict-mde-btn-remove:hover {
-			color: var(--facto-danger, #dc3545);
+			color: var(--facto-error, #dc3545);
 		}
 
-		/* CodeMirror editor */
+		/* CodeMirror editor — selectors must include .cm-editor to beat
+		   library's .pict-mde-segment-editor .cm-editor .cm-* specificity */
 		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-editor {
 			background: var(--facto-bg-input, #0d1117);
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 		}
-		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-gutters {
-			background: var(--facto-surface-elevated, #1a1e2a);
+		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-editor .cm-gutters {
+			background: var(--facto-bg-elevated, #1a1e2a);
 			border-color: var(--facto-border-subtle, #2a2e3a);
 			color: var(--facto-text-tertiary, #666);
 		}
-		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-activeLine {
-			background: rgba(74, 144, 217, 0.05);
+		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-editor .cm-activeLine {
+			background: var(--facto-brand-a05);
 		}
-		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-activeLineGutter {
-			background: rgba(74, 144, 217, 0.1);
+		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-editor .cm-activeLineGutter {
+			background: var(--facto-brand-a10);
 		}
-		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-cursor {
-			border-left-color: var(--facto-text-primary, #eee);
+		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-editor .cm-cursor {
+			border-left-color: var(--facto-text-heading, #eee);
 		}
-		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-selectionBackground {
-			background: rgba(74, 144, 217, 0.2) !important;
+		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-editor .cm-selectionBackground {
+			background: var(--facto-brand-a20) !important;
+		}
+		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-editor .cm-content {
+			color: var(--facto-text-heading, #eee);
+		}
+		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-editor .cm-lineNumbers .cm-gutterElement {
+			color: var(--facto-text-tertiary, #555);
 		}
 
 		/* Rich preview — must match library's two-class specificity */
@@ -515,22 +522,22 @@ const _ViewConfiguration =
 		.facto-doc-editor-wrap .pict-mde-rich-preview h2,
 		.facto-doc-editor-wrap .pict-mde-rich-preview h3,
 		.facto-doc-editor-wrap .pict-mde-rich-preview h4 {
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 		}
 		.facto-doc-editor-wrap .pict-mde-rich-preview code {
-			background: rgba(74, 144, 217, 0.1);
-			color: var(--facto-accent, #4a90d9);
+			background: var(--facto-brand-a10);
+			color: var(--facto-brand, #4a90d9);
 		}
 		.facto-doc-editor-wrap .pict-mde-rich-preview pre {
 			background: var(--facto-bg-input, #0d1117);
 			border: 1px solid var(--facto-border-subtle, #2a2e3a);
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 		}
 		.facto-doc-editor-wrap .pict-mde-rich-preview a {
-			color: var(--facto-accent, #4a90d9);
+			color: var(--facto-brand, #4a90d9);
 		}
 		.facto-doc-editor-wrap .pict-mde-rich-preview blockquote {
-			border-left-color: var(--facto-accent, #4a90d9);
+			border-left-color: var(--facto-brand, #4a90d9);
 			color: var(--facto-text-tertiary, #888);
 		}
 		.facto-doc-editor-wrap .pict-mde-rich-preview table th,
@@ -557,9 +564,9 @@ const _ViewConfiguration =
 			color: var(--facto-text-tertiary, #666);
 		}
 		.facto-doc-editor-wrap .pict-mde-btn-add:hover {
-			border-color: var(--facto-accent, #4a90d9);
-			color: var(--facto-accent, #4a90d9);
-			background: rgba(74, 144, 217, 0.05);
+			border-color: var(--facto-brand, #4a90d9);
+			color: var(--facto-brand, #4a90d9);
+			background: var(--facto-brand-a05);
 		}
 
 		/* Sidebar buttons */
@@ -569,16 +576,16 @@ const _ViewConfiguration =
 			color: var(--facto-text-tertiary, #666);
 		}
 		.facto-doc-editor-wrap .pict-mde-sidebar-btn:hover {
-			border-color: var(--facto-accent, #4a90d9);
-			color: var(--facto-accent, #4a90d9);
+			border-color: var(--facto-brand, #4a90d9);
+			color: var(--facto-brand, #4a90d9);
 		}
 
 		/* Drag-over indicators */
 		.facto-doc-editor-wrap .pict-mde-segment.pict-mde-drag-over-top {
-			border-top-color: var(--facto-accent, #4a90d9);
+			border-top-color: var(--facto-brand, #4a90d9);
 		}
 		.facto-doc-editor-wrap .pict-mde-segment.pict-mde-drag-over-bottom {
-			border-bottom-color: var(--facto-accent, #4a90d9);
+			border-bottom-color: var(--facto-brand, #4a90d9);
 		}
 
 		/* Rendered view (full-document preview mode) */
@@ -591,29 +598,29 @@ const _ViewConfiguration =
 		.facto-doc-editor-wrap .pict-mde-rendered-view h2,
 		.facto-doc-editor-wrap .pict-mde-rendered-view h3,
 		.facto-doc-editor-wrap .pict-mde-rendered-view h4 {
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 		}
 		.facto-doc-editor-wrap .pict-mde-rendered-view p {
 			color: var(--facto-text-secondary, #bbb);
 		}
 		.facto-doc-editor-wrap .pict-mde-rendered-view a {
-			color: var(--facto-accent, #4a90d9);
+			color: var(--facto-brand, #4a90d9);
 		}
 		.facto-doc-editor-wrap .pict-mde-rendered-view code {
-			background: rgba(74, 144, 217, 0.1);
-			color: var(--facto-accent, #4a90d9);
+			background: var(--facto-brand-a10);
+			color: var(--facto-brand, #4a90d9);
 		}
 		.facto-doc-editor-wrap .pict-mde-rendered-view pre {
 			background: var(--facto-bg-input, #0d1117);
 			border: 1px solid var(--facto-border-subtle, #2a2e3a);
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 		}
 		.facto-doc-editor-wrap .pict-mde-rendered-view pre code {
 			background: transparent;
 			color: inherit;
 		}
 		.facto-doc-editor-wrap .pict-mde-rendered-view blockquote {
-			border-left-color: var(--facto-accent, #4a90d9);
+			border-left-color: var(--facto-brand, #4a90d9);
 			color: var(--facto-text-tertiary, #888);
 		}
 		.facto-doc-editor-wrap .pict-mde-rendered-view table th,

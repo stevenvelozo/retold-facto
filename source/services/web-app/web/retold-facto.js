@@ -2897,7 +2897,7 @@ tmpView.onAfterRender(tmpEvent.Data.Renderable);}}return true;}/**
 	 * Lifecycle hook that triggers after data is marshaled into the view (async flow).
 	 *
 	 * @param {ErrorCallback} fCallback - The callback to call when the async operation is complete.
-	 */onAfterMarshalToViewAsync(fCallback){this.onAfterMarshalToView();return fCallback();}/** @return {boolean} - True if the object is a PictView. */get isPictView(){return true;}}module.exports=PictView;},{"../package.json":32,"fable-serviceproviderbase":2}],34:[function(require,module,exports){module.exports={"Name":"Retold Facto","Hash":"Facto-Full","MainViewportViewIdentifier":"Facto-Full-Layout","MainViewportDestinationAddress":"#Facto-Full-Application-Container","MainViewportDefaultDataAddress":"AppData.Facto","AutoSolveAfterInitialize":true,"AutoRenderMainViewportViewAfterInitialize":false,"AutoRenderViewsAfterInitialize":false,"pict_configuration":{"Product":"Retold-Facto-Full"}};},{}],35:[function(require,module,exports){const libPictApplication=require('pict-application');const libPictRouter=require('pict-router');const THEME_LIST=[{Key:'facto-dark',Label:'Facto Dark',Colors:['#12151e','#4a90d9','#28a745','#dc3545','#6366f1']},{Key:'facto-light',Label:'Facto Light',Colors:['#f5f6f8','#3b82f6','#22c55e','#ef4444','#6366f1']},{Key:'midnight-blue',Label:'Midnight Blue',Colors:['#0a0e1a','#3b82f6','#10b981','#f87171','#60a5fa']},{Key:'slate',Label:'Slate',Colors:['#1e2228','#6b8aae','#5ea37a','#c85a5a','#82a0c4']},{Key:'warm-earth',Label:'Warm Earth',Colors:['#1a1610','#c4956a','#8a9a5a','#b04050','#4a9090']},{Key:'high-contrast',Label:'High Contrast',Colors:['#000000','#58a6ff','#3fb950','#f85149','#d29922']}];// Shared provider (same API layer as accordion app)
+	 */onAfterMarshalToViewAsync(fCallback){this.onAfterMarshalToView();return fCallback();}/** @return {boolean} - True if the object is a PictView. */get isPictView(){return true;}}module.exports=PictView;},{"../package.json":32,"fable-serviceproviderbase":2}],34:[function(require,module,exports){module.exports={"Name":"Retold Facto","Hash":"Facto-Full","MainViewportViewIdentifier":"Facto-Full-Layout","MainViewportDestinationAddress":"#Facto-Full-Application-Container","MainViewportDefaultDataAddress":"AppData.Facto","AutoSolveAfterInitialize":true,"AutoRenderMainViewportViewAfterInitialize":false,"AutoRenderViewsAfterInitialize":false,"pict_configuration":{"Product":"Retold-Facto-Full"}};},{}],35:[function(require,module,exports){const libPictApplication=require('pict-application');const libPictRouter=require('pict-router');const THEME_LIST=[{Key:'turquoise-deluxe',Label:'Turquoise Deluxe',Colors:['#f6f0e4','#18a5a0','#3a9468','#c44836','#12908c']},{Key:'facto-dark',Label:'Facto Dark',Colors:['#12151e','#4a90d9','#28a745','#dc3545','#6366f1']},{Key:'facto-light',Label:'Facto Light',Colors:['#f5f6f8','#3b82f6','#22c55e','#ef4444','#6366f1']},{Key:'midnight-blue',Label:'Midnight Blue',Colors:['#0a0e1a','#3b82f6','#10b981','#f87171','#60a5fa']},{Key:'slate',Label:'Slate',Colors:['#1e2228','#6b8aae','#5ea37a','#c85a5a','#82a0c4']},{Key:'warm-earth',Label:'Warm Earth',Colors:['#1a1610','#c4956a','#8a9a5a','#b04050','#4a9090']},{Key:'high-contrast',Label:'High Contrast',Colors:['#000000','#58a6ff','#3fb950','#f85149','#d29922']}];// Shared provider (same API layer as accordion app)
 const libProvider=require('../pict-app/providers/Pict-Provider-Facto.js');// Shell views
 const libViewLayout=require('./views/PictView-Facto-Full-Layout.js');const libViewTopBar=require('./views/PictView-Facto-Full-TopBar.js');const libViewBottomBar=require('./views/PictView-Facto-Full-BottomBar.js');// Content views
 const libViewDashboard=require('./views/PictView-Facto-Full-Dashboard.js');const libViewSourceResearch=require('./views/PictView-Facto-Full-SourceResearch.js');const libViewIngestJobs=require('./views/PictView-Facto-Full-IngestJobs.js');const libViewSources=require('./views/PictView-Facto-Full-Sources.js');const libViewDatasets=require('./views/PictView-Facto-Full-Datasets.js');const libViewRecords=require('./views/PictView-Facto-Full-Records.js');const libViewProjections=require('./views/PictView-Facto-Full-Projections.js');const libViewDashboards=require('./views/PictView-Facto-Full-Dashboards.js');const libViewRecordViewer=require('./views/PictView-Facto-Full-RecordViewer.js');const libViewSourceDetail=require('./views/PictView-Facto-Full-SourceDetail.js');class FactoFullApplication extends libPictApplication{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);// Skip premature route resolution during addRoute(); the Layout view
@@ -2908,7 +2908,7 @@ this.pict.addProvider('PictRouter',require('./providers/PictRouter-Facto-Configu
 this.pict.addView('Facto-Full-Layout',libViewLayout.default_configuration,libViewLayout);this.pict.addView('Facto-Full-TopBar',libViewTopBar.default_configuration,libViewTopBar);this.pict.addView('Facto-Full-BottomBar',libViewBottomBar.default_configuration,libViewBottomBar);// Content views
 this.pict.addView('Facto-Full-Dashboard',libViewDashboard.default_configuration,libViewDashboard);this.pict.addView('Facto-Full-SourceResearch',libViewSourceResearch.default_configuration,libViewSourceResearch);this.pict.addView('Facto-Full-IngestJobs',libViewIngestJobs.default_configuration,libViewIngestJobs);this.pict.addView('Facto-Full-Sources',libViewSources.default_configuration,libViewSources);this.pict.addView('Facto-Full-Datasets',libViewDatasets.default_configuration,libViewDatasets);this.pict.addView('Facto-Full-Records',libViewRecords.default_configuration,libViewRecords);this.pict.addView('Facto-Full-Projections',libViewProjections.default_configuration,libViewProjections);this.pict.addView('Facto-Full-Dashboards',libViewDashboards.default_configuration,libViewDashboards);this.pict.addView('Facto-Full-RecordViewer',libViewRecordViewer.default_configuration,libViewRecordViewer);this.pict.addView('Facto-Full-SourceDetail',libViewSourceDetail.default_configuration,libViewSourceDetail);}onAfterInitializeAsync(fCallback){// Apply saved theme before first render
 this.loadSavedTheme();// Initialize application state
-this.pict.AppData.Facto={CatalogEntries:[],Sources:[],Datasets:[],Records:[],IngestJobs:[],SelectedSource:null,SelectedDataset:null,RecordPage:0,RecordPageSize:50,CurrentRecordContent:{},CurrentDocumentSegments:[],CurrentTheme:'facto-dark',CurrentRoute:''};// Expose pict globally for inline onclick handlers
+this.pict.AppData.Facto={CatalogEntries:[],Sources:[],Datasets:[],Records:[],IngestJobs:[],SelectedSource:null,SelectedDataset:null,RecordPage:0,RecordPageSize:50,CurrentRecordContent:{},CurrentDocumentSegments:[],CurrentTheme:'turquoise-deluxe',CurrentRoute:''};// Expose pict globally for inline onclick handlers
 window.pict=this.pict;// Register all parameterized routes BEFORE rendering the layout,
 // so they are available when resolve() fires after the DOM is ready.
 let tmpSelf=this;this.pict.providers.PictRouter.addRoute('/Record/:IDRecord',pMatch=>{let tmpIDRecord=pMatch&&pMatch.data?pMatch.data.IDRecord:null;if(tmpIDRecord){tmpSelf.showRecordView(tmpIDRecord);}});this.pict.providers.PictRouter.addRoute('/Source/:IDSource',pMatch=>{let tmpIDSource=pMatch&&pMatch.data?pMatch.data.IDSource:null;if(tmpIDSource){tmpSelf.showSourceView(tmpIDSource);}});this.pict.providers.PictRouter.addRoute('/Source/:IDSource/Doc/:IDDoc',pMatch=>{let tmpIDSource=pMatch&&pMatch.data?pMatch.data.IDSource:null;let tmpIDDoc=pMatch&&pMatch.data?pMatch.data.IDDoc:null;if(tmpIDSource){tmpSelf.showSourceView(tmpIDSource,tmpIDDoc);}});// Render the layout shell — this cascades into TopBar, BottomBar
@@ -2919,7 +2919,7 @@ this._setActiveNav('Records');}showSourceView(pIDSource,pIDDoc){let tmpView=this
 this._setActiveNav('SourceResearch');}showView(pViewIdentifier){if(pViewIdentifier in this.pict.views){this.pict.views[pViewIdentifier].render();}else{this.pict.log.warn(`View [${pViewIdentifier}] not found; falling back to dashboard.`);this.pict.views['Facto-Full-Dashboard'].render();}// Derive the route name from the view identifier for nav highlighting
 // e.g. "Facto-Full-SourceResearch" → "SourceResearch"
 let tmpRoute=pViewIdentifier.replace('Facto-Full-','');this._setActiveNav(tmpRoute);}_setActiveNav(pRoute){this.pict.AppData.Facto.CurrentRoute=pRoute;let tmpTopBar=this.pict.views['Facto-Full-TopBar'];if(tmpTopBar&&typeof tmpTopBar.highlightRoute==='function'){tmpTopBar.highlightRoute(pRoute);}}// --- Theme ---
-applyTheme(pThemeKey){let tmpThemeKey=pThemeKey||'facto-dark';if(tmpThemeKey==='facto-dark'){delete document.body.dataset.theme;}else{document.body.dataset.theme=tmpThemeKey;}localStorage.setItem('facto-theme',tmpThemeKey);if(this.pict.AppData.Facto){this.pict.AppData.Facto.CurrentTheme=tmpThemeKey;}}loadSavedTheme(){let tmpSavedTheme=localStorage.getItem('facto-theme')||'facto-dark';this.applyTheme(tmpSavedTheme);}getThemeList(){return THEME_LIST;}}module.exports=FactoFullApplication;module.exports.default_configuration=require('./Pict-Application-Facto-Full-Configuration.json');},{"../pict-app/providers/Pict-Provider-Facto.js":53,"./Pict-Application-Facto-Full-Configuration.json":34,"./providers/PictRouter-Facto-Configuration.json":36,"./views/PictView-Facto-Full-BottomBar.js":37,"./views/PictView-Facto-Full-Dashboard.js":38,"./views/PictView-Facto-Full-Dashboards.js":39,"./views/PictView-Facto-Full-Datasets.js":40,"./views/PictView-Facto-Full-IngestJobs.js":41,"./views/PictView-Facto-Full-Layout.js":42,"./views/PictView-Facto-Full-Projections.js":43,"./views/PictView-Facto-Full-RecordViewer.js":44,"./views/PictView-Facto-Full-Records.js":45,"./views/PictView-Facto-Full-SourceDetail.js":46,"./views/PictView-Facto-Full-SourceResearch.js":47,"./views/PictView-Facto-Full-Sources.js":48,"./views/PictView-Facto-Full-TopBar.js":49,"pict-application":5,"pict-router":8}],36:[function(require,module,exports){module.exports={"ProviderIdentifier":"Pict-Router","AutoInitialize":true,"AutoInitializeOrdinal":0,"Routes":[{"path":"/Home","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-Dashboard`)~}"},{"path":"/SourceResearch","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-SourceResearch`)~}"},{"path":"/IngestJobs","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-IngestJobs`)~}"},{"path":"/Sources","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-Sources`)~}"},{"path":"/Datasets","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-Datasets`)~}"},{"path":"/Records","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-Records`)~}"},{"path":"/Projections","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-Projections`)~}"},{"path":"/Dashboards","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-Dashboards`)~}"}]};},{}],37:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-BottomBar",DefaultRenderable:"Facto-Full-BottomBar-Content",DefaultDestinationAddress:"#Facto-Full-BottomBar-Container",AutoRender:false,CSS:/*css*/`
+applyTheme(pThemeKey){let tmpThemeKey=pThemeKey||'turquoise-deluxe';if(tmpThemeKey==='turquoise-deluxe'){delete document.body.dataset.theme;}else{document.body.dataset.theme=tmpThemeKey;}localStorage.setItem('facto-theme',tmpThemeKey);if(this.pict.AppData.Facto){this.pict.AppData.Facto.CurrentTheme=tmpThemeKey;}}loadSavedTheme(){let tmpSavedTheme=localStorage.getItem('facto-theme')||'turquoise-deluxe';this.applyTheme(tmpSavedTheme);}getThemeList(){return THEME_LIST;}}module.exports=FactoFullApplication;module.exports.default_configuration=require('./Pict-Application-Facto-Full-Configuration.json');},{"../pict-app/providers/Pict-Provider-Facto.js":53,"./Pict-Application-Facto-Full-Configuration.json":34,"./providers/PictRouter-Facto-Configuration.json":36,"./views/PictView-Facto-Full-BottomBar.js":37,"./views/PictView-Facto-Full-Dashboard.js":38,"./views/PictView-Facto-Full-Dashboards.js":39,"./views/PictView-Facto-Full-Datasets.js":40,"./views/PictView-Facto-Full-IngestJobs.js":41,"./views/PictView-Facto-Full-Layout.js":42,"./views/PictView-Facto-Full-Projections.js":43,"./views/PictView-Facto-Full-RecordViewer.js":44,"./views/PictView-Facto-Full-Records.js":45,"./views/PictView-Facto-Full-SourceDetail.js":46,"./views/PictView-Facto-Full-SourceResearch.js":47,"./views/PictView-Facto-Full-Sources.js":48,"./views/PictView-Facto-Full-TopBar.js":49,"pict-application":5,"pict-router":8}],36:[function(require,module,exports){module.exports={"ProviderIdentifier":"Pict-Router","AutoInitialize":true,"AutoInitializeOrdinal":0,"Routes":[{"path":"/Home","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-Dashboard`)~}"},{"path":"/SourceResearch","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-SourceResearch`)~}"},{"path":"/IngestJobs","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-IngestJobs`)~}"},{"path":"/Sources","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-Sources`)~}"},{"path":"/Datasets","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-Datasets`)~}"},{"path":"/Records","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-Records`)~}"},{"path":"/Projections","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-Projections`)~}"},{"path":"/Dashboards","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-Dashboards`)~}"}]};},{}],37:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-BottomBar",DefaultRenderable:"Facto-Full-BottomBar-Content",DefaultDestinationAddress:"#Facto-Full-BottomBar-Container",AutoRender:false,CSS:/*css*/`
 		.facto-bottombar {
 			display: flex;
 			align-items: center;
@@ -3135,7 +3135,7 @@ this.pict.CSSMap.injectCSS();return super.onAfterRender(pRenderable,pRenderDesti
 			transition: color 0.15s;
 		}
 		.facto-record-viewer-back:hover {
-			color: var(--facto-accent);
+			color: var(--facto-brand);
 		}
 		.facto-record-meta {
 			display: grid;
@@ -3144,7 +3144,7 @@ this.pict.CSSMap.injectCSS();return super.onAfterRender(pRenderable,pRenderDesti
 			margin-bottom: 1.5em;
 		}
 		.facto-record-meta-card {
-			background: var(--facto-surface-elevated, #1a1e2a);
+			background: var(--facto-bg-elevated, #1a1e2a);
 			border: 1px solid var(--facto-border-subtle, #2a2e3a);
 			border-radius: 8px;
 			padding: 1em;
@@ -3169,7 +3169,7 @@ this.pict.CSSMap.injectCSS();return super.onAfterRender(pRenderable,pRenderDesti
 			margin-right: 0.75em;
 		}
 		.facto-record-meta-value {
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 			text-align: right;
 			overflow: hidden;
 			text-overflow: ellipsis;
@@ -3178,7 +3178,7 @@ this.pict.CSSMap.injectCSS();return super.onAfterRender(pRenderable,pRenderDesti
 			font-size: 0.9em;
 		}
 		.facto-record-meta-value.facto-hash-value {
-			color: var(--facto-accent, #4a90d9);
+			color: var(--facto-brand, #4a90d9);
 		}
 		.facto-record-certainty-bar {
 			height: 6px;
@@ -3204,15 +3204,15 @@ this.pict.CSSMap.injectCSS();return super.onAfterRender(pRenderable,pRenderDesti
 		}
 		/* Override ObjectEditor styles for dark theme compatibility */
 		.facto-record-content-section .pict-objecteditor {
-			background: var(--facto-surface-elevated, #1a1e2a);
+			background: var(--facto-bg-elevated, #1a1e2a);
 			border-color: var(--facto-border-subtle, #2a2e3a);
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 		}
 		.facto-record-content-section .pict-oe-row:hover {
-			background: var(--facto-surface-hover, #222738);
+			background: var(--facto-table-row-hover, #222738);
 		}
 		.facto-record-content-section .pict-oe-key {
-			color: var(--facto-accent, #4a90d9);
+			color: var(--facto-brand, #4a90d9);
 		}
 		.facto-record-content-section .pict-oe-separator {
 			color: var(--facto-text-tertiary, #888);
@@ -3240,11 +3240,11 @@ this.pict.CSSMap.injectCSS();return super.onAfterRender(pRenderable,pRenderDesti
 			color: var(--facto-text-secondary, #aaa);
 		}
 		.facto-record-content-section .pict-oe-toggle:hover {
-			color: var(--facto-accent, #4a90d9);
-			background: var(--facto-surface-hover, #222738);
+			color: var(--facto-brand, #4a90d9);
+			background: var(--facto-table-row-hover, #222738);
 		}
 		.facto-record-content-section .pict-oe-type-badge {
-			background: var(--facto-surface-hover, #222738);
+			background: var(--facto-table-row-hover, #222738);
 			color: var(--facto-text-tertiary, #888);
 		}
 		.facto-record-content-section .pict-oe-empty {
@@ -3343,12 +3343,12 @@ let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.en
 			transition: color 0.15s;
 		}
 		.facto-source-detail-back:hover {
-			color: var(--facto-accent);
+			color: var(--facto-brand);
 		}
 
 		/* Research context section */
 		.facto-research-context {
-			background: var(--facto-surface-elevated, #1a1e2a);
+			background: var(--facto-bg-elevated, #1a1e2a);
 			border: 1px solid var(--facto-border-subtle, #2a2e3a);
 			border-radius: 8px;
 			padding: 1em;
@@ -3367,13 +3367,13 @@ let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.en
 			line-height: 1.6;
 		}
 		.facto-research-context-detail strong {
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 		}
 		.facto-research-context-note {
 			margin-top: 0.5em;
 			padding: 0.5em 0.75em;
-			background: rgba(74, 144, 217, 0.08);
-			border-left: 3px solid var(--facto-accent, #4a90d9);
+			background: var(--facto-brand-a08);
+			border-left: 3px solid var(--facto-brand, #4a90d9);
 			border-radius: 0 4px 4px 0;
 			font-size: 0.85em;
 			color: var(--facto-text-secondary, #aaa);
@@ -3422,18 +3422,18 @@ let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.en
 			color: var(--facto-text-tertiary, #888);
 		}
 		.facto-edit-toggle:hover {
-			border-color: var(--facto-accent, #4a90d9);
-			color: var(--facto-accent, #4a90d9);
+			border-color: var(--facto-brand, #4a90d9);
+			color: var(--facto-brand, #4a90d9);
 		}
 		.facto-edit-toggle.active {
-			background: rgba(74, 144, 217, 0.15);
-			border-color: var(--facto-accent, #4a90d9);
-			color: var(--facto-accent, #4a90d9);
+			background: var(--facto-brand-a15);
+			border-color: var(--facto-brand, #4a90d9);
+			color: var(--facto-brand, #4a90d9);
 		}
 
 		/* Read-only rendered content */
 		.facto-doc-content-wrap {
-			background: var(--facto-surface-elevated, #1a1e2a);
+			background: var(--facto-bg-elevated, #1a1e2a);
 			border: 1px solid var(--facto-border-subtle, #2a2e3a);
 			border-radius: 8px;
 			padding: 1.5em 2em;
@@ -3441,21 +3441,21 @@ let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.en
 		}
 		.facto-doc-content-wrap h1 {
 			font-size: 1.75em;
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 			border-bottom: 1px solid var(--facto-border-subtle, #2a2e3a);
 			padding-bottom: 0.3em;
 			margin-top: 0;
 		}
 		.facto-doc-content-wrap h2 {
 			font-size: 1.4em;
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 			border-bottom: 1px solid var(--facto-border-subtle, #2a2e3a);
 			padding-bottom: 0.25em;
 			margin-top: 1.5em;
 		}
 		.facto-doc-content-wrap h3 {
 			font-size: 1.15em;
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 			margin-top: 1.25em;
 		}
 		.facto-doc-content-wrap h4,
@@ -3470,11 +3470,11 @@ let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.en
 			margin: 0.75em 0;
 		}
 		.facto-doc-content-wrap a {
-			color: var(--facto-accent, #4a90d9);
+			color: var(--facto-brand, #4a90d9);
 		}
 		.facto-doc-content-wrap code {
-			background: rgba(74, 144, 217, 0.1);
-			color: var(--facto-accent, #4a90d9);
+			background: var(--facto-brand-a10);
+			color: var(--facto-brand, #4a90d9);
 			padding: 0.15em 0.35em;
 			border-radius: 3px;
 			font-size: 0.9em;
@@ -3485,7 +3485,7 @@ let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.en
 			border-radius: 6px;
 			padding: 1em;
 			overflow-x: auto;
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 		}
 		.facto-doc-content-wrap pre code {
 			background: transparent;
@@ -3493,11 +3493,11 @@ let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.en
 			color: inherit;
 		}
 		.facto-doc-content-wrap blockquote {
-			border-left: 3px solid var(--facto-accent, #4a90d9);
+			border-left: 3px solid var(--facto-brand, #4a90d9);
 			padding: 0.5em 1em;
 			margin: 1em 0;
 			color: var(--facto-text-tertiary, #888);
-			background: rgba(74, 144, 217, 0.05);
+			background: var(--facto-brand-a05);
 			border-radius: 0 4px 4px 0;
 		}
 		.facto-doc-content-wrap table {
@@ -3512,7 +3512,7 @@ let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.en
 		}
 		.facto-doc-content-wrap table th {
 			background: rgba(255, 255, 255, 0.03);
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 		}
 		.facto-doc-content-wrap img {
 			max-width: 100%;
@@ -3539,7 +3539,7 @@ let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.en
 		}
 		.facto-doc-item {
 			padding: 0.4em 0.75em;
-			background: var(--facto-surface-elevated, #1a1e2a);
+			background: var(--facto-bg-elevated, #1a1e2a);
 			border: 1px solid var(--facto-border-subtle, #2a2e3a);
 			border-radius: 6px;
 			font-size: 0.85em;
@@ -3548,16 +3548,16 @@ let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.en
 			transition: border-color 0.15s, color 0.15s;
 		}
 		.facto-doc-item:hover {
-			border-color: var(--facto-accent, #4a90d9);
-			color: var(--facto-text-primary, #eee);
+			border-color: var(--facto-brand, #4a90d9);
+			color: var(--facto-text-heading, #eee);
 		}
 		.facto-doc-item.active {
-			border-color: var(--facto-accent, #4a90d9);
-			color: var(--facto-accent, #4a90d9);
-			background: rgba(74, 144, 217, 0.1);
+			border-color: var(--facto-brand, #4a90d9);
+			color: var(--facto-brand, #4a90d9);
+			background: var(--facto-brand-a10);
 		}
 		.facto-doc-editor-wrap {
-			background: var(--facto-surface-elevated, #1a1e2a);
+			background: var(--facto-bg-elevated, #1a1e2a);
 			border: 1px solid var(--facto-border-subtle, #2a2e3a);
 			border-radius: 8px;
 			padding: 1em;
@@ -3572,12 +3572,12 @@ let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.en
 		.facto-doc-name {
 			font-size: 0.9em;
 			font-weight: 600;
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 		}
 		.facto-doc-name-input {
 			font-size: 0.9em;
 			font-weight: 600;
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 			background: var(--facto-bg-input, #0d1117);
 			border: 1px solid var(--facto-border, #3a3e4a);
 			border-radius: 4px;
@@ -3585,7 +3585,7 @@ let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.en
 			width: 250px;
 		}
 		.facto-doc-name-input:focus {
-			border-color: var(--facto-accent, #4a90d9);
+			border-color: var(--facto-brand, #4a90d9);
 			outline: none;
 		}
 		.facto-doc-new-input {
@@ -3624,9 +3624,9 @@ let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.en
 			color: var(--facto-text-secondary, #aaa);
 		}
 		.facto-editor-ctrl-btn.active {
-			background: rgba(74, 144, 217, 0.12);
-			border-color: var(--facto-accent, #4a90d9);
-			color: var(--facto-accent, #4a90d9);
+			background: var(--facto-brand-a12);
+			border-color: var(--facto-brand, #4a90d9);
+			color: var(--facto-brand, #4a90d9);
 		}
 		.facto-editor-ctrl-sep {
 			width: 1px;
@@ -3655,7 +3655,7 @@ let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.en
 		}
 		.facto-settings-gear:hover,
 		.facto-settings-gear.active {
-			color: var(--facto-accent, #4a90d9);
+			color: var(--facto-brand, #4a90d9);
 		}
 		.facto-settings-gear svg {
 			width: 18px;
@@ -3679,7 +3679,7 @@ let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.en
 			top: 36px;
 			right: 0;
 			width: 260px;
-			background: var(--facto-surface-elevated, #1a1e2a);
+			background: var(--facto-bg-elevated, #1a1e2a);
 			border: 1px solid var(--facto-border, #3a3e4a);
 			border-radius: 8px;
 			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
@@ -3701,7 +3701,7 @@ let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.en
 			right: 10px;
 			width: 10px;
 			height: 10px;
-			background: var(--facto-surface-elevated, #1a1e2a);
+			background: var(--facto-bg-elevated, #1a1e2a);
 			border-left: 1px solid var(--facto-border, #3a3e4a);
 			border-top: 1px solid var(--facto-border, #3a3e4a);
 			transform: rotate(45deg);
@@ -3735,7 +3735,7 @@ let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.en
 		.facto-settings-checkbox {
 			width: 15px;
 			height: 15px;
-			accent-color: var(--facto-accent, #4a90d9);
+			accent-color: var(--facto-brand, #4a90d9);
 			cursor: pointer;
 			flex-shrink: 0;
 		}
@@ -3788,7 +3788,7 @@ let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.en
 			background: var(--facto-border, #3a3e4a);
 		}
 		.facto-doc-editor-wrap .pict-mde-segment.pict-mde-active .pict-mde-drag-handle {
-			background: rgba(74, 144, 217, 0.25);
+			background: var(--facto-brand-a25);
 		}
 
 		/* Left control buttons */
@@ -3796,33 +3796,40 @@ let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.en
 			color: var(--facto-text-tertiary, #666);
 		}
 		.facto-doc-editor-wrap .pict-mde-left-btn:hover {
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 		}
 		.facto-doc-editor-wrap .pict-mde-btn-remove:hover {
-			color: var(--facto-danger, #dc3545);
+			color: var(--facto-error, #dc3545);
 		}
 
-		/* CodeMirror editor */
+		/* CodeMirror editor — selectors must include .cm-editor to beat
+		   library's .pict-mde-segment-editor .cm-editor .cm-* specificity */
 		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-editor {
 			background: var(--facto-bg-input, #0d1117);
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 		}
-		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-gutters {
-			background: var(--facto-surface-elevated, #1a1e2a);
+		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-editor .cm-gutters {
+			background: var(--facto-bg-elevated, #1a1e2a);
 			border-color: var(--facto-border-subtle, #2a2e3a);
 			color: var(--facto-text-tertiary, #666);
 		}
-		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-activeLine {
-			background: rgba(74, 144, 217, 0.05);
+		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-editor .cm-activeLine {
+			background: var(--facto-brand-a05);
 		}
-		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-activeLineGutter {
-			background: rgba(74, 144, 217, 0.1);
+		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-editor .cm-activeLineGutter {
+			background: var(--facto-brand-a10);
 		}
-		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-cursor {
-			border-left-color: var(--facto-text-primary, #eee);
+		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-editor .cm-cursor {
+			border-left-color: var(--facto-text-heading, #eee);
 		}
-		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-selectionBackground {
-			background: rgba(74, 144, 217, 0.2) !important;
+		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-editor .cm-selectionBackground {
+			background: var(--facto-brand-a20) !important;
+		}
+		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-editor .cm-content {
+			color: var(--facto-text-heading, #eee);
+		}
+		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-editor .cm-lineNumbers .cm-gutterElement {
+			color: var(--facto-text-tertiary, #555);
 		}
 
 		/* Rich preview — must match library's two-class specificity */
@@ -3835,22 +3842,22 @@ let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.en
 		.facto-doc-editor-wrap .pict-mde-rich-preview h2,
 		.facto-doc-editor-wrap .pict-mde-rich-preview h3,
 		.facto-doc-editor-wrap .pict-mde-rich-preview h4 {
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 		}
 		.facto-doc-editor-wrap .pict-mde-rich-preview code {
-			background: rgba(74, 144, 217, 0.1);
-			color: var(--facto-accent, #4a90d9);
+			background: var(--facto-brand-a10);
+			color: var(--facto-brand, #4a90d9);
 		}
 		.facto-doc-editor-wrap .pict-mde-rich-preview pre {
 			background: var(--facto-bg-input, #0d1117);
 			border: 1px solid var(--facto-border-subtle, #2a2e3a);
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 		}
 		.facto-doc-editor-wrap .pict-mde-rich-preview a {
-			color: var(--facto-accent, #4a90d9);
+			color: var(--facto-brand, #4a90d9);
 		}
 		.facto-doc-editor-wrap .pict-mde-rich-preview blockquote {
-			border-left-color: var(--facto-accent, #4a90d9);
+			border-left-color: var(--facto-brand, #4a90d9);
 			color: var(--facto-text-tertiary, #888);
 		}
 		.facto-doc-editor-wrap .pict-mde-rich-preview table th,
@@ -3877,9 +3884,9 @@ let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.en
 			color: var(--facto-text-tertiary, #666);
 		}
 		.facto-doc-editor-wrap .pict-mde-btn-add:hover {
-			border-color: var(--facto-accent, #4a90d9);
-			color: var(--facto-accent, #4a90d9);
-			background: rgba(74, 144, 217, 0.05);
+			border-color: var(--facto-brand, #4a90d9);
+			color: var(--facto-brand, #4a90d9);
+			background: var(--facto-brand-a05);
 		}
 
 		/* Sidebar buttons */
@@ -3889,16 +3896,16 @@ let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.en
 			color: var(--facto-text-tertiary, #666);
 		}
 		.facto-doc-editor-wrap .pict-mde-sidebar-btn:hover {
-			border-color: var(--facto-accent, #4a90d9);
-			color: var(--facto-accent, #4a90d9);
+			border-color: var(--facto-brand, #4a90d9);
+			color: var(--facto-brand, #4a90d9);
 		}
 
 		/* Drag-over indicators */
 		.facto-doc-editor-wrap .pict-mde-segment.pict-mde-drag-over-top {
-			border-top-color: var(--facto-accent, #4a90d9);
+			border-top-color: var(--facto-brand, #4a90d9);
 		}
 		.facto-doc-editor-wrap .pict-mde-segment.pict-mde-drag-over-bottom {
-			border-bottom-color: var(--facto-accent, #4a90d9);
+			border-bottom-color: var(--facto-brand, #4a90d9);
 		}
 
 		/* Rendered view (full-document preview mode) */
@@ -3911,29 +3918,29 @@ let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.en
 		.facto-doc-editor-wrap .pict-mde-rendered-view h2,
 		.facto-doc-editor-wrap .pict-mde-rendered-view h3,
 		.facto-doc-editor-wrap .pict-mde-rendered-view h4 {
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 		}
 		.facto-doc-editor-wrap .pict-mde-rendered-view p {
 			color: var(--facto-text-secondary, #bbb);
 		}
 		.facto-doc-editor-wrap .pict-mde-rendered-view a {
-			color: var(--facto-accent, #4a90d9);
+			color: var(--facto-brand, #4a90d9);
 		}
 		.facto-doc-editor-wrap .pict-mde-rendered-view code {
-			background: rgba(74, 144, 217, 0.1);
-			color: var(--facto-accent, #4a90d9);
+			background: var(--facto-brand-a10);
+			color: var(--facto-brand, #4a90d9);
 		}
 		.facto-doc-editor-wrap .pict-mde-rendered-view pre {
 			background: var(--facto-bg-input, #0d1117);
 			border: 1px solid var(--facto-border-subtle, #2a2e3a);
-			color: var(--facto-text-primary, #eee);
+			color: var(--facto-text-heading, #eee);
 		}
 		.facto-doc-editor-wrap .pict-mde-rendered-view pre code {
 			background: transparent;
 			color: inherit;
 		}
 		.facto-doc-editor-wrap .pict-mde-rendered-view blockquote {
-			border-left-color: var(--facto-accent, #4a90d9);
+			border-left-color: var(--facto-brand, #4a90d9);
 			color: var(--facto-text-tertiary, #888);
 		}
 		.facto-doc-editor-wrap .pict-mde-rendered-view table th,
@@ -4164,7 +4171,7 @@ this._renderDocList();}_setEditorStatus(pMessage,pType){let tmpNameEl=document.g
 		</div>
 	</div>
 </div>
-`}],Renderables:[{RenderableHash:"Facto-Full-SourceResearch-Content",TemplateHash:"Facto-Full-SourceResearch-Template",DestinationAddress:"#Facto-Full-Content-Container",RenderMethod:"replace"}]};class FactoFullSourceResearchView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent){this._SourceLinks={};Promise.all([this.pict.providers.Facto.loadCatalogEntries(),this.pict.providers.Facto.loadCatalogSourceLinks()]).then(pResults=>{let tmpLinksResponse=pResults[1];if(tmpLinksResponse&&tmpLinksResponse.Links){this._SourceLinks=tmpLinksResponse.Links;}this.refreshList();});return super.onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent);}setStatus(pMessage,pType){let tmpEl=document.getElementById('Facto-Full-Research-Status');if(!tmpEl)return;tmpEl.className='facto-status facto-status-'+(pType||'info');tmpEl.textContent=pMessage;tmpEl.style.display='block';}refreshList(){let tmpContainer=document.getElementById('Facto-Full-Research-List');if(!tmpContainer)return;let tmpEntries=this.pict.AppData.Facto.CatalogEntries;if(!tmpEntries||tmpEntries.length===0){tmpContainer.innerHTML='<div class="facto-empty">No catalog entries yet. Import a catalog or add sources manually.</div>';return;}let tmpHtml='<table><thead><tr><th>ID</th><th>Agency</th><th>Name</th><th>Type</th><th>Category</th><th>Region</th><th>Verified</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpEntries.length;i++){let tmpEntry=tmpEntries[i];let tmpVerified=tmpEntry.Verified?'<span class="facto-badge facto-badge-success">Yes</span>':'<span class="facto-badge facto-badge-muted">No</span>';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpEntry.IDSourceCatalogEntry||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Agency||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Name||'')+'</td>';tmpHtml+='<td><span class="facto-badge facto-badge-primary">'+(tmpEntry.Type||'')+'</span></td>';tmpHtml+='<td>'+(tmpEntry.Category||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Region||'')+'</td>';tmpHtml+='<td>'+tmpVerified+'</td>';tmpHtml+='<td>';let tmpLinkedSource=this._SourceLinks&&this._SourceLinks[tmpEntry.IDSourceCatalogEntry];if(tmpLinkedSource){tmpHtml+='<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.PictApplication.navigateTo(\'/Source/'+tmpLinkedSource+'\')">View Source &rarr;</button> ';}tmpHtml+='<button class="facto-btn facto-btn-primary facto-btn-small" onclick="pict.views[\'Facto-Full-SourceResearch\'].viewEntry('+tmpEntry.IDSourceCatalogEntry+')">Datasets</button> ';tmpHtml+='<button class="facto-btn facto-btn-danger facto-btn-small" onclick="pict.views[\'Facto-Full-SourceResearch\'].deleteEntry('+tmpEntry.IDSourceCatalogEntry+')">Delete</button>';tmpHtml+='</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}searchCatalog(){let tmpQuery=(document.getElementById('Facto-Full-Research-Search')||{}).value||'';if(!tmpQuery){this.pict.providers.Facto.loadCatalogEntries().then(()=>{this.refreshList();});return;}this.pict.providers.Facto.searchCatalog(tmpQuery).then(pResponse=>{this.pict.AppData.Facto.CatalogEntries=pResponse&&pResponse.Entries?pResponse.Entries:[];this.refreshList();});}deleteEntry(pIDEntry){if(!confirm('Remove this catalog entry?'))return;this.pict.providers.Facto.deleteCatalogEntry(pIDEntry).then(()=>{return this.pict.providers.Facto.loadCatalogEntries();}).then(()=>{this.refreshList();this.setStatus('Entry removed','ok');});}viewEntry(pIDEntry){let tmpDetail=document.getElementById('Facto-Full-Research-Detail');if(!tmpDetail)return;tmpDetail.style.display='block';this.pict.providers.Facto.loadCatalogEntryDatasets(pIDEntry).then(pResponse=>{let tmpDatasets=pResponse&&pResponse.Datasets?pResponse.Datasets:[];let tmpHtml='<h3>Dataset Definitions for Entry #'+pIDEntry+'</h3>';if(tmpDatasets.length===0){tmpHtml+='<div class="facto-empty">No dataset definitions yet.</div>';}else{tmpHtml+='<table><thead><tr><th>ID</th><th>Name</th><th>Format</th><th>Endpoint URL</th><th>Policy</th><th>Status</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpDatasets.length;i++){let tmpDS=tmpDatasets[i];let tmpStatus=tmpDS.Provisioned?'<span class="facto-badge facto-badge-success">Provisioned</span>':'<span class="facto-badge facto-badge-muted">Not provisioned</span>';let tmpAction='';if(tmpDS.Provisioned){tmpAction='<button class="facto-btn facto-btn-primary facto-btn-small" onclick="pict.views[\'Facto-Full-SourceResearch\'].fetchDataset('+tmpDS.IDCatalogDatasetDefinition+', '+pIDEntry+')">Fetch</button>';if(tmpDS.IDSource){tmpAction+=' <button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.PictApplication.navigateTo(\'/Source/'+tmpDS.IDSource+'\')">View Source &rarr;</button>';}}else{tmpAction='<button class="facto-btn facto-btn-success facto-btn-small" onclick="pict.views[\'Facto-Full-SourceResearch\'].provisionDataset('+tmpDS.IDCatalogDatasetDefinition+', '+pIDEntry+')">Provision</button>';}tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpDS.IDCatalogDatasetDefinition||'')+'</td>';tmpHtml+='<td>'+(tmpDS.Name||'')+'</td>';tmpHtml+='<td><span class="facto-badge facto-badge-primary">'+(tmpDS.Format||'')+'</span></td>';tmpHtml+='<td style="max-width:250px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">'+(tmpDS.EndpointURL||'')+'</td>';tmpHtml+='<td>'+(tmpDS.VersionPolicy||'Append')+'</td>';tmpHtml+='<td>'+tmpStatus+'</td>';tmpHtml+='<td>'+tmpAction+'</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';}tmpHtml+='<div style="margin-top:1em;"><button class="facto-btn facto-btn-secondary" onclick="document.getElementById(\'Facto-Full-Research-Detail\').style.display=\'none\'">Close</button></div>';tmpDetail.innerHTML=tmpHtml;});}provisionDataset(pIDCatalogDataset,pIDEntry){this.setStatus('Provisioning...','info');this.pict.providers.Facto.provisionCatalogDataset(pIDCatalogDataset).then(pResponse=>{if(pResponse&&pResponse.Success){let tmpStatusEl=document.getElementById('Facto-Full-Research-Status');if(tmpStatusEl){tmpStatusEl.className='facto-status facto-status-ok';tmpStatusEl.innerHTML='Provisioned! Source: '+(pResponse.Source.Hash||pResponse.Source.Name)+' (#'+pResponse.Source.IDSource+'), Dataset: '+(pResponse.Dataset.Hash||pResponse.Dataset.Name)+' (#'+pResponse.Dataset.IDDataset+') &mdash; <a href="#/Source/'+pResponse.Source.IDSource+'" style="color:var(--facto-accent);text-decoration:underline;cursor:pointer;">View Source \u2192</a>';tmpStatusEl.style.display='block';}this.viewEntry(pIDEntry);}else{this.setStatus('Error: '+(pResponse&&pResponse.Error||'Unknown'),'error');}});}fetchDataset(pIDCatalogDataset,pIDEntry){this.setStatus('Fetching data from endpoint...','info');this.pict.providers.Facto.fetchCatalogDataset(pIDCatalogDataset).then(pResponse=>{if(pResponse&&pResponse.Success){let tmpMsg='Fetched! '+pResponse.Ingested+' records ingested (v'+pResponse.DatasetVersion+', '+pResponse.Format+')';if(pResponse.IsDuplicate)tmpMsg+=' [duplicate content]';this.setStatus(tmpMsg,'ok');this.viewEntry(pIDEntry);}else{this.setStatus('Fetch error: '+(pResponse&&pResponse.Error||'Unknown'),'error');}});}importCatalog(){let tmpTextArea=document.getElementById('Facto-Full-Research-ImportJSON');if(!tmpTextArea||!tmpTextArea.value){this.setStatus('Paste JSON to import','warn');return;}let tmpEntries;try{tmpEntries=JSON.parse(tmpTextArea.value);}catch(pErr){this.setStatus('Invalid JSON: '+pErr.message,'error');return;}this.pict.providers.Facto.importCatalog(tmpEntries).then(pResponse=>{if(pResponse&&pResponse.Success){this.setStatus('Imported '+pResponse.EntriesCreated+' entries with '+pResponse.DatasetsCreated+' datasets','ok');tmpTextArea.value='';return this.pict.providers.Facto.loadCatalogEntries();}else{this.setStatus('Import error: '+(pResponse&&pResponse.Error||'Unknown'),'error');}}).then(()=>{this.refreshList();});}exportCatalog(){this.pict.providers.Facto.exportCatalog().then(pResponse=>{let tmpTextArea=document.getElementById('Facto-Full-Research-ImportJSON');if(tmpTextArea){tmpTextArea.value=JSON.stringify(pResponse&&pResponse.Entries?pResponse.Entries:pResponse,null,2);}this.setStatus('Catalog exported to JSON text area','ok');});}}module.exports=FactoFullSourceResearchView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":33}],48:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-Sources",DefaultRenderable:"Facto-Full-Sources-Content",DefaultDestinationAddress:"#Facto-Full-Content-Container",AutoRender:false,Templates:[{Hash:"Facto-Full-Sources-Template",Template:/*html*/`
+`}],Renderables:[{RenderableHash:"Facto-Full-SourceResearch-Content",TemplateHash:"Facto-Full-SourceResearch-Template",DestinationAddress:"#Facto-Full-Content-Container",RenderMethod:"replace"}]};class FactoFullSourceResearchView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent){this._SourceLinks={};Promise.all([this.pict.providers.Facto.loadCatalogEntries(),this.pict.providers.Facto.loadCatalogSourceLinks()]).then(pResults=>{let tmpLinksResponse=pResults[1];if(tmpLinksResponse&&tmpLinksResponse.Links){this._SourceLinks=tmpLinksResponse.Links;}this.refreshList();});return super.onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent);}setStatus(pMessage,pType){let tmpEl=document.getElementById('Facto-Full-Research-Status');if(!tmpEl)return;tmpEl.className='facto-status facto-status-'+(pType||'info');tmpEl.textContent=pMessage;tmpEl.style.display='block';}refreshList(){let tmpContainer=document.getElementById('Facto-Full-Research-List');if(!tmpContainer)return;let tmpEntries=this.pict.AppData.Facto.CatalogEntries;if(!tmpEntries||tmpEntries.length===0){tmpContainer.innerHTML='<div class="facto-empty">No catalog entries yet. Import a catalog or add sources manually.</div>';return;}let tmpHtml='<table><thead><tr><th>ID</th><th>Agency</th><th>Name</th><th>Type</th><th>Category</th><th>Region</th><th>Verified</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpEntries.length;i++){let tmpEntry=tmpEntries[i];let tmpVerified=tmpEntry.Verified?'<span class="facto-badge facto-badge-success">Yes</span>':'<span class="facto-badge facto-badge-muted">No</span>';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpEntry.IDSourceCatalogEntry||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Agency||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Name||'')+'</td>';tmpHtml+='<td><span class="facto-badge facto-badge-primary">'+(tmpEntry.Type||'')+'</span></td>';tmpHtml+='<td>'+(tmpEntry.Category||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Region||'')+'</td>';tmpHtml+='<td>'+tmpVerified+'</td>';tmpHtml+='<td>';let tmpLinkedSource=this._SourceLinks&&this._SourceLinks[tmpEntry.IDSourceCatalogEntry];if(tmpLinkedSource){tmpHtml+='<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.PictApplication.navigateTo(\'/Source/'+tmpLinkedSource+'\')">View Source &rarr;</button> ';}tmpHtml+='<button class="facto-btn facto-btn-primary facto-btn-small" onclick="pict.views[\'Facto-Full-SourceResearch\'].viewEntry('+tmpEntry.IDSourceCatalogEntry+')">Datasets</button> ';tmpHtml+='<button class="facto-btn facto-btn-danger facto-btn-small" onclick="pict.views[\'Facto-Full-SourceResearch\'].deleteEntry('+tmpEntry.IDSourceCatalogEntry+')">Delete</button>';tmpHtml+='</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}searchCatalog(){let tmpQuery=(document.getElementById('Facto-Full-Research-Search')||{}).value||'';if(!tmpQuery){this.pict.providers.Facto.loadCatalogEntries().then(()=>{this.refreshList();});return;}this.pict.providers.Facto.searchCatalog(tmpQuery).then(pResponse=>{this.pict.AppData.Facto.CatalogEntries=pResponse&&pResponse.Entries?pResponse.Entries:[];this.refreshList();});}deleteEntry(pIDEntry){if(!confirm('Remove this catalog entry?'))return;this.pict.providers.Facto.deleteCatalogEntry(pIDEntry).then(()=>{return this.pict.providers.Facto.loadCatalogEntries();}).then(()=>{this.refreshList();this.setStatus('Entry removed','ok');});}viewEntry(pIDEntry){let tmpDetail=document.getElementById('Facto-Full-Research-Detail');if(!tmpDetail)return;tmpDetail.style.display='block';this.pict.providers.Facto.loadCatalogEntryDatasets(pIDEntry).then(pResponse=>{let tmpDatasets=pResponse&&pResponse.Datasets?pResponse.Datasets:[];let tmpHtml='<h3>Dataset Definitions for Entry #'+pIDEntry+'</h3>';if(tmpDatasets.length===0){tmpHtml+='<div class="facto-empty">No dataset definitions yet.</div>';}else{tmpHtml+='<table><thead><tr><th>ID</th><th>Name</th><th>Format</th><th>Endpoint URL</th><th>Policy</th><th>Status</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpDatasets.length;i++){let tmpDS=tmpDatasets[i];let tmpStatus=tmpDS.Provisioned?'<span class="facto-badge facto-badge-success">Provisioned</span>':'<span class="facto-badge facto-badge-muted">Not provisioned</span>';let tmpAction='';if(tmpDS.Provisioned){tmpAction='<button class="facto-btn facto-btn-primary facto-btn-small" onclick="pict.views[\'Facto-Full-SourceResearch\'].fetchDataset('+tmpDS.IDCatalogDatasetDefinition+', '+pIDEntry+')">Fetch</button>';if(tmpDS.IDSource){tmpAction+=' <button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.PictApplication.navigateTo(\'/Source/'+tmpDS.IDSource+'\')">View Source &rarr;</button>';}}else{tmpAction='<button class="facto-btn facto-btn-success facto-btn-small" onclick="pict.views[\'Facto-Full-SourceResearch\'].provisionDataset('+tmpDS.IDCatalogDatasetDefinition+', '+pIDEntry+')">Provision</button>';}tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpDS.IDCatalogDatasetDefinition||'')+'</td>';tmpHtml+='<td>'+(tmpDS.Name||'')+'</td>';tmpHtml+='<td><span class="facto-badge facto-badge-primary">'+(tmpDS.Format||'')+'</span></td>';tmpHtml+='<td style="max-width:250px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">'+(tmpDS.EndpointURL||'')+'</td>';tmpHtml+='<td>'+(tmpDS.VersionPolicy||'Append')+'</td>';tmpHtml+='<td>'+tmpStatus+'</td>';tmpHtml+='<td>'+tmpAction+'</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';}tmpHtml+='<div style="margin-top:1em;"><button class="facto-btn facto-btn-secondary" onclick="document.getElementById(\'Facto-Full-Research-Detail\').style.display=\'none\'">Close</button></div>';tmpDetail.innerHTML=tmpHtml;});}provisionDataset(pIDCatalogDataset,pIDEntry){this.setStatus('Provisioning...','info');this.pict.providers.Facto.provisionCatalogDataset(pIDCatalogDataset).then(pResponse=>{if(pResponse&&pResponse.Success){let tmpStatusEl=document.getElementById('Facto-Full-Research-Status');if(tmpStatusEl){tmpStatusEl.className='facto-status facto-status-ok';tmpStatusEl.innerHTML='Provisioned! Source: '+(pResponse.Source.Hash||pResponse.Source.Name)+' (#'+pResponse.Source.IDSource+'), Dataset: '+(pResponse.Dataset.Hash||pResponse.Dataset.Name)+' (#'+pResponse.Dataset.IDDataset+') &mdash; <a href="#/Source/'+pResponse.Source.IDSource+'" style="color:var(--facto-brand);text-decoration:underline;cursor:pointer;">View Source \u2192</a>';tmpStatusEl.style.display='block';}this.viewEntry(pIDEntry);}else{this.setStatus('Error: '+(pResponse&&pResponse.Error||'Unknown'),'error');}});}fetchDataset(pIDCatalogDataset,pIDEntry){this.setStatus('Fetching data from endpoint...','info');this.pict.providers.Facto.fetchCatalogDataset(pIDCatalogDataset).then(pResponse=>{if(pResponse&&pResponse.Success){let tmpMsg='Fetched! '+pResponse.Ingested+' records ingested (v'+pResponse.DatasetVersion+', '+pResponse.Format+')';if(pResponse.IsDuplicate)tmpMsg+=' [duplicate content]';this.setStatus(tmpMsg,'ok');this.viewEntry(pIDEntry);}else{this.setStatus('Fetch error: '+(pResponse&&pResponse.Error||'Unknown'),'error');}});}importCatalog(){let tmpTextArea=document.getElementById('Facto-Full-Research-ImportJSON');if(!tmpTextArea||!tmpTextArea.value){this.setStatus('Paste JSON to import','warn');return;}let tmpEntries;try{tmpEntries=JSON.parse(tmpTextArea.value);}catch(pErr){this.setStatus('Invalid JSON: '+pErr.message,'error');return;}this.pict.providers.Facto.importCatalog(tmpEntries).then(pResponse=>{if(pResponse&&pResponse.Success){this.setStatus('Imported '+pResponse.EntriesCreated+' entries with '+pResponse.DatasetsCreated+' datasets','ok');tmpTextArea.value='';return this.pict.providers.Facto.loadCatalogEntries();}else{this.setStatus('Import error: '+(pResponse&&pResponse.Error||'Unknown'),'error');}}).then(()=>{this.refreshList();});}exportCatalog(){this.pict.providers.Facto.exportCatalog().then(pResponse=>{let tmpTextArea=document.getElementById('Facto-Full-Research-ImportJSON');if(tmpTextArea){tmpTextArea.value=JSON.stringify(pResponse&&pResponse.Entries?pResponse.Entries:pResponse,null,2);}this.setStatus('Catalog exported to JSON text area','ok');});}}module.exports=FactoFullSourceResearchView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":33}],48:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-Sources",DefaultRenderable:"Facto-Full-Sources-Content",DefaultDestinationAddress:"#Facto-Full-Content-Container",AutoRender:false,Templates:[{Hash:"Facto-Full-Sources-Template",Template:/*html*/`
 <div class="facto-content">
 	<div class="facto-content-header">
 		<h1>Sources</h1>

@@ -252,7 +252,7 @@ class FactoFullSourceResearchView extends libPictView
 					if (tmpStatusEl)
 					{
 						tmpStatusEl.className = 'facto-status facto-status-ok';
-						tmpStatusEl.innerHTML = 'Provisioned! Source: ' + (pResponse.Source.Hash || pResponse.Source.Name) + ' (#' + pResponse.Source.IDSource + '), Dataset: ' + (pResponse.Dataset.Hash || pResponse.Dataset.Name) + ' (#' + pResponse.Dataset.IDDataset + ') &mdash; <a href="#/Source/' + pResponse.Source.IDSource + '" style="color:var(--facto-accent);text-decoration:underline;cursor:pointer;">View Source \u2192</a>';
+						tmpStatusEl.innerHTML = 'Provisioned! Source: ' + (pResponse.Source.Hash || pResponse.Source.Name) + ' (#' + pResponse.Source.IDSource + '), Dataset: ' + (pResponse.Dataset.Hash || pResponse.Dataset.Name) + ' (#' + pResponse.Dataset.IDDataset + ') &mdash; <a href="#/Source/' + pResponse.Source.IDSource + '" style="color:var(--facto-brand);text-decoration:underline;cursor:pointer;">View Source \u2192</a>';
 						tmpStatusEl.style.display = 'block';
 					}
 					this.viewEntry(pIDEntry);

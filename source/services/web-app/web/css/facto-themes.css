@@ -3,9 +3,68 @@
    ================================================================ */
 
 /* ----------------------------------------------------------------
-   Default Theme: Facto Dark
+   Default Theme: Turquoise Deluxe (Mojave Gem)
    ---------------------------------------------------------------- */
 :root {
+	--facto-bg-base: #f6f0e4;
+	--facto-bg-surface: #fcf8f0;
+	--facto-bg-elevated: #ede5d5;
+	--facto-bg-input: #fcf8f0;
+	--facto-bg-code: #f0e8d8;
+
+	--facto-border: #d6c8ae;
+	--facto-border-subtle: #e8ddc8;
+	--facto-border-focus: #18a5a0;
+
+	--facto-text: #3a3020;
+	--facto-text-heading: #28200e;
+	--facto-text-secondary: #786848;
+	--facto-text-tertiary: #a09070;
+
+	--facto-brand: #18a5a0;
+	--facto-brand-hover: #12908c;
+	--facto-brand-a05: rgba(24,165,160,0.05);
+	--facto-brand-a08: rgba(24,165,160,0.08);
+	--facto-brand-a10: rgba(24,165,160,0.1);
+	--facto-brand-a12: rgba(24,165,160,0.12);
+	--facto-brand-a15: rgba(24,165,160,0.15);
+	--facto-brand-a20: rgba(24,165,160,0.2);
+	--facto-brand-a25: rgba(24,165,160,0.25);
+
+	--facto-link: #148a86;
+	--facto-link-hover: #0e706c;
+
+	--facto-btn-primary-bg: #18a5a0;
+	--facto-btn-primary-text: #ffffff;
+	--facto-btn-secondary-bg: #ede5d5;
+	--facto-btn-secondary-text: #3a3020;
+
+	--facto-success: #3a9468;
+	--facto-error: #c44836;
+	--facto-warning: #d09818;
+	--facto-info: #18a5a0;
+
+	--facto-topbar-bg: #1c2a28;
+	--facto-topbar-text: #8aada8;
+	--facto-topbar-hover: #f6f0e4;
+	--facto-topbar-active: #3eddd6;
+
+	--facto-table-header-bg: #f0e8d8;
+	--facto-table-stripe: rgba(0,0,0,0.02);
+	--facto-table-row-hover: rgba(24,165,160,0.07);
+
+	--facto-scrollbar-track: #f6f0e4;
+	--facto-scrollbar-thumb: #d6c8ae;
+	--facto-scrollbar-thumb-hover: #c0b090;
+
+	--facto-shadow: 0 2px 8px rgba(0,0,0,0.08);
+	--facto-shadow-heavy: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+/* ----------------------------------------------------------------
+   Facto Dark
+   ---------------------------------------------------------------- */
+body[data-theme="facto-dark"] {
 	--facto-bg-base: #12151e;
 	--facto-bg-surface: #1a1e2e;
 	--facto-bg-elevated: #242940;
@@ -23,6 +82,13 @@
 
 	--facto-brand: #4a90d9;
 	--facto-brand-hover: #5ea0e9;
+	--facto-brand-a05: rgba(74,144,217,0.05);
+	--facto-brand-a08: rgba(74,144,217,0.08);
+	--facto-brand-a10: rgba(74,144,217,0.1);
+	--facto-brand-a12: rgba(74,144,217,0.12);
+	--facto-brand-a15: rgba(74,144,217,0.15);
+	--facto-brand-a20: rgba(74,144,217,0.2);
+	--facto-brand-a25: rgba(74,144,217,0.25);
 
 	--facto-link: #5e9ee6;
 	--facto-link-hover: #7eb4f0;
@@ -75,6 +141,13 @@ body[data-theme="facto-light"] {
 
 	--facto-brand: #3b82f6;
 	--facto-brand-hover: #2563eb;
+	--facto-brand-a05: rgba(59,130,246,0.05);
+	--facto-brand-a08: rgba(59,130,246,0.08);
+	--facto-brand-a10: rgba(59,130,246,0.1);
+	--facto-brand-a12: rgba(59,130,246,0.12);
+	--facto-brand-a15: rgba(59,130,246,0.15);
+	--facto-brand-a20: rgba(59,130,246,0.2);
+	--facto-brand-a25: rgba(59,130,246,0.25);
 
 	--facto-link: #3b82f6;
 	--facto-link-hover: #2563eb;
@@ -127,6 +200,13 @@ body[data-theme="midnight-blue"] {
 
 	--facto-brand: #3b82f6;
 	--facto-brand-hover: #60a5fa;
+	--facto-brand-a05: rgba(59,130,246,0.05);
+	--facto-brand-a08: rgba(59,130,246,0.08);
+	--facto-brand-a10: rgba(59,130,246,0.1);
+	--facto-brand-a12: rgba(59,130,246,0.12);
+	--facto-brand-a15: rgba(59,130,246,0.15);
+	--facto-brand-a20: rgba(59,130,246,0.2);
+	--facto-brand-a25: rgba(59,130,246,0.25);
 
 	--facto-link: #60a5fa;
 	--facto-link-hover: #93c5fd;
@@ -179,6 +259,13 @@ body[data-theme="slate"] {
 
 	--facto-brand: #6b8aae;
 	--facto-brand-hover: #82a0c4;
+	--facto-brand-a05: rgba(107,138,174,0.05);
+	--facto-brand-a08: rgba(107,138,174,0.08);
+	--facto-brand-a10: rgba(107,138,174,0.1);
+	--facto-brand-a12: rgba(107,138,174,0.12);
+	--facto-brand-a15: rgba(107,138,174,0.15);
+	--facto-brand-a20: rgba(107,138,174,0.2);
+	--facto-brand-a25: rgba(107,138,174,0.25);
 
 	--facto-link: #82a0c4;
 	--facto-link-hover: #a0bada;
@@ -231,6 +318,13 @@ body[data-theme="warm-earth"] {
 
 	--facto-brand: #c4956a;
 	--facto-brand-hover: #d4a57a;
+	--facto-brand-a05: rgba(196,149,106,0.05);
+	--facto-brand-a08: rgba(196,149,106,0.08);
+	--facto-brand-a10: rgba(196,149,106,0.1);
+	--facto-brand-a12: rgba(196,149,106,0.12);
+	--facto-brand-a15: rgba(196,149,106,0.15);
+	--facto-brand-a20: rgba(196,149,106,0.2);
+	--facto-brand-a25: rgba(196,149,106,0.25);
 
 	--facto-link: #d4a57a;
 	--facto-link-hover: #e0b890;
@@ -283,6 +377,13 @@ body[data-theme="high-contrast"] {
 
 	--facto-brand: #58a6ff;
 	--facto-brand-hover: #79b8ff;
+	--facto-brand-a05: rgba(88,166,255,0.05);
+	--facto-brand-a08: rgba(88,166,255,0.08);
+	--facto-brand-a10: rgba(88,166,255,0.1);
+	--facto-brand-a12: rgba(88,166,255,0.12);
+	--facto-brand-a15: rgba(88,166,255,0.15);
+	--facto-brand-a20: rgba(88,166,255,0.2);
+	--facto-brand-a25: rgba(88,166,255,0.25);
 
 	--facto-link: #58a6ff;
 	--facto-link-hover: #79b8ff;
@@ -313,3 +414,4 @@ body[data-theme="high-contrast"] {
 	--facto-shadow: 0 2px 8px rgba(0,0,0,0.5);
 	--facto-shadow-heavy: 0 4px 16px rgba(0,0,0,0.7);
 }
+
