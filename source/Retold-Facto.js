@@ -23,6 +23,7 @@ const libRetoldFactoDatasetManager = require('./services/Retold-Facto-DatasetMan
 const libRetoldFactoIngestEngine = require('./services/Retold-Facto-IngestEngine.js');
 const libRetoldFactoProjectionEngine = require('./services/Retold-Facto-ProjectionEngine.js');
 const libRetoldFactoCatalogManager = require('./services/Retold-Facto-CatalogManager.js');
+const libRetoldFactoDataLakeService = require('./services/Retold-Facto-DataLakeService.js');
 
 // Embedded schema SQL for auto-creation when using SQLite
 const FACTO_SCHEMA_SQL = `
@@ -243,6 +244,13 @@ class RetoldFacto extends libFableServiceProviderBase
 		this.fable.serviceManager.instantiateServiceProvider('RetoldFactoCatalogManager',
 			{
 				RoutePrefix: this.options.Facto.RoutePrefix
+			});
+
+		this.fable.serviceManager.addServiceType('RetoldFactoDataLakeService', libRetoldFactoDataLakeService);
+		this.fable.serviceManager.instantiateServiceProvider('RetoldFactoDataLakeService',
+			{
+				CatalogPath: this.options.Facto.CatalogPath || null,
+				DataDir: this.options.Facto.DataDir || null
 			});
 
 		// Expose DAL on fable for convenience
