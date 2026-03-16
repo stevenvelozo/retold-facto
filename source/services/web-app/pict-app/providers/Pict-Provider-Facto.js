@@ -169,6 +169,7 @@ class FactoProvider extends libPictProvider
 			(pResponse) =>
 			{
 				this.pict.AppData.Facto.Sources = pResponse || [];
+				return pResponse || [];
 			});
 	}
 
@@ -590,7 +591,7 @@ class FactoProvider extends libPictProvider
 
 	saveProjectionSchema(pIDDataset, pSchemaDefinition)
 	{
-		return this.api('PUT', `/facto/projection/${pIDDataset}/schema`, { SchemaDefinition: pSchemaDefinition });
+		return this.api('POST', `/facto/projection/${pIDDataset}/save-schema`, { SchemaDefinition: pSchemaDefinition });
 	}
 
 	loadProjectionStores(pIDDataset)
@@ -628,7 +629,7 @@ class FactoProvider extends libPictProvider
 
 	updateProjectionMapping(pID, pData)
 	{
-		return this.api('PUT', `/facto/projection/mapping/${pID}`, pData);
+		return this.api('POST', `/facto/projection/mapping/${pID}/update`, pData);
 	}
 
 	deleteProjectionMapping(pID)

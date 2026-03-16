@@ -836,8 +836,8 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 					});
 			});
 
-		// PUT /facto/projection/:IDDataset/schema -- save schema definition
-		pOratorServiceServer.doPut(`${tmpRoutePrefix}/projection/:IDDataset/schema`,
+		// POST /facto/projection/:IDDataset/save-schema -- save schema definition
+		pOratorServiceServer.doPost(`${tmpRoutePrefix}/projection/:IDDataset/save-schema`,
 			(pRequest, pResponse, fNext) =>
 			{
 				if (!this.fable.DAL || !this.fable.DAL.Dataset)
@@ -1255,8 +1255,8 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 					});
 			});
 
-		// PUT /facto/projection/mapping/:ID -- update mapping
-		pOratorServiceServer.doPut(`${tmpRoutePrefix}/projection/mapping/:ID`,
+		// POST /facto/projection/mapping/:ID/update -- update mapping
+		pOratorServiceServer.doPost(`${tmpRoutePrefix}/projection/mapping/:ID/update`,
 			(pRequest, pResponse, fNext) =>
 			{
 				if (!this.fable.DAL || !this.fable.DAL.ProjectionMapping)

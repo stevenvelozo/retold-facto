@@ -348,6 +348,62 @@ const _ViewConfiguration =
 			margin-top: 0.5em;
 			color: var(--facto-text-secondary, #786848);
 		}
+
+		/* Toast notifications */
+		.facto-toast-container {
+			position: fixed;
+			top: 1em;
+			right: 1em;
+			z-index: 10000;
+			display: flex;
+			flex-direction: column;
+			gap: 0.5em;
+			pointer-events: none;
+		}
+		.facto-toast {
+			pointer-events: auto;
+			min-width: 260px;
+			max-width: 420px;
+			padding: 0.7em 1em;
+			border-radius: 6px;
+			font-size: 0.85em;
+			font-weight: 500;
+			box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+			animation: facto-toast-in 0.25s ease-out;
+			cursor: pointer;
+			word-break: break-word;
+		}
+		.facto-toast.facto-toast-out {
+			animation: facto-toast-out 0.2s ease-in forwards;
+		}
+		.facto-toast-success {
+			background: var(--facto-success-bg, #22543d);
+			color: #e6ffed;
+			border-left: 4px solid #38a169;
+		}
+		.facto-toast-error {
+			background: var(--facto-error-bg, #742a2a);
+			color: #ffe0e0;
+			border-left: 4px solid #e53e3e;
+		}
+		.facto-toast-info {
+			background: var(--facto-info-bg, #1a365d);
+			color: #e0edff;
+			border-left: 4px solid #3182ce;
+		}
+		.facto-toast-warn {
+			background: var(--facto-warn-bg, #744210);
+			color: #fff3d0;
+			border-left: 4px solid #d69e2e;
+		}
+		@keyframes facto-toast-in {
+			from { opacity: 0; transform: translateX(40px); }
+			to   { opacity: 1; transform: translateX(0); }
+		}
+		@keyframes facto-toast-out {
+			from { opacity: 1; transform: translateX(0); }
+			to   { opacity: 0; transform: translateX(40px); }
+		}
 	`,
 
 	Templates:
@@ -579,6 +635,8 @@ const _ViewConfiguration =
 		</div>
 		<div id="Facto-Full-Projections-Results" class="facto-projection-results" style="display:none;"></div>
 	</div>
+
+	<div id="Facto-Toast-Container" class="facto-toast-container"></div>
 </div>
 `
 		}
@@ -616,6 +674,46 @@ class FactoFullProjectionsView extends libPictView
 		this._MapEditorMode = 'flow';
 		this._MappingSources = [];
 		this._MappingStores = [];
+	}
+
+	/**
+	 * Show an in-DOM toast notification instead of alert().
+	 * @param {string} pMessage - The message to display
+	 * @param {string} [pType='info'] - 'success', 'error', 'warn', or 'info'
+	 * @param {number} [pDuration=4000] - Auto-dismiss time in ms (0 = manual dismiss)
+	 */
+	_showToast(pMessage, pType, pDuration)
+	{
+		let tmpType = pType || 'info';
+		let tmpDuration = (typeof pDuration === 'number') ? pDuration : 4000;
+
+		let tmpContainer = document.getElementById('Facto-Toast-Container');
+		if (!tmpContainer)
+		{
+			// Fallback: create one if template hasn't rendered yet
+			tmpContainer = document.createElement('div');
+			tmpContainer.id = 'Facto-Toast-Container';
+			tmpContainer.className = 'facto-toast-container';
+			document.body.appendChild(tmpContainer);
+		}
+
+		let tmpToast = document.createElement('div');
+		tmpToast.className = `facto-toast facto-toast-${tmpType}`;
+		tmpToast.textContent = pMessage;
+
+		let tmpDismiss = () =>
+		{
+			tmpToast.classList.add('facto-toast-out');
+			setTimeout(() => { if (tmpToast.parentNode) tmpToast.parentNode.removeChild(tmpToast); }, 250);
+		};
+
+		tmpToast.addEventListener('click', tmpDismiss);
+		tmpContainer.appendChild(tmpToast);
+
+		if (tmpDuration > 0)
+		{
+			setTimeout(tmpDismiss, tmpDuration);
+		}
 	}
 
 	onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent)
@@ -743,7 +841,7 @@ class FactoFullProjectionsView extends libPictView
 			{
 				if (pResponse && pResponse.Error)
 				{
-					alert('Error: ' + pResponse.Error);
+					this._showToast('Error: ' + pResponse.Error, 'error');
 					return;
 				}
 
@@ -765,7 +863,7 @@ class FactoFullProjectionsView extends libPictView
 				let tmpStores = (pResponse && pResponse.Stores) ? pResponse.Stores : [];
 				if (tmpStores.length === 0)
 				{
-					alert('No stores deployed for this projection yet.');
+					this._showToast('No stores deployed for this projection yet.', 'warn');
 					return;
 				}
 
@@ -774,7 +872,7 @@ class FactoFullProjectionsView extends libPictView
 				{
 					tmpMsg += '  \u2022 ' + tmpStores[i].TargetTableName + ' (' + tmpStores[i].Status + ')\n';
 				}
-				alert(tmpMsg);
+				this._showToast(tmpMsg, 'info', 6000);
 			});
 	}
 
@@ -1037,7 +1135,7 @@ class FactoFullProjectionsView extends libPictView
 		let tmpDDL = tmpTextarea.value.trim();
 		if (!tmpDDL)
 		{
-			alert('Enter MicroDDL text first.');
+			this._showToast('Enter MicroDDL text first.', 'warn');
 			return;
 		}
 
@@ -1085,7 +1183,7 @@ class FactoFullProjectionsView extends libPictView
 	{
 		if (!this._EditingIDDataset)
 		{
-			alert('No projection selected.');
+			this._showToast('No projection selected.', 'warn');
 			return;
 		}
 
@@ -1111,7 +1209,7 @@ class FactoFullProjectionsView extends libPictView
 			{
 				if (pResponse && pResponse.Error)
 				{
-					alert('Error saving schema: ' + pResponse.Error);
+					this._showToast('Error saving schema: ' + pResponse.Error, 'error');
 					return;
 				}
 
@@ -1125,7 +1223,7 @@ class FactoFullProjectionsView extends libPictView
 					}
 				}
 
-				alert('Schema saved (v' + (pResponse.SchemaVersion || 0) + ')');
+				this._showToast('Schema saved (v' + (pResponse.SchemaVersion || 0) + ')', 'success');
 			});
 	}
 
@@ -1179,12 +1277,12 @@ class FactoFullProjectionsView extends libPictView
 
 		if (!tmpIDConn)
 		{
-			alert('Select a connection first.');
+			this._showToast('Select a connection first.', 'warn');
 			return;
 		}
 		if (!tmpTableName)
 		{
-			alert('Enter a table name.');
+			this._showToast('Enter a table name.', 'warn');
 			return;
 		}
 
@@ -1289,7 +1387,7 @@ class FactoFullProjectionsView extends libPictView
 
 		if (!tmpName)
 		{
-			alert('Connection name is required.');
+			this._showToast('Connection name is required.', 'warn');
 			return;
 		}
 
@@ -1313,7 +1411,7 @@ class FactoFullProjectionsView extends libPictView
 			{
 				if (pResponse && pResponse.Error)
 				{
-					alert('Error: ' + pResponse.Error);
+					this._showToast('Error: ' + pResponse.Error, 'error');
 					return;
 				}
 
@@ -1350,11 +1448,11 @@ class FactoFullProjectionsView extends libPictView
 
 						if (pResponse && pResponse.Success)
 						{
-							alert('Connection test succeeded!');
+							this._showToast('Connection test succeeded!', 'success');
 						}
 						else
 						{
-							alert('Connection test failed: ' + (pResponse && pResponse.Error ? pResponse.Error : 'Unknown error'));
+							this._showToast('Connection test failed: ' + (pResponse && pResponse.Error ? pResponse.Error : 'Unknown error'), 'error');
 						}
 					});
 			});
@@ -1409,7 +1507,7 @@ class FactoFullProjectionsView extends libPictView
 			(pResults) =>
 			{
 				this._CurrentMappings = (pResults[0] && pResults[0].Mappings) ? pResults[0].Mappings : [];
-				this._MappingSources = (pResults[1] && pResults[1].Sources) ? pResults[1].Sources : [];
+				this._MappingSources = Array.isArray(pResults[1]) ? pResults[1] : [];
 				this._MappingStores = (pResults[2] && pResults[2].Stores) ? pResults[2].Stores : [];
 
 				this.refreshMappingList();
@@ -1531,7 +1629,7 @@ class FactoFullProjectionsView extends libPictView
 			{
 				if (!pResponse || !pResponse.Mapping)
 				{
-					alert('Mapping not found');
+					this._showToast('Mapping not found.', 'error');
 					return;
 				}
 
@@ -1665,7 +1763,7 @@ class FactoFullProjectionsView extends libPictView
 
 		if (!tmpIDSource)
 		{
-			alert('Select a source first.');
+			this._showToast('Select a source first.', 'warn');
 			return;
 		}
 
@@ -1674,14 +1772,14 @@ class FactoFullProjectionsView extends libPictView
 			{
 				if (pResponse && pResponse.Error)
 				{
-					alert('Error: ' + pResponse.Error);
+					this._showToast('Error: ' + pResponse.Error, 'error');
 					return;
 				}
 
 				let tmpHeaders = (pResponse && pResponse.Headers) ? pResponse.Headers : [];
 				this._DiscoveredFields[tmpIDSource] = tmpHeaders;
 
-				alert('Discovered ' + tmpHeaders.length + ' fields from ' + (pResponse.SampleSize || 0) + ' records:\n\n' + tmpHeaders.join(', '));
+				this._showToast('Discovered ' + tmpHeaders.length + ' fields from ' + (pResponse.SampleSize || 0) + ' records: ' + tmpHeaders.join(', '), 'success', 6000);
 
 				// Rebuild the flow if it exists
 				this._rebuildFlowNodes();
@@ -1909,7 +2007,7 @@ class FactoFullProjectionsView extends libPictView
 
 		if (!tmpName)
 		{
-			alert('Enter a mapping name.');
+			this._showToast('Enter a mapping name.', 'warn');
 			return;
 		}
 
@@ -1925,7 +2023,7 @@ class FactoFullProjectionsView extends libPictView
 			}
 			catch (e)
 			{
-				alert('Invalid JSON: ' + e.message);
+				this._showToast('Invalid JSON: ' + e.message, 'error');
 				return;
 			}
 		}
@@ -1966,7 +2064,7 @@ class FactoFullProjectionsView extends libPictView
 			{
 				if (pResponse && pResponse.Error)
 				{
-					alert('Error: ' + pResponse.Error);
+					this._showToast('Error: ' + pResponse.Error, 'error');
 					return;
 				}
 
@@ -1976,7 +2074,7 @@ class FactoFullProjectionsView extends libPictView
 					this._SelectedMappingID = pResponse.Mapping.IDProjectionMapping;
 				}
 
-				alert('Mapping saved.');
+				this._showToast('Mapping saved.', 'success');
 
 				// Refresh mapping list
 				this.pict.providers.Facto.loadProjectionMappings(this._EditingIDDataset).then(
@@ -1998,12 +2096,12 @@ class FactoFullProjectionsView extends libPictView
 
 		if (!this._SelectedMappingID)
 		{
-			alert('Save the mapping first before running an import.');
+			this._showToast('Save the mapping first before running an import.', 'warn');
 			return;
 		}
 		if (!tmpIDProjectionStore)
 		{
-			alert('Select a target store.');
+			this._showToast('Select a target store.', 'warn');
 			return;
 		}
 
