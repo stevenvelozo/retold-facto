@@ -1113,6 +1113,14 @@ class RetoldFactoDataLakeService extends libFableServiceProviderBase
 			{
 				await this.executePaginate(tmpStep, pDatasetDir, pManifest);
 			}
+			else if (tmpAction === 'merge_pages')
+			{
+				await this.executeMergePages(tmpStep, pDatasetDir, pManifest);
+			}
+			else if (tmpAction === 'for_each_in_pages')
+			{
+				await this.executeForEachInPages(tmpStep, pDatasetDir, pManifest);
+			}
 			else
 			{
 				this.log.warn(`  Unknown fetch_step action: ${tmpAction}`);
@@ -1228,8 +1236,22 @@ class RetoldFactoDataLakeService extends libFableServiceProviderBase
 				libFs.mkdirSync(tmpDir, { recursive: true });
 			}
 
+			let tmpSkipExisting = pStep.skip_existing !== false;
+			let tmpSkipCount = 0;
+
 			try
 			{
+				// Skip if file already exists (for resumability)
+				if (tmpSkipExisting && libFs.existsSync(tmpDestPath))
+				{
+					tmpSkipCount++;
+					if ((i + 1) % 100 === 0 || i === tmpSourceData.length - 1)
+					{
+						process.stdout.write(`  ... ${i + 1}/${tmpSourceData.length} (${tmpSuccessCount} ok, ${tmpSkipCount} cached, ${tmpErrorCount} err)\r`);
+					}
+					continue;
+				}
+
 				let tmpData = await this.fetchJson(tmpUrl, tmpHeaders);
 				libFs.writeFileSync(tmpDestPath, JSON.stringify(tmpData, null, '\t'), 'utf8');
 				pManifest.urls_downloaded.push(tmpUrl);
@@ -1238,7 +1260,7 @@ class RetoldFactoDataLakeService extends libFableServiceProviderBase
 				// Progress every 10 items or on last item
 				if ((i + 1) % 10 === 0 || i === tmpSourceData.length - 1)
 				{
-					process.stdout.write(`  ... ${i + 1}/${tmpSourceData.length} (${tmpSuccessCount} ok, ${tmpErrorCount} err)\r`);
+					process.stdout.write(`  ... ${i + 1}/${tmpSourceData.length} (${tmpSuccessCount} ok, ${tmpSkipCount} cached, ${tmpErrorCount} err)\r`);
 				}
 			}
 			catch (pError)
@@ -1254,7 +1276,7 @@ class RetoldFactoDataLakeService extends libFableServiceProviderBase
 		}
 
 		process.stdout.write('                                                              \r');
-		this.log.info(`  for_each complete: ${tmpSuccessCount} ok, ${tmpErrorCount} errors`);
+		this.log.info(`  for_each complete: ${tmpSuccessCount} ok, ${tmpSkipCount} cached, ${tmpErrorCount} errors`);
 	}
 
 	/**
@@ -1297,6 +1319,15 @@ class RetoldFactoDataLakeService extends libFableServiceProviderBase
 				libFs.mkdirSync(tmpDir, { recursive: true });
 			}
 
+			// Skip if page file already exists (for resumability)
+			if (libFs.existsSync(tmpDestPath))
+			{
+				tmpTotalSaved++;
+				tmpPage++;
+				tmpOffset += tmpPageSize;
+				continue;
+			}
+
 			try
 			{
 				let tmpData = await this.fetchJson(tmpUrl, tmpHeaders);
@@ -1334,6 +1365,176 @@ class RetoldFactoDataLakeService extends libFableServiceProviderBase
 
 		process.stdout.write('                                                              \r');
 		this.log.info(`  Pagination complete: ${tmpTotalSaved} pages saved`);
+	}
+
+	/**
+	 * merge_pages: Read all paginated JSON files matching a glob pattern
+	 * and merge them into a single JSON array file.
+	 */
+	async executeMergePages(pStep, pDatasetDir, pManifest)
+	{
+		let tmpPattern = pStep.source_pattern; // e.g. "pages/shows_page_{page}.json"
+		let tmpSaveAs = pStep.save_as;
+		let tmpItemField = pStep.item_field; // optional: extract field from each page item (e.g. for search results)
+		let tmpDestPath = libPath.join(pDatasetDir, tmpSaveAs);
+
+		// Skip if already exists
+		if (libFs.existsSync(tmpDestPath))
+		{
+			this.log.info(`  merge_pages: ${tmpSaveAs} already exists, skipping`);
+			return;
+		}
+
+		let tmpMerged = [];
+		let tmpPage = 0;
+		// Check if pages start at 0 or 1
+		let tmpTestFile0 = libPath.join(pDatasetDir, tmpPattern.replace(/\{page\}/g, '0'));
+		if (!libFs.existsSync(tmpTestFile0))
+		{
+			tmpPage = 1;
+		}
+
+		while (true)
+		{
+			let tmpFilename = tmpPattern.replace(/\{page\}/g, String(tmpPage));
+			let tmpFilePath = libPath.join(pDatasetDir, tmpFilename);
+
+			if (!libFs.existsSync(tmpFilePath))
+			{
+				break;
+			}
+
+			let tmpData = JSON.parse(libFs.readFileSync(tmpFilePath, 'utf8'));
+			if (Array.isArray(tmpData))
+			{
+				if (tmpItemField)
+				{
+					for (let i = 0; i < tmpData.length; i++)
+					{
+						tmpMerged.push(tmpData[i][tmpItemField] || tmpData[i]);
+					}
+				}
+				else
+				{
+					tmpMerged = tmpMerged.concat(tmpData);
+				}
+			}
+
+			tmpPage++;
+		}
+
+		libFs.writeFileSync(tmpDestPath, JSON.stringify(tmpMerged), 'utf8');
+		this.log.info(`  merge_pages: merged ${tmpPage} pages into ${tmpSaveAs} (${tmpMerged.length} items)`);
+	}
+
+	/**
+	 * for_each_in_pages: Iterate over items across multiple paginated JSON files
+	 * and fetch a URL per item. Skips items whose output file already exists.
+	 */
+	async executeForEachInPages(pStep, pDatasetDir, pManifest)
+	{
+		let tmpPagePattern = pStep.source_pattern; // e.g. "pages/shows_page_{page}.json"
+		let tmpField = pStep.field; // field to extract from each item for URL template
+		let tmpItemField = pStep.item_field; // optional: unwrap item (e.g. search results have {show: {...}})
+		let tmpUrlTemplate = pStep.url_template;
+		let tmpSaveAsTemplate = pStep.save_as;
+		let tmpDelayMs = pStep.delay_ms || 100;
+		let tmpHeaders = pStep.headers || {};
+		let tmpSuccessCount = 0;
+		let tmpSkipCount = 0;
+		let tmpErrorCount = 0;
+		let tmpTotalItems = 0;
+
+		// Count total items first — try page 0 then page 1 to find the start
+		let tmpPage = 0;
+		let tmpAllItems = [];
+		// Check if pages start at 0 or 1
+		let tmpTestFile0 = libPath.join(pDatasetDir, tmpPagePattern.replace(/\{page\}/g, '0'));
+		if (!libFs.existsSync(tmpTestFile0))
+		{
+			tmpPage = 1;
+		}
+		while (true)
+		{
+			let tmpFilename = tmpPagePattern.replace(/\{page\}/g, String(tmpPage));
+			let tmpFilePath = libPath.join(pDatasetDir, tmpFilename);
+
+			if (!libFs.existsSync(tmpFilePath))
+			{
+				break;
+			}
+
+			let tmpData = JSON.parse(libFs.readFileSync(tmpFilePath, 'utf8'));
+			if (Array.isArray(tmpData))
+			{
+				for (let i = 0; i < tmpData.length; i++)
+				{
+					let tmpItem = tmpItemField ? (tmpData[i][tmpItemField] || tmpData[i]) : tmpData[i];
+					tmpAllItems.push(tmpItem);
+				}
+			}
+			tmpPage++;
+		}
+
+		tmpTotalItems = tmpAllItems.length;
+		this.log.info(`  for_each_in_pages: ${tmpTotalItems} items across ${tmpPage} pages`);
+
+		for (let i = 0; i < tmpAllItems.length; i++)
+		{
+			let tmpItem = tmpAllItems[i];
+			let tmpValue = tmpField ? tmpItem[tmpField] : (typeof tmpItem === 'string' ? tmpItem : JSON.stringify(tmpItem));
+
+			let tmpUrl = this.expandTemplate(tmpUrlTemplate, tmpItem, tmpValue);
+			let tmpSaveAs = this.expandTemplate(tmpSaveAsTemplate, tmpItem, tmpValue);
+			let tmpDestPath = libPath.join(pDatasetDir, tmpSaveAs);
+
+			// Ensure subdirectory exists
+			let tmpDir = libPath.dirname(tmpDestPath);
+			if (!libFs.existsSync(tmpDir))
+			{
+				libFs.mkdirSync(tmpDir, { recursive: true });
+			}
+
+			// Skip if already exists
+			if (libFs.existsSync(tmpDestPath))
+			{
+				tmpSkipCount++;
+				if ((i + 1) % 500 === 0)
+				{
+					process.stdout.write(`  ... ${i + 1}/${tmpTotalItems} (${tmpSuccessCount} ok, ${tmpSkipCount} cached, ${tmpErrorCount} err)\r`);
+				}
+				continue;
+			}
+
+			try
+			{
+				let tmpData = await this.fetchJson(tmpUrl, tmpHeaders);
+				libFs.writeFileSync(tmpDestPath, JSON.stringify(tmpData, null, '\t'), 'utf8');
+				pManifest.urls_downloaded.push(tmpUrl);
+				tmpSuccessCount++;
+
+				if ((i + 1) % 10 === 0 || i === tmpTotalItems - 1)
+				{
+					process.stdout.write(`  ... ${i + 1}/${tmpTotalItems} (${tmpSuccessCount} ok, ${tmpSkipCount} cached, ${tmpErrorCount} err)\r`);
+				}
+			}
+			catch (pError)
+			{
+				tmpErrorCount++;
+				if (tmpErrorCount <= 10)
+				{
+					this.log.warn(`  Failed: ${tmpValue} — ${pError.message}`);
+				}
+			}
+
+			if (tmpDelayMs > 0)
+			{
+				await this.delay(tmpDelayMs);
+			}
+		}
+
+		process.stdout.write('                                                              \r');
+		this.log.info(`  for_each_in_pages complete: ${tmpSuccessCount} ok, ${tmpSkipCount} cached, ${tmpErrorCount} errors`);
 	}
 
 	/**
