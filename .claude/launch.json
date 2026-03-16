@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "facto-server",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["bin/retold-facto.js", "serve"],
+      "port": 8386
+    }
+  ]
+}

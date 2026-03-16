@@ -23,7 +23,7 @@ class FlowCardSourceDataset extends libPictFlowCard
 				Inputs: [],
 				Outputs:
 				[
-					{ Name: 'IDRecord', Side: 'right' }
+					{ Name: 'Whole Record', Side: 'right' }
 				],
 				ShowTypeLabel: true,
 				PortLabelsOnHover: false,

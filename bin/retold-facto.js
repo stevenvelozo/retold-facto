@@ -15,7 +15,7 @@
  *
  * @author Steven Velozo <steven@velozo.com>
  */
-const libFable = require('fable');
+const libFable = require('pict');
 const libMeadowConnectionSQLite = require('meadow-connection-sqlite');
 const libRetoldFacto = require('../source/Retold-Facto.js');
 
@@ -300,6 +300,7 @@ function commandServe()
 					IngestEngine: true,
 					ProjectionEngine: true,
 					CatalogManager: true,
+					StoreConnectionManager: true,
 					SourceFolderScanner: true,
 					WebUI: true
 				},

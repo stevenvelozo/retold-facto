@@ -795,6 +795,17 @@ class RetoldFacto extends libFableServiceProviderBase
 					return fInitCallback();
 				});
 
+			// Warm up projection entities for deployed ProjectionStores
+			tmpAnticipate.anticipate(
+				(fInitCallback) =>
+				{
+					if (!this.isEndpointGroupEnabled('ProjectionEngine'))
+					{
+						return fInitCallback();
+					}
+					this.fable.RetoldFactoProjectionEngine._warmUpProjectionEntities(fInitCallback);
+				});
+
 			tmpAnticipate.anticipate(this.onAfterInitialize.bind(this));
 
 			tmpAnticipate.wait(

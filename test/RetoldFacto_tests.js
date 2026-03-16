@@ -9,7 +9,7 @@
 var Chai = require("chai");
 var Expect = Chai.expect;
 
-const libFable = require('fable');
+const libFable = require('pict');
 const libSuperTest = require('supertest');
 const libMeadowConnectionSQLite = require('meadow-connection-sqlite');
 const libFs = require('fs');
@@ -261,6 +261,37 @@ suite
 								IDSource INTEGER DEFAULT 0,
 								IDDataset INTEGER DEFAULT 0
 							);
+							CREATE TABLE IF NOT EXISTS StoreConnection (
+								IDStoreConnection INTEGER PRIMARY KEY AUTOINCREMENT,
+								GUIDStoreConnection TEXT,
+								CreateDate TEXT, CreatingIDUser INTEGER DEFAULT 0,
+								UpdateDate TEXT, UpdatingIDUser INTEGER DEFAULT 0,
+								Deleted INTEGER DEFAULT 0, DeleteDate TEXT, DeletingIDUser INTEGER DEFAULT 0,
+								Name TEXT, Type TEXT, Config TEXT,
+								Status TEXT DEFAULT 'Untested', LastTestedDate TEXT
+							);
+							CREATE TABLE IF NOT EXISTS ProjectionStore (
+								IDProjectionStore INTEGER PRIMARY KEY AUTOINCREMENT,
+								GUIDProjectionStore TEXT,
+								CreateDate TEXT, CreatingIDUser INTEGER DEFAULT 0,
+								UpdateDate TEXT, UpdatingIDUser INTEGER DEFAULT 0,
+								Deleted INTEGER DEFAULT 0, DeleteDate TEXT, DeletingIDUser INTEGER DEFAULT 0,
+								IDDataset INTEGER DEFAULT 0, IDStoreConnection INTEGER DEFAULT 0,
+								TargetTableName TEXT, Status TEXT DEFAULT 'Pending',
+								DeployedAt TEXT, DeployLog TEXT
+							);
+							CREATE TABLE IF NOT EXISTS ProjectionMapping (
+								IDProjectionMapping INTEGER PRIMARY KEY AUTOINCREMENT,
+								GUIDProjectionMapping TEXT,
+								CreateDate TEXT, CreatingIDUser INTEGER DEFAULT 0,
+								UpdateDate TEXT, UpdatingIDUser INTEGER DEFAULT 0,
+								Deleted INTEGER DEFAULT 0, DeleteDate TEXT, DeletingIDUser INTEGER DEFAULT 0,
+								IDDataset INTEGER DEFAULT 0, IDSource INTEGER DEFAULT 0,
+								IDProjectionStore INTEGER DEFAULT 0,
+								Name TEXT, Active INTEGER DEFAULT 1,
+								MappingConfiguration TEXT,
+								FlowDiagramState TEXT
+							);
 						`);
 
 						_Fable.settings.MeadowProvider = 'SQLite';
@@ -285,6 +316,7 @@ suite
 										IngestEngine: true,
 										ProjectionEngine: true,
 										CatalogManager: true,
+										StoreConnectionManager: true,
 										WebUI: false
 									}
 							});

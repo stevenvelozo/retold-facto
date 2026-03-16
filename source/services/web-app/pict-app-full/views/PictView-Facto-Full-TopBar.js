@@ -201,6 +201,7 @@ const _ViewConfiguration =
 		<a data-route="Datasets" onclick="{~P~}.PictApplication.navigateTo('/Datasets')">Data Sets</a>
 		<a data-route="Records" onclick="{~P~}.PictApplication.navigateTo('/Records')">Records</a>
 		<a data-route="Projections" onclick="{~P~}.PictApplication.navigateTo('/Projections')">Projections</a>
+		<a data-route="Connections" onclick="{~P~}.PictApplication.navigateTo('/Connections')">Connections</a>
 		<a data-route="Dashboards" onclick="{~P~}.PictApplication.navigateTo('/Dashboards')">Dashboards</a>
 	</div>
 

@@ -22,7 +22,6 @@ class FlowCardProjectionTarget extends libPictFlowCard
 				Height: 100,
 				Inputs:
 				[
-					{ Name: 'ID', Side: 'left' }
 				],
 				Outputs: [],
 				ShowTypeLabel: true,

@@ -7,6 +7,12 @@
  * @author Steven Velozo <steven@velozo.com>
  */
 const libFableServiceProviderBase = require('fable-serviceproviderbase');
+const libFoxHound = require('foxhound');
+const libFS = require('fs');
+const libPath = require('path');
+const libMeadow = require('meadow');
+const libMeadowEndpoints = require('meadow-endpoints');
+const libMeadowIntegration = require('meadow-integration');
 
 const defaultProjectionEngineOptions = (
 	{
@@ -23,6 +29,20 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 		super(pFable, tmpOptions, pServiceHash);
 
 		this.serviceType = 'RetoldFactoProjectionEngine';
+
+		// Map of dynamically registered Meadow entities for projection tables.
+		// Keyed by TargetTableName (entity scope).
+		this._ProjectionEntities = {};
+
+		// Register meadow-integration service types so we can instantiate them
+		if (!this.fable.serviceManager.services.IntegrationAdapter)
+		{
+			this.fable.serviceManager.addServiceType('IntegrationAdapter', libMeadowIntegration.IntegrationAdapter);
+		}
+		if (!this.fable.serviceManager.services.MeadowCloneRestClient)
+		{
+			this.fable.serviceManager.addServiceType('MeadowCloneRestClient', libMeadowIntegration.CloneRestClient);
+		}
 	}
 
 	/**
@@ -1123,16 +1143,46 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 											this._saveProjectionStore(tmpIDDataset, tmpIDStoreConnection, tmpTableName, 'Deployed', tmpLog.join('\n'),
 												(pSaveError, pProjectionStore) =>
 												{
-													pResponse.send(
+													// Register a dynamic Meadow entity so the IntegrationAdapter
+													// can upsert records through MeadowEndpoints.
+													if (pProjectionStore && pProjectionStore.IDProjectionStore)
 													{
-														Success: true,
-														TargetTableName: tmpTableName,
-														ConnectionType: tmpConnection.Type,
-														ConnectionName: tmpConnection.Name,
-														Log: tmpLog.join('\n'),
-														ProjectionStore: pProjectionStore
-													});
-													return fNext();
+														this._registerProjectionEntity(pProjectionStore, tmpConnection, tmpParsedSchema, tmpConnector,
+															(pRegError) =>
+															{
+																if (pRegError)
+																{
+																	tmpLog.push(`[${new Date().toISOString()}] Entity registration warning: ${pRegError.message}`);
+																}
+																else
+																{
+																	tmpLog.push(`[${new Date().toISOString()}] Meadow entity [${tmpTableName}] registered for REST upserts`);
+																}
+																pResponse.send(
+																{
+																	Success: true,
+																	TargetTableName: tmpTableName,
+																	ConnectionType: tmpConnection.Type,
+																	ConnectionName: tmpConnection.Name,
+																	Log: tmpLog.join('\n'),
+																	ProjectionStore: pProjectionStore
+																});
+																return fNext();
+															});
+													}
+													else
+													{
+														pResponse.send(
+														{
+															Success: true,
+															TargetTableName: tmpTableName,
+															ConnectionType: tmpConnection.Type,
+															ConnectionName: tmpConnection.Name,
+															Log: tmpLog.join('\n'),
+															ProjectionStore: pProjectionStore
+														});
+														return fNext();
+													}
 												});
 										});
 								});
@@ -1406,17 +1456,8 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 							return fNext();
 						}
 
-						let tmpTabularCheck = this.fable.servicesMap.TabularCheck;
-						let tmpStatistics = {
-							DataSet: 'FieldDiscovery',
-							FirstRow: null,
-							RowCount: 0,
-							LastRow: null,
-							Headers: [],
-							ColumnCount: 0,
-							ColumnStatistics: {},
-							Records: null
-						};
+						let tmpTabularCheck = this.fable.services.TabularCheck;
+						let tmpStatistics = tmpTabularCheck.newStatisticsObject('FieldDiscovery');
 
 						let tmpRowCount = 0;
 						for (let i = 0; i < pRecords.length; i++)
@@ -1465,6 +1506,7 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 				let tmpIDProjectionStore = parseInt(tmpBody.IDProjectionStore, 10);
 				let tmpBatchSize = parseInt(tmpBody.BatchSize, 10) || 100;
 				let tmpCap = parseInt(tmpBody.Cap, 10) || 0;
+				let tmpStageComprehension = !!tmpBody.StageComprehension;
 
 				if (!tmpIDProjectionMapping)
 				{
@@ -1595,189 +1637,316 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 									}
 								}
 
-								// Resolve connector
-								let tmpConfig = {};
-								try { tmpConfig = JSON.parse(tmpConnection.Config || '{}'); }
-								catch (e) { /* ignore */ }
-
-								let tmpConnectorModuleName = '';
-								let tmpConnectorModules =
-								[
-									{ Type: 'MySQL', Module: 'meadow-connection-mysql' },
-									{ Type: 'PostgreSQL', Module: 'meadow-connection-postgresql' },
-									{ Type: 'MSSQL', Module: 'meadow-connection-mssql' },
-									{ Type: 'SQLite', Module: 'meadow-connection-sqlite' }
-								];
-
-								for (let i = 0; i < tmpConnectorModules.length; i++)
-								{
-									if (tmpConnectorModules[i].Type === tmpConnection.Type)
-									{
-										tmpConnectorModuleName = tmpConnectorModules[i].Module;
-										break;
-									}
-								}
-
-								if (!tmpConnectorModuleName)
-								{
-									pResponse.send({ Error: `Unsupported connection type for import: ${tmpConnection.Type}` });
-									return fNext();
-								}
-
-								let tmpConnectorModule;
-								try
-								{
-									tmpConnectorModule = require(tmpConnectorModuleName);
-								}
-								catch (pRequireError)
-								{
-									pResponse.send({ Error: `Connector module not installed: ${tmpConnectorModuleName}` });
-									return fNext();
-								}
-
 								tmpLog.push(`[${new Date().toISOString()}] Starting import for mapping "${tmpMapping.Name}" -> store "${tmpProjectionStore.TargetTableName}"`);
 
-								// Build INSERT statement
-								let tmpInsertInfo;
-								try
+								// Query source records from internal DAL
+								let tmpRecordQuery = this.fable.DAL.Record.query.clone()
+									.addFilter('Deleted', 0)
+									.addFilter('IDSource', tmpMapping.IDSource);
+
+								if (tmpCap > 0)
 								{
-									tmpInsertInfo = this._buildInsertSQL(tmpConnection.Type, tmpProjectionStore.TargetTableName, tmpColumns);
-								}
-								catch (pBuildError)
-								{
-									pResponse.send({ Error: `SQL build error: ${pBuildError.message}` });
-									return fNext();
+									tmpRecordQuery.setCap(tmpCap);
 								}
 
-								// Connect and execute import
-								let tmpConnector;
-								try
-								{
-									tmpConnector = new tmpConnectorModule(this.fable, tmpConfig, `Import-${Date.now()}`);
-								}
-								catch (pCreateError)
-								{
-									pResponse.send({ Error: `Connector create error: ${pCreateError.message}` });
-									return fNext();
-								}
-
-								tmpConnector.connectAsync(
-									(pConnectError) =>
+								this.fable.DAL.Record.doReads(tmpRecordQuery,
+									(pRecordError, pRecordQuery, pRecords) =>
 									{
-										if (pConnectError)
+										if (pRecordError)
 										{
-											tmpLog.push(`[${new Date().toISOString()}] Connection failed: ${pConnectError.message || pConnectError}`);
-											pResponse.send({ Error: `Connection failed: ${pConnectError.message}`, Log: tmpLog.join('\n') });
+											tmpLog.push(`[${new Date().toISOString()}] Record query error: ${pRecordError.message}`);
+											pResponse.send({ Error: pRecordError.message, Log: tmpLog.join('\n') });
 											return fNext();
 										}
 
-										tmpLog.push(`[${new Date().toISOString()}] Connected to ${tmpConnection.Type}`);
+										tmpLog.push(`[${new Date().toISOString()}] Found ${pRecords.length} source records`);
 
-										// Query source records
-										let tmpRecordQuery = this.fable.DAL.Record.query.clone()
-											.addFilter('Deleted', 0)
-											.addFilter('IDSource', tmpMapping.IDSource);
+										// Phase 1: Build comprehension via TabularTransform
+										let tmpTabularTransform = this.fable.services.TabularTransform;
+										let tmpMappingOutcome = tmpTabularTransform.newMappingOutcomeObject();
+										tmpMappingOutcome.ExplicitConfiguration = tmpMappingConfig;
+										// Pre-seed ImplicitConfiguration so initializeMappingOutcomeObject()
+										// does not attempt to auto-generate one (which references an
+										// out-of-scope variable in the meadow-integration source).
+										tmpMappingOutcome.ImplicitConfiguration = tmpMappingConfig;
 
-										if (tmpCap > 0)
+										let tmpParseErrorCount = 0;
+
+										for (let i = 0; i < pRecords.length; i++)
 										{
-											tmpRecordQuery.setCap(tmpCap);
+											let tmpRecord = pRecords[i];
+											let tmpParsedContent;
+											try
+											{
+												tmpParsedContent = JSON.parse(tmpRecord.Content);
+											}
+											catch (e)
+											{
+												tmpParseErrorCount++;
+												tmpLog.push(`[${new Date().toISOString()}] Parse error on record ${tmpRecord.IDRecord}: ${e.message}`);
+												continue;
+											}
+
+											// Pass flat content — Pict's resolveStateFromAddress auto-wraps as rootDataObject.Record = pRecord
+											let tmpWrapped = Object.assign({ IDRecord: tmpRecord.IDRecord }, tmpParsedContent);
+
+											try
+											{
+												tmpTabularTransform.transformRecord(tmpWrapped, tmpMappingOutcome);
+											}
+											catch (e)
+											{
+												tmpLog.push(`[${new Date().toISOString()}] Transform error on record ${tmpRecord.IDRecord}: ${e.message}`);
+											}
 										}
 
-										this.fable.DAL.Record.doReads(tmpRecordQuery,
-											(pRecordError, pRecordQuery, pRecords) =>
+										// Extract the comprehension records
+										let tmpEntityName = tmpMappingConfig.Entity || Object.keys(tmpMappingOutcome.Comprehension)[0];
+										let tmpComprehensionRecords = tmpMappingOutcome.Comprehension[tmpEntityName] || {};
+										let tmpRecordGUIDs = Object.keys(tmpComprehensionRecords);
+
+										tmpLog.push(`[${new Date().toISOString()}] Comprehension built: ${tmpMappingOutcome.ParsedRowCount} transformed, ${tmpRecordGUIDs.length} unique records (${tmpMappingOutcome.BadRecords.length} bad, ${tmpParseErrorCount} parse errors)`);
+
+										// Stage comprehension to disk if requested
+										let tmpStagingFile = false;
+										if (tmpStageComprehension)
+										{
+											try
 											{
-												if (pRecordError)
+												let tmpStagingDir = libPath.join(process.cwd(), 'data', 'staging');
+												if (!libFS.existsSync(tmpStagingDir))
 												{
-													tmpLog.push(`[${new Date().toISOString()}] Record query error: ${pRecordError.message}`);
-													pResponse.send({ Error: pRecordError.message, Log: tmpLog.join('\n') });
-													return fNext();
+													libFS.mkdirSync(tmpStagingDir, { recursive: true });
 												}
+												let tmpTimestamp = new Date().toISOString().replace(/[:.]/g, '-');
+												let tmpFilename = `comprehension-${tmpIDDataset}-${tmpIDProjectionMapping}-${tmpTimestamp}.json`;
+												let tmpFilePath = libPath.join(tmpStagingDir, tmpFilename);
+												let tmpStagingData = {
+													IDDataset: tmpIDDataset,
+													IDProjectionMapping: tmpIDProjectionMapping,
+													IDProjectionStore: tmpIDProjectionStore,
+													MappingName: tmpMapping.Name,
+													Entity: tmpEntityName,
+													Timestamp: new Date().toISOString(),
+													RecordCount: tmpRecordGUIDs.length,
+													BadRecordCount: tmpMappingOutcome.BadRecords.length,
+													Comprehension: tmpMappingOutcome.Comprehension,
+													BadRecords: tmpMappingOutcome.BadRecords
+												};
+												libFS.writeFileSync(tmpFilePath, JSON.stringify(tmpStagingData, null, '\t'));
+												tmpStagingFile = tmpFilename;
+												tmpLog.push(`[${new Date().toISOString()}] Comprehension staged to: ${tmpFilename}`);
+											}
+											catch (pStagingError)
+											{
+												tmpLog.push(`[${new Date().toISOString()}] Staging error: ${pStagingError.message}`);
+											}
+										}
 
-												tmpLog.push(`[${new Date().toISOString()}] Found ${pRecords.length} source records`);
+										if (tmpRecordGUIDs.length === 0)
+										{
+											tmpLog.push(`[${new Date().toISOString()}] No records to insert`);
+											pResponse.send(
+											{
+												Success: true,
+												RecordsProcessed: pRecords.length,
+												RecordsTransformed: 0,
+												RecordsCreated: 0,
+												RecordsErrored: tmpParseErrorCount + tmpMappingOutcome.BadRecords.length,
+												StagingFile: tmpStagingFile,
+												Log: tmpLog.join('\n')
+											});
+											return fNext();
+										}
 
-												let tmpTabularTransform = this.fable.servicesMap.TabularTransform;
-												let tmpRecordsProcessed = 0;
-												let tmpRecordsCreated = 0;
-												let tmpRecordsErrored = 0;
+										// Phase 2: Upsert comprehension records via IntegrationAdapter + REST to self
+										let tmpTargetEntityName = tmpProjectionStore.TargetTableName;
 
-												let tmpImportAnticipate = this.fable.newAnticipate();
+										// Lazy-register the projection entity if not already registered
+										let tmpDoImport = () =>
+										{
+											let tmpPort = this.fable.settings.APIServerPort || 8080;
+											let tmpServerURL = `http://localhost:${tmpPort}/1.0/`;
 
-												for (let i = 0; i < pRecords.length; i++)
+											// Create a RestClient that points at our own Orator server
+											let tmpRestClient = this.fable.serviceManager.instantiateServiceProviderWithoutRegistration(
+												'MeadowCloneRestClient',
 												{
-													let tmpRecord = pRecords[i];
+													ServerURL: tmpServerURL
+												});
 
-													tmpImportAnticipate.anticipate(
-														(fRecordCallback) =>
-														{
-															tmpRecordsProcessed++;
+											// Create an IntegrationAdapter for this entity
+											let tmpAdapter = this.fable.serviceManager.instantiateServiceProviderWithoutRegistration(
+												'IntegrationAdapter',
+												{
+													Entity: tmpTargetEntityName,
+													Client: tmpRestClient,
+													AdapterSetGUIDMarshalPrefix: `PROJ-${tmpIDDataset}`,
+													PerformUpserts: true,
+													PerformDeletes: false,
+													SimpleMarshal: true
+												});
 
-															let tmpParsedContent;
-															try
-															{
-																tmpParsedContent = JSON.parse(tmpRecord.Content);
-															}
-															catch (e)
-															{
-																tmpRecordsErrored++;
-																tmpLog.push(`[${new Date().toISOString()}] Parse error on record ${tmpRecord.IDRecord}: ${e.message}`);
-																return fRecordCallback();
-															}
-
-															// Wrap as { Record: { IDRecord, ...content } }
-															let tmpWrapped = { Record: Object.assign({ IDRecord: tmpRecord.IDRecord }, tmpParsedContent) };
-
-															// Transform through mapping config
-															let tmpMappedRecord;
-															try
-															{
-																tmpMappedRecord = tmpTabularTransform.createRecordFromMapping(tmpWrapped, tmpMappingConfig, {});
-															}
-															catch (e)
-															{
-																tmpRecordsErrored++;
-																tmpLog.push(`[${new Date().toISOString()}] Transform error on record ${tmpRecord.IDRecord}: ${e.message}`);
-																return fRecordCallback();
-															}
-
-															// Execute INSERT
-															let tmpParams = tmpInsertInfo.buildParams(tmpMappedRecord);
-
-															tmpConnector.pool.query(tmpInsertInfo.sql, tmpParams,
-																(pInsertError) =>
-																{
-																	if (pInsertError)
-																	{
-																		tmpRecordsErrored++;
-																		tmpLog.push(`[${new Date().toISOString()}] Insert error on record ${tmpRecord.IDRecord}: ${pInsertError.message}`);
-																	}
-																	else
-																	{
-																		tmpRecordsCreated++;
-																	}
-																	return fRecordCallback();
-																});
-														});
+											// Feed comprehension records to the adapter
+											let tmpGUIDField = `GUID${tmpTargetEntityName}`;
+											for (let i = 0; i < tmpRecordGUIDs.length; i++)
+											{
+												let tmpGUID = tmpRecordGUIDs[i];
+												let tmpCompRecord = tmpComprehensionRecords[tmpGUID];
+												// Ensure the GUID field exists for IntegrationAdapter
+												if (!tmpCompRecord[tmpGUIDField])
+												{
+													tmpCompRecord[tmpGUIDField] = tmpGUID;
 												}
+												tmpAdapter.addSourceRecord(tmpCompRecord);
+											}
 
-												tmpImportAnticipate.wait(
-													(pImportError) =>
+											tmpLog.push(`[${new Date().toISOString()}] Pushing ${tmpRecordGUIDs.length} records via IntegrationAdapter to ${tmpServerURL}${tmpTargetEntityName}/Upsert`);
+
+											// Marshal and push records through the REST API
+											tmpAdapter.marshalSourceRecords(
+												(pMarshalError) =>
+												{
+													if (pMarshalError)
 													{
-														tmpLog.push(`[${new Date().toISOString()}] Import complete: ${tmpRecordsProcessed} processed, ${tmpRecordsCreated} created, ${tmpRecordsErrored} errored`);
-
+														tmpLog.push(`[${new Date().toISOString()}] Marshal error: ${pMarshalError.message}`);
 														pResponse.send(
 														{
-															Success: (tmpRecordsErrored === 0),
-															RecordsProcessed: tmpRecordsProcessed,
-															RecordsCreated: tmpRecordsCreated,
-															RecordsErrored: tmpRecordsErrored,
+															Error: `Marshal error: ${pMarshalError.message}`,
+															RecordsProcessed: pRecords.length,
+															RecordsTransformed: tmpRecordGUIDs.length,
+															StagingFile: tmpStagingFile,
 															Log: tmpLog.join('\n')
 														});
 														return fNext();
-													});
-											});
+													}
+
+													let tmpMarshaledCount = Object.keys(tmpAdapter._MarshaledRecords).length;
+													tmpLog.push(`[${new Date().toISOString()}] Marshaled ${tmpMarshaledCount} records; pushing to server...`);
+
+													tmpAdapter.pushRecordsToServer(
+														(pPushError) =>
+														{
+															if (pPushError)
+															{
+																tmpLog.push(`[${new Date().toISOString()}] Push error: ${pPushError.message}`);
+															}
+
+															tmpLog.push(`[${new Date().toISOString()}] Import complete: ${pRecords.length} source records, ${tmpRecordGUIDs.length} unique, ${tmpMarshaledCount} upserted`);
+
+															pResponse.send(
+															{
+																Success: !pPushError,
+																RecordsProcessed: pRecords.length,
+																RecordsTransformed: tmpRecordGUIDs.length,
+																RecordsDeduplicated: tmpMappingOutcome.ParsedRowCount - tmpRecordGUIDs.length,
+																BadRecords: tmpMappingOutcome.BadRecords.length,
+																RecordsUpserted: tmpMarshaledCount,
+																StagingFile: tmpStagingFile,
+																Log: tmpLog.join('\n')
+															});
+															return fNext();
+														});
+												});
+										};
+
+										if (!this._ProjectionEntities[tmpTargetEntityName])
+										{
+											// Entity not yet registered — register lazily
+											tmpLog.push(`[${new Date().toISOString()}] Registering Meadow entity [${tmpTargetEntityName}] for REST upserts...`);
+											this._registerProjectionEntity(tmpProjectionStore, tmpConnection, tmpParsedSchema, null,
+												(pRegError) =>
+												{
+													if (pRegError)
+													{
+														tmpLog.push(`[${new Date().toISOString()}] Entity registration failed: ${pRegError.message}`);
+														pResponse.send(
+														{
+															Error: `Entity registration failed: ${pRegError.message}`,
+															Log: tmpLog.join('\n')
+														});
+														return fNext();
+													}
+													tmpLog.push(`[${new Date().toISOString()}] Entity [${tmpTargetEntityName}] registered successfully`);
+													return tmpDoImport();
+												});
+										}
+										else
+										{
+											return tmpDoImport();
+										}
 									});
 							});
 					});
+			});
+
+		// ======================================================================
+		// Comprehension Staging routes
+		// ======================================================================
+
+		// GET /facto/projection/:IDDataset/comprehensions — list staged comprehension files
+		pOratorServiceServer.doGet(`${tmpRoutePrefix}/projection/:IDDataset/comprehensions`,
+			(pRequest, pResponse, fNext) =>
+			{
+				let tmpIDDataset = parseInt(pRequest.params.IDDataset, 10);
+				let tmpStagingDir = libPath.join(process.cwd(), 'data', 'staging');
+
+				if (!libFS.existsSync(tmpStagingDir))
+				{
+					pResponse.send({ Files: [] });
+					return fNext();
+				}
+
+				try
+				{
+					let tmpAllFiles = libFS.readdirSync(tmpStagingDir);
+					let tmpPrefix = `comprehension-${tmpIDDataset}-`;
+					let tmpFiles = tmpAllFiles
+						.filter((pFile) => { return pFile.startsWith(tmpPrefix) && pFile.endsWith('.json'); })
+						.sort()
+						.reverse();
+
+					pResponse.send({ Files: tmpFiles });
+				}
+				catch (pReadError)
+				{
+					pResponse.send({ Error: pReadError.message, Files: [] });
+				}
+				return fNext();
+			});
+
+		// GET /facto/projection/:IDDataset/comprehension/:Filename — download a staged comprehension file
+		pOratorServiceServer.doGet(`${tmpRoutePrefix}/projection/:IDDataset/comprehension/:Filename`,
+			(pRequest, pResponse, fNext) =>
+			{
+				let tmpFilename = pRequest.params.Filename;
+
+				// Sanitize filename to prevent path traversal
+				if (!tmpFilename || tmpFilename.includes('..') || tmpFilename.includes('/') || tmpFilename.includes('\\'))
+				{
+					pResponse.send({ Error: 'Invalid filename' });
+					return fNext();
+				}
+
+				let tmpFilePath = libPath.join(process.cwd(), 'data', 'staging', tmpFilename);
+
+				if (!libFS.existsSync(tmpFilePath))
+				{
+					pResponse.send({ Error: 'File not found' });
+					return fNext();
+				}
+
+				try
+				{
+					let tmpContent = libFS.readFileSync(tmpFilePath, 'utf8');
+					let tmpParsed = JSON.parse(tmpContent);
+					pResponse.send(tmpParsed);
+				}
+				catch (pReadError)
+				{
+					pResponse.send({ Error: pReadError.message });
+				}
+				return fNext();
 			});
 
 		this.fable.log.info(`ProjectionEngine routes connected at ${tmpRoutePrefix}/projections/*`);
@@ -1803,90 +1972,72 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 	 */
 
 	/**
-	 * Build a parameterized INSERT SQL statement for the given connector type.
+	 * Build a Meadow-compatible schema array from parsed MicroDDL columns.
 	 *
-	 * @param {string} pType - Connector type (MySQL, PostgreSQL, MSSQL, SQLite)
-	 * @param {string} pTableName - Target table name
-	 * @param {Array} pColumns - Array of column definition objects with Column property
-	 * @returns {object} { sql: string, buildParams: function(record) }
+	 * FoxHound uses this schema to determine how to handle each column in
+	 * generated INSERT queries (e.g. AutoIdentity → NULL, CreateDate → NOW()).
+	 *
+	 * @param {Array} pColumns - Column definitions from _parseMicroDDL()
+	 * @returns {Array} Meadow schema array for FoxHound
 	 */
-	_buildInsertSQL(pType, pTableName, pColumns)
+	_buildMeadowSchemaFromColumns(pColumns)
 	{
-		// Filter out auto-identity columns (they are auto-generated)
-		let tmpColumnNames = [];
+		let tmpSchema = [];
 		for (let i = 0; i < pColumns.length; i++)
 		{
 			let tmpCol = pColumns[i];
-			if (tmpCol.DataType === 'ID' || tmpCol.Type === 'AutoIdentity')
-			{
-				continue;
-			}
-			tmpColumnNames.push(tmpCol.Column);
-		}
+			let tmpType = 'Default';
 
-		if (tmpColumnNames.length === 0)
+			// Map MicroDDL types to FoxHound schema types
+			if (tmpCol.MeadowType)
+			{
+				tmpType = tmpCol.MeadowType;
+			}
+			else if (tmpCol.DataType === 'ID')
+			{
+				tmpType = 'AutoIdentity';
+			}
+			else if (tmpCol.DataType === 'GUID')
+			{
+				tmpType = 'AutoGUID';
+			}
+
+			tmpSchema.push(
+			{
+				Column: tmpCol.Column,
+				Type: tmpType,
+				Size: tmpCol.Size || 'Default'
+			});
+		}
+		return tmpSchema;
+	}
+
+	/**
+	 * Coerce parameter values for SQLite compatibility.
+	 *
+	 * better-sqlite3 does not accept JavaScript booleans; they must be
+	 * converted to 0/1.  Single-element arrays are unwrapped to scalars.
+	 * This mirrors the coercion in Meadow-Provider-SQLite.
+	 *
+	 * @param {object} pParameters - FoxHound query parameters (mutated in place)
+	 */
+	_coerceSQLiteParameters(pParameters)
+	{
+		let tmpKeys = Object.keys(pParameters);
+		for (let i = 0; i < tmpKeys.length; i++)
 		{
-			throw new Error('No columns to insert');
-		}
+			let tmpKey = tmpKeys[i];
+			let tmpValue = pParameters[tmpKey];
 
-		let tmpSQL = '';
-		let tmpBuildParams = null;
-
-		switch (pType)
-		{
-			case 'PostgreSQL':
+			if (typeof(tmpValue) === 'boolean')
 			{
-				// PostgreSQL uses positional params ($1, $2, ...)
-				let tmpQuotedCols = tmpColumnNames.map((pCol) => `"${pCol}"`);
-				let tmpPlaceholders = tmpColumnNames.map((pCol, pIndex) => `$${pIndex + 1}`);
-				tmpSQL = `INSERT INTO "${pTableName}" (${tmpQuotedCols.join(', ')}) VALUES (${tmpPlaceholders.join(', ')})`;
-				tmpBuildParams = (pRecord) =>
-				{
-					let tmpParams = [];
-					for (let i = 0; i < tmpColumnNames.length; i++)
-					{
-						tmpParams.push(pRecord[tmpColumnNames[i]] !== undefined ? pRecord[tmpColumnNames[i]] : null);
-					}
-					return tmpParams;
-				};
-				break;
+				pParameters[tmpKey] = tmpValue ? 1 : 0;
 			}
-			case 'MSSQL':
+			else if (Array.isArray(tmpValue) && tmpValue.length === 1)
 			{
-				// MSSQL uses @named params with brackets
-				let tmpBracketCols = tmpColumnNames.map((pCol) => `[${pCol}]`);
-				let tmpPlaceholders = tmpColumnNames.map((pCol) => `@${pCol}`);
-				tmpSQL = `INSERT INTO [${pTableName}] (${tmpBracketCols.join(', ')}) VALUES (${tmpPlaceholders.join(', ')})`;
-				tmpBuildParams = (pRecord) =>
-				{
-					let tmpParams = {};
-					for (let i = 0; i < tmpColumnNames.length; i++)
-					{
-						tmpParams[tmpColumnNames[i]] = pRecord[tmpColumnNames[i]] !== undefined ? pRecord[tmpColumnNames[i]] : null;
-					}
-					return tmpParams;
-				};
-				break;
-			}
-			default:
-			{
-				// MySQL and SQLite use :named params
-				let tmpPlaceholders = tmpColumnNames.map((pCol) => `:${pCol}`);
-				tmpSQL = `INSERT INTO ${pTableName} (${tmpColumnNames.join(', ')}) VALUES (${tmpPlaceholders.join(', ')})`;
-				tmpBuildParams = (pRecord) =>
-				{
-					let tmpParams = {};
-					for (let i = 0; i < tmpColumnNames.length; i++)
-					{
-						tmpParams[tmpColumnNames[i]] = pRecord[tmpColumnNames[i]] !== undefined ? pRecord[tmpColumnNames[i]] : null;
-					}
-					return tmpParams;
-				};
-				break;
+				pParameters[tmpKey] = tmpValue[0];
 			}
 		}
-
-		return { sql: tmpSQL, buildParams: tmpBuildParams };
 	}
 
 	_parseMicroDDL(pDDL)
@@ -2031,6 +2182,274 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 							return fCallback(pCreateError, pCreated);
 						});
 				}
+			});
+	}
+
+	// ======================================================================
+	// Dynamic Meadow Entity Registration for Projection Tables
+	// ======================================================================
+
+	/**
+	 * Map connection type to the Fable singleton property name used by Meadow providers.
+	 */
+	_getProviderPropertyName(pConnectionType)
+	{
+		let tmpMap =
+		{
+			'SQLite': 'MeadowSQLiteProvider',
+			'MySQL': 'MeadowMySQLProvider',
+			'MSSQL': 'MeadowMSSQLProvider',
+			'PostgreSQL': 'MeadowPostgreSQLProvider'
+		};
+		return tmpMap[pConnectionType] || false;
+	}
+
+	/**
+	 * Dynamically register a Meadow entity + endpoints for a projection table.
+	 *
+	 * Creates a proxy Fable that routes DB queries to the external connection,
+	 * then creates DAL + MeadowEndpoints so the IntegrationAdapter can upsert
+	 * records through our own REST API.
+	 *
+	 * @param {object} pProjectionStore - The ProjectionStore record
+	 * @param {object} pConnection - The StoreConnection record
+	 * @param {object} pParsedSchema - Output of _parseMicroDDL()
+	 * @param {object} pConnector - An already-connected meadow-connection instance (optional)
+	 * @param {function} fCallback - Callback(pError)
+	 */
+	_registerProjectionEntity(pProjectionStore, pConnection, pParsedSchema, pConnector, fCallback)
+	{
+		let tmpEntityName = pProjectionStore.TargetTableName;
+
+		// If already registered, skip
+		if (this._ProjectionEntities[tmpEntityName])
+		{
+			this.fable.log.info(`Projection entity [${tmpEntityName}] already registered; skipping.`);
+			return fCallback();
+		}
+
+		// Build a Meadow package object from the parsed schema
+		let tmpFirstTableKey = Object.keys(pParsedSchema.Tables)[0];
+		let tmpColumns = pParsedSchema.Tables[tmpFirstTableKey].Columns;
+		let tmpMeadowSchemaArray = this._buildMeadowSchemaFromColumns(tmpColumns);
+
+		let tmpPackageObject =
+		{
+			Scope: tmpEntityName,
+			Schema: tmpMeadowSchemaArray
+		};
+
+		let tmpProviderProperty = this._getProviderPropertyName(pConnection.Type);
+		if (!tmpProviderProperty)
+		{
+			return fCallback(new Error(`Unsupported connection type for entity registration: ${pConnection.Type}`));
+		}
+
+		let tmpFinishRegistration = (pConnectorInstance) =>
+		{
+			// Create a proxy Fable that overrides the provider property
+			let tmpProxyFable = Object.create(this.fable);
+			tmpProxyFable[tmpProviderProperty] = pConnectorInstance;
+
+			// Create Meadow DAL with the proxy fable
+			let tmpMeadow = libMeadow.new(tmpProxyFable);
+			let tmpDAL = tmpMeadow.loadFromPackageObject(tmpPackageObject);
+			tmpDAL.setProvider(pConnection.Type);
+
+			// Create MeadowEndpoints and wire routes
+			let tmpEndpoints = libMeadowEndpoints.new(tmpDAL);
+			tmpEndpoints.connectRoutes(this.fable.OratorServiceServer);
+
+			// Store the registration
+			this._ProjectionEntities[tmpEntityName] =
+			{
+				DAL: tmpDAL,
+				Endpoints: tmpEndpoints,
+				Connector: pConnectorInstance,
+				ProxyFable: tmpProxyFable,
+				IDProjectionStore: pProjectionStore.IDProjectionStore
+			};
+
+			// Also publish to fable DAL/MeadowEndpoints maps
+			if (this.fable.DAL)
+			{
+				this.fable.DAL[tmpEntityName] = tmpDAL;
+			}
+			if (this.fable.MeadowEndpoints)
+			{
+				this.fable.MeadowEndpoints[tmpEntityName] = tmpEndpoints;
+			}
+
+			this.fable.log.info(`Projection entity [${tmpEntityName}] registered (${pConnection.Type} via proxy fable).`);
+			return fCallback();
+		};
+
+		if (pConnector)
+		{
+			// Reuse an already-connected connector
+			return tmpFinishRegistration(pConnector);
+		}
+
+		// Create and connect a new connector
+		let tmpConfig = {};
+		try { tmpConfig = JSON.parse(pConnection.Config || '{}'); }
+		catch (e) { /* ignore */ }
+
+		let tmpConnectorModuleName = '';
+		let tmpConnectorModules =
+		[
+			{ Type: 'MySQL', Module: 'meadow-connection-mysql' },
+			{ Type: 'PostgreSQL', Module: 'meadow-connection-postgresql' },
+			{ Type: 'MSSQL', Module: 'meadow-connection-mssql' },
+			{ Type: 'SQLite', Module: 'meadow-connection-sqlite' }
+		];
+
+		for (let i = 0; i < tmpConnectorModules.length; i++)
+		{
+			if (tmpConnectorModules[i].Type === pConnection.Type)
+			{
+				tmpConnectorModuleName = tmpConnectorModules[i].Module;
+				break;
+			}
+		}
+
+		if (!tmpConnectorModuleName)
+		{
+			return fCallback(new Error(`Unknown connection type: ${pConnection.Type}`));
+		}
+
+		let tmpConnectorModule;
+		try
+		{
+			tmpConnectorModule = require(tmpConnectorModuleName);
+		}
+		catch (pRequireError)
+		{
+			return fCallback(new Error(`Connector module not installed: ${tmpConnectorModuleName}`));
+		}
+
+		let tmpNewConnector = new tmpConnectorModule(this.fable, tmpConfig, `ProjEntity-${tmpEntityName}-${Date.now()}`);
+
+		tmpNewConnector.connectAsync(
+			(pConnectError) =>
+			{
+				if (pConnectError)
+				{
+					return fCallback(new Error(`Connection failed for entity [${tmpEntityName}]: ${pConnectError.message}`));
+				}
+				return tmpFinishRegistration(tmpNewConnector);
+			});
+	}
+
+	/**
+	 * Re-register Meadow entities for all deployed ProjectionStores on startup.
+	 *
+	 * This ensures projection entities survive server restarts.
+	 *
+	 * @param {function} fCallback - Callback(pError)
+	 */
+	_warmUpProjectionEntities(fCallback)
+	{
+		if (!this.fable.DAL || !this.fable.DAL.ProjectionStore)
+		{
+			this.fable.log.warn('ProjectionStore DAL not available; skipping projection entity warm-up.');
+			return fCallback();
+		}
+
+		let tmpQuery = this.fable.DAL.ProjectionStore.query.clone()
+			.addFilter('Status', 'Deployed')
+			.addFilter('Deleted', 0);
+
+		this.fable.DAL.ProjectionStore.doReads(tmpQuery,
+			(pError, pQuery, pRecords) =>
+			{
+				if (pError || !pRecords || pRecords.length === 0)
+				{
+					if (pError)
+					{
+						this.fable.log.warn(`Projection entity warm-up query error: ${pError.message}`);
+					}
+					else
+					{
+						this.fable.log.info('No deployed ProjectionStores found; warm-up complete.');
+					}
+					return fCallback();
+				}
+
+				this.fable.log.info(`Warming up ${pRecords.length} deployed projection entit${pRecords.length === 1 ? 'y' : 'ies'}...`);
+
+				let tmpAnticipate = this.fable.newAnticipate();
+
+				for (let i = 0; i < pRecords.length; i++)
+				{
+					let tmpStore = pRecords[i];
+
+					tmpAnticipate.anticipate(
+						(fStepCallback) =>
+						{
+							// Load the Dataset for the schema
+							let tmpDatasetQuery = this.fable.DAL.Dataset.query.clone()
+								.addFilter('IDDataset', tmpStore.IDDataset);
+
+							this.fable.DAL.Dataset.doRead(tmpDatasetQuery,
+								(pDatasetError, pDatasetQuery, pDataset) =>
+								{
+									if (pDatasetError || !pDataset || !pDataset.IDDataset || !pDataset.SchemaDefinition)
+									{
+										this.fable.log.warn(`Warm-up: skipping store ${tmpStore.IDProjectionStore} — dataset not found or no schema.`);
+										return fStepCallback();
+									}
+
+									// Load the StoreConnection
+									let tmpConnQuery = this.fable.DAL.StoreConnection.query.clone()
+										.addFilter('IDStoreConnection', tmpStore.IDStoreConnection);
+
+									this.fable.DAL.StoreConnection.doRead(tmpConnQuery,
+										(pConnError, pConnQuery, pConnection) =>
+										{
+											if (pConnError || !pConnection || !pConnection.IDStoreConnection)
+											{
+												this.fable.log.warn(`Warm-up: skipping store ${tmpStore.IDProjectionStore} — connection not found.`);
+												return fStepCallback();
+											}
+
+											let tmpParsedSchema;
+											try
+											{
+												tmpParsedSchema = this._parseMicroDDL(pDataset.SchemaDefinition);
+											}
+											catch (pParseError)
+											{
+												this.fable.log.warn(`Warm-up: skipping store ${tmpStore.IDProjectionStore} — schema parse error: ${pParseError.message}`);
+												return fStepCallback();
+											}
+
+											if (!tmpParsedSchema || !tmpParsedSchema.Tables || Object.keys(tmpParsedSchema.Tables).length === 0)
+											{
+												this.fable.log.warn(`Warm-up: skipping store ${tmpStore.IDProjectionStore} — empty schema.`);
+												return fStepCallback();
+											}
+
+											this._registerProjectionEntity(tmpStore, pConnection, tmpParsedSchema, null,
+												(pRegError) =>
+												{
+													if (pRegError)
+													{
+														this.fable.log.warn(`Warm-up: failed to register entity for store ${tmpStore.IDProjectionStore}: ${pRegError.message}`);
+													}
+													return fStepCallback();
+												});
+										});
+								});
+						});
+				}
+
+				tmpAnticipate.wait(
+					(pWaitError) =>
+					{
+						this.fable.log.info('Projection entity warm-up complete.');
+						return fCallback();
+					});
 			});
 	}
 }

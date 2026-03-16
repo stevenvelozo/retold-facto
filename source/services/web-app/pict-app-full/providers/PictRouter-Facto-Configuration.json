@@ -37,6 +37,10 @@
 			"template": "{~LV:Pict.PictApplication.showView(`Facto-Full-Projections`)~}"
 		},
 		{
+			"path": "/Connections",
+			"template": "{~LV:Pict.PictApplication.showView(`Facto-Full-Connections`)~}"
+		},
+		{
 			"path": "/Dashboards",
 			"template": "{~LV:Pict.PictApplication.showView(`Facto-Full-Dashboards`)~}"
 		}

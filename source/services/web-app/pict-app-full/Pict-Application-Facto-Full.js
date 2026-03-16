@@ -12,8 +12,9 @@ const THEME_LIST =
 	{ Key: 'high-contrast', Label: 'High Contrast', Colors: ['#000000', '#58a6ff', '#3fb950', '#f85149', '#d29922'] }
 ];
 
-// Shared provider (same API layer as accordion app)
+// Shared providers
 const libProvider = require('../pict-app/providers/Pict-Provider-Facto.js');
+const libUIProvider = require('../pict-app/providers/Pict-Provider-Facto-UI.js');
 
 // Shell views
 const libViewLayout = require('./views/PictView-Facto-Full-Layout.js');
@@ -28,10 +29,16 @@ const libViewSources = require('./views/PictView-Facto-Full-Sources.js');
 const libViewDatasets = require('./views/PictView-Facto-Full-Datasets.js');
 const libViewRecords = require('./views/PictView-Facto-Full-Records.js');
 const libViewProjections = require('./views/PictView-Facto-Full-Projections.js');
+const libViewSchemaEditor = require('./views/PictView-Facto-Full-SchemaEditor.js');
+const libViewMappingEditor = require('./views/PictView-Facto-Full-MappingEditor.js');
+const libViewQueryPanel = require('./views/PictView-Facto-Full-QueryPanel.js');
 const libViewDashboards = require('./views/PictView-Facto-Full-Dashboards.js');
 const libViewRecordViewer = require('./views/PictView-Facto-Full-RecordViewer.js');
 const libViewSourceDetail = require('./views/PictView-Facto-Full-SourceDetail.js');
+const libViewSourceEditor = require('./views/PictView-Facto-Full-SourceEditor.js');
 const libViewScanner = require('./views/PictView-Facto-Full-Scanner.js');
+const libViewConnections = require('./views/PictView-Facto-Full-Connections.js');
+const libViewProjectionDetail = require('./views/PictView-Facto-Full-ProjectionDetail.js');
 
 class FactoFullApplication extends libPictApplication
 {
@@ -43,8 +50,9 @@ class FactoFullApplication extends libPictApplication
 		// calls resolve() explicitly after the DOM is ready.
 		this.pict.settings.RouterSkipRouteResolveOnAdd = true;
 
-		// Register the shared API provider
+		// Register providers
 		this.pict.addProvider('Facto', libProvider.default_configuration, libProvider);
+		this.pict.addProvider('FactoUI', libUIProvider.default_configuration, libUIProvider);
 
 		// Register router
 		this.pict.addProvider('PictRouter',
@@ -63,10 +71,16 @@ class FactoFullApplication extends libPictApplication
 		this.pict.addView('Facto-Full-Datasets', libViewDatasets.default_configuration, libViewDatasets);
 		this.pict.addView('Facto-Full-Records', libViewRecords.default_configuration, libViewRecords);
 		this.pict.addView('Facto-Full-Projections', libViewProjections.default_configuration, libViewProjections);
+		this.pict.addView('Facto-Full-SchemaEditor', libViewSchemaEditor.default_configuration, libViewSchemaEditor);
+		this.pict.addView('Facto-Full-MappingEditor', libViewMappingEditor.default_configuration, libViewMappingEditor);
+		this.pict.addView('Facto-Full-QueryPanel', libViewQueryPanel.default_configuration, libViewQueryPanel);
 		this.pict.addView('Facto-Full-Dashboards', libViewDashboards.default_configuration, libViewDashboards);
 		this.pict.addView('Facto-Full-RecordViewer', libViewRecordViewer.default_configuration, libViewRecordViewer);
 		this.pict.addView('Facto-Full-SourceDetail', libViewSourceDetail.default_configuration, libViewSourceDetail);
+		this.pict.addView('Facto-Full-SourceEditor', libViewSourceEditor.default_configuration, libViewSourceEditor);
 		this.pict.addView('Facto-Full-Scanner', libViewScanner.default_configuration, libViewScanner);
+		this.pict.addView('Facto-Full-Connections', libViewConnections.default_configuration, libViewConnections);
+		this.pict.addView('Facto-Full-ProjectionDetail', libViewProjectionDetail.default_configuration, libViewProjectionDetail);
 	}
 
 	onAfterInitializeAsync(fCallback)
@@ -124,6 +138,16 @@ class FactoFullApplication extends libPictApplication
 				}
 			});
 
+		this.pict.providers.PictRouter.addRoute('/Projection/:IDDataset',
+			(pMatch) =>
+			{
+				let tmpIDDataset = pMatch && pMatch.data ? pMatch.data.IDDataset : null;
+				if (tmpIDDataset)
+				{
+					tmpSelf.showProjectionView(tmpIDDataset);
+				}
+			});
+
 		this.pict.providers.PictRouter.addRoute('/Source/:IDSource/Doc/:IDDoc',
 			(pMatch) =>
 			{
@@ -170,6 +194,16 @@ class FactoFullApplication extends libPictApplication
 		}
 		// Highlight "SourceResearch" in the nav since source detail is a child of Source Research
 		this._setActiveNav('SourceResearch');
+	}
+
+	showProjectionView(pIDDataset)
+	{
+		let tmpView = this.pict.views['Facto-Full-ProjectionDetail'];
+		if (tmpView)
+		{
+			tmpView.loadProjection(pIDDataset);
+		}
+		this._setActiveNav('Projections');
 	}
 
 	showView(pViewIdentifier)

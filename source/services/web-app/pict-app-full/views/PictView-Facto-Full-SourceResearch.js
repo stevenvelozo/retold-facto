@@ -35,6 +35,48 @@ const _ViewConfiguration =
 			border-radius: 6px;
 			margin-bottom: 0.5em;
 		}
+		.facto-research-add-form {
+			background: var(--facto-bg-card);
+			border: 1px solid var(--facto-border);
+			border-radius: 8px;
+			padding: 1.25em;
+			margin-bottom: 1.25em;
+		}
+		.facto-research-add-form .facto-form-grid {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 0.75em;
+		}
+		.facto-research-add-form .facto-form-grid .facto-form-full {
+			grid-column: 1 / -1;
+		}
+		.facto-research-add-form label {
+			display: block;
+			font-size: 0.8em;
+			font-weight: 600;
+			margin-bottom: 0.25em;
+			color: var(--facto-text-muted);
+		}
+		.facto-research-add-form input,
+		.facto-research-add-form textarea,
+		.facto-research-add-form select {
+			width: 100%;
+			margin-bottom: 0;
+		}
+		.facto-research-add-form textarea {
+			font-size: 0.9em;
+		}
+		.facto-research-add-form .facto-form-actions {
+			margin-top: 1em;
+			display: flex;
+			gap: 0.5em;
+		}
+		.facto-research-header-row {
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-start;
+			margin-bottom: 0;
+		}
 	`,
 
 	Templates:
@@ -43,9 +85,63 @@ const _ViewConfiguration =
 			Hash: "Facto-Full-SourceResearch-Template",
 			Template: /*html*/`
 <div class="facto-content">
-	<div class="facto-content-header">
-		<h1>Source Research</h1>
-		<p>Research and catalog potential data sources before provisioning them as runtime Sources and Datasets.</p>
+	<div class="facto-content-header facto-research-header-row">
+		<div>
+			<h1>Source Research</h1>
+			<p>Research and catalog potential data sources before provisioning them as runtime Sources and Datasets.</p>
+		</div>
+		<button class="facto-btn facto-btn-success" onclick="{~P~}.views['Facto-Full-SourceResearch'].toggleAddForm()">+ Add Entry</button>
+	</div>
+
+	<div id="Facto-Full-Research-AddForm" style="display:none;">
+		<div class="facto-research-add-form">
+			<div class="facto-form-grid">
+				<div>
+					<label>Name</label>
+					<input type="text" id="Facto-Research-Add-Name" placeholder="Source name">
+				</div>
+				<div>
+					<label>Agency</label>
+					<input type="text" id="Facto-Research-Add-Agency" placeholder="Agency or organization">
+				</div>
+				<div>
+					<label>Type</label>
+					<input type="text" id="Facto-Research-Add-Type" placeholder="e.g. API, CSV, Database">
+				</div>
+				<div>
+					<label>Category</label>
+					<input type="text" id="Facto-Research-Add-Category" placeholder="e.g. Census, Financial, Health">
+				</div>
+				<div>
+					<label>URL</label>
+					<input type="text" id="Facto-Research-Add-URL" placeholder="https://...">
+				</div>
+				<div>
+					<label>Protocol</label>
+					<input type="text" id="Facto-Research-Add-Protocol" placeholder="e.g. REST, FTP, SFTP">
+				</div>
+				<div>
+					<label>Region</label>
+					<input type="text" id="Facto-Research-Add-Region" placeholder="e.g. US, EU, Global">
+				</div>
+				<div>
+					<label>Update Frequency</label>
+					<input type="text" id="Facto-Research-Add-UpdateFrequency" placeholder="e.g. Daily, Weekly, Annual">
+				</div>
+				<div class="facto-form-full">
+					<label>Description</label>
+					<textarea id="Facto-Research-Add-Description" rows="2" placeholder="Brief description of this source"></textarea>
+				</div>
+				<div class="facto-form-full">
+					<label>Notes</label>
+					<textarea id="Facto-Research-Add-Notes" rows="2" placeholder="Additional notes"></textarea>
+				</div>
+			</div>
+			<div class="facto-form-actions">
+				<button class="facto-btn facto-btn-primary" onclick="{~P~}.views['Facto-Full-SourceResearch'].createEntry()">Save Entry</button>
+				<button class="facto-btn facto-btn-secondary" onclick="{~P~}.views['Facto-Full-SourceResearch'].toggleAddForm()">Cancel</button>
+			</div>
+		</div>
 	</div>
 
 	<div class="facto-research-search">
@@ -156,6 +252,66 @@ class FactoFullSourceResearchView extends libPictView
 		}
 		tmpHtml += '</tbody></table>';
 		tmpContainer.innerHTML = tmpHtml;
+	}
+
+	toggleAddForm()
+	{
+		let tmpForm = document.getElementById('Facto-Full-Research-AddForm');
+		if (!tmpForm) return;
+		tmpForm.style.display = (tmpForm.style.display === 'none') ? 'block' : 'none';
+	}
+
+	createEntry()
+	{
+		let tmpData =
+		{
+			Name: (document.getElementById('Facto-Research-Add-Name') || {}).value || '',
+			Agency: (document.getElementById('Facto-Research-Add-Agency') || {}).value || '',
+			Type: (document.getElementById('Facto-Research-Add-Type') || {}).value || '',
+			Category: (document.getElementById('Facto-Research-Add-Category') || {}).value || '',
+			URL: (document.getElementById('Facto-Research-Add-URL') || {}).value || '',
+			Protocol: (document.getElementById('Facto-Research-Add-Protocol') || {}).value || '',
+			Region: (document.getElementById('Facto-Research-Add-Region') || {}).value || '',
+			UpdateFrequency: (document.getElementById('Facto-Research-Add-UpdateFrequency') || {}).value || '',
+			Description: (document.getElementById('Facto-Research-Add-Description') || {}).value || '',
+			Notes: (document.getElementById('Facto-Research-Add-Notes') || {}).value || ''
+		};
+
+		if (!tmpData.Name)
+		{
+			this.pict.providers.FactoUI.showToast('Name is required', 'error');
+			return;
+		}
+
+		this.pict.providers.Facto.createCatalogEntry(tmpData).then(
+			(pResponse) =>
+			{
+				if (pResponse && pResponse.Error)
+				{
+					this.pict.providers.FactoUI.showToast('Error: ' + pResponse.Error, 'error');
+					return;
+				}
+
+				this.pict.providers.FactoUI.showToast('Catalog entry created', 'ok');
+
+				// Clear the form fields
+				let tmpFields = ['Name', 'Agency', 'Type', 'Category', 'URL', 'Protocol', 'Region', 'UpdateFrequency', 'Description', 'Notes'];
+				for (let i = 0; i < tmpFields.length; i++)
+				{
+					let tmpEl = document.getElementById('Facto-Research-Add-' + tmpFields[i]);
+					if (tmpEl) tmpEl.value = '';
+				}
+
+				// Hide the form and refresh the list
+				let tmpForm = document.getElementById('Facto-Full-Research-AddForm');
+				if (tmpForm) tmpForm.style.display = 'none';
+
+				return this.pict.providers.Facto.loadCatalogEntries();
+			}).then(
+			() =>
+			{
+				this.refreshList();
+			});
 	}
 
 	searchCatalog()
