@@ -534,6 +534,127 @@ class FactoProvider extends libPictProvider
 				return pResponse;
 			});
 	}
+
+	// ================================================================
+	// Store Connection Operations
+	// ================================================================
+
+	loadStoreConnections()
+	{
+		return this.api('GET', '/facto/connections');
+	}
+
+	createStoreConnection(pData)
+	{
+		return this.api('POST', '/facto/connection', pData);
+	}
+
+	updateStoreConnection(pID, pData)
+	{
+		return this.api('PUT', `/facto/connection/${pID}`, pData);
+	}
+
+	deleteStoreConnection(pID)
+	{
+		return this.api('DELETE', `/facto/connection/${pID}`);
+	}
+
+	testStoreConnection(pID)
+	{
+		return this.api('POST', `/facto/connection/${pID}/test`);
+	}
+
+	testAdHocConnection(pType, pConfig)
+	{
+		return this.api('POST', '/facto/connection/test', { Type: pType, Config: pConfig });
+	}
+
+	loadAvailableConnectionTypes()
+	{
+		return this.api('GET', '/facto/connection/available-types');
+	}
+
+	// ================================================================
+	// Projection Schema Operations
+	// ================================================================
+
+	compileMicroDDL(pDDLText)
+	{
+		return this.api('POST', '/facto/projection/compile', { DDL: pDDLText });
+	}
+
+	loadProjectionSchema(pIDDataset)
+	{
+		return this.api('GET', `/facto/projection/${pIDDataset}/schema`);
+	}
+
+	saveProjectionSchema(pIDDataset, pSchemaDefinition)
+	{
+		return this.api('PUT', `/facto/projection/${pIDDataset}/schema`, { SchemaDefinition: pSchemaDefinition });
+	}
+
+	loadProjectionStores(pIDDataset)
+	{
+		return this.api('GET', `/facto/projection/${pIDDataset}/stores`);
+	}
+
+	deployProjection(pIDDataset, pIDStoreConnection, pTargetTableName)
+	{
+		return this.api('POST', `/facto/projection/${pIDDataset}/deploy`,
+			{
+				IDStoreConnection: pIDStoreConnection,
+				TargetTableName: pTargetTableName
+			});
+	}
+
+	// ======================================================================
+	// Projection Mapping Operations
+	// ======================================================================
+
+	loadProjectionMappings(pIDDataset)
+	{
+		return this.api('GET', `/facto/projection/${pIDDataset}/mappings`);
+	}
+
+	loadProjectionMapping(pID)
+	{
+		return this.api('GET', `/facto/projection/mapping/${pID}`);
+	}
+
+	createProjectionMapping(pIDDataset, pData)
+	{
+		return this.api('POST', `/facto/projection/${pIDDataset}/mapping`, pData);
+	}
+
+	updateProjectionMapping(pID, pData)
+	{
+		return this.api('PUT', `/facto/projection/mapping/${pID}`, pData);
+	}
+
+	deleteProjectionMapping(pID)
+	{
+		return this.api('DELETE', `/facto/projection/mapping/${pID}`);
+	}
+
+	discoverFields(pIDDataset, pIDSource, pSampleSize)
+	{
+		return this.api('POST', `/facto/projection/${pIDDataset}/discover-fields`,
+			{
+				IDSource: pIDSource,
+				SampleSize: pSampleSize || 50
+			});
+	}
+
+	executeImport(pIDDataset, pIDProjectionMapping, pIDProjectionStore, pBatchSize, pCap)
+	{
+		return this.api('POST', `/facto/projection/${pIDDataset}/import`,
+			{
+				IDProjectionMapping: pIDProjectionMapping,
+				IDProjectionStore: pIDProjectionStore,
+				BatchSize: pBatchSize || 100,
+				Cap: pCap || 0
+			});
+	}
 }
 
 module.exports = FactoProvider;

@@ -5555,6 +5555,726 @@
                 },
                 "Authorization": {}
             }
+        },
+        "StoreConnection": {
+            "TableName": "StoreConnection",
+            "Domain": "Default",
+            "Columns": [
+                {
+                    "Column": "IDStoreConnection",
+                    "DataType": "ID"
+                },
+                {
+                    "Column": "GUIDStoreConnection",
+                    "DataType": "GUID",
+                    "Size": "36"
+                },
+                {
+                    "Column": "CreateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "CreatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "UpdateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "UpdatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Deleted",
+                    "DataType": "Boolean"
+                },
+                {
+                    "Column": "DeleteDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "DeletingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Name",
+                    "DataType": "String",
+                    "Size": "200"
+                },
+                {
+                    "Column": "Type",
+                    "DataType": "String",
+                    "Size": "32"
+                },
+                {
+                    "Column": "Config",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "Status",
+                    "DataType": "String",
+                    "Size": "32"
+                },
+                {
+                    "Column": "LastTestedDate",
+                    "DataType": "DateTime"
+                }
+            ],
+            "Description": "",
+            "MeadowSchema": {
+                "Scope": "StoreConnection",
+                "DefaultIdentifier": "IDStoreConnection",
+                "Domain": "Default",
+                "Schema": [
+                    {
+                        "Column": "IDStoreConnection",
+                        "Type": "AutoIdentity",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "GUIDStoreConnection",
+                        "Type": "AutoGUID",
+                        "Size": "36"
+                    },
+                    {
+                        "Column": "CreateDate",
+                        "Type": "CreateDate",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "CreatingIDUser",
+                        "Type": "CreateIDUser",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "UpdateDate",
+                        "Type": "UpdateDate",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "UpdatingIDUser",
+                        "Type": "UpdateIDUser",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "Deleted",
+                        "Type": "Deleted",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "DeleteDate",
+                        "Type": "DeleteDate",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "DeletingIDUser",
+                        "Type": "DeleteIDUser",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "Name",
+                        "Type": "String",
+                        "Size": "200"
+                    },
+                    {
+                        "Column": "Type",
+                        "Type": "String",
+                        "Size": "32"
+                    },
+                    {
+                        "Column": "Config",
+                        "Type": "String",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "Status",
+                        "Type": "String",
+                        "Size": "32"
+                    },
+                    {
+                        "Column": "LastTestedDate",
+                        "Type": "String",
+                        "Size": "Default"
+                    }
+                ],
+                "DefaultObject": {},
+                "JsonSchema": {
+                    "title": "StoreConnection",
+                    "type": "object",
+                    "properties": {
+                        "StoreConnection": {
+                            "type": "object",
+                            "properties": {
+                                "IDStoreConnection": {
+                                    "type": "integer",
+                                    "size": "Default"
+                                },
+                                "GUIDStoreConnection": {
+                                    "type": "string",
+                                    "size": "36"
+                                },
+                                "CreateDate": {
+                                    "type": "string",
+                                    "size": "Default"
+                                },
+                                "CreatingIDUser": {
+                                    "type": "integer",
+                                    "size": "int"
+                                },
+                                "UpdateDate": {
+                                    "type": "string",
+                                    "size": "Default"
+                                },
+                                "UpdatingIDUser": {
+                                    "type": "integer",
+                                    "size": "int"
+                                },
+                                "Deleted": {
+                                    "type": "boolean",
+                                    "size": "Default"
+                                },
+                                "DeleteDate": {
+                                    "type": "string",
+                                    "size": "Default"
+                                },
+                                "DeletingIDUser": {
+                                    "type": "integer",
+                                    "size": "int"
+                                },
+                                "Name": {
+                                    "type": "string",
+                                    "size": "200"
+                                },
+                                "Type": {
+                                    "type": "string",
+                                    "size": "32"
+                                },
+                                "Config": {
+                                    "type": "string",
+                                    "size": "Default"
+                                },
+                                "Status": {
+                                    "type": "string",
+                                    "size": "32"
+                                },
+                                "LastTestedDate": {
+                                    "type": "string",
+                                    "size": "Default"
+                                }
+                            },
+                            "required": [
+                                "IDStoreConnection"
+                            ]
+                        }
+                    },
+                    "Authorization": {}
+                }
+            },
+            "Authorization": {}
+        },
+        "ProjectionStore": {
+            "TableName": "ProjectionStore",
+            "Domain": "Default",
+            "Columns": [
+                {
+                    "Column": "IDProjectionStore",
+                    "DataType": "ID"
+                },
+                {
+                    "Column": "GUIDProjectionStore",
+                    "DataType": "GUID",
+                    "Size": "36"
+                },
+                {
+                    "Column": "CreateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "CreatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "UpdateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "UpdatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Deleted",
+                    "DataType": "Boolean"
+                },
+                {
+                    "Column": "DeleteDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "DeletingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "IDDataset",
+                    "DataType": "Numeric",
+                    "Size": "int",
+                    "Join": "IDDataset"
+                },
+                {
+                    "Column": "IDStoreConnection",
+                    "DataType": "Numeric",
+                    "Size": "int",
+                    "Join": "IDStoreConnection"
+                },
+                {
+                    "Column": "TargetTableName",
+                    "DataType": "String",
+                    "Size": "200"
+                },
+                {
+                    "Column": "Status",
+                    "DataType": "String",
+                    "Size": "32"
+                },
+                {
+                    "Column": "DeployedAt",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "DeployLog",
+                    "DataType": "Text"
+                }
+            ],
+            "Description": "",
+            "MeadowSchema": {
+                "Scope": "ProjectionStore",
+                "DefaultIdentifier": "IDProjectionStore",
+                "Domain": "Default",
+                "Schema": [
+                    {
+                        "Column": "IDProjectionStore",
+                        "Type": "AutoIdentity",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "GUIDProjectionStore",
+                        "Type": "AutoGUID",
+                        "Size": "36"
+                    },
+                    {
+                        "Column": "CreateDate",
+                        "Type": "CreateDate",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "CreatingIDUser",
+                        "Type": "CreateIDUser",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "UpdateDate",
+                        "Type": "UpdateDate",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "UpdatingIDUser",
+                        "Type": "UpdateIDUser",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "Deleted",
+                        "Type": "Deleted",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "DeleteDate",
+                        "Type": "DeleteDate",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "DeletingIDUser",
+                        "Type": "DeleteIDUser",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "IDDataset",
+                        "Type": "Numeric",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "IDStoreConnection",
+                        "Type": "Numeric",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "TargetTableName",
+                        "Type": "String",
+                        "Size": "200"
+                    },
+                    {
+                        "Column": "Status",
+                        "Type": "String",
+                        "Size": "32"
+                    },
+                    {
+                        "Column": "DeployedAt",
+                        "Type": "String",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "DeployLog",
+                        "Type": "String",
+                        "Size": "Default"
+                    }
+                ],
+                "DefaultObject": {},
+                "JsonSchema": {
+                    "title": "ProjectionStore",
+                    "type": "object",
+                    "properties": {
+                        "ProjectionStore": {
+                            "type": "object",
+                            "properties": {
+                                "IDProjectionStore": {
+                                    "type": "integer",
+                                    "size": "Default"
+                                },
+                                "GUIDProjectionStore": {
+                                    "type": "string",
+                                    "size": "36"
+                                },
+                                "CreateDate": {
+                                    "type": "string",
+                                    "size": "Default"
+                                },
+                                "CreatingIDUser": {
+                                    "type": "integer",
+                                    "size": "int"
+                                },
+                                "UpdateDate": {
+                                    "type": "string",
+                                    "size": "Default"
+                                },
+                                "UpdatingIDUser": {
+                                    "type": "integer",
+                                    "size": "int"
+                                },
+                                "Deleted": {
+                                    "type": "boolean",
+                                    "size": "Default"
+                                },
+                                "DeleteDate": {
+                                    "type": "string",
+                                    "size": "Default"
+                                },
+                                "DeletingIDUser": {
+                                    "type": "integer",
+                                    "size": "int"
+                                },
+                                "IDDataset": {
+                                    "type": "integer",
+                                    "size": "int"
+                                },
+                                "IDStoreConnection": {
+                                    "type": "integer",
+                                    "size": "int"
+                                },
+                                "TargetTableName": {
+                                    "type": "string",
+                                    "size": "200"
+                                },
+                                "Status": {
+                                    "type": "string",
+                                    "size": "32"
+                                },
+                                "DeployedAt": {
+                                    "type": "string",
+                                    "size": "Default"
+                                },
+                                "DeployLog": {
+                                    "type": "string",
+                                    "size": "Default"
+                                }
+                            },
+                            "required": [
+                                "IDProjectionStore"
+                            ]
+                        }
+                    },
+                    "Authorization": {}
+                }
+            },
+            "Authorization": {}
+        },
+        "ProjectionMapping": {
+            "TableName": "ProjectionMapping",
+            "Domain": "Default",
+            "Columns": [
+                {
+                    "Column": "IDProjectionMapping",
+                    "DataType": "ID"
+                },
+                {
+                    "Column": "GUIDProjectionMapping",
+                    "DataType": "GUID",
+                    "Size": "36"
+                },
+                {
+                    "Column": "CreateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "CreatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "UpdateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "UpdatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Deleted",
+                    "DataType": "Boolean"
+                },
+                {
+                    "Column": "DeleteDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "DeletingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "IDDataset",
+                    "DataType": "Numeric",
+                    "Size": "int",
+                    "Join": "IDDataset"
+                },
+                {
+                    "Column": "IDSource",
+                    "DataType": "Numeric",
+                    "Size": "int",
+                    "Join": "IDSource"
+                },
+                {
+                    "Column": "IDProjectionStore",
+                    "DataType": "Numeric",
+                    "Size": "int",
+                    "Join": "IDProjectionStore"
+                },
+                {
+                    "Column": "Name",
+                    "DataType": "String",
+                    "Size": "200"
+                },
+                {
+                    "Column": "SchemaVersion",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "MappingConfiguration",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "FlowDiagramState",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "Active",
+                    "DataType": "Boolean"
+                }
+            ],
+            "Description": "",
+            "MeadowSchema": {
+                "Scope": "ProjectionMapping",
+                "DefaultIdentifier": "IDProjectionMapping",
+                "Domain": "Default",
+                "Schema": [
+                    {
+                        "Column": "IDProjectionMapping",
+                        "Type": "AutoIdentity",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "GUIDProjectionMapping",
+                        "Type": "AutoGUID",
+                        "Size": "36"
+                    },
+                    {
+                        "Column": "CreateDate",
+                        "Type": "CreateDate",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "CreatingIDUser",
+                        "Type": "CreateIDUser",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "UpdateDate",
+                        "Type": "UpdateDate",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "UpdatingIDUser",
+                        "Type": "UpdateIDUser",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "Deleted",
+                        "Type": "Deleted",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "DeleteDate",
+                        "Type": "DeleteDate",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "DeletingIDUser",
+                        "Type": "DeleteIDUser",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "IDDataset",
+                        "Type": "Numeric",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "IDSource",
+                        "Type": "Numeric",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "IDProjectionStore",
+                        "Type": "Numeric",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "Name",
+                        "Type": "String",
+                        "Size": "200"
+                    },
+                    {
+                        "Column": "SchemaVersion",
+                        "Type": "Numeric",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "MappingConfiguration",
+                        "Type": "String",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "FlowDiagramState",
+                        "Type": "String",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "Active",
+                        "Type": "Deleted",
+                        "Size": "Default"
+                    }
+                ],
+                "DefaultObject": {},
+                "JsonSchema": {
+                    "title": "ProjectionMapping",
+                    "type": "object",
+                    "properties": {
+                        "ProjectionMapping": {
+                            "type": "object",
+                            "properties": {
+                                "IDProjectionMapping": {
+                                    "type": "integer",
+                                    "size": "Default"
+                                },
+                                "GUIDProjectionMapping": {
+                                    "type": "string",
+                                    "size": "36"
+                                },
+                                "CreateDate": {
+                                    "type": "string",
+                                    "size": "Default"
+                                },
+                                "CreatingIDUser": {
+                                    "type": "integer",
+                                    "size": "int"
+                                },
+                                "UpdateDate": {
+                                    "type": "string",
+                                    "size": "Default"
+                                },
+                                "UpdatingIDUser": {
+                                    "type": "integer",
+                                    "size": "int"
+                                },
+                                "Deleted": {
+                                    "type": "boolean",
+                                    "size": "Default"
+                                },
+                                "DeleteDate": {
+                                    "type": "string",
+                                    "size": "Default"
+                                },
+                                "DeletingIDUser": {
+                                    "type": "integer",
+                                    "size": "int"
+                                },
+                                "IDDataset": {
+                                    "type": "integer",
+                                    "size": "int"
+                                },
+                                "IDSource": {
+                                    "type": "integer",
+                                    "size": "int"
+                                },
+                                "IDProjectionStore": {
+                                    "type": "integer",
+                                    "size": "int"
+                                },
+                                "Name": {
+                                    "type": "string",
+                                    "size": "200"
+                                },
+                                "SchemaVersion": {
+                                    "type": "integer",
+                                    "size": "int"
+                                },
+                                "MappingConfiguration": {
+                                    "type": "string",
+                                    "size": "Default"
+                                },
+                                "FlowDiagramState": {
+                                    "type": "string",
+                                    "size": "Default"
+                                },
+                                "Active": {
+                                    "type": "boolean",
+                                    "size": "Default"
+                                }
+                            },
+                            "required": [
+                                "IDProjectionMapping"
+                            ]
+                        }
+                    },
+                    "Authorization": {}
+                }
+            },
+            "Authorization": {}
         }
     },
     "TablesSequence": [

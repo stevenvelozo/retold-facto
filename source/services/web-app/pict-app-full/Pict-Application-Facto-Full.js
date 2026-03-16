@@ -86,6 +86,10 @@ class FactoFullApplication extends libPictApplication
 			RecordPageSize: 50,
 			CurrentRecordContent: {},
 			CurrentDocumentSegments: [],
+			StoreConnections: [],
+			AvailableConnectionTypes: [],
+			ProjectionMappings: [],
+			DiscoveredFields: {},
 			CurrentTheme: 'turquoise-deluxe',
 			CurrentRoute: ''
 		};

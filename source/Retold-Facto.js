@@ -23,7 +23,11 @@ const libRetoldFactoDatasetManager = require('./services/Retold-Facto-DatasetMan
 const libRetoldFactoIngestEngine = require('./services/Retold-Facto-IngestEngine.js');
 const libRetoldFactoProjectionEngine = require('./services/Retold-Facto-ProjectionEngine.js');
 const libRetoldFactoCatalogManager = require('./services/Retold-Facto-CatalogManager.js');
+const libRetoldFactoStoreConnectionManager = require('./services/Retold-Facto-StoreConnectionManager.js');
 const libRetoldFactoDataLakeService = require('./services/Retold-Facto-DataLakeService.js');
+
+const libMeadowIntegration = require('meadow-integration');
+const libTabularTransform = require('meadow-integration/source/services/tabular/Service-TabularTransform.js');
 
 // Embedded schema SQL for auto-creation when using SQLite
 const FACTO_SCHEMA_SQL = `
@@ -132,6 +136,40 @@ CREATE TABLE IF NOT EXISTS CatalogDatasetDefinition (
 	Provisioned INTEGER DEFAULT 0,
 	IDSource INTEGER DEFAULT 0, IDDataset INTEGER DEFAULT 0
 );
+CREATE TABLE IF NOT EXISTS StoreConnection (
+	IDStoreConnection INTEGER PRIMARY KEY AUTOINCREMENT,
+	GUIDStoreConnection TEXT,
+	CreateDate TEXT, CreatingIDUser INTEGER DEFAULT 0,
+	UpdateDate TEXT, UpdatingIDUser INTEGER DEFAULT 0,
+	Deleted INTEGER DEFAULT 0, DeleteDate TEXT, DeletingIDUser INTEGER DEFAULT 0,
+	Name TEXT, Type TEXT, Config TEXT,
+	Status TEXT DEFAULT 'Untested', LastTestedDate TEXT
+);
+CREATE TABLE IF NOT EXISTS ProjectionStore (
+	IDProjectionStore INTEGER PRIMARY KEY AUTOINCREMENT,
+	GUIDProjectionStore TEXT,
+	CreateDate TEXT, CreatingIDUser INTEGER DEFAULT 0,
+	UpdateDate TEXT, UpdatingIDUser INTEGER DEFAULT 0,
+	Deleted INTEGER DEFAULT 0, DeleteDate TEXT, DeletingIDUser INTEGER DEFAULT 0,
+	IDDataset INTEGER DEFAULT 0, IDStoreConnection INTEGER DEFAULT 0,
+	TargetTableName TEXT, Status TEXT DEFAULT 'Pending',
+	DeployedAt TEXT, DeployLog TEXT
+);
+CREATE TABLE IF NOT EXISTS ProjectionMapping (
+	IDProjectionMapping INTEGER PRIMARY KEY AUTOINCREMENT,
+	GUIDProjectionMapping TEXT,
+	CreateDate TEXT, CreatingIDUser INTEGER DEFAULT 0,
+	UpdateDate TEXT, UpdatingIDUser INTEGER DEFAULT 0,
+	Deleted INTEGER DEFAULT 0, DeleteDate TEXT, DeletingIDUser INTEGER DEFAULT 0,
+	IDDataset INTEGER DEFAULT 0,
+	IDSource INTEGER DEFAULT 0,
+	IDProjectionStore INTEGER DEFAULT 0,
+	Name TEXT,
+	SchemaVersion INTEGER DEFAULT 0,
+	MappingConfiguration TEXT,
+	FlowDiagramState TEXT,
+	Active INTEGER DEFAULT 1
+);
 `;
 
 const defaultFactoSettings = (
@@ -166,6 +204,8 @@ const defaultFactoSettings = (
 				ProjectionEngine: true,
 				// Catalog manager API (/facto/catalog/*)
 				CatalogManager: true,
+				// Store connection manager API (/facto/connection/*)
+				StoreConnectionManager: true,
 				// Web UI
 				WebUI: true
 			},
@@ -246,12 +286,24 @@ class RetoldFacto extends libFableServiceProviderBase
 				RoutePrefix: this.options.Facto.RoutePrefix
 			});
 
+		this.fable.serviceManager.addServiceType('RetoldFactoStoreConnectionManager', libRetoldFactoStoreConnectionManager);
+		this.fable.serviceManager.instantiateServiceProvider('RetoldFactoStoreConnectionManager',
+			{
+				RoutePrefix: this.options.Facto.RoutePrefix
+			});
+
 		this.fable.serviceManager.addServiceType('RetoldFactoDataLakeService', libRetoldFactoDataLakeService);
 		this.fable.serviceManager.instantiateServiceProvider('RetoldFactoDataLakeService',
 			{
 				CatalogPath: this.options.Facto.CatalogPath || null,
 				DataDir: this.options.Facto.DataDir || null
 			});
+
+		// Register Meadow Integration services for projection mapping transforms
+		this.fable.serviceManager.addServiceType('TabularCheck', libMeadowIntegration.TabularCheck);
+		this.fable.serviceManager.instantiateServiceProvider('TabularCheck');
+		this.fable.serviceManager.addServiceType('TabularTransform', libTabularTransform);
+		this.fable.serviceManager.instantiateServiceProvider('TabularTransform');
 
 		// Expose DAL on fable for convenience
 		this.fable.DAL = this._DAL;
@@ -491,7 +543,7 @@ class RetoldFacto extends libFableServiceProviderBase
 			this.fable.log.info(`Retold Facto is initializing...`);
 
 			// Log endpoint configuration
-			let tmpGroupNames = ['MeadowEndpoints', 'SourceManager', 'RecordManager', 'DatasetManager', 'IngestEngine', 'ProjectionEngine', 'CatalogManager', 'WebUI'];
+			let tmpGroupNames = ['MeadowEndpoints', 'SourceManager', 'RecordManager', 'DatasetManager', 'IngestEngine', 'ProjectionEngine', 'CatalogManager', 'StoreConnectionManager', 'WebUI'];
 			let tmpEnabledGroups = [];
 			let tmpDisabledGroups = [];
 			for (let i = 0; i < tmpGroupNames.length; i++)
@@ -582,6 +634,11 @@ class RetoldFacto extends libFableServiceProviderBase
 					if (this.isEndpointGroupEnabled('CatalogManager'))
 					{
 						this.fable.RetoldFactoCatalogManager.connectRoutes(this.fable.OratorServiceServer);
+					}
+
+					if (this.isEndpointGroupEnabled('StoreConnectionManager'))
+					{
+						this.fable.RetoldFactoStoreConnectionManager.connectRoutes(this.fable.OratorServiceServer);
 					}
 
 					return fInitCallback();

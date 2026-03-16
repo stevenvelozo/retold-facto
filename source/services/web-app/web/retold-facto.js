@@ -548,7 +548,7 @@ let tmpCode=this.codeJar.toString();this.codeJar.destroy();this.codeJar=this._co
 	 * Marshal code content from the data address into the view.
 	 */marshalToView(){super.marshalToView();if(this.codeJar&&this.options.CodeDataAddress){let tmpCode=this._resolveCodeContent();if(typeof tmpCode==='string'){this.codeJar.updateCode(tmpCode);this._updateLineNumbers();}}}/**
 	 * Marshal the current code content back to the data address.
-	 */marshalFromView(){super.marshalFromView();if(this.codeJar&&this.options.CodeDataAddress){this.onCodeChange(this.codeJar.toString());}}}module.exports=PictSectionCode;module.exports.default_configuration=_DefaultConfiguration;module.exports.createHighlighter=libCreateHighlighter;},{"./Pict-Code-Highlighter.js":9,"./Pict-Section-Code-DefaultConfiguration.js":10,"pict-view":33}],12:[function(require,module,exports){// The container for all the Pict-Section-Content related code.
+	 */marshalFromView(){super.marshalFromView();if(this.codeJar&&this.options.CodeDataAddress){this.onCodeChange(this.codeJar.toString());}}}module.exports=PictSectionCode;module.exports.default_configuration=_DefaultConfiguration;module.exports.createHighlighter=libCreateHighlighter;},{"./Pict-Code-Highlighter.js":9,"./Pict-Section-Code-DefaultConfiguration.js":10,"pict-view":64}],12:[function(require,module,exports){// The container for all the Pict-Section-Content related code.
 // The main content view class
 module.exports=require('./views/Pict-View-Content.js');// The content provider (markdown parsing, HTML escaping)
 module.exports.PictContentProvider=require('./providers/Pict-Provider-Content.js');},{"./providers/Pict-Provider-Content.js":13,"./views/Pict-View-Content.js":14}],13:[function(require,module,exports){const libPictProvider=require('pict-provider');const libCreateHighlighter=require('pict-section-code').createHighlighter;/**
@@ -860,7 +860,3644 @@ let tmpDisplayElements=tmpContentBody.querySelectorAll('.pict-content-katex-disp
 	 *
 	 * @param {string} [pMessage] - Loading message (defaults to 'Loading content...')
 	 * @param {string} [pContainerID] - The container element ID (defaults to 'Pict-Content-Body')
-	 */showLoading(pMessage,pContainerID){let tmpContainerID=pContainerID||'Pict-Content-Body';let tmpMessage=pMessage||'Loading content...';this.pict.ContentAssignment.assignContent('#'+tmpContainerID,'<div class="pict-content-loading">'+tmpMessage+'</div>');}}module.exports=PictContentView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":33}],15:[function(require,module,exports){/**
+	 */showLoading(pMessage,pContainerID){let tmpContainerID=pContainerID||'Pict-Content-Body';let tmpMessage=pMessage||'Loading content...';this.pict.ContentAssignment.assignContent('#'+tmpContainerID,'<div class="pict-content-loading">'+tmpMessage+'</div>');}}module.exports=PictContentView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":64}],15:[function(require,module,exports){// The container for all the Pict-Section-Flow related code.
+// The main flow diagram view class
+module.exports=require('./views/PictView-Flow.js');// Node rendering view
+module.exports.PictViewFlowNode=require('./views/PictView-Flow-Node.js');// Toolbar views
+module.exports.PictViewFlowToolbar=require('./views/PictView-Flow-Toolbar.js');module.exports.PictViewFlowFloatingToolbar=require('./views/PictView-Flow-FloatingToolbar.js');// Services
+module.exports.PictServiceFlowInteractionManager=require('./services/PictService-Flow-InteractionManager.js');module.exports.PictServiceFlowConnectionRenderer=require('./services/PictService-Flow-ConnectionRenderer.js');module.exports.PictServiceFlowTether=require('./services/PictService-Flow-Tether.js');module.exports.PictServiceFlowLayout=require('./services/PictService-Flow-Layout.js');module.exports.PictServiceFlowPathGenerator=require('./services/PictService-Flow-PathGenerator.js');module.exports.PictServiceFlowViewportManager=require('./services/PictService-Flow-ViewportManager.js');module.exports.PictServiceFlowSelectionManager=require('./services/PictService-Flow-SelectionManager.js');module.exports.PictServiceFlowPanelManager=require('./services/PictService-Flow-PanelManager.js');// Providers
+module.exports.PictProviderFlowNodeTypes=require('./providers/PictProvider-Flow-NodeTypes.js');module.exports.PictProviderFlowEventHandler=require('./providers/PictProvider-Flow-EventHandler.js');module.exports.PictProviderFlowLayouts=require('./providers/PictProvider-Flow-Layouts.js');module.exports.PictProviderFlowSVGHelpers=require('./providers/PictProvider-Flow-SVGHelpers.js');module.exports.PictProviderFlowGeometry=require('./providers/PictProvider-Flow-Geometry.js');module.exports.PictProviderFlowPanelChrome=require('./providers/PictProvider-Flow-PanelChrome.js');module.exports.PictProviderFlowCSS=require('./providers/PictProvider-Flow-CSS.js');module.exports.PictProviderFlowIcons=require('./providers/PictProvider-Flow-Icons.js');module.exports.PictProviderFlowConnectorShapes=require('./providers/PictProvider-Flow-ConnectorShapes.js');// FlowCard base class
+module.exports.PictFlowCard=require('./PictFlowCard.js');// FlowCardPropertiesPanel base class and panel types
+module.exports.PictFlowCardPropertiesPanel=require('./PictFlowCardPropertiesPanel.js');module.exports.FlowCardPropertiesPanelTemplate=require('./panels/FlowCardPropertiesPanel-Template.js');module.exports.FlowCardPropertiesPanelMarkdown=require('./panels/FlowCardPropertiesPanel-Markdown.js');module.exports.FlowCardPropertiesPanelForm=require('./panels/FlowCardPropertiesPanel-Form.js');module.exports.FlowCardPropertiesPanelView=require('./panels/FlowCardPropertiesPanel-View.js');// Properties panel renderer view
+module.exports.PictViewFlowPropertiesPanel=require('./views/PictView-Flow-PropertiesPanel.js');},{"./PictFlowCard.js":16,"./PictFlowCardPropertiesPanel.js":17,"./panels/FlowCardPropertiesPanel-Form.js":18,"./panels/FlowCardPropertiesPanel-Markdown.js":19,"./panels/FlowCardPropertiesPanel-Template.js":20,"./panels/FlowCardPropertiesPanel-View.js":21,"./providers/PictProvider-Flow-CSS.js":22,"./providers/PictProvider-Flow-ConnectorShapes.js":23,"./providers/PictProvider-Flow-EventHandler.js":24,"./providers/PictProvider-Flow-Geometry.js":25,"./providers/PictProvider-Flow-Icons.js":26,"./providers/PictProvider-Flow-Layouts.js":27,"./providers/PictProvider-Flow-NodeTypes.js":28,"./providers/PictProvider-Flow-PanelChrome.js":30,"./providers/PictProvider-Flow-SVGHelpers.js":31,"./services/PictService-Flow-ConnectionRenderer.js":33,"./services/PictService-Flow-InteractionManager.js":34,"./services/PictService-Flow-Layout.js":35,"./services/PictService-Flow-PanelManager.js":36,"./services/PictService-Flow-PathGenerator.js":37,"./services/PictService-Flow-SelectionManager.js":38,"./services/PictService-Flow-Tether.js":39,"./services/PictService-Flow-ViewportManager.js":40,"./views/PictView-Flow-FloatingToolbar.js":41,"./views/PictView-Flow-Node.js":42,"./views/PictView-Flow-PropertiesPanel.js":43,"./views/PictView-Flow-Toolbar.js":44,"./views/PictView-Flow.js":45}],16:[function(require,module,exports){const libFableServiceProviderBase=require('fable-serviceproviderbase');/**
+ * PictFlowCard - Base class for flow diagram cards.
+ *
+ * Developers create subclasses of PictFlowCard to define reusable node types
+ * that appear in the flow palette. Each card describes a discrete operation
+ * (e.g. "If-Then-Else", "File Read") with configurable inputs, outputs, and
+ * metadata. Pict-Section-Flow uses registered cards to build a palette for
+ * the user to drag onto the graph.
+ *
+ * Configurable properties:
+ *   - Title          (string, required) - Display name shown on the node
+ *   - Name           (string, optional) - Longer descriptive name
+ *   - Code           (string, required) - Short identifier (e.g. "ITE", "SW")
+ *   - Description    (string, optional) - Brief explanation of what the card does
+ *   - Icon           (string, optional) - Icon identifier or emoji
+ *   - PreviewImage   (string, optional) - URL to a preview/thumbnail image
+ *   - Documentation  (string, optional) - URL or inline documentation text
+ *   - Tooltip        (string, optional) - Hover tooltip text
+ *   - Inputs         (array)  - Named input ports, each with:
+ *       - Name                 (string)  - Port label
+ *       - Side                 (string)  - Port side ('left', 'top', etc.)
+ *       - MinimumInputCount    (number)  - Minimum connections accepted (default 0)
+ *       - MaximumInputCount    (number)  - Maximum connections accepted (default -1, unlimited)
+ *   - Outputs        (array)  - Named output ports
+ *   - Enabled        (boolean) - Whether this card is available in the palette
+ *   - PropertiesPanel (object, optional) - Configuration for the on-graph properties panel
+ *       - PanelType      (string)  - 'Template', 'Markdown', 'Form', or 'View'
+ *       - DefaultWidth   (number)  - Panel width (default 300)
+ *       - DefaultHeight  (number)  - Panel height (default 200)
+ *       - Title          (string)  - Panel title bar text
+ *       - Configuration  (object)  - Panel-type-specific configuration
+ *   - BodyContent     (object, optional) - Custom content rendered in the node body area
+ *       - ContentType    (string)  - 'svg', 'html', or 'canvas'
+ *       - Template       (string)  - Pict template string (html/svg only)
+ *       - TemplateHash   (string)  - Registered template hash (takes precedence over Template)
+ *       - Templates      (array)   - Template definitions to register [{Hash, Template}]
+ *       - RenderCallback (function)- Imperative render callback (required for canvas)
+ *       - Padding        (number)  - Inner padding in pixels (default 2)
+ *   - ShowTypeLabel    (boolean, default true)  - Whether to show the type label/code badge on hover
+ *   - PortLabelsOnHover (boolean, default false) - When true, port labels only appear on hover
+ *   - PortLabelsVertical (boolean, default false) - When true, port labels render vertically
+ *   - PortLabelPadding  (boolean, default false) - When true, port labels have extra padding to avoid overlapping body content
+ *   - LabelsInFront     (boolean, default true)  - When true, labels render in front of body content; when false, behind
+ *
+ * Usage:
+ *   class MyCard extends PictFlowCard {
+ *     constructor(pFable, pOptions, pServiceHash) {
+ *       super(pFable, pOptions, pServiceHash);
+ *       this.cardTitle = 'My Card';
+ *       this.cardCode = 'MC';
+ *       this.cardInputs = [{ Name: 'Data', Side: 'left', MinimumInputCount: 1, MaximumInputCount: 1 }];
+ *       this.cardOutputs = [{ Name: 'Result', Side: 'right' }];
+ *     }
+ *   }
+ */class PictFlowCard extends libFableServiceProviderBase{constructor(pFable,pOptions,pServiceHash){let tmpOptions=Object.assign({},PictFlowCard.default_configuration,pOptions);super(pFable,tmpOptions,pServiceHash);this.serviceType='PictFlowCard';// --- Card metadata ---
+this.cardTitle=tmpOptions.Title?tmpOptions.Title:'Card';this.cardName=tmpOptions.Name?tmpOptions.Name:false;this.cardCode=tmpOptions.Code?tmpOptions.Code:'';this.cardDescription=tmpOptions.Description?tmpOptions.Description:false;this.cardIcon=tmpOptions.Icon?tmpOptions.Icon:false;this.cardPreviewImage=tmpOptions.PreviewImage?tmpOptions.PreviewImage:false;this.cardDocumentation=tmpOptions.Documentation?tmpOptions.Documentation:false;this.cardTooltip=tmpOptions.Tooltip?tmpOptions.Tooltip:false;// --- Card enabled state ---
+this.cardEnabled=typeof tmpOptions.Enabled==='boolean'?tmpOptions.Enabled:true;// --- Card appearance ---
+this.cardTitleBarColor=tmpOptions.TitleBarColor?tmpOptions.TitleBarColor:'#2c3e50';this.cardBodyStyle=tmpOptions.BodyStyle?tmpOptions.BodyStyle:{};this.cardWidth=typeof tmpOptions.Width==='number'?tmpOptions.Width:180;this.cardHeight=typeof tmpOptions.Height==='number'?tmpOptions.Height:80;this.cardCategory=tmpOptions.Category?tmpOptions.Category:'General';// --- Input and Output port definitions ---
+// Inputs: [{ Name: 'In', Side: 'left', MinimumInputCount: 0, MaximumInputCount: -1 }]
+// Outputs: [{ Name: 'Out', Side: 'right' }]
+this.cardInputs=Array.isArray(tmpOptions.Inputs)?tmpOptions.Inputs:[];this.cardOutputs=Array.isArray(tmpOptions.Outputs)?tmpOptions.Outputs:[];// --- Properties panel configuration ---
+this.cardPropertiesPanel=tmpOptions.PropertiesPanel&&typeof tmpOptions.PropertiesPanel==='object'?tmpOptions.PropertiesPanel:null;// --- Body content configuration ---
+this.cardBodyContent=tmpOptions.BodyContent&&typeof tmpOptions.BodyContent==='object'?tmpOptions.BodyContent:null;// --- Label display booleans ---
+this.cardShowTypeLabel=typeof tmpOptions.ShowTypeLabel==='boolean'?tmpOptions.ShowTypeLabel:true;this.cardPortLabelsOnHover=typeof tmpOptions.PortLabelsOnHover==='boolean'?tmpOptions.PortLabelsOnHover:false;this.cardPortLabelsVertical=typeof tmpOptions.PortLabelsVertical==='boolean'?tmpOptions.PortLabelsVertical:false;this.cardPortLabelPadding=typeof tmpOptions.PortLabelPadding==='boolean'?tmpOptions.PortLabelPadding:false;this.cardPortLabelsOutside=typeof tmpOptions.PortLabelsOutside==='boolean'?tmpOptions.PortLabelsOutside:false;this.cardLabelsInFront=typeof tmpOptions.LabelsInFront==='boolean'?tmpOptions.LabelsInFront:true;}/**
+	 * Generate the node type configuration object for the NodeTypes provider.
+	 * This converts the card's properties into the format expected by
+	 * PictProviderFlowNodeTypes.registerNodeType().
+	 *
+	 * @returns {Object} Node type configuration
+	 */getNodeTypeConfiguration(){let tmpPorts=[];// Build input ports
+for(let i=0;i<this.cardInputs.length;i++){let tmpInput=this.cardInputs[i];let tmpPort={Hash:null,Direction:'input',Side:tmpInput.Side||'left',Label:tmpInput.Name||`In ${i+1}`,MinimumInputCount:typeof tmpInput.MinimumInputCount==='number'?tmpInput.MinimumInputCount:0,MaximumInputCount:typeof tmpInput.MaximumInputCount==='number'?tmpInput.MaximumInputCount:-1};if(tmpInput.PortType){tmpPort.PortType=tmpInput.PortType;}if(tmpInput.DataType){tmpPort.DataType=tmpInput.DataType;}tmpPorts.push(tmpPort);}// Build output ports
+for(let i=0;i<this.cardOutputs.length;i++){let tmpOutput=this.cardOutputs[i];let tmpOutPort={Hash:null,Direction:'output',Side:tmpOutput.Side||'right',Label:tmpOutput.Name||`Out ${i+1}`};if(tmpOutput.PortType){tmpOutPort.PortType=tmpOutput.PortType;}if(tmpOutput.DataType){tmpOutPort.DataType=tmpOutput.DataType;}tmpPorts.push(tmpOutPort);}// If no ports were defined, provide sensible defaults
+if(tmpPorts.length===0){tmpPorts.push({Hash:null,Direction:'input',Side:'left',Label:'In'});tmpPorts.push({Hash:null,Direction:'output',Side:'right',Label:'Out'});}let tmpResult={Hash:this.cardCode,Label:this.cardTitle,DefaultWidth:this.cardWidth,DefaultHeight:this.cardHeight,DefaultPorts:tmpPorts,TitleBarColor:this.cardTitleBarColor,BodyStyle:JSON.parse(JSON.stringify(this.cardBodyStyle)),// Extended FlowCard metadata stored alongside the type
+CardMetadata:{Name:this.cardName,Code:this.cardCode,Description:this.cardDescription,Icon:this.cardIcon,PreviewImage:this.cardPreviewImage,Documentation:this.cardDocumentation,Tooltip:this.cardTooltip,Enabled:this.cardEnabled,Category:this.cardCategory}};// Include label display booleans
+tmpResult.ShowTypeLabel=this.cardShowTypeLabel;tmpResult.PortLabelsOnHover=this.cardPortLabelsOnHover;tmpResult.PortLabelsVertical=this.cardPortLabelsVertical;tmpResult.PortLabelPadding=this.cardPortLabelPadding;tmpResult.PortLabelsOutside=this.cardPortLabelsOutside;tmpResult.LabelsInFront=this.cardLabelsInFront;// Include properties panel config if defined
+if(this.cardPropertiesPanel){tmpResult.PropertiesPanel=JSON.parse(JSON.stringify(this.cardPropertiesPanel));}// Include body content config if defined
+if(this.cardBodyContent){tmpResult.BodyContent=JSON.parse(JSON.stringify(this.cardBodyContent));// RenderCallback cannot be serialized — preserve the original function reference
+if(typeof this.options.BodyContent.RenderCallback==='function'){tmpResult.BodyContent.RenderCallback=this.options.BodyContent.RenderCallback;}}return tmpResult;}/**
+	 * Register this card with a FlowView's node type provider.
+	 *
+	 * @param {Object} pFlowView - The PictViewFlow instance
+	 * @returns {boolean} Whether registration succeeded
+	 */registerWithFlowView(pFlowView){if(!pFlowView||!pFlowView._NodeTypeProvider){this.log.warn('PictFlowCard registerWithFlowView: no valid FlowView or NodeTypeProvider');return false;}let tmpConfig=this.getNodeTypeConfiguration();return pFlowView._NodeTypeProvider.registerNodeType(tmpConfig);}}module.exports=PictFlowCard;module.exports.default_configuration={Title:'Card',Name:false,Code:'',Description:false,Icon:false,PreviewImage:false,Documentation:false,Tooltip:false,Inputs:[],Outputs:[],Enabled:true,TitleBarColor:'#2c3e50',BodyStyle:{},Width:180,Height:80,Category:'General',PropertiesPanel:null,BodyContent:null,ShowTypeLabel:true,PortLabelsOnHover:false,PortLabelsVertical:false,PortLabelPadding:false,PortLabelsOutside:false,LabelsInFront:true};},{"fable-serviceproviderbase":2}],17:[function(require,module,exports){const libFableServiceProviderBase=require('fable-serviceproviderbase');/**
+ * PictFlowCardPropertiesPanel - Base class for flow card property panels.
+ *
+ * Developers create subclasses to define what UI appears when a user opens
+ * the properties panel for a node on the flow graph. Four built-in panel
+ * types are provided:
+ *
+ *   - Template  - Renders pict templates
+ *   - Markdown  - Renders markdown via pict-section-content
+ *   - Form      - Creates an ephemeral pict-section-form section
+ *   - View      - Renders an existing registered pict-view
+ *
+ * Configurable properties:
+ *   - PanelType      (string)  - Panel type identifier
+ *   - Title          (string)  - Panel title bar text
+ *   - Width          (number)  - Default panel width in pixels
+ *   - Height         (number)  - Default panel height in pixels
+ *   - Configuration  (object)  - Panel-type-specific configuration
+ */class PictFlowCardPropertiesPanel extends libFableServiceProviderBase{constructor(pFable,pOptions,pServiceHash){let tmpOptions=Object.assign({},PictFlowCardPropertiesPanel.default_configuration,pOptions);super(pFable,tmpOptions,pServiceHash);this.serviceType='PictFlowCardPropertiesPanel';// Panel metadata
+this.panelType=tmpOptions.PanelType||'Base';this.panelTitle=tmpOptions.Title||'Properties';this.panelWidth=typeof tmpOptions.Width==='number'?tmpOptions.Width:300;this.panelHeight=typeof tmpOptions.Height==='number'?tmpOptions.Height:200;// Reference to the flow view (set when panel is activated)
+this._FlowView=null;// The node data this panel is operating on (set when panel is opened)
+this._NodeData=null;// The DOM container element for panel content (set during render)
+this._ContentContainer=null;// The panel configuration (panel-type-specific)
+this._Configuration=tmpOptions.Configuration||{};}/**
+	 * Render the panel's content into a DOM container element.
+	 * Subclasses MUST override this.
+	 *
+	 * @param {HTMLElement} pContainer - The DOM element to render into
+	 * @param {Object} pNodeData - The node data object (has .Data property)
+	 */render(pContainer,pNodeData){this._ContentContainer=pContainer;this._NodeData=pNodeData;}/**
+	 * Marshal data FROM the node's Data object INTO the panel UI.
+	 * Called when the panel opens or when data changes externally.
+	 *
+	 * @param {Object} pNodeData
+	 */marshalToPanel(pNodeData){this._NodeData=pNodeData;}/**
+	 * Marshal data FROM the panel UI INTO the node's Data object.
+	 * Called before saving or when the panel is about to close.
+	 *
+	 * @param {Object} pNodeData
+	 */marshalFromPanel(pNodeData){// Subclasses override
+}/**
+	 * Called when the panel is being destroyed (closed).
+	 * Subclasses should clean up resources.
+	 */destroy(){this._ContentContainer=null;this._NodeData=null;}}module.exports=PictFlowCardPropertiesPanel;module.exports.default_configuration={PanelType:'Base',Title:'Properties',Width:300,Height:200,Configuration:{}};},{"fable-serviceproviderbase":2}],18:[function(require,module,exports){const libPictFlowCardPropertiesPanel=require('../PictFlowCardPropertiesPanel.js');/**
+ * FlowCardPropertiesPanel-Form
+ *
+ * Creates an ephemeral pict-section-form section to edit the node's Data object.
+ * Uses PictViewFormMetacontroller.injectManifest() to dynamically create form
+ * sections at runtime.
+ *
+ * Note: pict-section-form must be available in the consuming application
+ * (it is an optional/peer dependency, not bundled with pict-section-flow).
+ *
+ * Configuration:
+ *   {
+ *     PanelType: 'Form',
+ *     Configuration: {
+ *       Manifest: {
+ *         Sections: [...],
+ *         Descriptors: {...}
+ *       }
+ *     }
+ *   }
+ */class FlowCardPropertiesPanelForm extends libPictFlowCardPropertiesPanel{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictFlowCardPropertiesPanel-Form';this._Metacontroller=null;this._InjectedSectionHash=null;}/**
+	 * Render the form into the panel body.
+	 */render(pContainer,pNodeData){super.render(pContainer,pNodeData);if(!this._Configuration||!this._Configuration.Manifest){pContainer.innerHTML='<em>No form manifest configured</em>';return;}// Create a unique container ID for the form section
+let tmpContainerID=`pict-flow-panel-form-${pNodeData.Hash}`;pContainer.innerHTML=`<div id="${tmpContainerID}"></div>`;// Bind the node data to AppData.Record so the form descriptors
+// (which use addresses like Record.Data.SearchString) resolve against
+// the actual node object.
+this.fable.AppData.Record=pNodeData;try{// Look for an existing metacontroller or create one
+if(!this._Metacontroller){// Try to find PictFormMetacontroller service type (check both common names)
+let tmpServiceType=null;if(this.fable.servicesMap.hasOwnProperty('PictFormMetacontroller')){tmpServiceType='PictFormMetacontroller';}else if(this.fable.servicesMap.hasOwnProperty('PictViewFormMetacontroller')){tmpServiceType='PictViewFormMetacontroller';}if(tmpServiceType){this._Metacontroller=this.fable.instantiateServiceProviderWithoutRegistration(tmpServiceType,{ViewIdentifier:`FlowPanelForm-${pNodeData.Hash}`,DefaultDestinationAddress:`#${tmpContainerID}`,AutoRender:false,AutoPopulateAfterRender:true,AutoSolveBeforeRender:false});}}if(this._Metacontroller&&typeof this._Metacontroller.injectManifestAndRender==='function'){// Create the FormContainer div that the metacontroller's
+// updateMetatemplateInDOM() expects when adding section wrappers.
+// Normally this is created when the metacontroller renders its own
+// metatemplate, but we skip that step since we only need the
+// injected section views, not the metacontroller's own renderable.
+let tmpFormContainerID=`Pict-${this._Metacontroller.UUID}-FormContainer`;let tmpContainerEl=pContainer.querySelector(`#${tmpContainerID}`);if(tmpContainerEl){tmpContainerEl.innerHTML=`<div id="${tmpFormContainerID}" class="pict-form"></div>`;}// Deep clone the manifest so each panel gets its own copy
+let tmpManifest=JSON.parse(JSON.stringify(this._Configuration.Manifest));this._InjectedSectionHash=tmpManifest.Hash||null;// Use injectManifestAndRender which properly creates section views,
+// updates the metatemplate in the DOM, and renders each section view
+this._Metacontroller.injectManifestAndRender(tmpManifest);}else if(this._Metacontroller&&typeof this._Metacontroller.injectManifest==='function'){// Fallback for older pict-section-form versions: inject the
+// manifest and render each section view individually
+let tmpManifest=JSON.parse(JSON.stringify(this._Configuration.Manifest));let tmpViewsToRender=this._Metacontroller.injectManifest(tmpManifest);this._InjectedSectionHash=tmpManifest.Hash||null;// Create container divs for each section view and render them
+let tmpContainerEl=pContainer.querySelector(`#${tmpContainerID}`);if(tmpContainerEl&&tmpViewsToRender.length>0){let tmpInnerHTML='';for(let i=0;i<tmpViewsToRender.length;i++){let tmpDestID=tmpViewsToRender[i].options.DefaultDestinationAddress;if(tmpDestID&&tmpDestID.charAt(0)==='#'){tmpDestID=tmpDestID.substring(1);}tmpInnerHTML+=`<div id="${tmpDestID}" class="pict-form-view"></div>`;}tmpContainerEl.innerHTML=tmpInnerHTML;for(let i=0;i<tmpViewsToRender.length;i++){tmpViewsToRender[i].render();}}}else{pContainer.innerHTML='<em>pict-section-form is not available. Install it in your application to use Form panels.</em>';}}catch(pError){this.log.warn(`FlowCardPropertiesPanel-Form render error: ${pError.message}`);pContainer.innerHTML=`<em>Form render error: ${pError.message}</em>`;}}marshalFromPanel(pNodeData){if(this._Metacontroller&&typeof this._Metacontroller.marshalFromView==='function'){this._Metacontroller.marshalFromView();}}destroy(){this._Metacontroller=null;this._InjectedSectionHash=null;super.destroy();}}module.exports=FlowCardPropertiesPanelForm;module.exports.default_configuration=Object.assign({},libPictFlowCardPropertiesPanel.default_configuration,{PanelType:'Form',Configuration:{Manifest:null}});},{"../PictFlowCardPropertiesPanel.js":17}],19:[function(require,module,exports){const libPictFlowCardPropertiesPanel=require('../PictFlowCardPropertiesPanel.js');/**
+ * FlowCardPropertiesPanel-Markdown
+ *
+ * Renders markdown content into the panel body using pict-section-content's
+ * PictContentProvider service.  When pict-section-content is installed and its
+ * PictContentProvider service type has been registered with the pict instance,
+ * full markdown rendering is available (headings, lists, tables, code blocks
+ * with syntax highlighting, KaTeX equations, Mermaid diagrams, etc.).
+ *
+ * If PictContentProvider is not available, the panel falls back to displaying
+ * the raw markdown as pre-formatted text.
+ *
+ * Configuration:
+ *   {
+ *     PanelType: 'Markdown',
+ *     Configuration: {
+ *       Markdown: '# Title\nSome **markdown** content'
+ *     }
+ *   }
+ *
+ * Or use an address to pull markdown from the node's data:
+ *   {
+ *     PanelType: 'Markdown',
+ *     Configuration: {
+ *       MarkdownAddress: 'Data.MarkdownContent'
+ *     }
+ *   }
+ */class FlowCardPropertiesPanelMarkdown extends libPictFlowCardPropertiesPanel{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictFlowCardPropertiesPanel-Markdown';this._ContentProvider=null;}/**
+	 * Render markdown into the panel.
+	 */render(pContainer,pNodeData){super.render(pContainer,pNodeData);this._renderMarkdown();}marshalToPanel(pNodeData){super.marshalToPanel(pNodeData);this._renderMarkdown();}_renderMarkdown(){if(!this._ContentContainer||!this._Configuration)return;let tmpMarkdown='';if(this._Configuration.MarkdownAddress&&this._NodeData){// Resolve markdown from node data using manyfest
+tmpMarkdown=this.fable.manifest.getValueByHash(this._NodeData,this._Configuration.MarkdownAddress)||'';}else if(this._Configuration.Markdown){tmpMarkdown=this._Configuration.Markdown;}if(!tmpMarkdown){this._ContentContainer.innerHTML='<em>No content</em>';return;}// Use pict-section-content's PictContentProvider for markdown rendering.
+// The consuming application must register the PictContentProvider service
+// type (from pict-section-content) for this to work.
+try{if(!this._ContentProvider){if(this.fable.servicesMap.hasOwnProperty('PictContentProvider')){this._ContentProvider=this.fable.instantiateServiceProviderWithoutRegistration('PictContentProvider',{});}}if(this._ContentProvider&&typeof this._ContentProvider.parseMarkdown==='function'){let tmpHTML=this._ContentProvider.parseMarkdown(tmpMarkdown);this._ContentContainer.innerHTML=tmpHTML;// Post-render hooks for equations and diagrams
+if(typeof this._ContentProvider.renderKaTeXEquations==='function'){this._ContentProvider.renderKaTeXEquations(this._ContentContainer);}if(typeof this._ContentProvider.renderMermaidDiagrams==='function'){this._ContentProvider.renderMermaidDiagrams(this._ContentContainer);}}else{// PictContentProvider not registered — render as pre-formatted text
+this._ContentContainer.innerHTML=`<pre style="white-space: pre-wrap; font-family: inherit;">${this._escapeHTML(tmpMarkdown)}</pre>`;}}catch(pError){this.log.warn(`FlowCardPropertiesPanel-Markdown render error: ${pError.message}`);this._ContentContainer.innerHTML=`<pre style="white-space: pre-wrap; font-family: inherit;">${this._escapeHTML(tmpMarkdown)}</pre>`;}}_escapeHTML(pText){let tmpDiv=document.createElement('div');tmpDiv.textContent=pText;return tmpDiv.innerHTML;}destroy(){this._ContentProvider=null;super.destroy();}}module.exports=FlowCardPropertiesPanelMarkdown;module.exports.default_configuration=Object.assign({},libPictFlowCardPropertiesPanel.default_configuration,{PanelType:'Markdown',Configuration:{Markdown:'',MarkdownAddress:''}});},{"../PictFlowCardPropertiesPanel.js":17}],20:[function(require,module,exports){const libPictFlowCardPropertiesPanel=require('../PictFlowCardPropertiesPanel.js');/**
+ * FlowCardPropertiesPanel-Template
+ *
+ * Renders pict templates into the panel body.
+ *
+ * Configuration:
+ *   {
+ *     PanelType: 'Template',
+ *     Configuration: {
+ *       Templates: [
+ *         { Hash: 'my-template', Template: '<div>{~D:Record.Data.SomeValue~}</div>' }
+ *       ],
+ *       TemplateHash: 'my-template'
+ *     }
+ *   }
+ */class FlowCardPropertiesPanelTemplate extends libPictFlowCardPropertiesPanel{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictFlowCardPropertiesPanel-Template';this._TemplatesRegistered=false;}/**
+	 * Register templates with the pict template provider and render.
+	 */render(pContainer,pNodeData){super.render(pContainer,pNodeData);if(!this._Configuration||!this._Configuration.Templates)return;// Register templates with pict (only once)
+if(!this._TemplatesRegistered){let tmpTemplates=this._Configuration.Templates;for(let i=0;i<tmpTemplates.length;i++){if(tmpTemplates[i].Hash&&tmpTemplates[i].Template){this.fable.TemplateProvider.addTemplate(tmpTemplates[i].Hash,tmpTemplates[i].Template);}}this._TemplatesRegistered=true;}this._renderTemplate();}marshalToPanel(pNodeData){super.marshalToPanel(pNodeData);this._renderTemplate();}_renderTemplate(){if(!this._ContentContainer||!this._NodeData)return;let tmpTemplateHash=this._Configuration.TemplateHash;if(!tmpTemplateHash)return;let tmpRecord=this._NodeData;let tmpHTML=this.fable.parseTemplateByHash(tmpTemplateHash,tmpRecord,null,[tmpRecord]);this._ContentContainer.innerHTML=tmpHTML;}}module.exports=FlowCardPropertiesPanelTemplate;module.exports.default_configuration=Object.assign({},libPictFlowCardPropertiesPanel.default_configuration,{PanelType:'Template',Configuration:{Templates:[],TemplateHash:''}});},{"../PictFlowCardPropertiesPanel.js":17}],21:[function(require,module,exports){const libPictFlowCardPropertiesPanel=require('../PictFlowCardPropertiesPanel.js');/**
+ * FlowCardPropertiesPanel-View
+ *
+ * Renders an existing registered pict-view into the panel body.
+ * The view's destination is temporarily overridden to render inside
+ * the panel container.
+ *
+ * Configuration:
+ *   {
+ *     PanelType: 'View',
+ *     Configuration: {
+ *       ViewHash: 'MyCustomViewIdentifier'
+ *     }
+ *   }
+ */class FlowCardPropertiesPanelView extends libPictFlowCardPropertiesPanel{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictFlowCardPropertiesPanel-View';this._OriginalDestination=null;this._ViewInstance=null;}/**
+	 * Render the referenced pict-view into the panel body.
+	 */render(pContainer,pNodeData){super.render(pContainer,pNodeData);if(!this._Configuration||!this._Configuration.ViewHash){pContainer.innerHTML='<em>No ViewHash configured</em>';return;}let tmpViewHash=this._Configuration.ViewHash;// Create a unique container ID
+let tmpContainerID=`pict-flow-panel-view-${pNodeData.Hash}`;pContainer.innerHTML=`<div id="${tmpContainerID}"></div>`;try{// Look up the view in the pict instance
+let tmpPict=this.pict||this.fable;if(tmpPict.views&&tmpPict.views[tmpViewHash]){this._ViewInstance=tmpPict.views[tmpViewHash];// Save original destination
+this._OriginalDestination=this._ViewInstance.options.DefaultDestinationAddress;// Override destination to our panel container
+this._ViewInstance.options.DefaultDestinationAddress=`#${tmpContainerID}`;if(typeof this._ViewInstance.render==='function'){this._ViewInstance.render();}}else{pContainer.innerHTML=`<em>View "${tmpViewHash}" not found</em>`;}}catch(pError){this.log.warn(`FlowCardPropertiesPanel-View render error: ${pError.message}`);pContainer.innerHTML=`<em>View render error: ${pError.message}</em>`;}}marshalFromPanel(pNodeData){if(this._ViewInstance&&typeof this._ViewInstance.marshalFromView==='function'){this._ViewInstance.marshalFromView();}}destroy(){// Restore original destination
+if(this._ViewInstance&&this._OriginalDestination){this._ViewInstance.options.DefaultDestinationAddress=this._OriginalDestination;}this._ViewInstance=null;this._OriginalDestination=null;super.destroy();}}module.exports=FlowCardPropertiesPanelView;module.exports.default_configuration=Object.assign({},libPictFlowCardPropertiesPanel.default_configuration,{PanelType:'View',Configuration:{ViewHash:''}});},{"../PictFlowCardPropertiesPanel.js":17}],22:[function(require,module,exports){const libFableServiceProviderBase=require('fable-serviceproviderbase');/**
+ * PictProvider-Flow-CSS
+ *
+ * Centralized CSS provider for the flow diagram.
+ * All flow-related CSS is organized into domain-specific getter methods,
+ * providing a single source of truth and enabling future theming.
+ */const _ProviderConfiguration={ProviderIdentifier:'PictProviderFlowCSS'};class PictProviderFlowCSS extends libFableServiceProviderBase{constructor(pFable,pOptions,pServiceHash){let tmpOptions=Object.assign({},_ProviderConfiguration,pOptions);super(pFable,tmpOptions,pServiceHash);this.serviceType='PictProviderFlowCSS';this._FlowView=pOptions&&pOptions.FlowView?pOptions.FlowView:null;}// ── Container ──────────────────────────────────────────────────────────
+/**
+	 * CSS for the flow container, SVG container, panning/connecting cursors, and grid pattern.
+	 * @returns {string}
+	 */getContainerCSS(){return/*css*/`
+		.pict-flow-container {
+			/* ── Design Tokens ─────────────────────────────────────
+			   Override these custom properties to theme the flow diagram.
+			   Node-type classes (.pict-flow-node-{type}) can scope-override
+			   any variable for per-type variation. */
+
+			/* Node */
+			--pf-node-body-fill: #ffffff;
+			--pf-node-body-stroke: #d0d4d8;
+			--pf-node-body-stroke-width: 1;
+			--pf-node-body-radius: 8px;
+			--pf-node-shadow: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.10));
+			--pf-node-shadow-hover: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.15));
+			--pf-node-shadow-selected: drop-shadow(0 2px 8px rgba(52, 152, 219, 0.25));
+			--pf-node-shadow-dragging: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.20));
+			--pf-node-title-fill: #ffffff;
+			--pf-node-title-size: 11.5px;
+			--pf-node-title-weight: 600;
+			--pf-node-title-bar-color: #2c3e50;
+			--pf-node-type-label-fill: #a0a8b0;
+			--pf-node-selected-stroke: #3498db;
+
+			/* Ports */
+			--pf-port-input-fill: #3498db;
+			--pf-port-output-fill: #2ecc71;
+			--pf-port-stroke: #ffffff;
+			--pf-port-stroke-width: 2;
+			--pf-port-label-bg: rgba(255, 253, 240, 0.5);
+			--pf-port-label-text: #2c3e50;
+
+			/* Port Type Colors */
+			--pf-port-event-in-fill: #3498db;
+			--pf-port-event-out-fill: #2ecc71;
+			--pf-port-setting-fill: #e67e22;
+			--pf-port-value-fill: #f1c40f;
+			--pf-port-error-fill: #e74c3c;
+
+			/* Connection Type Colors (match source port) */
+			--pf-connection-event-in-stroke: #3498db;
+			--pf-connection-event-out-stroke: #2ecc71;
+			--pf-connection-setting-stroke: #e67e22;
+			--pf-connection-value-stroke: #f1c40f;
+			--pf-connection-error-stroke: #e74c3c;
+
+			/* Panels */
+			--pf-panel-bg: #ffffff;
+			--pf-panel-border: #d0d4d8;
+			--pf-panel-radius: 8px;
+			--pf-panel-shadow: 0 4px 12px rgba(0,0,0,0.10), 0 1px 3px rgba(0,0,0,0.06);
+			--pf-panel-titlebar-bg: #f7f8fa;
+			--pf-panel-titlebar-border: #e8eaed;
+			--pf-panel-title-color: #2c3e50;
+
+			/* Connections */
+			--pf-connection-stroke: #95a5a6;
+			--pf-connection-selected-stroke: #3498db;
+
+			/* Canvas */
+			--pf-canvas-bg: #fafafa;
+			--pf-grid-stroke: #e8e8e8;
+
+			position: relative;
+			width: 100%;
+			height: 100%;
+			min-height: 400px;
+			overflow: hidden;
+			background-color: var(--pf-canvas-bg);
+			border: 1px solid #e0e0e0;
+			border-radius: 4px;
+			display: flex;
+			flex-direction: column;
+		}
+		.pict-flow-svg-container {
+			flex: 1;
+			min-height: 0;
+			position: relative;
+		}
+		.pict-flow-svg {
+			width: 100%;
+			height: 100%;
+			cursor: grab;
+			user-select: none;
+			-webkit-user-select: none;
+		}
+		.pict-flow-svg.panning {
+			cursor: grabbing;
+		}
+		.pict-flow-svg.connecting {
+			cursor: crosshair;
+		}
+		.pict-flow-grid-pattern line {
+			stroke: var(--pf-grid-stroke);
+			stroke-width: 0.5;
+		}
+		`;}// ── Nodes ──────────────────────────────────────────────────────────────
+/**
+	 * CSS for base node styling: body, hover/selected/dragging states, title bar, title text, type label.
+	 * @returns {string}
+	 */getNodeCSS(){return/*css*/`
+		.pict-flow-node {
+			cursor: pointer;
+			filter: var(--pf-node-shadow);
+			transition: filter 0.2s;
+		}
+		.pict-flow-node:hover {
+			filter: var(--pf-node-shadow-hover);
+		}
+		.pict-flow-node:hover .pict-flow-node-body {
+			stroke: #b0b8c0;
+			stroke-width: 1.5;
+		}
+		.pict-flow-node.selected {
+			filter: var(--pf-node-shadow-selected);
+		}
+		.pict-flow-node.selected .pict-flow-node-body {
+			stroke: var(--pf-node-selected-stroke);
+			stroke-width: 2;
+		}
+		.pict-flow-node.dragging {
+			opacity: 0.9;
+			cursor: grabbing;
+			filter: var(--pf-node-shadow-dragging);
+		}
+		.pict-flow-node-body {
+			fill: var(--pf-node-body-fill);
+			stroke: var(--pf-node-body-stroke);
+			stroke-width: var(--pf-node-body-stroke-width);
+			rx: var(--pf-node-body-radius);
+			ry: var(--pf-node-body-radius);
+			transition: stroke 0.2s, stroke-width 0.2s;
+		}
+		.pict-flow-node-title-bar {
+			fill: var(--pf-node-title-bar-color);
+			rx: var(--pf-node-body-radius);
+			ry: var(--pf-node-body-radius);
+		}
+		.pict-flow-node-title-bar-bottom {
+			fill: var(--pf-node-title-bar-color);
+		}
+		.pict-flow-node-title {
+			fill: var(--pf-node-title-fill);
+			font-size: var(--pf-node-title-size);
+			font-weight: var(--pf-node-title-weight);
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+			letter-spacing: 0.2px;
+			pointer-events: none;
+		}
+		.pict-flow-node-type-label {
+			fill: var(--pf-node-type-label-fill);
+			font-size: 9.5px;
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+			text-transform: uppercase;
+			letter-spacing: 0.3px;
+			pointer-events: none;
+			opacity: 0;
+			transition: opacity 0.2s;
+		}
+		.pict-flow-node:hover .pict-flow-node-type-label {
+			opacity: 1;
+		}
+		.pict-flow-node-card-code {
+			opacity: 0;
+			transition: opacity 0.2s;
+		}
+		.pict-flow-node:hover .pict-flow-node-card-code {
+			opacity: 1;
+		}
+		/* Title-bar icon: invert SVG paths to white for dark title bars */
+		.pict-flow-node-title-icon {
+			filter: brightness(0) invert(1);
+		}
+		`;}// ── Body Content ──────────────────────────────────────────────────────
+/**
+	 * CSS for custom body content in nodes: SVG group, foreignObject, HTML container, canvas.
+	 * @returns {string}
+	 */getBodyContentCSS(){return/*css*/`
+		.pict-flow-node-body-content {
+			pointer-events: none;
+		}
+		.pict-flow-node-body-content-fo {
+			overflow: hidden;
+		}
+		.pict-flow-node-body-content-html {
+			overflow: hidden;
+			width: 100%;
+			height: 100%;
+			box-sizing: border-box;
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+			font-size: 11px;
+			color: #2c3e50;
+			pointer-events: auto;
+		}
+		.pict-flow-node-body-content-canvas {
+			display: block;
+			pointer-events: auto;
+		}
+		`;}// ── Node Variants ──────────────────────────────────────────────────────
+/**
+	 * CSS overrides for specific node types: start, end, halt, decision.
+	 * @returns {string}
+	 */getNodeVariantCSS(){return/*css*/`
+		.pict-flow-node-decision .pict-flow-node-body {
+			fill: #fff9e6;
+			stroke: #f39c12;
+			stroke-width: 1.5;
+		}
+		.pict-flow-node-start .pict-flow-node-body {
+			fill: #eafaf1;
+			stroke: #27ae60;
+			stroke-width: 1.5;
+		}
+		.pict-flow-node-end .pict-flow-node-body {
+			fill: #e8f8f5;
+			stroke: #1abc9c;
+			stroke-width: 1.5;
+		}
+		.pict-flow-node-halt .pict-flow-node-body {
+			fill: #fdedec;
+			stroke: #e74c3c;
+			stroke-width: 1.5;
+		}
+		`;}// ── Ports ──────────────────────────────────────────────────────────────
+/**
+	 * CSS for port circles: input/output coloring, hover states, labels.
+	 * @returns {string}
+	 */getPortCSS(){return/*css*/`
+		.pict-flow-port {
+			cursor: crosshair;
+			transition: r 0.15s, filter 0.15s;
+			filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.12));
+		}
+		.pict-flow-port.input {
+			fill: var(--pf-port-input-fill);
+			stroke: var(--pf-port-stroke);
+			stroke-width: var(--pf-port-stroke-width);
+		}
+		.pict-flow-port.output {
+			fill: var(--pf-port-output-fill);
+			stroke: var(--pf-port-stroke);
+			stroke-width: var(--pf-port-stroke-width);
+		}
+		.pict-flow-port:hover {
+			r: 7;
+			filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.20));
+		}
+		/* Port type color overrides */
+		.pict-flow-port.port-type-event-in {
+			fill: var(--pf-port-event-in-fill);
+		}
+		.pict-flow-port.port-type-event-out {
+			fill: var(--pf-port-event-out-fill);
+		}
+		.pict-flow-port.port-type-setting {
+			fill: var(--pf-port-setting-fill);
+		}
+		.pict-flow-port.port-type-value {
+			fill: var(--pf-port-value-fill);
+		}
+		.pict-flow-port.port-type-error {
+			fill: var(--pf-port-error-fill);
+		}
+		.pict-flow-port-label {
+			font-size: 8px;
+			font-weight: 600;
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+			pointer-events: none;
+		}
+		/* Port label badge background */
+		.pict-flow-port-label-bg {
+			pointer-events: none;
+		}
+		/* Port labels on hover: hidden by default, revealed on node hover */
+		.pict-flow-node-port-labels-hover .pict-flow-port-label,
+		.pict-flow-node-port-labels-hover .pict-flow-port-label-bg {
+			opacity: 0;
+			transition: opacity 0.2s;
+		}
+		.pict-flow-node-port-labels-hover:hover .pict-flow-port-label,
+		.pict-flow-node-port-labels-hover:hover .pict-flow-port-label-bg {
+			opacity: 1;
+		}
+		`;}// ── Connections ────────────────────────────────────────────────────────
+/**
+	 * CSS for connection paths: base, hover/selected states, hitarea, drag-connection.
+	 * @returns {string}
+	 */getConnectionCSS(){return/*css*/`
+		.pict-flow-connection {
+			fill: none;
+			stroke: var(--pf-connection-stroke);
+			stroke-width: 2;
+			cursor: pointer;
+			transition: stroke 0.15s;
+		}
+		.pict-flow-connection:hover {
+			stroke: #7f8c8d;
+			stroke-width: 3;
+		}
+		.pict-flow-connection.selected {
+			stroke: var(--pf-connection-selected-stroke);
+			stroke-width: 3;
+		}
+		/* Connection type color overrides (based on source port type) */
+		.pict-flow-connection.conn-type-event-in {
+			stroke: var(--pf-connection-event-in-stroke);
+		}
+		.pict-flow-connection.conn-type-event-out {
+			stroke: var(--pf-connection-event-out-stroke);
+		}
+		.pict-flow-connection.conn-type-setting {
+			stroke: var(--pf-connection-setting-stroke);
+		}
+		.pict-flow-connection.conn-type-value {
+			stroke: var(--pf-connection-value-stroke);
+		}
+		.pict-flow-connection.conn-type-error {
+			stroke: var(--pf-connection-error-stroke);
+		}
+		.pict-flow-connection-hitarea {
+			fill: none;
+			stroke: transparent;
+			stroke-width: 12;
+			cursor: pointer;
+		}
+		.pict-flow-drag-connection {
+			fill: none;
+			stroke: #3498db;
+			stroke-width: 2;
+			stroke-dasharray: 6 3;
+			pointer-events: none;
+		}
+		`;}// ── Connection Handles ─────────────────────────────────────────────────
+/**
+	 * CSS for connection waypoint handles and midpoint handles.
+	 * @returns {string}
+	 */getHandleCSS(){return/*css*/`
+		.pict-flow-connection-handle {
+			fill: #ffffff;
+			stroke: #3498db;
+			stroke-width: 2;
+			cursor: grab;
+			transition: r 0.15s;
+			filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+		}
+		.pict-flow-connection-handle:hover {
+			r: 8;
+			stroke-width: 2.5;
+		}
+		.pict-flow-connection-handle-midpoint {
+			fill: #ffffff;
+			stroke: #e67e22;
+			stroke-width: 2;
+			cursor: grab;
+			transition: r 0.15s;
+			filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+		}
+		.pict-flow-connection-handle-midpoint:hover {
+			r: 8;
+			stroke-width: 2.5;
+		}
+		`;}// ── Tethers ────────────────────────────────────────────────────────────
+/**
+	 * CSS for tether lines, hitareas, handles, and midpoint handles.
+	 * @returns {string}
+	 */getTetherCSS(){return/*css*/`
+		.pict-flow-tether-line {
+			fill: none;
+			stroke: #95a5a6;
+			stroke-width: 1.5;
+			stroke-dasharray: 6 4;
+			pointer-events: visibleStroke;
+			cursor: pointer;
+		}
+		.pict-flow-tether-line.selected {
+			stroke: #3498db;
+			stroke-width: 2;
+		}
+		.pict-flow-tether-hitarea {
+			fill: none;
+			stroke: transparent;
+			stroke-width: 10;
+			cursor: pointer;
+		}
+		.pict-flow-tether-handle {
+			fill: #ffffff;
+			stroke: #3498db;
+			stroke-width: 2;
+			cursor: grab;
+			transition: r 0.15s;
+			filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+		}
+		.pict-flow-tether-handle:hover {
+			r: 8;
+			stroke-width: 2.5;
+		}
+		.pict-flow-tether-handle-midpoint {
+			fill: #ffffff;
+			stroke: #e67e22;
+			stroke-width: 2;
+			cursor: grab;
+			transition: r 0.15s;
+			filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+		}
+		.pict-flow-tether-handle-midpoint:hover {
+			r: 8;
+			stroke-width: 2.5;
+		}
+		`;}// ── Panels ─────────────────────────────────────────────────────────────
+/**
+	 * CSS for property panels: foreign object, panel container, titlebar, close button, body, indicator.
+	 * @returns {string}
+	 */getPanelCSS(){return/*css*/`
+		.pict-flow-node-panel-indicator {
+			fill: var(--pf-node-selected-stroke);
+			stroke: none;
+			opacity: 0.6;
+			cursor: pointer;
+			transition: opacity 0.15s;
+		}
+		.pict-flow-node-panel-indicator:hover {
+			opacity: 1.0;
+		}
+		.pict-flow-panel-foreign-object {
+			overflow: visible;
+		}
+		.pict-flow-panel {
+			background: var(--pf-panel-bg);
+			border: 1px solid var(--pf-panel-border);
+			border-radius: var(--pf-panel-radius);
+			box-shadow: var(--pf-panel-shadow);
+			display: flex;
+			flex-direction: column;
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+			font-size: 13px;
+			overflow: hidden;
+			width: 100%;
+			height: 100%;
+			box-sizing: border-box;
+		}
+		.pict-flow-panel-titlebar {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 8px 12px;
+			background: var(--pf-panel-titlebar-bg);
+			border-bottom: 1px solid var(--pf-panel-titlebar-border);
+			cursor: grab;
+			user-select: none;
+			-webkit-user-select: none;
+			flex-shrink: 0;
+		}
+		.pict-flow-panel-titlebar.dragging {
+			cursor: grabbing;
+		}
+		.pict-flow-panel-title-text {
+			font-weight: 600;
+			font-size: 12px;
+			color: var(--pf-panel-title-color);
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			letter-spacing: 0.1px;
+		}
+		.pict-flow-panel-close-btn {
+			cursor: pointer;
+			color: #b0b8c0;
+			font-size: 14px;
+			line-height: 1;
+			padding: 4px;
+			border: none;
+			background: none;
+			border-radius: 4px;
+			transition: background-color 0.15s, color 0.15s;
+		}
+		.pict-flow-panel-close-btn:hover {
+			color: #e74c3c;
+			background-color: rgba(231, 76, 60, 0.08);
+		}
+		.pict-flow-panel-body {
+			flex: 1;
+			overflow: auto;
+			padding: 10px 12px;
+		}
+		`;}// ── Info Panels ────────────────────────────────────────────────────────
+/**
+	 * CSS for the info/hover panel and all sub-elements: header, description, badges, sections, ports.
+	 * @returns {string}
+	 */getInfoPanelCSS(){return/*css*/`
+		.pict-flow-info-panel {
+			padding: 2px 0;
+			font-size: 12px;
+			line-height: 1.5;
+			color: #2c3e50;
+		}
+		.pict-flow-info-panel-header {
+			font-size: 13px;
+			font-weight: 600;
+			margin-bottom: 6px;
+			color: #1a252f;
+		}
+		.pict-flow-info-panel-header.with-icon {
+			font-size: 14px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+		.pict-flow-info-panel-description {
+			font-size: 11px;
+			color: #7f8c8d;
+			margin-bottom: 10px;
+			line-height: 1.45;
+		}
+		.pict-flow-info-panel-badges {
+			margin-bottom: 10px;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 4px;
+		}
+		.pict-flow-info-panel-badge {
+			display: inline-block;
+			padding: 2px 8px;
+			border-radius: 4px;
+			font-size: 10px;
+		}
+		.pict-flow-info-panel-badge.category {
+			background: #f0f2f4;
+			color: #6b7b8d;
+		}
+		.pict-flow-info-panel-badge.code {
+			background: #eaf2f8;
+			color: #2980b9;
+			font-family: "SF Mono", "Fira Code", monospace;
+		}
+		.pict-flow-info-panel-section {
+			margin-bottom: 8px;
+		}
+		.pict-flow-info-panel-section-title {
+			font-size: 10px;
+			font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			color: #8e99a4;
+			margin-bottom: 4px;
+			padding-bottom: 2px;
+			border-bottom: 1px solid #f0f2f4;
+		}
+		.pict-flow-info-panel-port {
+			padding: 3px 8px;
+			background: #f8f9fa;
+			margin-bottom: 3px;
+			font-size: 11px;
+			border-radius: 3px;
+		}
+		.pict-flow-info-panel-port.input {
+			border-left: 3px solid var(--pf-port-input-fill);
+		}
+		.pict-flow-info-panel-port.output {
+			border-left: 3px solid var(--pf-port-output-fill);
+		}
+		/* Info panel port type color overrides */
+		.pict-flow-info-panel-port.port-type-event-in {
+			border-left-color: var(--pf-port-event-in-fill);
+		}
+		.pict-flow-info-panel-port.port-type-event-out {
+			border-left-color: var(--pf-port-event-out-fill);
+		}
+		.pict-flow-info-panel-port.port-type-setting {
+			border-left-color: var(--pf-port-setting-fill);
+		}
+		.pict-flow-info-panel-port.port-type-value {
+			border-left-color: var(--pf-port-value-fill);
+		}
+		.pict-flow-info-panel-port.port-type-error {
+			border-left-color: var(--pf-port-error-fill);
+		}
+		.pict-flow-info-panel-port-constraint {
+			color: #8e99a4;
+			font-size: 10px;
+		}
+		/* Port summary section appended below form panels */
+		.pict-flow-port-summary {
+			margin-top: 12px;
+			padding-top: 8px;
+			border-top: 1px solid #e8eaed;
+		}
+		.pict-flow-info-panel-port.event {
+			border-left: 3px solid var(--pf-port-event-in-fill);
+		}
+		.pict-flow-info-panel-port.value {
+			border-left: 3px solid var(--pf-port-value-fill);
+		}
+		`;}// ── Node Properties Editor ────────────────────────────────────────────
+/**
+	 * CSS for the collapsible node properties editor at the bottom of panels.
+	 * @returns {string}
+	 */getNodePropsEditorCSS(){return/*css*/`
+		.pict-flow-panel-node-props {
+			border-top: 1px solid var(--pf-panel-titlebar-border);
+			flex-shrink: 0;
+		}
+		.pict-flow-panel-node-props-header {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			padding: 6px 12px;
+			cursor: pointer;
+			user-select: none;
+			-webkit-user-select: none;
+			background: var(--pf-panel-titlebar-bg);
+			transition: background-color 0.15s;
+		}
+		.pict-flow-panel-node-props-header:hover {
+			background: #eef0f2;
+		}
+		.pict-flow-panel-node-props-chevron {
+			font-size: 8px;
+			color: #95a5a6;
+			transition: transform 0.2s;
+			display: inline-block;
+		}
+		.pict-flow-panel-node-props-chevron.expanded {
+			transform: rotate(90deg);
+		}
+		.pict-flow-panel-node-props-title {
+			font-size: 10px;
+			font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			color: #8e99a4;
+		}
+		.pict-flow-panel-node-props-body {
+			padding: 8px 12px;
+			max-height: 240px;
+			overflow-y: auto;
+		}
+		.pict-flow-node-props-fields {
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+		}
+		.pict-flow-node-props-field {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+		.pict-flow-node-props-label {
+			font-size: 11px;
+			color: #7f8c8d;
+			min-width: 72px;
+			flex-shrink: 0;
+		}
+		.pict-flow-node-props-input {
+			flex: 1;
+			padding: 3px 6px;
+			border: 1px solid #d5d8dc;
+			border-radius: 3px;
+			font-size: 11px;
+			outline: none;
+			box-sizing: border-box;
+			min-width: 0;
+		}
+		.pict-flow-node-props-input:focus {
+			border-color: #3498db;
+		}
+		.pict-flow-node-props-color {
+			width: 28px;
+			height: 24px;
+			padding: 1px;
+			cursor: pointer;
+			flex: 0 0 28px;
+		}
+		`;}// ── Fullscreen ─────────────────────────────────────────────────────────
+/**
+	 * CSS for fullscreen mode.
+	 * @returns {string}
+	 */getFullscreenCSS(){return/*css*/`
+		.pict-flow-fullscreen {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100vw;
+			height: 100vh;
+			z-index: 9999;
+			border-radius: 0;
+			border: none;
+			min-height: 100vh;
+		}
+		.pict-flow-fullscreen .pict-flow-svg {
+			min-height: calc(100vh - 50px);
+		}
+		`;}// ── Toolbar ────────────────────────────────────────────────────────────
+/**
+	 * CSS for the toolbar: buttons, groups, labels, selects.
+	 * @returns {string}
+	 */getToolbarCSS(){return/*css*/`
+		.pict-flow-toolbar {
+			display: flex;
+			align-items: center;
+			gap: 0.5em;
+			padding: 0.5em 0.75em;
+			background-color: #ffffff;
+			border-bottom: 1px solid #e0e0e0;
+			flex-wrap: wrap;
+		}
+		.pict-flow-toolbar-group {
+			display: flex;
+			align-items: center;
+			gap: 0.25em;
+			padding-right: 0.75em;
+			border-right: 1px solid #e0e0e0;
+		}
+		.pict-flow-toolbar-group:last-child {
+			border-right: none;
+			padding-right: 0;
+		}
+		.pict-flow-toolbar-btn {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 0.35em;
+			padding: 0.35em 0.65em;
+			border: 1px solid #bdc3c7;
+			border-radius: 4px;
+			background-color: #fff;
+			color: #2c3e50;
+			font-size: 0.85em;
+			cursor: pointer;
+			transition: background-color 0.15s, border-color 0.15s;
+			user-select: none;
+			-webkit-user-select: none;
+		}
+		.pict-flow-toolbar-btn:hover {
+			background-color: #ecf0f1;
+			border-color: #95a5a6;
+		}
+		.pict-flow-toolbar-btn:active {
+			background-color: #d5dbdb;
+		}
+		.pict-flow-toolbar-btn.danger {
+			color: #e74c3c;
+			border-color: #e74c3c;
+		}
+		.pict-flow-toolbar-btn.danger:hover {
+			background-color: #fdedec;
+		}
+		.pict-flow-toolbar-btn-icon {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			line-height: 1;
+		}
+		.pict-flow-toolbar-btn-icon svg {
+			display: block;
+		}
+		.pict-flow-toolbar-btn-text {
+			white-space: nowrap;
+		}
+		.pict-flow-toolbar-btn-chevron {
+			display: inline-flex;
+			align-items: center;
+			margin-left: 0.15em;
+		}
+		.pict-flow-toolbar-right {
+			margin-left: auto;
+			border-right: none;
+			padding-right: 0;
+		}
+		.pict-flow-toolbar-label {
+			font-size: 0.8em;
+			color: #7f8c8d;
+			margin-right: 0.25em;
+		}
+		.pict-flow-toolbar-select {
+			padding: 0.3em 0.5em;
+			border: 1px solid #bdc3c7;
+			border-radius: 4px;
+			font-size: 0.85em;
+			background-color: #fff;
+			color: #2c3e50;
+		}
+		`;}// ── Card Palette ───────────────────────────────────────────────────────
+/**
+	 * CSS for the card palette: toggle, body, categories, cards, swatches.
+	 * @returns {string}
+	 */getPaletteCSS(){return/*css*/`
+		.pict-flow-palette-category {
+			margin-bottom: 0.5em;
+		}
+		.pict-flow-palette-category:last-child {
+			margin-bottom: 0;
+		}
+		.pict-flow-palette-category-label {
+			font-size: 0.7em;
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+			color: #95a5a6;
+			margin-bottom: 0.35em;
+			padding-bottom: 0.2em;
+			border-bottom: 1px solid #ecf0f1;
+		}
+		.pict-flow-palette-cards {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.35em;
+		}
+		.pict-flow-palette-card {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.35em;
+			padding: 0.35em 0.6em;
+			border: 1px solid #d5d8dc;
+			border-radius: 4px;
+			background-color: #ffffff;
+			font-size: 0.8em;
+			cursor: pointer;
+			transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
+			user-select: none;
+			-webkit-user-select: none;
+			position: relative;
+		}
+		.pict-flow-palette-card:hover {
+			background-color: #eaf2f8;
+			border-color: #3498db;
+			box-shadow: 0 1px 3px rgba(52, 152, 219, 0.15);
+		}
+		.pict-flow-palette-card.disabled {
+			opacity: 0.45;
+			pointer-events: none;
+			cursor: default;
+		}
+		.pict-flow-palette-card-icon {
+			font-size: 1.1em;
+			line-height: 1;
+		}
+		.pict-flow-palette-card-swatch {
+			width: 10px;
+			height: 10px;
+			border-radius: 2px;
+			flex-shrink: 0;
+		}
+		.pict-flow-palette-card-title {
+			font-weight: 500;
+			color: #2c3e50;
+			white-space: nowrap;
+		}
+		.pict-flow-palette-card-code {
+			font-size: 0.8em;
+			color: #95a5a6;
+			font-family: monospace;
+		}
+		.pict-flow-toolbar-select.layout-select {
+			min-width: 120px;
+			max-width: 200px;
+		}
+		`;}// ── Popups ────────────────────────────────────────────────────────────
+/**
+	 * CSS for toolbar dropdown popups (Add Node, Cards, Layout).
+	 * @returns {string}
+	 */getPopupCSS(){return/*css*/`
+		.pict-flow-toolbar-popup-anchor {
+			position: relative;
+		}
+		.pict-flow-toolbar-popup {
+			position: absolute;
+			z-index: 1000;
+			background: #ffffff;
+			border: 1px solid #d5d8dc;
+			border-radius: 6px;
+			box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+			min-width: 240px;
+			max-height: 340px;
+			overflow-y: auto;
+			padding: 0.35em 0;
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+			font-size: 13px;
+		}
+		.pict-flow-popup-search-wrapper {
+			position: relative;
+			padding: 0.4em 0.5em;
+			border-bottom: 1px solid #ecf0f1;
+		}
+		.pict-flow-popup-search-icon {
+			position: absolute;
+			left: 0.85em;
+			top: 50%;
+			transform: translateY(-50%);
+			pointer-events: none;
+			line-height: 1;
+			display: flex;
+			align-items: center;
+		}
+		.pict-flow-popup-search {
+			width: 100%;
+			padding: 0.4em 0.5em 0.4em 2em;
+			border: 1px solid #d5d8dc;
+			border-radius: 4px;
+			font-size: 0.9em;
+			outline: none;
+			box-sizing: border-box;
+		}
+		.pict-flow-popup-search:focus {
+			border-color: #3498db;
+		}
+		.pict-flow-popup-list-item {
+			display: flex;
+			align-items: center;
+			gap: 0.5em;
+			padding: 0.45em 0.75em;
+			cursor: pointer;
+			transition: background-color 0.1s;
+		}
+		.pict-flow-popup-list-item:hover {
+			background-color: #eaf2f8;
+		}
+		.pict-flow-popup-list-item-icon {
+			display: inline-flex;
+			align-items: center;
+			flex-shrink: 0;
+			line-height: 1;
+		}
+		.pict-flow-popup-list-item-label {
+			flex: 1;
+			color: #2c3e50;
+			font-weight: 500;
+		}
+		.pict-flow-popup-list-item-code {
+			font-size: 0.8em;
+			color: #95a5a6;
+			font-family: monospace;
+			background: #f0f3f5;
+			padding: 0.1em 0.4em;
+			border-radius: 3px;
+		}
+		.pict-flow-popup-divider {
+			height: 1px;
+			background: #ecf0f1;
+			margin: 0.25em 0;
+		}
+		.pict-flow-popup-list-empty {
+			text-align: center;
+			color: #95a5a6;
+			padding: 1.5em 0.75em;
+			font-size: 0.9em;
+		}
+		.pict-flow-popup-layout-save {
+			display: flex;
+			align-items: center;
+			gap: 0.5em;
+			padding: 0.45em 0.75em;
+			cursor: pointer;
+			transition: background-color 0.1s;
+			color: #2c3e50;
+			font-weight: 500;
+		}
+		.pict-flow-popup-layout-save:hover {
+			background-color: #eaf2f8;
+		}
+		.pict-flow-popup-layout-save-icon {
+			display: inline-flex;
+			align-items: center;
+			flex-shrink: 0;
+			line-height: 1;
+		}
+		.pict-flow-popup-layout-save-input-row {
+			display: flex;
+			align-items: center;
+			gap: 0.35em;
+			padding: 0.35em 0.5em;
+		}
+		.pict-flow-popup-layout-save-input {
+			flex: 1;
+			padding: 0.35em 0.5em;
+			border: 1px solid #d5d8dc;
+			border-radius: 4px;
+			font-size: 0.9em;
+			outline: none;
+			box-sizing: border-box;
+		}
+		.pict-flow-popup-layout-save-input:focus {
+			border-color: #3498db;
+		}
+		.pict-flow-popup-layout-save-confirm {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 28px;
+			height: 28px;
+			border: 1px solid #d5d8dc;
+			border-radius: 4px;
+			background: #fff;
+			cursor: pointer;
+			flex-shrink: 0;
+			transition: background-color 0.15s, border-color 0.15s;
+			line-height: 1;
+		}
+		.pict-flow-popup-layout-save-confirm:hover {
+			background-color: #eaf2f8;
+			border-color: #3498db;
+		}
+		.pict-flow-popup-layout-row {
+			display: flex;
+			align-items: center;
+			padding: 0.45em 0.75em;
+			cursor: pointer;
+			transition: background-color 0.1s;
+		}
+		.pict-flow-popup-layout-row:hover {
+			background-color: #eaf2f8;
+		}
+		.pict-flow-popup-layout-name {
+			flex: 1;
+			color: #2c3e50;
+		}
+		.pict-flow-popup-layout-delete {
+			display: none;
+			align-items: center;
+			justify-content: center;
+			border: none;
+			background: none;
+			color: #e74c3c;
+			cursor: pointer;
+			padding: 2px 4px;
+			border-radius: 3px;
+			line-height: 1;
+		}
+		.pict-flow-popup-layout-row:hover .pict-flow-popup-layout-delete {
+			display: inline-flex;
+		}
+		.pict-flow-popup-layout-delete:hover {
+			background-color: #fdedec;
+		}
+		.pict-flow-popup-settings-section {
+			padding: 0.5em 0.75em;
+		}
+		.pict-flow-popup-settings-label {
+			display: block;
+			font-size: 0.8em;
+			font-weight: 600;
+			color: #7f8c8d;
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+			margin-bottom: 0.35em;
+		}
+		.pict-flow-popup-settings-select {
+			width: 100%;
+			padding: 0.4em 0.5em;
+			border: 1px solid #d5d8dc;
+			border-radius: 4px;
+			font-size: 0.9em;
+			background: #fff;
+			color: #2c3e50;
+			cursor: pointer;
+			outline: none;
+			box-sizing: border-box;
+		}
+		.pict-flow-popup-settings-select:focus {
+			border-color: #3498db;
+		}
+		.pict-flow-popup-settings-slider-row {
+			display: flex;
+			align-items: center;
+			gap: 0.5em;
+		}
+		.pict-flow-popup-settings-slider {
+			flex: 1;
+			-webkit-appearance: none;
+			appearance: none;
+			height: 4px;
+			background: #d5d8dc;
+			border-radius: 2px;
+			outline: none;
+			cursor: pointer;
+		}
+		.pict-flow-popup-settings-slider::-webkit-slider-thumb {
+			-webkit-appearance: none;
+			appearance: none;
+			width: 14px;
+			height: 14px;
+			background: #3498db;
+			border-radius: 50%;
+			cursor: pointer;
+		}
+		.pict-flow-popup-settings-slider::-moz-range-thumb {
+			width: 14px;
+			height: 14px;
+			background: #3498db;
+			border-radius: 50%;
+			cursor: pointer;
+			border: none;
+		}
+		.pict-flow-popup-settings-slider-value {
+			font-size: 0.85em;
+			color: #7f8c8d;
+			min-width: 2.5em;
+			text-align: right;
+		}
+		`;}// ── Collapsed Toolbar ─────────────────────────────────────────────────
+/**
+	 * CSS for the collapsed toolbar state (small expand button in corner).
+	 * @returns {string}
+	 */getCollapsedToolbarCSS(){return/*css*/`
+		.pict-flow-toolbar-collapsed {
+			position: absolute;
+			top: 8px;
+			right: 8px;
+			z-index: 100;
+			display: none;
+		}
+		.pict-flow-toolbar-collapsed.visible {
+			display: block;
+		}
+		.pict-flow-toolbar-expand-btn {
+			width: 36px;
+			height: 36px;
+			border-radius: 6px;
+			border: 1px solid #d5d8dc;
+			background-color: #ffffff;
+			box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: background-color 0.15s, box-shadow 0.15s;
+		}
+		.pict-flow-toolbar-expand-btn:hover {
+			background-color: #ecf0f1;
+			box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+		}
+		`;}// ── Floating Toolbar ──────────────────────────────────────────────────
+/**
+	 * CSS for the floating draggable toolbar.
+	 * @returns {string}
+	 */getFloatingToolbarCSS(){return/*css*/`
+		.pict-flow-floating-toolbar {
+			position: absolute;
+			z-index: 100;
+			display: flex;
+			flex-direction: column;
+			gap: 2px;
+			padding: 4px;
+			border-radius: 8px;
+			border: 1px solid #d5d8dc;
+			background-color: #ffffff;
+			box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+			pointer-events: auto;
+		}
+		.pict-flow-floating-grip {
+			cursor: grab;
+			padding: 4px;
+			border-radius: 4px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: background-color 0.15s;
+		}
+		.pict-flow-floating-grip:hover {
+			background-color: #ecf0f1;
+		}
+		.pict-flow-floating-grip:active {
+			cursor: grabbing;
+		}
+		.pict-flow-floating-btn {
+			width: 32px;
+			height: 32px;
+			border: none;
+			border-radius: 4px;
+			background-color: transparent;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: background-color 0.15s;
+		}
+		.pict-flow-floating-btn:hover {
+			background-color: #ecf0f1;
+		}
+		.pict-flow-floating-btn.danger:hover {
+			background-color: #fdedec;
+		}
+		.pict-flow-floating-separator {
+			height: 1px;
+			background-color: #ecf0f1;
+			margin: 2px 4px;
+		}
+		/* Collapsed floating toolbar — grip-only draggable square */
+		.pict-flow-floating-toolbar.collapsed .pict-flow-floating-btn,
+		.pict-flow-floating-toolbar.collapsed .pict-flow-floating-separator {
+			display: none;
+		}
+		.pict-flow-floating-toolbar.collapsed {
+			padding: 0;
+			border-radius: 6px;
+		}
+		.pict-flow-floating-toolbar.collapsed .pict-flow-floating-grip {
+			width: 32px;
+			height: 32px;
+			padding: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		.pict-flow-floating-toolbar.collapsed .pict-flow-floating-grip span {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			line-height: 1;
+		}
+		`;}// ── Icons ─────────────────────────────────────────────────────────────
+/**
+	 * CSS for inline SVG icons in palette cards, toolbar buttons, info panel headers, and panel close buttons.
+	 * @returns {string}
+	 */getIconCSS(){return/*css*/`
+		.pict-flow-icon-svg {
+			pointer-events: none;
+		}
+		.pict-flow-palette-card-icon svg {
+			display: inline-block;
+			vertical-align: middle;
+		}
+		.pict-flow-toolbar-btn-icon {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			line-height: 1;
+		}
+		.pict-flow-toolbar-btn-icon svg {
+			display: block;
+			vertical-align: middle;
+		}
+		.pict-flow-info-panel-header.with-icon svg {
+			display: inline-block;
+			vertical-align: middle;
+			margin-right: 4px;
+		}
+		.pict-flow-panel-close-icon {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			line-height: 1;
+		}
+		.pict-flow-panel-close-icon svg {
+			display: block;
+		}
+		.pict-flow-palette-toggle-arrow svg {
+			display: block;
+		}
+		`;}// ── Bracket Node CSS ──────────────────────────────────────────────────
+/**
+	 * CSS for bracket-style node bodies used by sketch/blueprint themes.
+	 *
+	 * The bracket fill rects share class `.pict-flow-node-body` for fill
+	 * inheritance, so these rules must use parent-qualified selectors
+	 * (specificity ≥ 0,2,0) to override the base, variant, hover, and
+	 * selected rules that set stroke and rx/ry on `.pict-flow-node-body`.
+	 *
+	 * @returns {string}
+	 */getBracketNodeCSS(){return/*css*/`
+		/* Bracket outline path */
+		.pict-flow-node-bracket {
+			fill: none;
+			stroke: var(--pf-node-body-stroke);
+			stroke-width: 2;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+		}
+		.pict-flow-node.selected .pict-flow-node-bracket {
+			stroke: var(--pf-node-selected-stroke);
+			stroke-width: 2;
+		}
+		.pict-flow-node:hover .pict-flow-node-bracket {
+			stroke: #b0b8c0;
+			stroke-width: 1.5;
+		}
+
+		/* Bracket fill rects: no stroke, no rounded corners.
+		   Uses parent-qualified selectors to beat variant rules
+		   (e.g. .pict-flow-node-start .pict-flow-node-body). */
+		.pict-flow-node .pict-flow-node-bracket-fill,
+		.pict-flow-node .pict-flow-node-bracket-title-fill {
+			stroke: none;
+			stroke-width: 0;
+			rx: 0;
+			ry: 0;
+		}
+		/* Beat hover rule: .pict-flow-node:hover .pict-flow-node-body */
+		.pict-flow-node:hover .pict-flow-node-bracket-fill,
+		.pict-flow-node:hover .pict-flow-node-bracket-title-fill {
+			stroke: none;
+			stroke-width: 0;
+		}
+		/* Beat selected rule: .pict-flow-node.selected .pict-flow-node-body */
+		.pict-flow-node.selected .pict-flow-node-bracket-fill,
+		.pict-flow-node.selected .pict-flow-node-bracket-title-fill {
+			stroke: none;
+			stroke-width: 0;
+		}
+		`;}// ── Aggregate Methods ──────────────────────────────────────────────────
+/**
+	 * Concatenate all domain CSS getters into a single CSS string.
+	 * Includes theme overrides if a theme provider is active.
+	 * @returns {string}
+	 */generateCSS(){let tmpBaseCSS=this.getContainerCSS()+this.getNodeCSS()+this.getBodyContentCSS()+this.getNodeVariantCSS()+this.getPortCSS()+this.getConnectionCSS()+this.getHandleCSS()+this.getTetherCSS()+this.getPanelCSS()+this.getInfoPanelCSS()+this.getNodePropsEditorCSS()+this.getBracketNodeCSS()+this.getFullscreenCSS()+this.getToolbarCSS()+this.getPaletteCSS()+this.getPopupCSS()+this.getCollapsedToolbarCSS()+this.getFloatingToolbarCSS()+this.getIconCSS();// Apply theme overrides if a theme provider exists
+if(this._FlowView&&this._FlowView._ThemeProvider){let tmpTheme=this._FlowView._ThemeProvider.getActiveTheme();if(tmpTheme&&tmpTheme.CSSVariables&&Object.keys(tmpTheme.CSSVariables).length>0){let tmpOverrides='.pict-flow-container {\n';for(let tmpKey in tmpTheme.CSSVariables){tmpOverrides+='\t'+tmpKey+': '+tmpTheme.CSSVariables[tmpKey]+';\n';}tmpOverrides+='}\n';tmpBaseCSS+=tmpOverrides;}if(tmpTheme&&tmpTheme.AdditionalCSS){tmpBaseCSS+=tmpTheme.AdditionalCSS;}}return tmpBaseCSS;}/**
+	 * Register all flow CSS with pict's CSSMap service.
+	 * Uses correct parameter ordering: (hash, content, priority, provider).
+	 * Removes existing CSS first to allow theme re-registration,
+	 * then re-injects into the DOM.
+	 */registerCSS(){if(this.fable&&this.fable.CSSMap){// Remove existing CSS first so we can re-register with updated theme overrides
+this.fable.CSSMap.removeCSS('PictSectionFlow-CSS');this.fable.CSSMap.addCSS('PictSectionFlow-CSS',this.generateCSS(),500,'PictProviderFlowCSS');// Re-inject into the DOM to apply the updated CSS
+this.fable.CSSMap.injectCSS();}else{this.log.warn('PictProviderFlowCSS: CSSMap not available; CSS not registered.');}}}module.exports=PictProviderFlowCSS;module.exports.default_configuration=_ProviderConfiguration;},{"fable-serviceproviderbase":2}],23:[function(require,module,exports){const libFableServiceProviderBase=require('fable-serviceproviderbase');class PictProviderFlowConnectorShapes extends libFableServiceProviderBase{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictProviderFlowConnectorShapes';this._FlowView=pOptions&&pOptions.FlowView?pOptions.FlowView:null;// Default shape configurations — each keyed by a shape identifier
+// _OriginalShapes stores a deep copy for reset when switching themes.
+this._DefaultShapes={'port':{ElementType:'circle',Attributes:{r:'5'},ClassName:'pict-flow-port'},'panel-indicator':{ElementType:'rect',Attributes:{rx:'2',ry:'2'},ClassName:'pict-flow-node-panel-indicator'},'connection-path':{ElementType:'path',Attributes:{},ClassName:'pict-flow-connection'},'connection-hitarea':{ElementType:'path',Attributes:{},ClassName:'pict-flow-connection-hitarea'},'connection-handle':{ElementType:'circle',Attributes:{r:'6'},ClassName:'pict-flow-connection-handle'},'connection-handle-midpoint':{ElementType:'circle',Attributes:{r:'6'},ClassName:'pict-flow-connection-handle-midpoint'},'drag-connection':{ElementType:'path',Attributes:{},ClassName:'pict-flow-drag-connection'},'tether-path':{ElementType:'path',Attributes:{},ClassName:'pict-flow-tether-line'},'tether-hitarea':{ElementType:'path',Attributes:{},ClassName:'pict-flow-tether-hitarea'},'tether-handle':{ElementType:'circle',Attributes:{r:'6'},ClassName:'pict-flow-tether-handle'},'tether-handle-midpoint':{ElementType:'circle',Attributes:{r:'6'},ClassName:'pict-flow-tether-handle-midpoint'},'arrowhead-connection':{MarkerWidth:'5',MarkerHeight:'7',RefX:'7.5',RefY:'3.5',Points:'0 0, 5 3.5, 0 7',Fill:'#95a5a6'},'arrowhead-connection-selected':{MarkerWidth:'5',MarkerHeight:'7',RefX:'7.5',RefY:'3.5',Points:'0 0, 5 3.5, 0 7',Fill:'#3498db'},'arrowhead-tether':{MarkerWidth:'4',MarkerHeight:'6',RefX:'6',RefY:'3',Points:'0 0, 4 3, 0 6',Fill:'#95a5a6'}};// Store a deep copy for resetting when switching themes
+this._OriginalShapes=JSON.parse(JSON.stringify(this._DefaultShapes));}// ── Theme Override Methods ─────────────────────────────────────────────
+/**
+	 * Apply theme-specific shape overrides.
+	 * Merges the overrides into the active shape configs.
+	 * @param {Object} pOverrides - Map of shape key to partial config
+	 */applyThemeOverrides(pOverrides){if(!pOverrides||typeof pOverrides!=='object'){return;}for(let tmpKey in pOverrides){if(this._DefaultShapes.hasOwnProperty(tmpKey)){Object.assign(this._DefaultShapes[tmpKey],pOverrides[tmpKey]);}else{this._DefaultShapes[tmpKey]=pOverrides[tmpKey];}}}/**
+	 * Reset all shape configs to their original defaults.
+	 * Called before applying new theme overrides to prevent accumulation.
+	 */resetToDefaults(){this._DefaultShapes=JSON.parse(JSON.stringify(this._OriginalShapes));}/**
+	 * Get a shape configuration by key.
+	 * @param {string} pShapeKey
+	 * @returns {Object|null}
+	 */getShapeConfig(pShapeKey){if(this._DefaultShapes.hasOwnProperty(pShapeKey)){return this._DefaultShapes[pShapeKey];}return null;}/**
+	 * Override or add a shape configuration.
+	 * Consumers can call this to customize connector shapes without subclassing.
+	 * @param {string} pShapeKey
+	 * @param {Object} pConfig
+	 */setShapeConfig(pShapeKey,pConfig){this._DefaultShapes[pShapeKey]=pConfig;}/**
+	 * Get all registered shape keys.
+	 * @returns {string[]}
+	 */getShapeKeys(){return Object.keys(this._DefaultShapes);}// ---- Factory Methods ----
+/**
+	 * Create a port SVG element.
+	 * @param {Object} pPortData - Port data with Hash, Direction
+	 * @param {{x: number, y: number}} pPosition - Local position within the node group
+	 * @param {string} pNodeHash - The owning node hash
+	 * @returns {SVGCircleElement}
+	 */createPortElement(pPortData,pPosition,pNodeHash){let tmpConfig=this._DefaultShapes['port'];let tmpElement=this._FlowView._SVGHelperProvider.createSVGElement(tmpConfig.ElementType);let tmpClassName=tmpConfig.ClassName+' '+pPortData.Direction;if(pPortData.PortType){tmpClassName+=' port-type-'+pPortData.PortType;}tmpElement.setAttribute('class',tmpClassName);tmpElement.setAttribute('cx',String(pPosition.x));tmpElement.setAttribute('cy',String(pPosition.y));// Apply config attributes (r, etc.)
+for(let tmpKey in tmpConfig.Attributes){tmpElement.setAttribute(tmpKey,tmpConfig.Attributes[tmpKey]);}tmpElement.setAttribute('data-port-hash',pPortData.Hash);tmpElement.setAttribute('data-node-hash',pNodeHash);tmpElement.setAttribute('data-port-direction',pPortData.Direction);if(pPortData.PortType){tmpElement.setAttribute('data-port-type',pPortData.PortType);}tmpElement.setAttribute('data-element-type','port');return tmpElement;}/**
+	 * Create a panel indicator SVG element.
+	 * @param {string} pNodeHash
+	 * @param {number} pX
+	 * @param {number} pY
+	 * @param {number} pWidth
+	 * @param {number} pHeight
+	 * @returns {SVGRectElement}
+	 */createPanelIndicatorElement(pNodeHash,pX,pY,pWidth,pHeight){let tmpConfig=this._DefaultShapes['panel-indicator'];let tmpElement=this._FlowView._SVGHelperProvider.createSVGElement(tmpConfig.ElementType);tmpElement.setAttribute('class',tmpConfig.ClassName);tmpElement.setAttribute('x',String(pX));tmpElement.setAttribute('y',String(pY));tmpElement.setAttribute('width',String(pWidth));tmpElement.setAttribute('height',String(pHeight));// Apply config attributes (rx, ry, etc.)
+for(let tmpKey in tmpConfig.Attributes){tmpElement.setAttribute(tmpKey,tmpConfig.Attributes[tmpKey]);}tmpElement.setAttribute('data-node-hash',pNodeHash);tmpElement.setAttribute('data-element-type','panel-indicator');return tmpElement;}/**
+	 * Create a visible connection path SVG element.
+	 * @param {string} pPath - The SVG path d-string
+	 * @param {string} pConnectionHash
+	 * @param {boolean} pIsSelected
+	 * @param {string} pViewIdentifier
+	 * @returns {SVGPathElement}
+	 */createConnectionPathElement(pPath,pConnectionHash,pIsSelected,pViewIdentifier){let tmpConfig=this._DefaultShapes['connection-path'];let tmpElement=this._FlowView._SVGHelperProvider.createSVGElement(tmpConfig.ElementType);tmpElement.setAttribute('class',tmpConfig.ClassName+(pIsSelected?' selected':''));tmpElement.setAttribute('d',pPath);tmpElement.setAttribute('data-connection-hash',pConnectionHash);tmpElement.setAttribute('data-element-type','connection');// Arrow marker
+let tmpMarkerConfig=pIsSelected?this._DefaultShapes['arrowhead-connection-selected']:this._DefaultShapes['arrowhead-connection'];// The marker id follows the naming convention used in generateMarkerDefs
+let tmpMarkerId=pIsSelected?'flow-arrowhead-selected-'+pViewIdentifier:'flow-arrowhead-'+pViewIdentifier;tmpElement.setAttribute('marker-end','url(#'+tmpMarkerId+')');return tmpElement;}/**
+	 * Create a connection hit area SVG element (wider invisible path for click targeting).
+	 * @param {string} pPath - The SVG path d-string
+	 * @param {string} pConnectionHash
+	 * @returns {SVGPathElement}
+	 */createConnectionHitAreaElement(pPath,pConnectionHash){let tmpConfig=this._DefaultShapes['connection-hitarea'];let tmpElement=this._FlowView._SVGHelperProvider.createSVGElement(tmpConfig.ElementType);tmpElement.setAttribute('class',tmpConfig.ClassName);tmpElement.setAttribute('d',pPath);tmpElement.setAttribute('data-connection-hash',pConnectionHash);tmpElement.setAttribute('data-element-type','connection-hitarea');return tmpElement;}/**
+	 * Create a drag handle circle element.
+	 * Works for both connection handles and tether handles.
+	 * @param {string} pOwnerHash - Connection hash or panel hash
+	 * @param {string} pHandleType - e.g. 'ortho-corner1', 'bezier-midpoint'
+	 * @param {number} pX
+	 * @param {number} pY
+	 * @param {string} pShapeKey - 'connection-handle', 'connection-handle-midpoint', 'tether-handle', 'tether-handle-midpoint'
+	 * @returns {SVGCircleElement}
+	 */createHandleElement(pOwnerHash,pHandleType,pX,pY,pShapeKey){let tmpConfig=this._DefaultShapes[pShapeKey]||this._DefaultShapes['connection-handle'];let tmpElement=this._FlowView._SVGHelperProvider.createSVGElement(tmpConfig.ElementType);tmpElement.setAttribute('class',tmpConfig.ClassName);tmpElement.setAttribute('cx',String(pX));tmpElement.setAttribute('cy',String(pY));// Apply config attributes (r, etc.)
+for(let tmpKey in tmpConfig.Attributes){tmpElement.setAttribute(tmpKey,tmpConfig.Attributes[tmpKey]);}tmpElement.setAttribute('data-handle-type',pHandleType);return tmpElement;}/**
+	 * Create a temporary drag connection path element.
+	 * @param {string} pPath - The SVG path d-string
+	 * @returns {SVGPathElement}
+	 */createDragConnectionElement(pPath){let tmpConfig=this._DefaultShapes['drag-connection'];let tmpElement=this._FlowView._SVGHelperProvider.createSVGElement(tmpConfig.ElementType);tmpElement.setAttribute('class',tmpConfig.ClassName);tmpElement.setAttribute('d',pPath);return tmpElement;}/**
+	 * Create a visible tether path SVG element.
+	 * @param {string} pPath - The SVG path d-string
+	 * @param {string} pPanelHash
+	 * @param {boolean} pIsSelected
+	 * @param {string} pViewIdentifier
+	 * @returns {SVGPathElement}
+	 */createTetherPathElement(pPath,pPanelHash,pIsSelected,pViewIdentifier){let tmpConfig=this._DefaultShapes['tether-path'];let tmpElement=this._FlowView._SVGHelperProvider.createSVGElement(tmpConfig.ElementType);tmpElement.setAttribute('class',tmpConfig.ClassName+(pIsSelected?' selected':''));tmpElement.setAttribute('d',pPath);tmpElement.setAttribute('marker-end','url(#flow-tether-arrowhead-'+pViewIdentifier+')');tmpElement.setAttribute('data-element-type','tether');tmpElement.setAttribute('data-panel-hash',pPanelHash);return tmpElement;}/**
+	 * Create a tether hit area SVG element.
+	 * @param {string} pPath - The SVG path d-string
+	 * @param {string} pPanelHash
+	 * @returns {SVGPathElement}
+	 */createTetherHitAreaElement(pPath,pPanelHash){let tmpConfig=this._DefaultShapes['tether-hitarea'];let tmpElement=this._FlowView._SVGHelperProvider.createSVGElement(tmpConfig.ElementType);tmpElement.setAttribute('class',tmpConfig.ClassName);tmpElement.setAttribute('d',pPath);tmpElement.setAttribute('data-element-type','tether-hitarea');tmpElement.setAttribute('data-panel-hash',pPanelHash);return tmpElement;}/**
+	 * Generate SVG marker definition markup for all arrowhead types.
+	 * Returns raw SVG markup to be injected into the <defs> section.
+	 * @param {string} pViewIdentifier
+	 * @returns {string}
+	 */generateMarkerDefs(pViewIdentifier){let tmpConnectionMarker=this._DefaultShapes['arrowhead-connection'];let tmpSelectedMarker=this._DefaultShapes['arrowhead-connection-selected'];let tmpTetherMarker=this._DefaultShapes['arrowhead-tether'];let tmpMarkup='';// Normal connection arrowhead (default gray)
+tmpMarkup+='<marker id="flow-arrowhead-'+pViewIdentifier+'"'+' markerWidth="'+tmpConnectionMarker.MarkerWidth+'"'+' markerHeight="'+tmpConnectionMarker.MarkerHeight+'"'+' refX="'+tmpConnectionMarker.RefX+'"'+' refY="'+tmpConnectionMarker.RefY+'"'+' orient="auto" markerUnits="strokeWidth">'+'<polygon points="'+tmpConnectionMarker.Points+'" fill="'+tmpConnectionMarker.Fill+'" />'+'</marker>';// Per-port-type connection arrowheads
+let tmpPortTypeColors={'event-in':'#3498db','event-out':'#2ecc71','setting':'#e67e22','value':'#f1c40f','error':'#e74c3c'};for(let tmpType in tmpPortTypeColors){tmpMarkup+='<marker id="flow-arrowhead-'+tmpType+'-'+pViewIdentifier+'"'+' markerWidth="'+tmpConnectionMarker.MarkerWidth+'"'+' markerHeight="'+tmpConnectionMarker.MarkerHeight+'"'+' refX="'+tmpConnectionMarker.RefX+'"'+' refY="'+tmpConnectionMarker.RefY+'"'+' orient="auto" markerUnits="strokeWidth">'+'<polygon points="'+tmpConnectionMarker.Points+'" fill="'+tmpPortTypeColors[tmpType]+'" />'+'</marker>';}// Selected connection arrowhead
+tmpMarkup+='<marker id="flow-arrowhead-selected-'+pViewIdentifier+'"'+' markerWidth="'+tmpSelectedMarker.MarkerWidth+'"'+' markerHeight="'+tmpSelectedMarker.MarkerHeight+'"'+' refX="'+tmpSelectedMarker.RefX+'"'+' refY="'+tmpSelectedMarker.RefY+'"'+' orient="auto" markerUnits="strokeWidth">'+'<polygon points="'+tmpSelectedMarker.Points+'" fill="'+tmpSelectedMarker.Fill+'" />'+'</marker>';// Tether arrowhead
+tmpMarkup+='<marker id="flow-tether-arrowhead-'+pViewIdentifier+'"'+' markerWidth="'+tmpTetherMarker.MarkerWidth+'"'+' markerHeight="'+tmpTetherMarker.MarkerHeight+'"'+' refX="'+tmpTetherMarker.RefX+'"'+' refY="'+tmpTetherMarker.RefY+'"'+' orient="auto" markerUnits="strokeWidth">'+'<polygon points="'+tmpTetherMarker.Points+'" fill="'+tmpTetherMarker.Fill+'" />'+'</marker>';return tmpMarkup;}}module.exports=PictProviderFlowConnectorShapes;},{"fable-serviceproviderbase":2}],24:[function(require,module,exports){const libPictProvider=require('pict-provider');const _ProviderConfiguration={ProviderIdentifier:'PictProviderFlowEventHandler'};/**
+ * Event handler provider for the flow diagram.
+ * Provides hook points for extensibility - consumers can register handlers
+ * for flow events like node selection, movement, connection creation, etc.
+ *
+ * Supported events:
+ * - onNodeSelected(node)              - A node was selected (or null for deselection)
+ * - onNodeAdded(node)                 - A new node was added
+ * - onNodeRemoved(node)               - A node was removed
+ * - onNodeMoved(node)                 - A node was moved to a new position
+ * - onConnectionSelected(conn)        - A connection was selected
+ * - onConnectionCreated(conn)         - A new connection was created
+ * - onConnectionRemoved(conn)         - A connection was removed
+ * - onConnectionHandleMoved(conn)     - A connection's drag handle was repositioned
+ * - onConnectionModeChanged(conn)     - A connection's line mode was toggled (bezier/orthogonal)
+ * - onPanelOpened(panelData)          - A properties panel was opened
+ * - onPanelClosed(panelData)          - A properties panel was closed
+ * - onPanelMoved(panelData)           - A properties panel was moved
+ * - onTetherSelected(panelData)       - A tether line was selected (or null for deselection)
+ * - onTetherHandleMoved(panelData)    - A tether's drag handle was repositioned
+ * - onTetherModeChanged(panelData)    - A tether's line mode was toggled (bezier/orthogonal)
+ * - onLayoutSaved(layoutData)         - A layout snapshot was saved
+ * - onLayoutRestored(layoutData)      - A saved layout was restored
+ * - onLayoutDeleted(layoutData)       - A saved layout was deleted
+ * - onFlowChanged(flowData)           - The flow data changed (catch-all)
+ */class PictProviderFlowEventHandler extends libPictProvider{constructor(pFable,pOptions,pServiceHash){let tmpOptions=Object.assign({},_ProviderConfiguration,pOptions);super(pFable,tmpOptions,pServiceHash);this.serviceType='PictProviderFlowEventHandler';this._FlowView=pOptions&&pOptions.FlowView?pOptions.FlowView:null;// Event handler registry
+this._Handlers={};}/**
+	 * Register an event handler
+	 * @param {string} pEventName - The event name (e.g., 'onNodeSelected')
+	 * @param {Function} pHandler - The handler function
+	 * @param {string} [pHandlerHash] - Optional unique identifier for this handler (for later removal)
+	 * @returns {string} The handler hash
+	 */registerHandler(pEventName,pHandler,pHandlerHash){if(typeof pHandler!=='function'){this.log.warn(`PictProviderFlowEventHandler registerHandler: handler for '${pEventName}' is not a function`);return null;}if(!this._Handlers[pEventName]){this._Handlers[pEventName]=[];}let tmpHash=pHandlerHash||`handler-${this.fable.getUUID()}`;this._Handlers[pEventName].push({Hash:tmpHash,Handler:pHandler});this.log.trace(`PictProviderFlowEventHandler registered handler '${tmpHash}' for event '${pEventName}'`);return tmpHash;}/**
+	 * Remove a specific event handler
+	 * @param {string} pEventName - The event name
+	 * @param {string} pHandlerHash - The handler hash to remove
+	 * @returns {boolean}
+	 */removeHandler(pEventName,pHandlerHash){if(!this._Handlers[pEventName])return false;let tmpIndex=this._Handlers[pEventName].findIndex(pH=>pH.Hash===pHandlerHash);if(tmpIndex>=0){this._Handlers[pEventName].splice(tmpIndex,1);return true;}return false;}/**
+	 * Remove all handlers for a specific event
+	 * @param {string} pEventName
+	 */removeAllHandlers(pEventName){if(pEventName){this._Handlers[pEventName]=[];}else{this._Handlers={};}}/**
+	 * Fire an event, calling all registered handlers
+	 * @param {string} pEventName - The event name
+	 * @param {*} pEventData - The event data to pass to handlers
+	 */fireEvent(pEventName,pEventData){this.log.trace(`PictProviderFlowEventHandler firing event '${pEventName}'`);if(!this._Handlers[pEventName]||this._Handlers[pEventName].length===0){return;}for(let i=0;i<this._Handlers[pEventName].length;i++){let tmpEntry=this._Handlers[pEventName][i];try{tmpEntry.Handler(pEventData,this._FlowView);}catch(pError){this.log.error(`PictProviderFlowEventHandler error in handler '${tmpEntry.Hash}' for event '${pEventName}': ${pError.message}`);}}}/**
+	 * Check if any handlers are registered for a specific event
+	 * @param {string} pEventName
+	 * @returns {boolean}
+	 */hasHandlers(pEventName){return!!(this._Handlers[pEventName]&&this._Handlers[pEventName].length>0);}/**
+	 * Get the count of handlers for a specific event
+	 * @param {string} pEventName
+	 * @returns {number}
+	 */getHandlerCount(pEventName){if(!this._Handlers[pEventName])return 0;return this._Handlers[pEventName].length;}}module.exports=PictProviderFlowEventHandler;module.exports.default_configuration=_ProviderConfiguration;},{"pict-provider":7}],25:[function(require,module,exports){const libFableServiceProviderBase=require('fable-serviceproviderbase');/**
+ * PictProvider-Flow-Geometry
+ *
+ * Shared geometry utilities for the flow diagram.
+ * Provides direction vectors and edge center calculations used by
+ * connections, tethers, and other flow components.
+ *
+ * Port Side values (12 positions):
+ *
+ *   Top edge:    'top-left'     'top'     'top-right'
+ *   Left edge:   'left-top'     'left'    'left-bottom'
+ *   Right edge:  'right-top'    'right'   'right-bottom'
+ *   Bottom edge: 'bottom-left'  'bottom'  'bottom-right'
+ *
+ * The old 4-value sides ('left', 'right', 'top', 'bottom') map to
+ * the middle position on each edge for backward compatibility.
+ */class PictProviderFlowGeometry extends libFableServiceProviderBase{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictProviderFlowGeometry';}/**
+	 * Extract the edge name from a Side value.
+	 *
+	 * Maps all 12 positions (and the 4 legacy values) back to
+	 * the edge they sit on: 'left', 'right', 'top', or 'bottom'.
+	 *
+	 * @param {string} pSide - Any valid Side value
+	 * @returns {string} The edge: 'left', 'right', 'top', or 'bottom'
+	 */getEdgeFromSide(pSide){switch(pSide){case'left-top':case'left':case'left-bottom':return'left';case'right-top':case'right':case'right-bottom':return'right';case'top-left':case'top':case'top-right':return'top';case'bottom-left':case'bottom':case'bottom-right':return'bottom';default:return'right';}}/**
+	 * Get the outward unit direction vector for a given side.
+	 *
+	 * All positions on the same edge share the same direction vector.
+	 *
+	 * @param {string} pSide - Any valid Side value (12 positions or 4 legacy)
+	 * @returns {{dx: number, dy: number}}
+	 */sideDirection(pSide){switch(this.getEdgeFromSide(pSide)){case'left':return{dx:-1,dy:0};case'right':return{dx:1,dy:0};case'top':return{dx:0,dy:-1};case'bottom':return{dx:0,dy:1};default:return{dx:1,dy:0};}}/**
+	 * Get the center point of a rectangle's edge.
+	 * Works for any object with X, Y, Width, Height properties
+	 * (nodes, panels, or any rectangular element).
+	 *
+	 * @param {Object} pRectData - Object with X, Y, Width, Height
+	 * @param {string} pSide - 'left', 'right', 'top', 'bottom'
+	 * @returns {{x: number, y: number}}
+	 */getEdgeCenter(pRectData,pSide){switch(pSide){case'left':return{x:pRectData.X,y:pRectData.Y+pRectData.Height/2};case'right':return{x:pRectData.X+pRectData.Width,y:pRectData.Y+pRectData.Height/2};case'top':return{x:pRectData.X+pRectData.Width/2,y:pRectData.Y};case'bottom':return{x:pRectData.X+pRectData.Width/2,y:pRectData.Y+pRectData.Height};default:return{x:pRectData.X+pRectData.Width,y:pRectData.Y+pRectData.Height/2};}}/**
+	 * Calculate a port's local position relative to node origin.
+	 *
+	 * Supports 12 positions (3 zones per edge).  For left/right edges,
+	 * the body area below the title bar is divided into three vertical zones
+	 * (start/middle/end).  For top/bottom edges, the full width is divided
+	 * into three horizontal zones.
+	 *
+	 * Multiple ports sharing the same Side value distribute evenly within
+	 * their zone.
+	 *
+	 * @param {string} pSide - Side value (any of 12 positions or 4 legacy)
+	 * @param {number} pIndex - Index of this port within its Side group
+	 * @param {number} pTotal - Total ports with this Side value
+	 * @param {number} pWidth - Node width
+	 * @param {number} pHeight - Node height
+	 * @param {number} pTitleBarHeight - Height of the node title bar
+	 * @returns {{x: number, y: number}}
+	 */getPortLocalPosition(pSide,pIndex,pTotal,pWidth,pHeight,pTitleBarHeight){let tmpEdge=this.getEdgeFromSide(pSide);let tmpZone=this._getZoneFromSide(pSide);// Minimum spacing between port centers (px)
+let tmpMinSpacing=16;// Reserve space at the bottom of the body so that port badges
+// never overlap the panel-indicator icon (10×10 rect at bottom-right)
+// and always leave a visible gap above the node bottom edge.
+let tmpBottomPad=16;if(tmpEdge==='left'||tmpEdge==='right'){let tmpX=tmpEdge==='left'?0:pWidth;let tmpBodyHeight=pHeight-pTitleBarHeight-tmpBottomPad;let tmpZoneStart=pTitleBarHeight+tmpBodyHeight*tmpZone.start;let tmpZoneHeight=tmpBodyHeight*(tmpZone.end-tmpZone.start);let tmpSpacing=tmpZoneHeight/(pTotal+1);if(tmpSpacing<tmpMinSpacing){tmpSpacing=tmpMinSpacing;}let tmpY=tmpZoneStart+tmpSpacing*(pIndex+1);return{x:tmpX,y:tmpY};}// top or bottom
+let tmpY=tmpEdge==='top'?0:pHeight;let tmpZoneStart=pWidth*tmpZone.start;let tmpZoneWidth=pWidth*(tmpZone.end-tmpZone.start);let tmpSpacing=tmpZoneWidth/(pTotal+1);if(tmpSpacing<tmpMinSpacing){tmpSpacing=tmpMinSpacing;}let tmpX=tmpZoneStart+tmpSpacing*(pIndex+1);return{x:tmpX,y:tmpY};}/**
+	 * Get the zone fraction (start, end) for a Side value.
+	 *
+	 * Each edge is divided into three zones of equal size:
+	 *   start:  0.0 — 0.333
+	 *   middle: 0.333 — 0.667
+	 *   end:    0.667 — 1.0
+	 *
+	 * @param {string} pSide
+	 * @returns {{start: number, end: number}}
+	 */_getZoneFromSide(pSide){switch(pSide){// Left edge: top, middle, bottom
+case'left-top':return{start:0.0,end:0.333};case'left':return{start:0.333,end:0.667};case'left-bottom':return{start:0.667,end:1.0};// Right edge: top, middle, bottom
+case'right-top':return{start:0.0,end:0.333};case'right':return{start:0.333,end:0.667};case'right-bottom':return{start:0.667,end:1.0};// Top edge: left, middle, right
+case'top-left':return{start:0.0,end:0.333};case'top':return{start:0.333,end:0.667};case'top-right':return{start:0.667,end:1.0};// Bottom edge: left, middle, right
+case'bottom-left':return{start:0.0,end:0.333};case'bottom':return{start:0.333,end:0.667};case'bottom-right':return{start:0.667,end:1.0};// Fallback: full range (legacy behavior)
+default:return{start:0.0,end:1.0};}}/**
+	 * Compute the minimum node height required so that all ports
+	 * (with their badges) fit within the node boundary.
+	 *
+	 * Uses the same zone system and minimum spacing as getPortLocalPosition.
+	 * For each left/right zone, calculates where the last port would land
+	 * and ensures the node is tall enough to contain it plus badge clearance.
+	 *
+	 * @param {Array} pPorts - Array of port objects with Side, Direction
+	 * @param {number} pTitleBarHeight - Height of the title bar
+	 * @returns {number} Minimum node height in pixels (0 if no ports)
+	 */computeMinimumNodeHeight(pPorts,pTitleBarHeight){if(!pPorts||!Array.isArray(pPorts)||pPorts.length===0){return 0;}let tmpMinSpacing=16;let tmpBadgeHalfHeight=6;let tmpBottomPad=16;// Count ports per Side value
+let tmpCountBySide={};for(let i=0;i<pPorts.length;i++){let tmpSide=pPorts[i].Side||(pPorts[i].Direction==='input'?'left':'right');if(!tmpCountBySide[tmpSide]){tmpCountBySide[tmpSide]=0;}tmpCountBySide[tmpSide]++;}let tmpMinHeight=0;for(let tmpSide in tmpCountBySide){let tmpCount=tmpCountBySide[tmpSide];let tmpEdge=this.getEdgeFromSide(tmpSide);// Only left/right edge zones affect required height
+if(tmpEdge!=='left'&&tmpEdge!=='right'){continue;}let tmpZone=this._getZoneFromSide(tmpSide);// With bottomPad reserving space at the bottom:
+//   bodyHeight = H - titleBar - bottomPad
+//   lastPortY = titleBar + bodyHeight * zone.start + minSpacing * count
+//   Need: lastPortY + badgeHalfHeight <= H - bottomPad
+// Solving for H:
+//   H >= titleBar + bottomPad + (minSpacing * count + badgeHalfHeight) / (1 - zone.start)
+let tmpRequired=pTitleBarHeight+tmpBottomPad+(tmpMinSpacing*tmpCount+tmpBadgeHalfHeight)/(1-tmpZone.start);if(tmpRequired>tmpMinHeight){tmpMinHeight=tmpRequired;}}return Math.ceil(tmpMinHeight);}}module.exports=PictProviderFlowGeometry;},{"fable-serviceproviderbase":2}],26:[function(require,module,exports){const libFableServiceProviderBase=require('fable-serviceproviderbase');/**
+ * PictProvider-Flow-Icons
+ *
+ * Centralized SVG icon provider for the flow diagram.
+ * All icons use a duotone style: 2px outline (#2c3e50) with
+ * subtle filled accent shapes (#d5e8f7).
+ *
+ * Each icon is registered as a pict template with hash `Flow-Icon-{key}`,
+ * making them individually overridable by consumers.
+ */const _ProviderConfiguration={ProviderIdentifier:'PictProviderFlowIcons'};// ── Default Icon SVG Markup ────────────────────────────────────────────────
+// All icons: viewBox="0 0 24 24", duotone style
+// Accent fill: #d5e8f7, Stroke: #2c3e50, Stroke-width: 2
+//
+// The {FlowIconSize} placeholder is replaced at render time with the
+// requested pixel size. Each template is a self-contained <svg> element.
+const _DefaultIcons={// ── FlowCard Icons ─────────────────────────────────────────────────────
+'ITE':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="6" r="3" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><circle cx="6" cy="18" r="2.5" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><circle cx="18" cy="18" r="2.5" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><path d="M12 9v2M9.5 12.5L6 15.5M14.5 12.5L18 15.5" stroke="#2c3e50" stroke-width="2"/></svg>','SW':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><path d="M3 12h5M16 12h5M14.8 9.2l3.7-5.2M14.8 14.8l3.7 5.2" stroke="#2c3e50" stroke-width="2"/></svg>','EACH':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1.5" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1.5" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1.5" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/></svg>','FREAD':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9l-7-7z" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><path d="M13 2v7h7" stroke="#2c3e50" stroke-width="2"/><path d="M9 13h6M9 17h4" stroke="#2c3e50" stroke-width="2"/></svg>','FWRITE':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9l-7-7z" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><path d="M13 2v7h7" stroke="#2c3e50" stroke-width="2"/><path d="M12 13v5M9.5 15.5L12 13l2.5 2.5" stroke="#2c3e50" stroke-width="2"/></svg>','LOG':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><circle cx="7.5" cy="8" r="1" fill="#2c3e50"/><circle cx="7.5" cy="12" r="1" fill="#2c3e50"/><circle cx="7.5" cy="16" r="1" fill="#2c3e50"/><path d="M11 8h5.5M11 12h5.5M11 16h3.5" stroke="#2c3e50" stroke-width="2"/></svg>','GET':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><path d="M21 21l-5.15-5.15" stroke="#2c3e50" stroke-width="2"/></svg>','SET':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4.5 1.5L4 16Z" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><path d="M14 6l3 3" stroke="#2c3e50" stroke-width="2"/></svg>',// ── UI Icons ───────────────────────────────────────────────────────────
+'fullscreen':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke="#2c3e50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></svg>','exit-fullscreen':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke="#2c3e50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14h6v6"/><path d="M20 10h-6V4"/><path d="M14 10l7-7"/><path d="M3 21l7-7"/></svg>','close':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke="#2c3e50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>','chevron-down':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke="#2c3e50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>',// ── Toolbar & Popup Icons ─────────────────────────────────────────────
+'search':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="#2c3e50" stroke-width="2"/></svg>','cards':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="16" height="12" rx="2" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><path d="M6 7V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2" stroke="#2c3e50" stroke-width="2"/></svg>','layout':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="10" rx="1.5" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><rect x="13" y="3" width="8" height="6" rx="1.5" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><rect x="3" y="15" width="8" height="6" rx="1.5" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><rect x="13" y="11" width="8" height="10" rx="1.5" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/></svg>','collapse':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><path d="M8 12h8" stroke="#2c3e50" stroke-width="2"/></svg>','expand':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><path d="M12 8v8M8 12h8" stroke="#2c3e50" stroke-width="2"/></svg>','grip':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="#2c3e50"><circle cx="9" cy="5" r="1.5"/><circle cx="15" cy="5" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="15" cy="19" r="1.5"/></svg>','settings':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke="#2c3e50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3" fill="#d5e8f7"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>','plus':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><path d="M12 8v8M8 12h8" stroke="#2c3e50" stroke-width="2"/></svg>','trash':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18" stroke="#2c3e50" stroke-width="2"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="#2c3e50" stroke-width="2"/><rect x="5" y="6" width="14" height="14" rx="2" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><path d="M10 11v6M14 11v6" stroke="#2c3e50" stroke-width="2"/></svg>','save':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><path d="M17 21v-8H7v8" stroke="#2c3e50" stroke-width="2"/><path d="M7 3v5h8" stroke="#2c3e50" stroke-width="2"/></svg>','auto-layout':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="6" rx="1.5" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><rect x="2" y="16" width="8" height="6" rx="1.5" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><rect x="14" y="16" width="8" height="6" rx="1.5" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><path d="M12 8v4M6 16v-4h12v4" stroke="#2c3e50" stroke-width="2"/></svg>','zoom-in':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="#2c3e50" stroke-width="2"/><path d="M11 8v6M8 11h6" stroke="#2c3e50" stroke-width="2"/></svg>','zoom-out':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="#2c3e50" stroke-width="2"/><path d="M8 11h6" stroke="#2c3e50" stroke-width="2"/></svg>','zoom-fit':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke="#2c3e50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V3h4"/><path d="M17 3h4v4"/><path d="M21 17v4h-4"/><path d="M7 21H3v-4"/><rect x="7" y="7" width="10" height="10" rx="1.5" fill="#d5e8f7"/></svg>','dock':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="4" rx="1.5" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><path d="M12 20V11M8 14l4-4 4 4" stroke="#2c3e50" stroke-width="2"/></svg>','restore':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke="#2c3e50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>','delete-node':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18" stroke="#2c3e50" stroke-width="2"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="#2c3e50" stroke-width="2"/><rect x="5" y="6" width="14" height="14" rx="2" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><path d="M10 11v6M14 11v6" stroke="#2c3e50" stroke-width="2"/></svg>',// ── Fallback ───────────────────────────────────────────────────────────
+'default':'<svg xmlns="http://www.w3.org/2000/svg" width="{FlowIconSize}" height="{FlowIconSize}" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4" fill="#d5e8f7" stroke="#2c3e50" stroke-width="2"/><circle cx="12" cy="12" r="2.5" fill="#2c3e50"/></svg>'};class PictProviderFlowIcons extends libFableServiceProviderBase{constructor(pFable,pOptions,pServiceHash){let tmpOptions=Object.assign({},_ProviderConfiguration,pOptions);super(pFable,tmpOptions,pServiceHash);this.serviceType='PictProviderFlowIcons';this._FlowView=pOptions&&pOptions.FlowView?pOptions.FlowView:null;// Deep copy the default icons
+this._Icons=JSON.parse(JSON.stringify(_DefaultIcons));// Merge any additional icons passed via options
+if(pOptions&&pOptions.AdditionalIcons&&typeof pOptions.AdditionalIcons==='object'){let tmpKeys=Object.keys(pOptions.AdditionalIcons);for(let i=0;i<tmpKeys.length;i++){this._Icons[tmpKeys[i]]=pOptions.AdditionalIcons[tmpKeys[i]];}}}/**
+	 * Register all icons as pict templates with hash Flow-Icon-{key}.
+	 * Consumers can override any icon by registering a template with
+	 * the same hash before the flow view renders.
+	 */registerIconTemplates(){if(!this.fable||!this.fable.TemplateProvider){this.log.warn('PictProviderFlowIcons: TemplateProvider not available; icon templates not registered.');return;}let tmpKeys=Object.keys(this._Icons);for(let i=0;i<tmpKeys.length;i++){let tmpHash='Flow-Icon-'+tmpKeys[i];// Only register if not already present (allow consumer overrides)
+if(!this.fable.TemplateProvider.getTemplate(tmpHash)){this.fable.TemplateProvider.addTemplate(tmpHash,this._Icons[tmpKeys[i]]);}}}/**
+	 * Determine if the given icon string is an emoji (legacy) or an icon key.
+	 * Returns true if the string contains characters with code points above U+00FF,
+	 * indicating emoji or Unicode symbol characters.
+	 *
+	 * @param {string} pIconValue - The icon value to check
+	 * @returns {boolean}
+	 */isEmojiIcon(pIconValue){if(!pIconValue||typeof pIconValue!=='string'){return false;}for(let i=0;i<pIconValue.length;i++){if(pIconValue.charCodeAt(i)>255){return true;}}return false;}/**
+	 * Resolve the icon key to use for a given CardMetadata object.
+	 * Tries Icon field first, then Code field, then falls back to 'default'.
+	 *
+	 * @param {Object} pCardMetadata - The CardMetadata object
+	 * @returns {string} The icon key
+	 */resolveIconKey(pCardMetadata){if(!pCardMetadata){return'default';}// If Icon is a known key, use it
+if(pCardMetadata.Icon&&this._Icons.hasOwnProperty(pCardMetadata.Icon)){return pCardMetadata.Icon;}// If Icon is a non-emoji string, check if it matches a registered template
+if(pCardMetadata.Icon&&!this.isEmojiIcon(pCardMetadata.Icon)){return pCardMetadata.Icon;}// Fall back to Code field
+if(pCardMetadata.Code&&this._Icons.hasOwnProperty(pCardMetadata.Code)){return pCardMetadata.Code;}return'default';}/**
+	 * Get the raw SVG markup string for a given icon key, with size applied.
+	 *
+	 * @param {string} pIconKey - The icon key
+	 * @param {number} pSize - Pixel size (default 16)
+	 * @returns {string} The SVG markup string
+	 */getIconSVGMarkup(pIconKey,pSize){let tmpSize=pSize||16;let tmpKey=pIconKey||'default';let tmpMarkup=this._Icons[tmpKey]||this._Icons['default'];// Replace the size placeholder
+return tmpMarkup.replace(/\{FlowIconSize\}/g,String(tmpSize));}/**
+	 * Render an icon into an SVG canvas context using createElementNS.
+	 * Creates a <g> element containing the icon paths, positioned at (pX, pY)
+	 * with the given size via a scale transform.
+	 *
+	 * @param {string} pIconKey - The icon key
+	 * @param {SVGElement} pParentGroup - The parent SVG group to append to
+	 * @param {number} pX - X position (top-left of icon bounding box)
+	 * @param {number} pY - Y position (top-left of icon bounding box)
+	 * @param {number} pSize - Pixel size (default 16)
+	 * @returns {SVGGElement|null} The created group element, or null on failure
+	 */renderIconIntoSVGGroup(pIconKey,pParentGroup,pX,pY,pSize){if(!pParentGroup){return null;}let tmpSize=pSize||16;let tmpScale=tmpSize/24;let tmpKey=pIconKey||'default';let tmpMarkup=this._Icons[tmpKey]||this._Icons['default'];// Replace size placeholder (for consistency, though we scale via transform)
+tmpMarkup=tmpMarkup.replace(/\{FlowIconSize\}/g,'24');try{// Create a temporary SVG element to parse the icon markup
+let tmpTempSVG=document.createElementNS('http://www.w3.org/2000/svg','svg');tmpTempSVG.innerHTML=tmpMarkup;// Find the inner SVG (the icon's root <svg> element)
+let tmpInnerSVG=tmpTempSVG.querySelector('svg');if(!tmpInnerSVG){return null;}// Create a group to hold the icon content
+let tmpGroup=document.createElementNS('http://www.w3.org/2000/svg','g');tmpGroup.setAttribute('transform','translate('+pX+','+pY+') scale('+tmpScale+')');tmpGroup.setAttribute('pointer-events','none');tmpGroup.setAttribute('class','pict-flow-icon-svg');// Move all children from the parsed SVG into the group
+while(tmpInnerSVG.childNodes.length>0){tmpGroup.appendChild(tmpInnerSVG.childNodes[0]);}pParentGroup.appendChild(tmpGroup);return tmpGroup;}catch(pError){this.log.warn('PictProviderFlowIcons renderIconIntoSVGGroup error: '+pError.message);return null;}}/**
+	 * Get all registered icon keys.
+	 * @returns {Array<string>}
+	 */getIconKeys(){return Object.keys(this._Icons);}/**
+	 * Check if a given key has a registered icon.
+	 * @param {string} pIconKey
+	 * @returns {boolean}
+	 */hasIcon(pIconKey){return this._Icons.hasOwnProperty(pIconKey);}/**
+	 * Register a new icon or override an existing one.
+	 * @param {string} pIconKey - The icon key
+	 * @param {string} pSVGMarkup - The SVG markup string (must contain {FlowIconSize} placeholders)
+	 * @returns {boolean}
+	 */registerIcon(pIconKey,pSVGMarkup){if(!pIconKey||!pSVGMarkup){return false;}this._Icons[pIconKey]=pSVGMarkup;// Also update the pict template if TemplateProvider is available
+if(this.fable&&this.fable.TemplateProvider){this.fable.TemplateProvider.addTemplate('Flow-Icon-'+pIconKey,pSVGMarkup);}return true;}}module.exports=PictProviderFlowIcons;module.exports.default_configuration=_ProviderConfiguration;module.exports.DefaultIcons=_DefaultIcons;},{"fable-serviceproviderbase":2}],27:[function(require,module,exports){const libPictProvider=require('pict-provider');const _ProviderConfiguration={ProviderIdentifier:'PictProviderFlowLayouts'};/**
+ * Provider for managing saved flow diagram layouts.
+ *
+ * Layouts capture the spatial arrangement of nodes and panels on the canvas
+ * without storing any card content. When a layout is restored, nodes that
+ * still exist are placed at their saved positions and any new nodes are
+ * auto-laid-out to the right.
+ *
+ * ## Persistence
+ *
+ * By default, layouts are persisted to the browser's `localStorage` using a
+ * key derived from the flow view identifier. This means layouts survive page
+ * refreshes out of the box.
+ *
+ * Developers can override the storage backend (e.g., to use a REST API or
+ * IndexedDB) by replacing the three storage hook methods on the instance or
+ * in a subclass:
+ *
+ *   - `storageWrite(pLayouts, fCallback)` — persist the full layout array
+ *   - `storageRead(fCallback)` — load the persisted layout array
+ *   - `storageDelete(fCallback)` — remove all persisted layouts
+ *
+ * Each callback follows the Node convention: `fCallback(pError, pResult)`.
+ *
+ * Saved layout data structure:
+ * {
+ *     Hash: "layout-<UUID>",
+ *     Name: "My Layout",
+ *     CreatedAt: "2026-02-26T12:00:00.000Z",
+ *     NodePositions: { "node-hash": { X, Y, Width, Height } },
+ *     PanelPositions: { "node-hash": { X, Y, Width, Height } },
+ *     ViewState: { PanX, PanY, Zoom }
+ * }
+ */class PictProviderFlowLayouts extends libPictProvider{constructor(pFable,pOptions,pServiceHash){let tmpOptions=Object.assign({},_ProviderConfiguration,pOptions);super(pFable,tmpOptions,pServiceHash);this.serviceType='PictProviderFlowLayouts';this._FlowView=pOptions&&pOptions.FlowView?pOptions.FlowView:null;// Storage key for localStorage persistence.
+// Defaults to a key derived from the FlowView identifier, or can be
+// set via options.StorageKey.  Pass `false` to disable localStorage.
+if(pOptions&&pOptions.StorageKey!==undefined){this._StorageKey=pOptions.StorageKey;}else if(this._FlowView&&this._FlowView.options&&this._FlowView.options.ViewIdentifier){this._StorageKey=`pict-flow-layouts-${this._FlowView.options.ViewIdentifier}`;}else{this._StorageKey='pict-flow-layouts';}}// ── Storage Hooks ─────────────────────────────────────────────────────
+// These three methods form the persistence contract.  The default
+// implementation uses localStorage.  Override them on the instance or
+// subclass to use a REST API, IndexedDB, or any other backend.
+//
+// All callbacks follow `fCallback(pError, pResult)`.
+/**
+	 * Persist the full array of layout objects.
+	 *
+	 * Default implementation writes JSON to `localStorage`.
+	 *
+	 * @param {Array} pLayouts - The array of layout objects to persist
+	 * @param {Function} fCallback - `function(pError)` called when done
+	 */storageWrite(pLayouts,fCallback){if(this._StorageKey===false){return fCallback(null);}try{if(typeof localStorage!=='undefined'){localStorage.setItem(this._StorageKey,JSON.stringify(pLayouts));}return fCallback(null);}catch(pError){this.log.warn(`PictProviderFlowLayouts storageWrite error: ${pError.message}`);return fCallback(pError);}}/**
+	 * Load the persisted array of layout objects.
+	 *
+	 * Default implementation reads JSON from `localStorage`.
+	 *
+	 * @param {Function} fCallback - `function(pError, pLayouts)` where
+	 *        pLayouts is an Array (or null/empty if nothing stored)
+	 */storageRead(fCallback){if(this._StorageKey===false){return fCallback(null,[]);}try{if(typeof localStorage!=='undefined'){let tmpRaw=localStorage.getItem(this._StorageKey);if(tmpRaw){let tmpParsed=JSON.parse(tmpRaw);if(Array.isArray(tmpParsed)){return fCallback(null,tmpParsed);}}}return fCallback(null,[]);}catch(pError){this.log.warn(`PictProviderFlowLayouts storageRead error: ${pError.message}`);return fCallback(pError,[]);}}/**
+	 * Remove all persisted layout data.
+	 *
+	 * Default implementation removes the key from `localStorage`.
+	 *
+	 * @param {Function} fCallback - `function(pError)` called when done
+	 */storageDelete(fCallback){if(this._StorageKey===false){return fCallback(null);}try{if(typeof localStorage!=='undefined'){localStorage.removeItem(this._StorageKey);}return fCallback(null);}catch(pError){this.log.warn(`PictProviderFlowLayouts storageDelete error: ${pError.message}`);return fCallback(pError);}}// ── Initialization ────────────────────────────────────────────────────
+/**
+	 * Load persisted layouts and merge them into _FlowData.SavedLayouts.
+	 * Layouts already present in _FlowData (e.g., from setFlowData) are
+	 * kept; persisted layouts with new hashes are appended.
+	 *
+	 * Call this after _FlowData is populated.
+	 */loadPersistedLayouts(){this.storageRead((pError,pLayouts)=>{if(pError||!Array.isArray(pLayouts)||pLayouts.length===0){return;}if(!this._FlowView||!this._FlowView._FlowData){return;}let tmpExisting=this._FlowView._FlowData.SavedLayouts;let tmpExistingHashes={};for(let i=0;i<tmpExisting.length;i++){tmpExistingHashes[tmpExisting[i].Hash]=true;}let tmpAdded=0;for(let i=0;i<pLayouts.length;i++){if(!tmpExistingHashes[pLayouts[i].Hash]){tmpExisting.push(pLayouts[i]);tmpAdded++;}}if(tmpAdded>0){this.log.trace(`PictProviderFlowLayouts loaded ${tmpAdded} persisted layout(s)`);}});}// ── Public API ────────────────────────────────────────────────────────
+/**
+	 * Save the current node and panel positions as a named layout.
+	 * @param {string} pName - The display name for this layout
+	 * @returns {Object} The saved layout entry
+	 */saveLayout(pName){if(!this._FlowView){this.log.warn('PictProviderFlowLayouts saveLayout: no FlowView reference');return null;}let tmpFlowData=this._FlowView._FlowData;let tmpLayoutHash=`layout-${this.fable.getUUID()}`;let tmpNodePositions={};let tmpPanelPositions={};// Capture node positions and per-instance overrides (Title, Style)
+for(let i=0;i<tmpFlowData.Nodes.length;i++){let tmpNode=tmpFlowData.Nodes[i];tmpNodePositions[tmpNode.Hash]={X:tmpNode.X,Y:tmpNode.Y,Width:tmpNode.Width,Height:tmpNode.Height,Title:tmpNode.Title};// Only include Style if it has been customized
+if(tmpNode.Style&&Object.keys(tmpNode.Style).length>0){tmpNodePositions[tmpNode.Hash].Style=JSON.parse(JSON.stringify(tmpNode.Style));}}// Capture panel positions keyed by NodeHash (panels get new hashes on each open)
+for(let i=0;i<tmpFlowData.OpenPanels.length;i++){let tmpPanel=tmpFlowData.OpenPanels[i];tmpPanelPositions[tmpPanel.NodeHash]={X:tmpPanel.X,Y:tmpPanel.Y,Width:tmpPanel.Width,Height:tmpPanel.Height};}let tmpLayout={Hash:tmpLayoutHash,Name:pName||'Untitled Layout',CreatedAt:new Date().toISOString(),NodePositions:tmpNodePositions,PanelPositions:tmpPanelPositions,ViewState:{PanX:tmpFlowData.ViewState.PanX,PanY:tmpFlowData.ViewState.PanY,Zoom:tmpFlowData.ViewState.Zoom}};tmpFlowData.SavedLayouts.push(tmpLayout);this._FlowView.marshalFromView();// Persist to storage
+this.storageWrite(tmpFlowData.SavedLayouts,pError=>{if(pError){this.log.warn(`PictProviderFlowLayouts: failed to persist after save: ${pError.message}`);}});if(this._FlowView._EventHandlerProvider){this._FlowView._EventHandlerProvider.fireEvent('onLayoutSaved',tmpLayout);this._FlowView._EventHandlerProvider.fireEvent('onFlowChanged',tmpFlowData);}this.log.trace(`PictProviderFlowLayouts saved layout '${tmpLayout.Name}' (${tmpLayout.Hash})`);return tmpLayout;}/**
+	 * Restore a saved layout by hash.
+	 * Nodes present in the saved layout are placed at their saved positions.
+	 * Nodes not in the saved layout are auto-laid-out to the right of the
+	 * positioned nodes.
+	 * @param {string} pLayoutHash - The hash of the layout to restore
+	 * @returns {boolean} Whether the layout was restored
+	 */restoreLayout(pLayoutHash){if(!this._FlowView){this.log.warn('PictProviderFlowLayouts restoreLayout: no FlowView reference');return false;}let tmpFlowData=this._FlowView._FlowData;let tmpLayout=tmpFlowData.SavedLayouts.find(pLayout=>pLayout.Hash===pLayoutHash);if(!tmpLayout){this.log.warn(`PictProviderFlowLayouts restoreLayout: layout '${pLayoutHash}' not found`);return false;}let tmpMatchedNodes=[];let tmpUnmatchedNodes=[];// Apply saved positions to matched nodes; collect unmatched ones
+for(let i=0;i<tmpFlowData.Nodes.length;i++){let tmpNode=tmpFlowData.Nodes[i];let tmpSaved=tmpLayout.NodePositions[tmpNode.Hash];if(tmpSaved){tmpNode.X=tmpSaved.X;tmpNode.Y=tmpSaved.Y;if(typeof tmpSaved.Width==='number')tmpNode.Width=tmpSaved.Width;if(typeof tmpSaved.Height==='number')tmpNode.Height=tmpSaved.Height;if(typeof tmpSaved.Title==='string')tmpNode.Title=tmpSaved.Title;if(tmpSaved.Style&&typeof tmpSaved.Style==='object'){tmpNode.Style=JSON.parse(JSON.stringify(tmpSaved.Style));}tmpMatchedNodes.push(tmpNode);}else{tmpUnmatchedNodes.push(tmpNode);}}// Apply saved panel positions (keyed by NodeHash)
+if(tmpLayout.PanelPositions){for(let i=0;i<tmpFlowData.OpenPanels.length;i++){let tmpPanel=tmpFlowData.OpenPanels[i];let tmpSavedPanel=tmpLayout.PanelPositions[tmpPanel.NodeHash];if(tmpSavedPanel){tmpPanel.X=tmpSavedPanel.X;tmpPanel.Y=tmpSavedPanel.Y;if(typeof tmpSavedPanel.Width==='number')tmpPanel.Width=tmpSavedPanel.Width;if(typeof tmpSavedPanel.Height==='number')tmpPanel.Height=tmpSavedPanel.Height;}}}// Auto-layout unmatched nodes to the right of positioned nodes
+if(tmpUnmatchedNodes.length>0&&this._FlowView._LayoutService){this._FlowView._LayoutService.autoLayoutSubset(tmpUnmatchedNodes,tmpMatchedNodes,tmpFlowData.Connections);}// Restore view state (camera position)
+if(tmpLayout.ViewState){if(typeof tmpLayout.ViewState.PanX==='number'){tmpFlowData.ViewState.PanX=tmpLayout.ViewState.PanX;}if(typeof tmpLayout.ViewState.PanY==='number'){tmpFlowData.ViewState.PanY=tmpLayout.ViewState.PanY;}if(typeof tmpLayout.ViewState.Zoom==='number'){tmpFlowData.ViewState.Zoom=tmpLayout.ViewState.Zoom;}}this._FlowView.renderFlow();this._FlowView.marshalFromView();if(this._FlowView._EventHandlerProvider){this._FlowView._EventHandlerProvider.fireEvent('onLayoutRestored',tmpLayout);this._FlowView._EventHandlerProvider.fireEvent('onFlowChanged',tmpFlowData);}this.log.trace(`PictProviderFlowLayouts restored layout '${tmpLayout.Name}' (${tmpLayout.Hash})`);return true;}/**
+	 * Delete a saved layout by hash.
+	 * @param {string} pLayoutHash - The hash of the layout to delete
+	 * @returns {boolean} Whether the layout was deleted
+	 */deleteLayout(pLayoutHash){if(!this._FlowView){this.log.warn('PictProviderFlowLayouts deleteLayout: no FlowView reference');return false;}let tmpFlowData=this._FlowView._FlowData;let tmpIndex=tmpFlowData.SavedLayouts.findIndex(pLayout=>pLayout.Hash===pLayoutHash);if(tmpIndex<0){this.log.warn(`PictProviderFlowLayouts deleteLayout: layout '${pLayoutHash}' not found`);return false;}let tmpRemovedLayout=tmpFlowData.SavedLayouts.splice(tmpIndex,1)[0];this._FlowView.marshalFromView();// Persist to storage (with the layout removed)
+this.storageWrite(tmpFlowData.SavedLayouts,pError=>{if(pError){this.log.warn(`PictProviderFlowLayouts: failed to persist after delete: ${pError.message}`);}});if(this._FlowView._EventHandlerProvider){this._FlowView._EventHandlerProvider.fireEvent('onLayoutDeleted',tmpRemovedLayout);this._FlowView._EventHandlerProvider.fireEvent('onFlowChanged',tmpFlowData);}this.log.trace(`PictProviderFlowLayouts deleted layout '${tmpRemovedLayout.Name}' (${tmpRemovedLayout.Hash})`);return true;}/**
+	 * Get the list of saved layouts.
+	 * @returns {Array} Array of saved layout objects
+	 */getLayouts(){if(!this._FlowView)return[];return this._FlowView._FlowData.SavedLayouts;}/**
+	 * Get a specific saved layout by hash.
+	 * @param {string} pLayoutHash
+	 * @returns {Object|null}
+	 */getLayout(pLayoutHash){if(!this._FlowView)return null;return this._FlowView._FlowData.SavedLayouts.find(pLayout=>pLayout.Hash===pLayoutHash)||null;}}module.exports=PictProviderFlowLayouts;module.exports.default_configuration=_ProviderConfiguration;},{"pict-provider":7}],28:[function(require,module,exports){const libPictProvider=require('pict-provider');const _DefaultNodeTypes={'default':{Hash:'default',Label:'Default',DefaultWidth:180,DefaultHeight:80,DefaultPorts:[{Hash:null,Direction:'input',Side:'left',Label:'In'},{Hash:null,Direction:'output',Side:'right',Label:'Out'}],TitleBarColor:'#2c3e50',BodyStyle:{}},'start':{Hash:'start',Label:'Start',DefaultWidth:140,DefaultHeight:80,DefaultPorts:[{Hash:null,Direction:'output',Side:'right',Label:'Out'}],TitleBarColor:'#27ae60',BodyStyle:{'fill':'#eafaf1','stroke':'#27ae60'}},'end':{Hash:'end',Label:'End',DefaultWidth:140,DefaultHeight:80,DefaultPorts:[{Hash:null,Direction:'input',Side:'left',Label:'In'}],TitleBarColor:'#1abc9c',BodyStyle:{'fill':'#e8f8f5','stroke':'#1abc9c'}},'halt':{Hash:'halt',Label:'Halt',DefaultWidth:140,DefaultHeight:80,DefaultPorts:[{Hash:null,Direction:'input',Side:'left',Label:'In'}],TitleBarColor:'#e74c3c',BodyStyle:{'fill':'#fdedec','stroke':'#e74c3c'}},'decision':{Hash:'decision',Label:'Decision',DefaultWidth:200,DefaultHeight:100,DefaultPorts:[{Hash:null,Direction:'input',Side:'left',Label:'In'},{Hash:null,Direction:'output',Side:'right',Label:'Yes'},{Hash:null,Direction:'output',Side:'bottom',Label:'No'}],TitleBarColor:'#f39c12',BodyStyle:{'fill':'#fff9e6','stroke':'#f39c12'}}};const _ProviderConfiguration={ProviderIdentifier:'PictProviderFlowNodeTypes'};class PictProviderFlowNodeTypes extends libPictProvider{constructor(pFable,pOptions,pServiceHash){let tmpOptions=Object.assign({},_ProviderConfiguration,pOptions);super(pFable,tmpOptions,pServiceHash);this.serviceType='PictProviderFlowNodeTypes';this._FlowView=pOptions&&pOptions.FlowView?pOptions.FlowView:null;// Initialize with default node types
+this._NodeTypes=JSON.parse(JSON.stringify(_DefaultNodeTypes));// Merge any additional node types passed in via options
+if(pOptions&&pOptions.AdditionalNodeTypes&&typeof pOptions.AdditionalNodeTypes==='object'){let tmpAdditionalKeys=Object.keys(pOptions.AdditionalNodeTypes);for(let i=0;i<tmpAdditionalKeys.length;i++){let tmpOriginal=pOptions.AdditionalNodeTypes[tmpAdditionalKeys[i]];this._NodeTypes[tmpAdditionalKeys[i]]=Object.assign({},this._NodeTypes[tmpAdditionalKeys[i]]||{},JSON.parse(JSON.stringify(tmpOriginal)));// Preserve BodyContent.RenderCallback (functions are stripped by JSON serialization)
+if(tmpOriginal.BodyContent&&typeof tmpOriginal.BodyContent.RenderCallback==='function'){if(!this._NodeTypes[tmpAdditionalKeys[i]].BodyContent){this._NodeTypes[tmpAdditionalKeys[i]].BodyContent={};}this._NodeTypes[tmpAdditionalKeys[i]].BodyContent.RenderCallback=tmpOriginal.BodyContent.RenderCallback;}}}}/**
+	 * Get a node type configuration by hash
+	 * @param {string} pTypeHash - The node type hash
+	 * @returns {Object|null} The node type configuration
+	 */getNodeType(pTypeHash){return this._NodeTypes[pTypeHash]||this._NodeTypes['default'];}/**
+	 * Register a new node type or override an existing one
+	 * @param {Object} pNodeTypeConfig - The node type configuration
+	 * @returns {boolean}
+	 */registerNodeType(pNodeTypeConfig){if(!pNodeTypeConfig||!pNodeTypeConfig.Hash){this.log.warn('PictProviderFlowNodeTypes registerNodeType: invalid config (missing Hash)');return false;}this._NodeTypes[pNodeTypeConfig.Hash]=Object.assign({},this._NodeTypes[pNodeTypeConfig.Hash]||{},pNodeTypeConfig);return true;}/**
+	 * Remove a node type
+	 * @param {string} pTypeHash
+	 * @returns {boolean}
+	 */removeNodeType(pTypeHash){if(pTypeHash==='default'){this.log.warn('PictProviderFlowNodeTypes: cannot remove the default node type');return false;}if(this._NodeTypes[pTypeHash]){delete this._NodeTypes[pTypeHash];return true;}return false;}/**
+	 * Get all registered node types
+	 * @returns {Object} Map of type hash to type configuration
+	 */getNodeTypes(){return JSON.parse(JSON.stringify(this._NodeTypes));}/**
+	 * Get a list of node type hashes
+	 * @returns {Array<string>}
+	 */getNodeTypeList(){return Object.keys(this._NodeTypes);}/**
+	 * Get all enabled node types that have FlowCard metadata.
+	 * Returns only types that are cards and whose Enabled flag is true.
+	 * @returns {Array<Object>} Array of node type configurations
+	 */getEnabledCards(){let tmpCards=[];let tmpKeys=Object.keys(this._NodeTypes);for(let i=0;i<tmpKeys.length;i++){let tmpType=this._NodeTypes[tmpKeys[i]];if(tmpType.CardMetadata){if(tmpType.CardMetadata.Enabled!==false){tmpCards.push(JSON.parse(JSON.stringify(tmpType)));}}}return tmpCards;}/**
+	 * Get all enabled cards grouped by category.
+	 * @returns {Object} Map of category name to array of node type configurations
+	 */getCardsByCategory(){let tmpCards=this.getEnabledCards();let tmpCategories={};for(let i=0;i<tmpCards.length;i++){let tmpCategory=tmpCards[i].CardMetadata&&tmpCards[i].CardMetadata.Category?tmpCards[i].CardMetadata.Category:'General';if(!tmpCategories[tmpCategory]){tmpCategories[tmpCategory]=[];}tmpCategories[tmpCategory].push(tmpCards[i]);}return tmpCategories;}/**
+	 * Check whether a node type hash refers to a FlowCard (has CardMetadata).
+	 * @param {string} pTypeHash
+	 * @returns {boolean}
+	 */isFlowCard(pTypeHash){let tmpType=this._NodeTypes[pTypeHash];return!!(tmpType&&tmpType.CardMetadata);}}module.exports=PictProviderFlowNodeTypes;module.exports.default_configuration=_ProviderConfiguration;module.exports.DefaultNodeTypes=_DefaultNodeTypes;},{"pict-provider":7}],29:[function(require,module,exports){const libFableServiceProviderBase=require('fable-serviceproviderbase');const _ProviderConfiguration={ProviderIdentifier:'PictProviderFlowNoise'};/**
+ * PictProvider-Flow-Noise
+ *
+ * Deterministic noise/jitter generator for hand-drawn visual effects.
+ *
+ * Uses seeded pseudo-random number generation so that the same node or
+ * connection always receives the same jitter values across re-renders,
+ * preventing visual "jumping" while still looking organic.
+ */class PictProviderFlowNoise extends libFableServiceProviderBase{constructor(pFable,pOptions,pServiceHash){let tmpOptions=Object.assign({},_ProviderConfiguration,pOptions);super(pFable,tmpOptions,pServiceHash);this.serviceType='PictProviderFlowNoise';}// ── Hashing / PRNG ────────────────────────────────────────────────────
+/**
+	 * Convert a string to a 32-bit integer hash (djb2 algorithm).
+	 * @param {string} pStr
+	 * @returns {number}
+	 */hashString(pStr){let tmpHash=5381;for(let i=0;i<pStr.length;i++){tmpHash=(tmpHash<<5)+tmpHash+pStr.charCodeAt(i);tmpHash=tmpHash&tmpHash;// Convert to 32-bit integer
+}return tmpHash>>>0;// Ensure unsigned
+}/**
+	 * Create a seeded pseudo-random number generator (Mulberry32).
+	 * Returns a function that produces deterministic floats in [0, 1).
+	 * @param {number} pSeed - 32-bit integer seed
+	 * @returns {Function}
+	 */seededRandom(pSeed){let tmpSeed=pSeed|0;return function(){tmpSeed=tmpSeed+0x6D2B79F5|0;let t=Math.imul(tmpSeed^tmpSeed>>>15,1|tmpSeed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}// ── Point Jitter ──────────────────────────────────────────────────────
+/**
+	 * Apply random jitter to a point.
+	 * @param {number} pX
+	 * @param {number} pY
+	 * @param {number} pAmplitude - Maximum offset in pixels
+	 * @param {Function} pRNG - Seeded random function
+	 * @returns {{x: number, y: number}}
+	 */jitterPoint(pX,pY,pAmplitude,pRNG){if(pAmplitude<=0){return{x:pX,y:pY};}return{x:pX+pAmplitude*(pRNG()-0.5)*2,y:pY+pAmplitude*(pRNG()-0.5)*2};}// ── Bracket Path Generation ───────────────────────────────────────────
+/**
+	 * Generate an SVG path `d` string for a bracket-shaped node border.
+	 *
+	 * Draws true bracket shapes — `[` on the left and `]` on the right —
+	 * with NO top/bottom connecting lines.  The serifs (horizontal turns)
+	 * extend inward from each corner, giving a distinctive hand-drawn
+	 * technical-diagram look that is immediately distinguishable from a
+	 * regular rectangle at any zoom level.
+	 *
+	 * The bracket consists of:
+	 * - Left bracket `[`: top serif → vertical left side → bottom serif
+	 * - Right bracket `]`: top serif → vertical right side → bottom serif
+	 * - Optional title divider line across the full width
+	 *
+	 * @param {number} pWidth - Node width
+	 * @param {number} pHeight - Node height
+	 * @param {number} pSerifLength - Length of corner serifs in px
+	 * @param {number} pTitleBarHeight - Height of title bar (0 to skip divider)
+	 * @param {number} pAmplitude - Noise amplitude (0 = precise)
+	 * @param {string} pSeedString - Hash string for deterministic noise
+	 * @returns {string} SVG path d attribute
+	 */generateBracketPath(pWidth,pHeight,pSerifLength,pTitleBarHeight,pAmplitude,pSeedString){let tmpRNG=this.seededRandom(this.hashString(pSeedString||'default'));let tmpS=pSerifLength||18;let tmpW=pWidth;let tmpH=pHeight;let tmpJ=(pX,pY)=>{return this.jitterPoint(pX,pY,pAmplitude,tmpRNG);};// Left bracket `[`: top serif → down left side → bottom serif
+let tmpTL_serif=tmpJ(tmpS,0);let tmpTL_corner=tmpJ(0,0);let tmpBL_corner=tmpJ(0,tmpH);let tmpBL_serif=tmpJ(tmpS,tmpH);// Right bracket `]`: top serif → down right side → bottom serif
+let tmpTR_serif=tmpJ(tmpW-tmpS,0);let tmpTR_corner=tmpJ(tmpW,0);let tmpBR_corner=tmpJ(tmpW,tmpH);let tmpBR_serif=tmpJ(tmpW-tmpS,tmpH);let tmpPath='';// Left bracket `[`
+tmpPath+=`M ${tmpTL_serif.x.toFixed(1)} ${tmpTL_serif.y.toFixed(1)}`;tmpPath+=` L ${tmpTL_corner.x.toFixed(1)} ${tmpTL_corner.y.toFixed(1)}`;tmpPath+=` L ${tmpBL_corner.x.toFixed(1)} ${tmpBL_corner.y.toFixed(1)}`;tmpPath+=` L ${tmpBL_serif.x.toFixed(1)} ${tmpBL_serif.y.toFixed(1)}`;// Right bracket `]`
+tmpPath+=` M ${tmpTR_serif.x.toFixed(1)} ${tmpTR_serif.y.toFixed(1)}`;tmpPath+=` L ${tmpTR_corner.x.toFixed(1)} ${tmpTR_corner.y.toFixed(1)}`;tmpPath+=` L ${tmpBR_corner.x.toFixed(1)} ${tmpBR_corner.y.toFixed(1)}`;tmpPath+=` L ${tmpBR_serif.x.toFixed(1)} ${tmpBR_serif.y.toFixed(1)}`;// No horizontal lines — the title bar fill rect provides visual
+// separation via its background color.  The bracket outline is
+// purely the `[` and `]` shapes on the sides.
+return tmpPath;}// ── Path Jitter (for connections) ─────────────────────────────────────
+/**
+	 * Apply jitter to an existing SVG path string by offsetting coordinate
+	 * pairs.  The first M and last coordinate pair receive reduced jitter
+	 * to keep connections aligned with their port anchors.
+	 *
+	 * @param {string} pPathString - SVG path d attribute
+	 * @param {number} pAmplitude - Noise amplitude (0 = no change)
+	 * @param {string} pSeedString - Hash string for deterministic noise
+	 * @returns {string} Modified path string
+	 */jitterPath(pPathString,pAmplitude,pSeedString){if(pAmplitude<=0||!pPathString){return pPathString;}let tmpRNG=this.seededRandom(this.hashString(pSeedString||'path'));// Parse path into tokens: commands and numbers
+let tmpTokens=pPathString.match(/[MLCQZmlcqz]|[-+]?[0-9]*\.?[0-9]+/g);if(!tmpTokens){return pPathString;}// Collect all numeric coordinate indices
+let tmpNumericIndices=[];for(let i=0;i<tmpTokens.length;i++){if(/^[-+]?[0-9]*\.?[0-9]+$/.test(tmpTokens[i])){tmpNumericIndices.push(i);}}// Process pairs of coordinates (x, y)
+for(let i=0;i<tmpNumericIndices.length-1;i+=2){let tmpXIdx=tmpNumericIndices[i];let tmpYIdx=tmpNumericIndices[i+1];// Reduce jitter for first and last coordinate pairs (port anchors)
+let tmpLocalAmplitude=pAmplitude;if(i===0||i>=tmpNumericIndices.length-2){tmpLocalAmplitude=pAmplitude*0.15;// Minimal anchor jitter
+}else if(i===2||i>=tmpNumericIndices.length-4){tmpLocalAmplitude=pAmplitude*0.5;// Reduced near anchors
+}let tmpX=parseFloat(tmpTokens[tmpXIdx]);let tmpY=parseFloat(tmpTokens[tmpYIdx]);let tmpJittered=this.jitterPoint(tmpX,tmpY,tmpLocalAmplitude,tmpRNG);tmpTokens[tmpXIdx]=tmpJittered.x.toFixed(1);tmpTokens[tmpYIdx]=tmpJittered.y.toFixed(1);}// Reassemble path string with spaces
+let tmpResult='';for(let i=0;i<tmpTokens.length;i++){if(i>0&&/^[MLCQZmlcqz]$/.test(tmpTokens[i])){tmpResult+=' '+tmpTokens[i];}else if(i>0){tmpResult+=' '+tmpTokens[i];}else{tmpResult+=tmpTokens[i];}}return tmpResult;}}module.exports=PictProviderFlowNoise;module.exports.default_configuration=_ProviderConfiguration;},{"fable-serviceproviderbase":2}],30:[function(require,module,exports){const libFableServiceProviderBase=require('fable-serviceproviderbase');/**
+ * PictProvider-Flow-PanelChrome
+ *
+ * Template-based provider for creating the panel chrome (the foreignObject
+ * wrapper, title bar, close button, and body container) for properties panels.
+ *
+ * Replaces the raw DOM API approach with a configuration template
+ * (Flow-PanelChrome-Template) registered in the FlowView's template set.
+ */class PictProviderFlowPanelChrome extends libFableServiceProviderBase{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictProviderFlowPanelChrome';this._FlowView=pOptions&&pOptions.FlowView?pOptions.FlowView:null;}/**
+	 * Create a foreignObject containing the panel chrome and empty body container.
+	 *
+	 * Uses the Flow-PanelChrome-Template registered in the FlowView configuration
+	 * to render the inner HTML (title bar, close button, body container), then
+	 * attaches event isolation listeners so pointer and wheel events inside the
+	 * panel body do not propagate to the SVG interaction layer.
+	 *
+	 * @param {Object} pPanelData - Panel data from OpenPanels (Hash, NodeHash, X, Y, Width, Height, Title)
+	 * @param {SVGGElement} pPanelsLayer - The SVG <g> for panel foreignObjects
+	 * @returns {HTMLDivElement} The panel body container element for content rendering
+	 */createPanelForeignObject(pPanelData,pPanelsLayer){let tmpSVGHelper=this._FlowView._SVGHelperProvider;// Create the SVG foreignObject wrapper
+let tmpFO=tmpSVGHelper.createSVGElement('foreignObject');tmpFO.setAttribute('class','pict-flow-panel-foreign-object');tmpFO.setAttribute('data-panel-hash',pPanelData.Hash);tmpFO.setAttribute('data-node-hash',pPanelData.NodeHash);tmpFO.setAttribute('x',String(pPanelData.X));tmpFO.setAttribute('y',String(pPanelData.Y));tmpFO.setAttribute('width',String(pPanelData.Width));tmpFO.setAttribute('height',String(pPanelData.Height));// Render the panel chrome from the configuration template
+let tmpPict=this._FlowView.pict||this._FlowView.fable;let tmpTitle=pPanelData.Title||'Properties';let tmpChromeHTML=tmpPict.parseTemplateByHash('Flow-PanelChrome-Template',{Hash:pPanelData.Hash,Title:tmpTitle});tmpFO.innerHTML=tmpChromeHTML;// Populate the close button icon
+let tmpCloseIcon=tmpFO.querySelector('.pict-flow-panel-close-icon');if(tmpCloseIcon&&this._FlowView&&this._FlowView._IconProvider){tmpCloseIcon.innerHTML=this._FlowView._IconProvider.getIconSVGMarkup('close',12);}else if(tmpCloseIcon){tmpCloseIcon.textContent='\u2715';}// Attach event isolation to the panel body so pointer/wheel events
+// inside the panel content do not trigger SVG interactions
+let tmpBody=tmpFO.querySelector('.pict-flow-panel-body');if(tmpBody){tmpBody.addEventListener('pointerdown',pEvent=>{pEvent.stopPropagation();});tmpBody.addEventListener('wheel',pEvent=>{pEvent.stopPropagation();});}// Isolate events on the collapsible node properties editor section
+let tmpNodeProps=tmpFO.querySelector('.pict-flow-panel-node-props');if(tmpNodeProps){tmpNodeProps.addEventListener('pointerdown',pEvent=>{pEvent.stopPropagation();});tmpNodeProps.addEventListener('wheel',pEvent=>{pEvent.stopPropagation();});}pPanelsLayer.appendChild(tmpFO);return tmpBody;}}module.exports=PictProviderFlowPanelChrome;},{"fable-serviceproviderbase":2}],31:[function(require,module,exports){const libFableServiceProviderBase=require('fable-serviceproviderbase');/**
+ * PictProvider-Flow-SVGHelpers
+ *
+ * Shared SVG element creation utility used by all flow components
+ * that need to create SVG namespace elements (nodes, connections, tethers).
+ */class PictProviderFlowSVGHelpers extends libFableServiceProviderBase{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictProviderFlowSVGHelpers';}/**
+	 * Create an SVG namespace element.
+	 *
+	 * @param {string} pTagName - The SVG element tag name (e.g., 'path', 'circle', 'g', 'rect', 'text')
+	 * @returns {SVGElement}
+	 */createSVGElement(pTagName){return document.createElementNS('http://www.w3.org/2000/svg',pTagName);}}module.exports=PictProviderFlowSVGHelpers;},{"fable-serviceproviderbase":2}],32:[function(require,module,exports){const libFableServiceProviderBase=require('fable-serviceproviderbase');const _ProviderConfiguration={ProviderIdentifier:'PictProviderFlowTheme'};/**
+ * PictProvider-Flow-Theme
+ *
+ * Central orchestrator for the flow diagram theming system.
+ *
+ * Holds a registry of theme definitions, manages the active theme,
+ * and provides hooks for node body rendering and path noise processing.
+ *
+ * ## Usage
+ *
+ * ```javascript
+ * flowView.setTheme('sketch');       // Switch to hand-drawn style
+ * flowView.setNoiseLevel(0.6);       // Increase bracket/connection wobble
+ * flowView.setTheme('default');      // Restore modern style
+ * ```
+ *
+ * ## Custom Themes
+ *
+ * ```javascript
+ * flowView._ThemeProvider.registerTheme('custom', {
+ *     Key: 'custom',
+ *     Label: 'My Custom Theme',
+ *     CSSVariables: { '--pf-canvas-bg': '#222' },
+ *     NodeBodyMode: 'rect',
+ *     NoiseConfig: { Enabled: false }
+ * });
+ * flowView.setTheme('custom');
+ * ```
+ */class PictProviderFlowTheme extends libFableServiceProviderBase{constructor(pFable,pOptions,pServiceHash){let tmpOptions=Object.assign({},_ProviderConfiguration,pOptions);super(pFable,tmpOptions,pServiceHash);this.serviceType='PictProviderFlowTheme';this._FlowView=pOptions&&pOptions.FlowView?pOptions.FlowView:null;this._ActiveThemeKey='default';this._NoiseLevel=0;this._Themes={};this._registerBuiltInThemes();}// ── Theme Registry ────────────────────────────────────────────────────
+_registerBuiltInThemes(){// ── 1. Default (Modern) ──────────────────────────────────────
+this._Themes['default']={Key:'default',Label:'Modern',CSSVariables:{},AdditionalCSS:'',NodeBodyMode:'rect',BracketConfig:null,ConnectionConfig:{StrokeDashArray:null,StrokeWidth:2,ArrowheadStyle:'triangle'},NoiseConfig:{Enabled:false,DefaultLevel:0,MaxJitterPx:0,AffectsNodes:false,AffectsConnections:false},ShapeOverrides:{}};// ── 2. Sketch (Hand-drawn) ───────────────────────────────────
+this._Themes['sketch']={Key:'sketch',Label:'Sketch',CSSVariables:{'--pf-node-body-fill':'#fffef5','--pf-node-body-stroke':'#444444','--pf-node-body-stroke-width':'1.5','--pf-node-body-radius':'0px','--pf-node-shadow':'none','--pf-node-shadow-hover':'none','--pf-node-shadow-selected':'none','--pf-node-shadow-dragging':'none','--pf-node-title-fill':'#333333','--pf-node-title-size':'12px','--pf-node-title-weight':'400','--pf-node-title-bar-color':'#f0ece0','--pf-node-type-label-fill':'#888888','--pf-node-selected-stroke':'#2255aa','--pf-port-input-fill':'#5577bb','--pf-port-output-fill':'#55aa77','--pf-port-stroke':'#fffef5','--pf-connection-stroke':'#555555','--pf-connection-selected-stroke':'#2255aa','--pf-canvas-bg':'#fffef5','--pf-grid-stroke':'#e8e4d8','--pf-panel-bg':'#fffef5','--pf-panel-border':'#ccccaa','--pf-panel-radius':'0px','--pf-panel-shadow':'2px 2px 0px rgba(0,0,0,0.08)','--pf-panel-titlebar-bg':'#f0ece0','--pf-panel-titlebar-border':'#ccccaa','--pf-panel-title-color':'#333333'},AdditionalCSS:`
+				.pict-flow-node-title,
+				.pict-flow-node-type-label,
+				.pict-flow-port-label,
+				.pict-flow-node-card-code {
+					font-family: "Courier New", "Courier", monospace !important;
+				}
+				.pict-flow-panel-title-text,
+				.pict-flow-panel-node-props-title,
+				.pict-flow-info-panel {
+					font-family: "Courier New", "Courier", monospace !important;
+				}
+				.pict-flow-node-title-icon {
+					filter: brightness(0) !important;
+				}
+			`,NodeBodyMode:'bracket',BracketConfig:{SerifLength:20,TitleSeparator:true},ConnectionConfig:{StrokeDashArray:null,StrokeWidth:1.5,ArrowheadStyle:'triangle'},NoiseConfig:{Enabled:true,DefaultLevel:0.4,MaxJitterPx:4,AffectsNodes:true,AffectsConnections:true},ShapeOverrides:{'arrowhead-connection':{Fill:'#555555'},'arrowhead-connection-selected':{Fill:'#2255aa'}}};// ── 3. Blueprint (Technical) ─────────────────────────────────
+this._Themes['blueprint']={Key:'blueprint',Label:'Blueprint',CSSVariables:{'--pf-node-body-fill':'rgba(255,255,255,0.05)','--pf-node-body-stroke':'#ffffff','--pf-node-body-stroke-width':'1','--pf-node-body-radius':'0px','--pf-node-shadow':'none','--pf-node-shadow-hover':'none','--pf-node-shadow-selected':'none','--pf-node-shadow-dragging':'none','--pf-node-title-fill':'#ffffff','--pf-node-title-size':'11px','--pf-node-title-weight':'400','--pf-node-title-bar-color':'rgba(255,255,255,0.1)','--pf-node-type-label-fill':'rgba(255,255,255,0.5)','--pf-node-selected-stroke':'#ffdd44','--pf-port-input-fill':'#88bbff','--pf-port-output-fill':'#88ffbb','--pf-port-stroke':'#1a3a6a','--pf-connection-stroke':'rgba(255,255,255,0.6)','--pf-connection-selected-stroke':'#ffdd44','--pf-canvas-bg':'#1a3a6a','--pf-grid-stroke':'rgba(255,255,255,0.08)','--pf-panel-bg':'#1a3a6a','--pf-panel-border':'rgba(255,255,255,0.3)','--pf-panel-radius':'0px','--pf-panel-shadow':'none','--pf-panel-titlebar-bg':'rgba(255,255,255,0.05)','--pf-panel-titlebar-border':'rgba(255,255,255,0.15)','--pf-panel-title-color':'#ffffff'},AdditionalCSS:`
+				.pict-flow-node-title,
+				.pict-flow-node-type-label,
+				.pict-flow-port-label,
+				.pict-flow-node-card-code {
+					font-family: "Courier New", monospace !important;
+					text-transform: uppercase;
+					letter-spacing: 1px;
+				}
+				.pict-flow-container {
+					border-color: #0d2244;
+				}
+				.pict-flow-node-title-icon {
+					filter: brightness(0) invert(1) !important;
+				}
+				.pict-flow-toolbar {
+					background-color: #142e54;
+					border-bottom-color: rgba(255,255,255,0.15);
+				}
+				.pict-flow-toolbar-btn {
+					background-color: rgba(255,255,255,0.05);
+					border-color: rgba(255,255,255,0.2);
+					color: #ffffff;
+				}
+				.pict-flow-toolbar-btn:hover {
+					background-color: rgba(255,255,255,0.1);
+				}
+			`,NodeBodyMode:'bracket',BracketConfig:{SerifLength:18,TitleSeparator:true},ConnectionConfig:{StrokeDashArray:'8 4',StrokeWidth:1,ArrowheadStyle:'triangle'},NoiseConfig:{Enabled:false,DefaultLevel:0,MaxJitterPx:0,AffectsNodes:false,AffectsConnections:false},ShapeOverrides:{'arrowhead-connection':{Fill:'rgba(255,255,255,0.6)'},'arrowhead-connection-selected':{Fill:'#ffdd44'}}};// ── 4. Mono (Black & White) ──────────────────────────────────
+this._Themes['mono']={Key:'mono',Label:'Monochrome',CSSVariables:{'--pf-node-body-fill':'#ffffff','--pf-node-body-stroke':'#000000','--pf-node-body-stroke-width':'1','--pf-node-body-radius':'0px','--pf-node-shadow':'none','--pf-node-shadow-hover':'none','--pf-node-shadow-selected':'none','--pf-node-shadow-dragging':'none','--pf-node-title-fill':'#ffffff','--pf-node-title-size':'11px','--pf-node-title-weight':'600','--pf-node-title-bar-color':'#000000','--pf-node-type-label-fill':'#888888','--pf-node-selected-stroke':'#444444','--pf-port-input-fill':'#000000','--pf-port-output-fill':'#666666','--pf-port-stroke':'#ffffff','--pf-connection-stroke':'#000000','--pf-connection-selected-stroke':'#444444','--pf-canvas-bg':'#ffffff','--pf-grid-stroke':'#eeeeee','--pf-panel-bg':'#ffffff','--pf-panel-border':'#000000','--pf-panel-radius':'0px','--pf-panel-shadow':'none','--pf-panel-titlebar-bg':'#f0f0f0','--pf-panel-titlebar-border':'#000000','--pf-panel-title-color':'#000000'},AdditionalCSS:`
+				.pict-flow-node-title {
+					font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+				}
+				.pict-flow-node-title-icon {
+					filter: brightness(0) invert(1) !important;
+				}
+			`,NodeBodyMode:'rect',BracketConfig:null,ConnectionConfig:{StrokeDashArray:null,StrokeWidth:1,ArrowheadStyle:'triangle'},NoiseConfig:{Enabled:false,DefaultLevel:0,MaxJitterPx:0,AffectsNodes:false,AffectsConnections:false},ShapeOverrides:{'arrowhead-connection':{Fill:'#000000'},'arrowhead-connection-selected':{Fill:'#444444'}}};// ── 5. Retro 80s (Neon) ──────────────────────────────────────
+this._Themes['retro-80s']={Key:'retro-80s',Label:'80s Retro',CSSVariables:{'--pf-node-body-fill':'#1a0a2e','--pf-node-body-stroke':'#ff00ff','--pf-node-body-stroke-width':'2','--pf-node-body-radius':'0px','--pf-node-shadow':'drop-shadow(0 0 8px rgba(255,0,255,0.4))','--pf-node-shadow-hover':'drop-shadow(0 0 12px rgba(255,0,255,0.6))','--pf-node-shadow-selected':'drop-shadow(0 0 16px rgba(0,255,255,0.5))','--pf-node-shadow-dragging':'drop-shadow(0 0 20px rgba(255,0,255,0.7))','--pf-node-title-fill':'#00ffff','--pf-node-title-size':'11px','--pf-node-title-weight':'700','--pf-node-title-bar-color':'#2a0a4e','--pf-node-type-label-fill':'#ff66ff','--pf-node-selected-stroke':'#00ffff','--pf-port-input-fill':'#ff00ff','--pf-port-output-fill':'#00ff66','--pf-port-stroke':'#1a0a2e','--pf-connection-stroke':'#ff00ff','--pf-connection-selected-stroke':'#00ffff','--pf-canvas-bg':'#0a0015','--pf-grid-stroke':'#1a0a2e','--pf-panel-bg':'#1a0a2e','--pf-panel-border':'#ff00ff','--pf-panel-radius':'0px','--pf-panel-shadow':'0 0 20px rgba(255,0,255,0.3)','--pf-panel-titlebar-bg':'#2a0a4e','--pf-panel-titlebar-border':'#ff00ff','--pf-panel-title-color':'#00ffff'},AdditionalCSS:`
+				.pict-flow-node-title,
+				.pict-flow-node-type-label,
+				.pict-flow-port-label,
+				.pict-flow-node-card-code {
+					font-family: "Courier New", monospace !important;
+					text-transform: uppercase;
+					letter-spacing: 0.5px;
+				}
+				.pict-flow-connection {
+					filter: drop-shadow(0 0 3px rgba(255,0,255,0.4));
+				}
+				.pict-flow-node-title-icon {
+					filter: brightness(0) invert(1) hue-rotate(180deg) !important;
+				}
+				.pict-flow-toolbar {
+					background-color: #1a0a2e;
+					border-bottom-color: #ff00ff;
+				}
+				.pict-flow-toolbar-btn {
+					background-color: #1a0a2e;
+					border-color: #ff00ff;
+					color: #00ffff;
+				}
+				.pict-flow-toolbar-btn:hover {
+					background-color: #2a0a4e;
+				}
+				.pict-flow-container {
+					border-color: #ff00ff;
+				}
+			`,NodeBodyMode:'rect',BracketConfig:null,ConnectionConfig:{StrokeDashArray:null,StrokeWidth:2,ArrowheadStyle:'triangle'},NoiseConfig:{Enabled:false,DefaultLevel:0,MaxJitterPx:0,AffectsNodes:false,AffectsConnections:false},ShapeOverrides:{'arrowhead-connection':{Fill:'#ff00ff'},'arrowhead-connection-selected':{Fill:'#00ffff'}}};// ── 6. Retro 90s (Windows) ───────────────────────────────────
+this._Themes['retro-90s']={Key:'retro-90s',Label:'90s Retro',CSSVariables:{'--pf-node-body-fill':'#c0c0c0','--pf-node-body-stroke':'#808080','--pf-node-body-stroke-width':'1','--pf-node-body-radius':'0px','--pf-node-shadow':'drop-shadow(2px 2px 0px #404040)','--pf-node-shadow-hover':'drop-shadow(3px 3px 0px #404040)','--pf-node-shadow-selected':'drop-shadow(2px 2px 0px #008080)','--pf-node-shadow-dragging':'drop-shadow(4px 4px 0px #404040)','--pf-node-title-fill':'#ffffff','--pf-node-title-size':'11px','--pf-node-title-weight':'700','--pf-node-title-bar-color':'#000080','--pf-node-type-label-fill':'#606060','--pf-node-selected-stroke':'#008080','--pf-port-input-fill':'#000080','--pf-port-output-fill':'#008000','--pf-port-stroke':'#c0c0c0','--pf-connection-stroke':'#808080','--pf-connection-selected-stroke':'#008080','--pf-canvas-bg':'#008080','--pf-grid-stroke':'rgba(0,0,0,0.06)','--pf-panel-bg':'#c0c0c0','--pf-panel-border':'#808080','--pf-panel-radius':'0px','--pf-panel-shadow':'2px 2px 0px #404040','--pf-panel-titlebar-bg':'#000080','--pf-panel-titlebar-border':'#c0c0c0','--pf-panel-title-color':'#ffffff'},AdditionalCSS:`
+				.pict-flow-node-title,
+				.pict-flow-node-type-label,
+				.pict-flow-port-label,
+				.pict-flow-node-card-code {
+					font-family: "MS Sans Serif", "Arial", sans-serif !important;
+				}
+				.pict-flow-node-title-icon {
+					filter: brightness(0) invert(1) !important;
+				}
+				.pict-flow-toolbar {
+					background-color: #c0c0c0;
+					border-bottom: 2px solid #808080;
+					border-top: 1px solid #ffffff;
+				}
+				.pict-flow-toolbar-btn {
+					background-color: #c0c0c0;
+					border: 2px outset #c0c0c0;
+					border-radius: 0;
+					color: #000000;
+				}
+				.pict-flow-toolbar-btn:hover {
+					background-color: #d0d0d0;
+				}
+				.pict-flow-toolbar-btn:active {
+					border-style: inset;
+				}
+				.pict-flow-container {
+					border: 2px outset #c0c0c0;
+					border-radius: 0;
+				}
+			`,NodeBodyMode:'rect',BracketConfig:null,ConnectionConfig:{StrokeDashArray:null,StrokeWidth:2,ArrowheadStyle:'triangle'},NoiseConfig:{Enabled:false,DefaultLevel:0,MaxJitterPx:0,AffectsNodes:false,AffectsConnections:false},ShapeOverrides:{'arrowhead-connection':{Fill:'#808080'},'arrowhead-connection-selected':{Fill:'#008080'}}};// ── 7. Whiteboard (Minimal brackets, no fills) ──────────────
+this._Themes['whiteboard']={Key:'whiteboard',Label:'Whiteboard',CSSVariables:{'--pf-node-body-fill':'transparent','--pf-node-body-stroke':'#555555','--pf-node-body-stroke-width':'2','--pf-node-body-radius':'0px','--pf-node-shadow':'none','--pf-node-shadow-hover':'none','--pf-node-shadow-selected':'none','--pf-node-shadow-dragging':'none','--pf-node-title-fill':'#333333','--pf-node-title-size':'12px','--pf-node-title-weight':'600','--pf-node-title-bar-color':'transparent','--pf-node-type-label-fill':'#999999','--pf-node-selected-stroke':'#2255aa','--pf-port-input-fill':'#5577bb','--pf-port-output-fill':'#55aa77','--pf-port-stroke':'#ffffff','--pf-connection-stroke':'#888888','--pf-connection-selected-stroke':'#2255aa','--pf-canvas-bg':'#ffffff','--pf-grid-stroke':'#f0f0f0','--pf-panel-bg':'#ffffff','--pf-panel-border':'#cccccc','--pf-panel-radius':'0px','--pf-panel-shadow':'2px 2px 0px rgba(0,0,0,0.06)','--pf-panel-titlebar-bg':'#f8f8f8','--pf-panel-titlebar-border':'#e0e0e0','--pf-panel-title-color':'#333333'},AdditionalCSS:`
+				.pict-flow-node-title,
+				.pict-flow-node-type-label,
+				.pict-flow-port-label,
+				.pict-flow-node-card-code {
+					font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+				}
+				/* Node-type bracket colors — each type gets its own bracket color */
+				.pict-flow-node-start .pict-flow-node-bracket { stroke: #27ae60; }
+				.pict-flow-node-end .pict-flow-node-bracket { stroke: #1abc9c; }
+				.pict-flow-node-halt .pict-flow-node-bracket { stroke: #e74c3c; }
+				.pict-flow-node-decision .pict-flow-node-bracket { stroke: #f39c12; }
+				.pict-flow-node-default .pict-flow-node-bracket { stroke: #3498db; }
+				.pict-flow-node-action .pict-flow-node-bracket { stroke: #2c3e50; }
+				/* Override variant rules: no fills/strokes on body rects in whiteboard */
+				.pict-flow-node-decision .pict-flow-node-body,
+				.pict-flow-node-start .pict-flow-node-body,
+				.pict-flow-node-end .pict-flow-node-body,
+				.pict-flow-node-halt .pict-flow-node-body {
+					fill: transparent;
+					stroke: transparent;
+					stroke-width: 0;
+				}
+				/* Title bar fills transparent too */
+				.pict-flow-node .pict-flow-node-bracket-title-fill {
+					fill: transparent !important;
+				}
+				.pict-flow-node-title-icon {
+					filter: none !important;
+				}
+			`,NodeBodyMode:'bracket',BracketConfig:{SerifLength:22,TitleSeparator:false},ConnectionConfig:{StrokeDashArray:null,StrokeWidth:1.5,ArrowheadStyle:'triangle'},NoiseConfig:{Enabled:true,DefaultLevel:0.3,MaxJitterPx:3,AffectsNodes:true,AffectsConnections:true},ShapeOverrides:{'arrowhead-connection':{Fill:'#888888'},'arrowhead-connection-selected':{Fill:'#2255aa'}}};}// ── Public API ────────────────────────────────────────────────────────
+/**
+	 * Get the active theme definition.
+	 * @returns {Object}
+	 */getActiveTheme(){return this._Themes[this._ActiveThemeKey]||this._Themes['default'];}/**
+	 * Get the active theme key.
+	 * @returns {string}
+	 */getActiveThemeKey(){return this._ActiveThemeKey;}/**
+	 * Switch the active theme.
+	 * This updates the internal key and applies shape overrides.
+	 * The caller (FlowView.setTheme) is responsible for re-registering
+	 * CSS and triggering a full re-render.
+	 *
+	 * @param {string} pThemeKey
+	 * @returns {boolean} Whether the theme was found and applied
+	 */setTheme(pThemeKey){if(!this._Themes[pThemeKey]){this.log.warn(`PictProviderFlowTheme: theme '${pThemeKey}' not found`);return false;}this._ActiveThemeKey=pThemeKey;let tmpTheme=this._Themes[pThemeKey];// Apply noise defaults from theme
+if(tmpTheme.NoiseConfig&&typeof tmpTheme.NoiseConfig.DefaultLevel==='number'){this._NoiseLevel=tmpTheme.NoiseConfig.DefaultLevel;}else{this._NoiseLevel=0;}// Apply shape overrides
+if(this._FlowView&&this._FlowView._ConnectorShapesProvider){this._FlowView._ConnectorShapesProvider.resetToDefaults();if(tmpTheme.ShapeOverrides&&Object.keys(tmpTheme.ShapeOverrides).length>0){this._FlowView._ConnectorShapesProvider.applyThemeOverrides(tmpTheme.ShapeOverrides);}}this.log.trace(`PictProviderFlowTheme: switched to '${pThemeKey}'`);return true;}/**
+	 * Get the current noise level (0 to 1).
+	 * @returns {number}
+	 */getNoiseLevel(){return this._NoiseLevel;}/**
+	 * Set the noise level (0 to 1).
+	 * @param {number} pLevel
+	 */setNoiseLevel(pLevel){this._NoiseLevel=Math.max(0,Math.min(1,pLevel||0));}/**
+	 * Register a custom theme.
+	 * @param {string} pKey
+	 * @param {Object} pThemeDefinition
+	 */registerTheme(pKey,pThemeDefinition){if(!pKey||!pThemeDefinition){this.log.warn('PictProviderFlowTheme: registerTheme requires key and definition');return;}pThemeDefinition.Key=pKey;this._Themes[pKey]=pThemeDefinition;}/**
+	 * Get all registered theme keys.
+	 * @returns {Array<string>}
+	 */getThemeKeys(){return Object.keys(this._Themes);}// ── Rendering Hooks ───────────────────────────────────────────────────
+/**
+	 * Post-process an SVG path string to apply noise/jitter if the
+	 * active theme has noise enabled for connections.
+	 *
+	 * @param {string} pPathString - SVG path d attribute
+	 * @param {string} pSeedString - Hash for deterministic noise
+	 * @returns {string} Possibly-modified path string
+	 */processPathString(pPathString,pSeedString){let tmpTheme=this.getActiveTheme();if(!tmpTheme||!tmpTheme.NoiseConfig||!tmpTheme.NoiseConfig.Enabled||!tmpTheme.NoiseConfig.AffectsConnections){return pPathString;}let tmpAmplitude=this._NoiseLevel*(tmpTheme.NoiseConfig.MaxJitterPx||3);if(tmpAmplitude<=0){return pPathString;}if(this._FlowView&&this._FlowView._NoiseProvider){return this._FlowView._NoiseProvider.jitterPath(pPathString,tmpAmplitude,pSeedString);}return pPathString;}/**
+	 * Get the noise amplitude for node bracket rendering.
+	 * Returns 0 if noise is not enabled for nodes in the active theme.
+	 * @returns {number}
+	 */getNodeNoiseAmplitude(){let tmpTheme=this.getActiveTheme();if(!tmpTheme||!tmpTheme.NoiseConfig||!tmpTheme.NoiseConfig.Enabled||!tmpTheme.NoiseConfig.AffectsNodes){return 0;}return this._NoiseLevel*(tmpTheme.NoiseConfig.MaxJitterPx||3);}}module.exports=PictProviderFlowTheme;module.exports.default_configuration=_ProviderConfiguration;},{"fable-serviceproviderbase":2}],33:[function(require,module,exports){const libFableServiceProviderBase=require('fable-serviceproviderbase');class PictServiceFlowConnectionRenderer extends libFableServiceProviderBase{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictServiceFlowConnectionRenderer';this._FlowView=pOptions&&pOptions.FlowView?pOptions.FlowView:null;}/**
+	 * Render a connection as an SVG path with hit area and optional handles.
+	 * @param {Object} pConnection - The connection data
+	 * @param {SVGGElement} pConnectionsLayer - The SVG group to append to
+	 * @param {boolean} pIsSelected - Whether this connection is selected
+	 */renderConnection(pConnection,pConnectionsLayer,pIsSelected){if(!this._FlowView)return;let tmpSourcePos=this._FlowView.getPortPosition(pConnection.SourceNodeHash,pConnection.SourcePortHash);let tmpTargetPos=this._FlowView.getPortPosition(pConnection.TargetNodeHash,pConnection.TargetPortHash);// Look up the source port's PortType for connection coloring
+let tmpSourcePortType=null;let tmpSourceNode=this._FlowView.getNode(pConnection.SourceNodeHash);if(tmpSourceNode&&tmpSourceNode.Ports){for(let i=0;i<tmpSourceNode.Ports.length;i++){if(tmpSourceNode.Ports[i].Hash===pConnection.SourcePortHash){tmpSourcePortType=tmpSourceNode.Ports[i].PortType||null;break;}}}if(!tmpSourcePos||!tmpTargetPos)return;let tmpData=pConnection.Data||{};let tmpLineMode=tmpData.LineMode||'bezier';let tmpPath;if(tmpLineMode==='orthogonal'){let tmpCorners=null;if(tmpData.HandleCustomized&&tmpData.OrthoCorner1X!=null){tmpCorners={corner1:{x:tmpData.OrthoCorner1X,y:tmpData.OrthoCorner1Y},corner2:{x:tmpData.OrthoCorner2X,y:tmpData.OrthoCorner2Y}};}tmpPath=this._generateOrthogonalPath(tmpSourcePos,tmpTargetPos,tmpCorners,tmpData.OrthoMidOffset||0);}else{let tmpHandleX=tmpData.HandleCustomized&&tmpData.BezierHandleX!=null?tmpData.BezierHandleX:null;let tmpHandleY=tmpData.HandleCustomized&&tmpData.BezierHandleY!=null?tmpData.BezierHandleY:null;tmpPath=this._generateBezierPathWithHandle(tmpSourcePos,tmpTargetPos,tmpHandleX,tmpHandleY);}// Apply theme noise post-processing to the path
+if(this._FlowView._ThemeProvider){tmpPath=this._FlowView._ThemeProvider.processPathString(tmpPath,pConnection.Hash);}// Apply stroke-dasharray from theme's ConnectionConfig
+let tmpStrokeDashArray=null;if(this._FlowView._ThemeProvider){let tmpActiveTheme=this._FlowView._ThemeProvider.getActiveTheme();if(tmpActiveTheme&&tmpActiveTheme.ConnectionConfig&&tmpActiveTheme.ConnectionConfig.StrokeDashArray){tmpStrokeDashArray=tmpActiveTheme.ConnectionConfig.StrokeDashArray;}}let tmpViewIdentifier=this._FlowView.options.ViewIdentifier;// Build the port-type CSS class suffix for connection coloring
+let tmpConnTypeClass=tmpSourcePortType?' conn-type-'+tmpSourcePortType:'';// Determine the arrowhead marker based on port type
+let tmpArrowMarkerId;if(pIsSelected){tmpArrowMarkerId='flow-arrowhead-selected-'+tmpViewIdentifier;}else if(tmpSourcePortType){tmpArrowMarkerId='flow-arrowhead-'+tmpSourcePortType+'-'+tmpViewIdentifier;}else{tmpArrowMarkerId='flow-arrowhead-'+tmpViewIdentifier;}// Hit area (wider invisible path for easier selection)
+let tmpShapeProvider=this._FlowView._ConnectorShapesProvider;if(tmpShapeProvider){let tmpHitArea=tmpShapeProvider.createConnectionHitAreaElement(tmpPath,pConnection.Hash);pConnectionsLayer.appendChild(tmpHitArea);let tmpPathElement=tmpShapeProvider.createConnectionPathElement(tmpPath,pConnection.Hash,pIsSelected,tmpViewIdentifier);if(tmpConnTypeClass){tmpPathElement.setAttribute('class',(tmpPathElement.getAttribute('class')||'')+tmpConnTypeClass);}// Override the default arrowhead with the typed one
+tmpPathElement.setAttribute('marker-end','url(#'+tmpArrowMarkerId+')');if(tmpStrokeDashArray){tmpPathElement.setAttribute('stroke-dasharray',tmpStrokeDashArray);}pConnectionsLayer.appendChild(tmpPathElement);}else{let tmpHitArea=this._FlowView._SVGHelperProvider.createSVGElement('path');tmpHitArea.setAttribute('class','pict-flow-connection-hitarea');tmpHitArea.setAttribute('d',tmpPath);tmpHitArea.setAttribute('data-connection-hash',pConnection.Hash);tmpHitArea.setAttribute('data-element-type','connection-hitarea');pConnectionsLayer.appendChild(tmpHitArea);let tmpPathElement=this._FlowView._SVGHelperProvider.createSVGElement('path');tmpPathElement.setAttribute('class',`pict-flow-connection${tmpConnTypeClass} ${pIsSelected?'selected':''}`);tmpPathElement.setAttribute('d',tmpPath);tmpPathElement.setAttribute('data-connection-hash',pConnection.Hash);tmpPathElement.setAttribute('data-element-type','connection');tmpPathElement.setAttribute('marker-end','url(#'+tmpArrowMarkerId+')');if(tmpStrokeDashArray){tmpPathElement.setAttribute('stroke-dasharray',tmpStrokeDashArray);}pConnectionsLayer.appendChild(tmpPathElement);}// Render drag handles when selected
+if(pIsSelected){this._renderHandles(pConnection,pConnectionsLayer,tmpSourcePos,tmpTargetPos);}}/**
+	 * Compute the departure and approach points plus control points
+	 * for a direction-aware bezier between two ports.
+	 *
+	 * This extracts the intermediate geometry from _generateDirectionalPath
+	 * so it can be reused by _getAutoMidpoint and _generateBezierPathWithHandle.
+	 *
+	 * @param {{x: number, y: number, side: string}} pStart
+	 * @param {{x: number, y: number, side: string}} pEnd
+	 * @returns {{departX, departY, approachX, approachY, cp1X, cp1Y, cp2X, cp2Y, startDir, endDir}}
+	 */_computeDirectionalGeometry(pStart,pEnd){let tmpStartDir=this._FlowView._GeometryProvider.sideDirection(pStart.side||'right');let tmpEndDir=this._FlowView._GeometryProvider.sideDirection(pEnd.side||'left');let tmpStraightLen=20;let tmpDepartX=pStart.x+tmpStartDir.dx*tmpStraightLen;let tmpDepartY=pStart.y+tmpStartDir.dy*tmpStraightLen;let tmpApproachX=pEnd.x+tmpEndDir.dx*tmpStraightLen;let tmpApproachY=pEnd.y+tmpEndDir.dy*tmpStraightLen;let tmpDX=Math.abs(tmpApproachX-tmpDepartX);let tmpDY=Math.abs(tmpApproachY-tmpDepartY);let tmpDist=Math.sqrt(tmpDX*tmpDX+tmpDY*tmpDY);let tmpBaseOffset=Math.max(Math.min(tmpDist*0.4,180),30);let tmpSameAxis=tmpStartDir.dx!==0&&tmpEndDir.dx!==0||tmpStartDir.dy!==0&&tmpEndDir.dy!==0;let tmpFacingEachOther=false;if(tmpSameAxis){if(tmpStartDir.dx===1&&tmpEndDir.dx===-1&&pEnd.x>=pStart.x){tmpFacingEachOther=true;}else if(tmpStartDir.dx===-1&&tmpEndDir.dx===1&&pEnd.x<=pStart.x){tmpFacingEachOther=true;}else if(tmpStartDir.dy===1&&tmpEndDir.dy===-1&&pEnd.y>=pStart.y){tmpFacingEachOther=true;}else if(tmpStartDir.dy===-1&&tmpEndDir.dy===1&&pEnd.y<=pStart.y){tmpFacingEachOther=true;}}let tmpCurveOffset;if(tmpFacingEachOther){let tmpInlineDist=tmpStartDir.dx!==0?tmpDX:tmpDY;tmpCurveOffset=Math.max(tmpInlineDist*0.35,30);}else if(tmpSameAxis){tmpCurveOffset=Math.max(tmpBaseOffset,60);}else{tmpCurveOffset=Math.max(tmpBaseOffset*0.8,40);}let tmpCP1X=tmpDepartX+tmpStartDir.dx*tmpCurveOffset;let tmpCP1Y=tmpDepartY+tmpStartDir.dy*tmpCurveOffset;let tmpCP2X=tmpApproachX+tmpEndDir.dx*tmpCurveOffset;let tmpCP2Y=tmpApproachY+tmpEndDir.dy*tmpCurveOffset;return{departX:tmpDepartX,departY:tmpDepartY,approachX:tmpApproachX,approachY:tmpApproachY,cp1X:tmpCP1X,cp1Y:tmpCP1Y,cp2X:tmpCP2X,cp2Y:tmpCP2Y,startDir:tmpStartDir,endDir:tmpEndDir};}/**
+	 * Generate a direction-aware path between two ports.
+	 *
+	 * The path is composed of three segments:
+	 *   1. A short straight "departure" segment leaving the source port
+	 *      in its outward direction.
+	 *   2. A cubic bezier curve connecting the departure point to an
+	 *      "approach" point near the target port.
+	 *   3. A short straight "approach" segment arriving at the target
+	 *      port aligned with its inward direction.
+	 *
+	 * @param {{x: number, y: number, side: string}} pStart - Start port position + side
+	 * @param {{x: number, y: number, side: string}} pEnd   - End port position + side
+	 * @returns {string} SVG path d attribute
+	 */_generateDirectionalPath(pStart,pEnd){let tmpGeo=this._computeDirectionalGeometry(pStart,pEnd);return this._FlowView._PathGenerator.buildBezierPathString({x:pStart.x,y:pStart.y},{x:tmpGeo.departX,y:tmpGeo.departY},{x:tmpGeo.cp1X,y:tmpGeo.cp1Y},{x:tmpGeo.cp2X,y:tmpGeo.cp2Y},{x:tmpGeo.approachX,y:tmpGeo.approachY},{x:pEnd.x,y:pEnd.y});}/**
+	 * Generate a bezier path with an optional user-controlled midpoint handle.
+	 *
+	 * If handle is null, uses the standard auto-calculated bezier.
+	 * If handle is set, splits into two cubic bezier segments passing
+	 * through the handle point for a smooth S-curve.
+	 *
+	 * @param {{x: number, y: number, side: string}} pStart
+	 * @param {{x: number, y: number, side: string}} pEnd
+	 * @param {number|null} pHandleX
+	 * @param {number|null} pHandleY
+	 * @returns {string} SVG path d attribute
+	 */_generateBezierPathWithHandle(pStart,pEnd,pHandleX,pHandleY){if(pHandleX==null||pHandleY==null){return this._generateDirectionalPath(pStart,pEnd);}let tmpGeo=this._computeDirectionalGeometry(pStart,pEnd);// Split into two cubic bezier segments through the handle point.
+// First segment: depart -> handle
+// Second segment: handle -> approach
+// Control points are computed to ensure smooth tangent at the handle.
+let tmpCP1aX=tmpGeo.departX+tmpGeo.startDir.dx*((Math.abs(pHandleX-tmpGeo.departX)+Math.abs(pHandleY-tmpGeo.departY))*0.4);let tmpCP1aY=tmpGeo.departY+tmpGeo.startDir.dy*((Math.abs(pHandleX-tmpGeo.departX)+Math.abs(pHandleY-tmpGeo.departY))*0.4);// The tangent at the handle should be smooth: the control points on
+// either side of the handle should be collinear through it.
+// Use the direction from depart to approach as the tangent direction.
+let tmpTangentX=tmpGeo.approachX-tmpGeo.departX;let tmpTangentY=tmpGeo.approachY-tmpGeo.departY;let tmpTangentLen=Math.sqrt(tmpTangentX*tmpTangentX+tmpTangentY*tmpTangentY);if(tmpTangentLen<1)tmpTangentLen=1;let tmpTangentNX=tmpTangentX/tmpTangentLen;let tmpTangentNY=tmpTangentY/tmpTangentLen;let tmpTangentScale=tmpTangentLen*0.2;let tmpCP1bX=pHandleX-tmpTangentNX*tmpTangentScale;let tmpCP1bY=pHandleY-tmpTangentNY*tmpTangentScale;let tmpCP2aX=pHandleX+tmpTangentNX*tmpTangentScale;let tmpCP2aY=pHandleY+tmpTangentNY*tmpTangentScale;let tmpCP2bX=tmpGeo.approachX+tmpGeo.endDir.dx*((Math.abs(pHandleX-tmpGeo.approachX)+Math.abs(pHandleY-tmpGeo.approachY))*0.4);let tmpCP2bY=tmpGeo.approachY+tmpGeo.endDir.dy*((Math.abs(pHandleX-tmpGeo.approachX)+Math.abs(pHandleY-tmpGeo.approachY))*0.4);return this._FlowView._PathGenerator.buildSplitBezierPathString({x:pStart.x,y:pStart.y},{x:tmpGeo.departX,y:tmpGeo.departY},{x:tmpCP1aX,y:tmpCP1aY},{x:tmpCP1bX,y:tmpCP1bY},{x:pHandleX,y:pHandleY},{x:tmpCP2aX,y:tmpCP2aY},{x:tmpCP2bX,y:tmpCP2bY},{x:tmpGeo.approachX,y:tmpGeo.approachY},{x:pEnd.x,y:pEnd.y});}/**
+	 * Get the auto-calculated midpoint of the default bezier curve between two ports.
+	 * Evaluates the cubic bezier at t=0.5.
+	 *
+	 * @param {{x: number, y: number, side: string}} pStart
+	 * @param {{x: number, y: number, side: string}} pEnd
+	 * @returns {{x: number, y: number}}
+	 */getAutoMidpoint(pStart,pEnd){let tmpGeo=this._computeDirectionalGeometry(pStart,pEnd);return this._FlowView._PathGenerator.evaluateCubicBezier({x:tmpGeo.departX,y:tmpGeo.departY},{x:tmpGeo.cp1X,y:tmpGeo.cp1Y},{x:tmpGeo.cp2X,y:tmpGeo.cp2Y},{x:tmpGeo.approachX,y:tmpGeo.approachY},0.5);}/**
+	 * Generate an orthogonal (90-degree angles only) path between two ports.
+	 *
+	 * Path format: M start L depart L corner1 L corner2 L approach L end
+	 *
+	 * @param {{x: number, y: number, side: string}} pStart
+	 * @param {{x: number, y: number, side: string}} pEnd
+	 * @param {Object|null} pCorners - { corner1: {x,y}, corner2: {x,y} } or null for auto
+	 * @param {number} pMidOffset - Offset for the auto-calculated corridor position
+	 * @returns {string} SVG path d attribute
+	 */_generateOrthogonalPath(pStart,pEnd,pCorners,pMidOffset){let tmpStartDir=this._FlowView._GeometryProvider.sideDirection(pStart.side||'right');let tmpEndDir=this._FlowView._GeometryProvider.sideDirection(pEnd.side||'left');let tmpStraightLen=20;let tmpDepartX=pStart.x+tmpStartDir.dx*tmpStraightLen;let tmpDepartY=pStart.y+tmpStartDir.dy*tmpStraightLen;let tmpApproachX=pEnd.x+tmpEndDir.dx*tmpStraightLen;let tmpApproachY=pEnd.y+tmpEndDir.dy*tmpStraightLen;let tmpCorner1,tmpCorner2;if(pCorners&&pCorners.corner1&&pCorners.corner2){tmpCorner1=pCorners.corner1;tmpCorner2=pCorners.corner2;}else{let tmpAutoCorners=this._FlowView._PathGenerator.computeAutoOrthogonalCorners(tmpDepartX,tmpDepartY,tmpApproachX,tmpApproachY,tmpStartDir,tmpEndDir,pMidOffset||0);tmpCorner1=tmpAutoCorners.corner1;tmpCorner2=tmpAutoCorners.corner2;}return this._FlowView._PathGenerator.buildOrthogonalPathString({x:pStart.x,y:pStart.y},{x:tmpDepartX,y:tmpDepartY},tmpCorner1,tmpCorner2,{x:tmpApproachX,y:tmpApproachY},{x:pEnd.x,y:pEnd.y});}/**
+	 * Get the full orthogonal geometry for a connection (for handle positioning).
+	 *
+	 * @param {{x: number, y: number, side: string}} pStart
+	 * @param {{x: number, y: number, side: string}} pEnd
+	 * @param {Object} pData - Connection.Data
+	 * @returns {{corner1: {x,y}, corner2: {x,y}, midpoint: {x,y}}}
+	 */getOrthogonalGeometry(pStart,pEnd,pData){let tmpStartDir=this._FlowView._GeometryProvider.sideDirection(pStart.side||'right');let tmpEndDir=this._FlowView._GeometryProvider.sideDirection(pEnd.side||'left');let tmpStraightLen=20;let tmpDepartX=pStart.x+tmpStartDir.dx*tmpStraightLen;let tmpDepartY=pStart.y+tmpStartDir.dy*tmpStraightLen;let tmpApproachX=pEnd.x+tmpEndDir.dx*tmpStraightLen;let tmpApproachY=pEnd.y+tmpEndDir.dy*tmpStraightLen;if(pData&&pData.HandleCustomized&&pData.OrthoCorner1X!=null){let tmpCorner1={x:pData.OrthoCorner1X,y:pData.OrthoCorner1Y};let tmpCorner2={x:pData.OrthoCorner2X,y:pData.OrthoCorner2Y};let tmpMidpoint={x:(tmpCorner1.x+tmpCorner2.x)/2,y:(tmpCorner1.y+tmpCorner2.y)/2};return{corner1:tmpCorner1,corner2:tmpCorner2,midpoint:tmpMidpoint};}return this._FlowView._PathGenerator.computeAutoOrthogonalCorners(tmpDepartX,tmpDepartY,tmpApproachX,tmpApproachY,tmpStartDir,tmpEndDir,pData&&pData.OrthoMidOffset||0);}/**
+	 * Render drag handles for the selected connection.
+	 *
+	 * @param {Object} pConnection
+	 * @param {SVGGElement} pLayer
+	 * @param {{x, y, side}} pStart - Source port position
+	 * @param {{x, y, side}} pEnd   - Target port position
+	 */_renderHandles(pConnection,pLayer,pStart,pEnd){let tmpData=pConnection.Data||{};let tmpLineMode=tmpData.LineMode||'bezier';if(tmpLineMode==='orthogonal'){let tmpGeometry=this.getOrthogonalGeometry(pStart,pEnd,tmpData);// Corner 1 handle
+this._createHandle(pLayer,pConnection.Hash,'ortho-corner1',tmpGeometry.corner1.x,tmpGeometry.corner1.y,'pict-flow-connection-handle');// Midpoint handle (between corners)
+this._createHandle(pLayer,pConnection.Hash,'ortho-midpoint',tmpGeometry.midpoint.x,tmpGeometry.midpoint.y,'pict-flow-connection-handle-midpoint');// Corner 2 handle
+this._createHandle(pLayer,pConnection.Hash,'ortho-corner2',tmpGeometry.corner2.x,tmpGeometry.corner2.y,'pict-flow-connection-handle');}else{// Bezier midpoint handle
+let tmpMidpoint;if(tmpData.HandleCustomized&&tmpData.BezierHandleX!=null){tmpMidpoint={x:tmpData.BezierHandleX,y:tmpData.BezierHandleY};}else{tmpMidpoint=this.getAutoMidpoint(pStart,pEnd);}this._createHandle(pLayer,pConnection.Hash,'bezier-midpoint',tmpMidpoint.x,tmpMidpoint.y,'pict-flow-connection-handle');}}/**
+	 * Create a single SVG circle handle element.
+	 *
+	 * @param {SVGGElement} pLayer
+	 * @param {string} pConnectionHash
+	 * @param {string} pHandleType
+	 * @param {number} pX
+	 * @param {number} pY
+	 * @param {string} pClassName
+	 */_createHandle(pLayer,pConnectionHash,pHandleType,pX,pY,pClassName){let tmpShapeProvider=this._FlowView._ConnectorShapesProvider;let tmpShapeKey=pClassName==='pict-flow-connection-handle-midpoint'?'connection-handle-midpoint':'connection-handle';if(tmpShapeProvider){let tmpHandle=tmpShapeProvider.createHandleElement(pConnectionHash,pHandleType,pX,pY,tmpShapeKey);tmpHandle.setAttribute('data-element-type','connection-handle');tmpHandle.setAttribute('data-connection-hash',pConnectionHash);pLayer.appendChild(tmpHandle);}else{let tmpCircle=this._FlowView._SVGHelperProvider.createSVGElement('circle');tmpCircle.setAttribute('class',pClassName);tmpCircle.setAttribute('cx',String(pX));tmpCircle.setAttribute('cy',String(pY));tmpCircle.setAttribute('r','6');tmpCircle.setAttribute('data-element-type','connection-handle');tmpCircle.setAttribute('data-connection-hash',pConnectionHash);tmpCircle.setAttribute('data-handle-type',pHandleType);pLayer.appendChild(tmpCircle);}}/**
+	 * Legacy bezier path for drag connections where we don't have side info.
+	 * @param {{x: number, y: number}} pStart
+	 * @param {{x: number, y: number}} pEnd
+	 * @returns {string}
+	 */_generateBezierPath(pStart,pEnd){// During drag operations we may not have side info; default to right->left
+let tmpStart={x:pStart.x,y:pStart.y,side:pStart.side||'right'};let tmpEnd={x:pEnd.x,y:pEnd.y,side:pEnd.side||'left'};return this._generateDirectionalPath(tmpStart,tmpEnd);}/**
+	 * Render a temporary drag connection line (used during connection creation)
+	 * @param {number} pStartX
+	 * @param {number} pStartY
+	 * @param {number} pEndX
+	 * @param {number} pEndY
+	 * @param {SVGGElement} pLayer - The layer to render into
+	 * @param {string} [pStartSide] - The side the source port is on
+	 * @returns {SVGPathElement} The created path element
+	 */renderDragConnection(pStartX,pStartY,pEndX,pEndY,pLayer,pStartSide){let tmpPath=this._generateDirectionalPath({x:pStartX,y:pStartY,side:pStartSide||'right'},{x:pEndX,y:pEndY,side:'left'});let tmpShapeProvider=this._FlowView._ConnectorShapesProvider;let tmpPathElement;if(tmpShapeProvider){tmpPathElement=tmpShapeProvider.createDragConnectionElement(tmpPath);}else{tmpPathElement=this._FlowView._SVGHelperProvider.createSVGElement('path');tmpPathElement.setAttribute('class','pict-flow-drag-connection');tmpPathElement.setAttribute('d',tmpPath);}pLayer.appendChild(tmpPathElement);return tmpPathElement;}/**
+	 * Update a drag connection path
+	 * @param {SVGPathElement} pPathElement
+	 * @param {number} pStartX
+	 * @param {number} pStartY
+	 * @param {number} pEndX
+	 * @param {number} pEndY
+	 * @param {string} [pStartSide] - The side the source port is on
+	 */updateDragConnection(pPathElement,pStartX,pStartY,pEndX,pEndY,pStartSide){if(!pPathElement)return;let tmpPath=this._generateDirectionalPath({x:pStartX,y:pStartY,side:pStartSide||'right'},{x:pEndX,y:pEndY,side:'left'});pPathElement.setAttribute('d',tmpPath);}}module.exports=PictServiceFlowConnectionRenderer;},{"fable-serviceproviderbase":2}],34:[function(require,module,exports){const libFableServiceProviderBase=require('fable-serviceproviderbase');/**
+ * Interaction states for the flow diagram
+ */const INTERACTION_STATES={IDLE:'idle',DRAGGING_NODE:'dragging-node',DRAGGING_PANEL:'dragging-panel',DRAGGING_HANDLE:'dragging-handle',CONNECTING:'connecting',PANNING:'panning'};class PictServiceFlowInteractionManager extends libFableServiceProviderBase{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictServiceFlowInteractionManager';this._FlowView=pOptions&&pOptions.FlowView?pOptions.FlowView:null;this._SVGElement=null;this._ViewportElement=null;// Interaction state
+this._State=INTERACTION_STATES.IDLE;// Drag state
+this._DragNodeHash=null;this._DragStartX=0;this._DragStartY=0;this._DragNodeStartX=0;this._DragNodeStartY=0;// Panel drag state
+this._DragPanelHash=null;this._DragPanelStartX=0;this._DragPanelStartY=0;this._DragPanelDataStartX=0;this._DragPanelDataStartY=0;// Handle drag state
+this._DragHandleConnectionHash=null;this._DragHandlePanelHash=null;this._DragHandleType=null;this._DragHandleIsTether=false;// Pan state
+this._PanStartX=0;this._PanStartY=0;this._PanStartPanX=0;this._PanStartPanY=0;// Connection drag state
+this._ConnectSourceNodeHash=null;this._ConnectSourcePortHash=null;this._ConnectDragLine=null;// Double-click detection
+this._LastClickTime=0;this._LastClickNodeHash=null;this._DoubleClickThreshold=400;// Double-click detection for handles
+this._LastHandleClickTime=0;this._LastHandleClickHash=null;this._LastHandleClickType=null;// Bound event handlers (for removeEventListener)
+this._boundOnPointerDown=this._onPointerDown.bind(this);this._boundOnPointerMove=this._onPointerMove.bind(this);this._boundOnPointerUp=this._onPointerUp.bind(this);this._boundOnWheel=this._onWheel.bind(this);this._boundOnKeyDown=this._onKeyDown.bind(this);}/**
+	 * Initialize event listeners on the SVG element
+	 * @param {SVGSVGElement} pSVGElement
+	 * @param {SVGGElement} pViewportElement
+	 */initialize(pSVGElement,pViewportElement){this._SVGElement=pSVGElement;this._ViewportElement=pViewportElement;if(!this._SVGElement)return;// Use pointer events for unified mouse/touch handling
+this._SVGElement.addEventListener('pointerdown',this._boundOnPointerDown);this._SVGElement.addEventListener('pointermove',this._boundOnPointerMove);this._SVGElement.addEventListener('pointerup',this._boundOnPointerUp);this._SVGElement.addEventListener('pointerleave',this._boundOnPointerUp);this._SVGElement.addEventListener('wheel',this._boundOnWheel,{passive:false});// Keyboard events for delete
+document.addEventListener('keydown',this._boundOnKeyDown);// Prevent context menu on right-click
+this._SVGElement.addEventListener('contextmenu',pEvent=>{pEvent.preventDefault();});}/**
+	 * Remove all event listeners
+	 */destroy(){if(this._SVGElement){this._SVGElement.removeEventListener('pointerdown',this._boundOnPointerDown);this._SVGElement.removeEventListener('pointermove',this._boundOnPointerMove);this._SVGElement.removeEventListener('pointerup',this._boundOnPointerUp);this._SVGElement.removeEventListener('pointerleave',this._boundOnPointerUp);this._SVGElement.removeEventListener('wheel',this._boundOnWheel);}document.removeEventListener('keydown',this._boundOnKeyDown);}/**
+	 * Handle pointer down event
+	 * @param {PointerEvent} pEvent
+	 */_onPointerDown(pEvent){if(!this._FlowView)return;let tmpTarget=pEvent.target;let tmpElementType=this._getElementType(tmpTarget);// Check if click is inside a panel body — let HTML handle its own events
+if(tmpTarget.closest&&tmpTarget.closest('.pict-flow-panel-body')){return;}// Capture pointer for smooth dragging
+this._SVGElement.setPointerCapture(pEvent.pointerId);switch(tmpElementType){case'port':this._startConnection(pEvent,tmpTarget);break;case'node':case'node-body':case'panel-indicator':{let tmpNodeHash=this._getNodeHash(tmpTarget);let tmpNow=Date.now();// Check for double-click on same node
+if(tmpNodeHash&&tmpNodeHash===this._LastClickNodeHash&&tmpNow-this._LastClickTime<this._DoubleClickThreshold){// Double-click: toggle panel
+this._LastClickTime=0;this._LastClickNodeHash=null;this._FlowView.togglePanel(tmpNodeHash);}else{// Single click: start node drag
+this._LastClickTime=tmpNow;this._LastClickNodeHash=tmpNodeHash;this._startNodeDrag(pEvent,tmpTarget);}break;}case'panel-titlebar':this._startPanelDrag(pEvent,tmpTarget);break;case'panel-close':{let tmpPanelHash=this._getPanelHash(tmpTarget);if(tmpPanelHash){this._FlowView.closePanel(tmpPanelHash);}break;}case'connection-handle':{let tmpConnectionHash=this._getConnectionHash(tmpTarget);let tmpHandleType=tmpTarget.getAttribute('data-handle-type');let tmpNow=Date.now();// Check for double-click on handle to toggle mode
+if(tmpConnectionHash===this._LastHandleClickHash&&tmpHandleType===this._LastHandleClickType&&tmpNow-this._LastHandleClickTime<this._DoubleClickThreshold){this._toggleConnectionLineMode(tmpConnectionHash);this._LastHandleClickTime=0;this._LastHandleClickHash=null;this._LastHandleClickType=null;}else{this._LastHandleClickTime=tmpNow;this._LastHandleClickHash=tmpConnectionHash;this._LastHandleClickType=tmpHandleType;this._startHandleDrag(pEvent,tmpConnectionHash,null,tmpHandleType,false);}pEvent.stopPropagation();break;}case'tether':case'tether-hitarea':this._selectTether(tmpTarget);break;case'tether-handle':{let tmpPanelHash=this._getPanelHash(tmpTarget);let tmpHandleType=tmpTarget.getAttribute('data-handle-type');let tmpNow=Date.now();// Check for double-click on tether handle to toggle mode
+if(tmpPanelHash===this._LastHandleClickHash&&tmpHandleType===this._LastHandleClickType&&tmpNow-this._LastHandleClickTime<this._DoubleClickThreshold){this._toggleTetherLineMode(tmpPanelHash);this._LastHandleClickTime=0;this._LastHandleClickHash=null;this._LastHandleClickType=null;}else{this._LastHandleClickTime=tmpNow;this._LastHandleClickHash=tmpPanelHash;this._LastHandleClickType=tmpHandleType;this._startHandleDrag(pEvent,null,tmpPanelHash,tmpHandleType,true);}pEvent.stopPropagation();break;}case'connection':case'connection-hitarea':this._selectConnection(tmpTarget);break;default:// Click on background - start panning or deselect
+if(pEvent.button===0&&this._FlowView.options.EnablePanning){this._startPanning(pEvent);}break;}}/**
+	 * Handle pointer move event
+	 * @param {PointerEvent} pEvent
+	 */_onPointerMove(pEvent){if(!this._FlowView)return;switch(this._State){case INTERACTION_STATES.DRAGGING_NODE:this._onNodeDrag(pEvent);break;case INTERACTION_STATES.DRAGGING_PANEL:this._onPanelDrag(pEvent);break;case INTERACTION_STATES.DRAGGING_HANDLE:this._onHandleDrag(pEvent);break;case INTERACTION_STATES.CONNECTING:this._onConnectionDrag(pEvent);break;case INTERACTION_STATES.PANNING:this._onPan(pEvent);break;}}/**
+	 * Handle pointer up event
+	 * @param {PointerEvent} pEvent
+	 */_onPointerUp(pEvent){if(!this._FlowView)return;// Release pointer capture
+if(this._SVGElement.hasPointerCapture&&this._SVGElement.hasPointerCapture(pEvent.pointerId)){this._SVGElement.releasePointerCapture(pEvent.pointerId);}switch(this._State){case INTERACTION_STATES.DRAGGING_NODE:this._endNodeDrag(pEvent);break;case INTERACTION_STATES.DRAGGING_PANEL:this._endPanelDrag(pEvent);break;case INTERACTION_STATES.DRAGGING_HANDLE:this._endHandleDrag(pEvent);break;case INTERACTION_STATES.CONNECTING:this._endConnection(pEvent);break;case INTERACTION_STATES.PANNING:this._endPanning(pEvent);break;}}/**
+	 * Handle mouse wheel for zoom
+	 * @param {WheelEvent} pEvent
+	 */_onWheel(pEvent){if(!this._FlowView||!this._FlowView.options.EnableZooming)return;pEvent.preventDefault();let tmpDelta=pEvent.deltaY>0?-this._FlowView.options.ZoomStep:this._FlowView.options.ZoomStep;let tmpNewZoom=this._FlowView.viewState.Zoom+tmpDelta;// Zoom toward mouse position
+let tmpRect=this._SVGElement.getBoundingClientRect();let tmpMouseX=pEvent.clientX-tmpRect.left;let tmpMouseY=pEvent.clientY-tmpRect.top;this._FlowView.setZoom(tmpNewZoom,tmpMouseX,tmpMouseY);}/**
+	 * Handle keyboard events
+	 * @param {KeyboardEvent} pEvent
+	 */_onKeyDown(pEvent){if(!this._FlowView)return;// Only handle events when the flow is focused/visible
+if(pEvent.key==='Delete'||pEvent.key==='Backspace'){// Don't delete if user is typing in an input or inside a panel
+if(pEvent.target&&(pEvent.target.tagName==='INPUT'||pEvent.target.tagName==='TEXTAREA'||pEvent.target.tagName==='SELECT')){return;}if(pEvent.target&&pEvent.target.closest&&pEvent.target.closest('.pict-flow-panel')){return;}this._FlowView.deleteSelected();pEvent.preventDefault();}else if(pEvent.key==='Escape'){if(this._State===INTERACTION_STATES.CONNECTING){this._cancelConnection();}// Exit fullscreen if currently in fullscreen mode
+if(this._FlowView._IsFullscreen){this._FlowView.exitFullscreen();// Update the toolbar button text
+if(this._FlowView._ToolbarView){let tmpFlowViewIdentifier=this._FlowView.options.ViewIdentifier;let tmpBtnElements=this._FlowView.pict.ContentAssignment.getElement(`#Flow-Toolbar-Fullscreen-${tmpFlowViewIdentifier}`);if(tmpBtnElements.length>0){tmpBtnElements[0].innerHTML='&#x26F6; Fullscreen';}}pEvent.preventDefault();return;}this._FlowView.deselectAll();}}// ---- Node Dragging ----
+_startNodeDrag(pEvent,pTarget){if(!this._FlowView.options.EnableNodeDragging)return;let tmpNodeHash=this._getNodeHash(pTarget);if(!tmpNodeHash)return;this._FlowView.selectNode(tmpNodeHash);let tmpNode=this._FlowView.getNode(tmpNodeHash);if(!tmpNode)return;this._State=INTERACTION_STATES.DRAGGING_NODE;this._DragNodeHash=tmpNodeHash;this._DragStartX=pEvent.clientX;this._DragStartY=pEvent.clientY;this._DragNodeStartX=tmpNode.X;this._DragNodeStartY=tmpNode.Y;this._SVGElement.classList.add('panning');let tmpNodeGroup=this._FlowView._NodesLayer.querySelector(`[data-node-hash="${tmpNodeHash}"]`);if(tmpNodeGroup){tmpNodeGroup.classList.add('dragging');}}_onNodeDrag(pEvent){if(!this._DragNodeHash)return;let tmpVS=this._FlowView.viewState;let tmpDX=(pEvent.clientX-this._DragStartX)/tmpVS.Zoom;let tmpDY=(pEvent.clientY-this._DragStartY)/tmpVS.Zoom;let tmpNewX=this._DragNodeStartX+tmpDX;let tmpNewY=this._DragNodeStartY+tmpDY;this._FlowView.updateNodePosition(this._DragNodeHash,tmpNewX,tmpNewY);}_endNodeDrag(pEvent){this._SVGElement.classList.remove('panning');let tmpNodeGroup=this._FlowView._NodesLayer.querySelector(`[data-node-hash="${this._DragNodeHash}"]`);if(tmpNodeGroup){tmpNodeGroup.classList.remove('dragging');}this._FlowView.renderFlow();this._FlowView.marshalFromView();let tmpNode=this._FlowView.getNode(this._DragNodeHash);if(tmpNode&&this._FlowView._EventHandlerProvider){this._FlowView._EventHandlerProvider.fireEvent('onNodeMoved',tmpNode);this._FlowView._EventHandlerProvider.fireEvent('onFlowChanged',this._FlowView.flowData);}this._State=INTERACTION_STATES.IDLE;this._DragNodeHash=null;}// ---- Panel Dragging ----
+_startPanelDrag(pEvent,pTarget){let tmpPanelHash=this._getPanelHash(pTarget);if(!tmpPanelHash)return;let tmpPanel=this._FlowView._FlowData.OpenPanels.find(pPanel=>pPanel.Hash===tmpPanelHash);if(!tmpPanel)return;this._State=INTERACTION_STATES.DRAGGING_PANEL;this._DragPanelHash=tmpPanelHash;this._DragPanelStartX=pEvent.clientX;this._DragPanelStartY=pEvent.clientY;this._DragPanelDataStartX=tmpPanel.X;this._DragPanelDataStartY=tmpPanel.Y;this._SVGElement.classList.add('panning');}_onPanelDrag(pEvent){if(!this._DragPanelHash)return;let tmpVS=this._FlowView.viewState;let tmpDX=(pEvent.clientX-this._DragPanelStartX)/tmpVS.Zoom;let tmpDY=(pEvent.clientY-this._DragPanelStartY)/tmpVS.Zoom;let tmpNewX=this._DragPanelDataStartX+tmpDX;let tmpNewY=this._DragPanelDataStartY+tmpDY;this._FlowView.updatePanelPosition(this._DragPanelHash,tmpNewX,tmpNewY);}_endPanelDrag(pEvent){this._SVGElement.classList.remove('panning');this._FlowView.marshalFromView();let tmpPanel=this._FlowView._FlowData.OpenPanels.find(pPanel=>pPanel.Hash===this._DragPanelHash);if(tmpPanel&&this._FlowView._EventHandlerProvider){this._FlowView._EventHandlerProvider.fireEvent('onPanelMoved',tmpPanel);this._FlowView._EventHandlerProvider.fireEvent('onFlowChanged',this._FlowView.flowData);}this._State=INTERACTION_STATES.IDLE;this._DragPanelHash=null;}// ---- Handle Dragging ----
+_startHandleDrag(pEvent,pConnectionHash,pPanelHash,pHandleType,pIsTether){this._State=INTERACTION_STATES.DRAGGING_HANDLE;this._DragHandleConnectionHash=pConnectionHash;this._DragHandlePanelHash=pPanelHash;this._DragHandleType=pHandleType;this._DragHandleIsTether=pIsTether;this._DragStartX=pEvent.clientX;this._DragStartY=pEvent.clientY;this._SVGElement.classList.add('panning');}_onHandleDrag(pEvent){let tmpCoords=this._FlowView.screenToSVGCoords(pEvent.clientX,pEvent.clientY);if(this._DragHandleIsTether){this._FlowView.updateTetherHandle(this._DragHandlePanelHash,this._DragHandleType,tmpCoords.x,tmpCoords.y);}else{this._FlowView.updateConnectionHandle(this._DragHandleConnectionHash,this._DragHandleType,tmpCoords.x,tmpCoords.y);}}_endHandleDrag(pEvent){this._SVGElement.classList.remove('panning');this._FlowView.renderFlow();this._FlowView.marshalFromView();if(this._FlowView._EventHandlerProvider){this._FlowView._EventHandlerProvider.fireEvent('onFlowChanged',this._FlowView.flowData);if(this._DragHandleIsTether){let tmpPanel=this._FlowView._FlowData.OpenPanels.find(pPanel=>pPanel.Hash===this._DragHandlePanelHash);if(tmpPanel){this._FlowView._EventHandlerProvider.fireEvent('onTetherHandleMoved',tmpPanel);}}else{let tmpConnection=this._FlowView.getConnection(this._DragHandleConnectionHash);if(tmpConnection){this._FlowView._EventHandlerProvider.fireEvent('onConnectionHandleMoved',tmpConnection);}}}this._State=INTERACTION_STATES.IDLE;this._DragHandleConnectionHash=null;this._DragHandlePanelHash=null;this._DragHandleType=null;this._DragHandleIsTether=false;}// ---- Line Mode Toggling ----
+_toggleConnectionLineMode(pConnectionHash){let tmpConnection=this._FlowView.getConnection(pConnectionHash);if(!tmpConnection)return;if(!tmpConnection.Data)tmpConnection.Data={};let tmpCurrentMode=tmpConnection.Data.LineMode||'bezier';tmpConnection.Data.LineMode=tmpCurrentMode==='bezier'?'orthogonal':'bezier';// Reset handle positions when switching modes
+tmpConnection.Data.HandleCustomized=false;tmpConnection.Data.BezierHandleX=null;tmpConnection.Data.BezierHandleY=null;tmpConnection.Data.OrthoCorner1X=null;tmpConnection.Data.OrthoCorner1Y=null;tmpConnection.Data.OrthoCorner2X=null;tmpConnection.Data.OrthoCorner2Y=null;tmpConnection.Data.OrthoMidOffset=0;this._FlowView.renderFlow();this._FlowView.marshalFromView();if(this._FlowView._EventHandlerProvider){this._FlowView._EventHandlerProvider.fireEvent('onConnectionModeChanged',tmpConnection);this._FlowView._EventHandlerProvider.fireEvent('onFlowChanged',this._FlowView.flowData);}}_toggleTetherLineMode(pPanelHash){let tmpPanel=this._FlowView._FlowData.OpenPanels.find(pPanel=>pPanel.Hash===pPanelHash);if(!tmpPanel)return;if(this._FlowView._TetherService){this._FlowView._TetherService.toggleLineMode(tmpPanel);}this._FlowView.renderFlow();this._FlowView.marshalFromView();if(this._FlowView._EventHandlerProvider){this._FlowView._EventHandlerProvider.fireEvent('onTetherModeChanged',tmpPanel);this._FlowView._EventHandlerProvider.fireEvent('onFlowChanged',this._FlowView.flowData);}}// ---- Tether Selection ----
+_selectTether(pTarget){let tmpPanelHash=this._getPanelHash(pTarget);if(tmpPanelHash){this._FlowView.selectTether(tmpPanelHash);}}// ---- Connection Creation ----
+_startConnection(pEvent,pTarget){if(!this._FlowView.options.EnableConnectionCreation)return;let tmpNodeHash=pTarget.getAttribute('data-node-hash');let tmpPortHash=pTarget.getAttribute('data-port-hash');let tmpPortDirection=pTarget.getAttribute('data-port-direction');if(!tmpNodeHash||!tmpPortHash)return;if(tmpPortDirection!=='output'){return;}this._State=INTERACTION_STATES.CONNECTING;this._ConnectSourceNodeHash=tmpNodeHash;this._ConnectSourcePortHash=tmpPortHash;this._SVGElement.classList.add('connecting');let tmpPortPos=this._FlowView.getPortPosition(tmpNodeHash,tmpPortHash);if(tmpPortPos){this._ConnectDragLine=document.createElementNS('http://www.w3.org/2000/svg','path');this._ConnectDragLine.setAttribute('class','pict-flow-drag-connection');this._ConnectDragLine.setAttribute('d',`M ${tmpPortPos.x} ${tmpPortPos.y} L ${tmpPortPos.x} ${tmpPortPos.y}`);this._FlowView._ViewportElement.appendChild(this._ConnectDragLine);}pEvent.stopPropagation();}_onConnectionDrag(pEvent){if(!this._ConnectDragLine)return;let tmpSourcePos=this._FlowView.getPortPosition(this._ConnectSourceNodeHash,this._ConnectSourcePortHash);if(!tmpSourcePos)return;let tmpEndCoords=this._FlowView.screenToSVGCoords(pEvent.clientX,pEvent.clientY);let tmpDX=Math.abs(tmpEndCoords.x-tmpSourcePos.x)*0.5;let tmpPath=`M ${tmpSourcePos.x} ${tmpSourcePos.y} C ${tmpSourcePos.x+tmpDX} ${tmpSourcePos.y}, ${tmpEndCoords.x-tmpDX} ${tmpEndCoords.y}, ${tmpEndCoords.x} ${tmpEndCoords.y}`;this._ConnectDragLine.setAttribute('d',tmpPath);}_endConnection(pEvent){if(this._ConnectDragLine&&this._ConnectDragLine.parentNode){this._ConnectDragLine.parentNode.removeChild(this._ConnectDragLine);}this._ConnectDragLine=null;this._SVGElement.classList.remove('connecting');let tmpTarget=document.elementFromPoint(pEvent.clientX,pEvent.clientY);if(tmpTarget){let tmpTargetPortHash=tmpTarget.getAttribute('data-port-hash');let tmpTargetNodeHash=tmpTarget.getAttribute('data-node-hash');let tmpTargetPortDirection=tmpTarget.getAttribute('data-port-direction');if(tmpTargetPortHash&&tmpTargetNodeHash&&tmpTargetPortDirection==='input'){this._FlowView.addConnection(this._ConnectSourceNodeHash,this._ConnectSourcePortHash,tmpTargetNodeHash,tmpTargetPortHash);}}this._State=INTERACTION_STATES.IDLE;this._ConnectSourceNodeHash=null;this._ConnectSourcePortHash=null;}_cancelConnection(){if(this._ConnectDragLine&&this._ConnectDragLine.parentNode){this._ConnectDragLine.parentNode.removeChild(this._ConnectDragLine);}this._ConnectDragLine=null;this._SVGElement.classList.remove('connecting');this._State=INTERACTION_STATES.IDLE;this._ConnectSourceNodeHash=null;this._ConnectSourcePortHash=null;}// ---- Panning ----
+_startPanning(pEvent){this._FlowView.deselectAll();this._State=INTERACTION_STATES.PANNING;this._PanStartX=pEvent.clientX;this._PanStartY=pEvent.clientY;this._PanStartPanX=this._FlowView.viewState.PanX;this._PanStartPanY=this._FlowView.viewState.PanY;this._SVGElement.classList.add('panning');}_onPan(pEvent){let tmpDX=pEvent.clientX-this._PanStartX;let tmpDY=pEvent.clientY-this._PanStartY;this._FlowView.viewState.PanX=this._PanStartPanX+tmpDX;this._FlowView.viewState.PanY=this._PanStartPanY+tmpDY;this._FlowView.updateViewportTransform();}_endPanning(pEvent){this._SVGElement.classList.remove('panning');this._State=INTERACTION_STATES.IDLE;}// ---- Connection Selection ----
+_selectConnection(pTarget){let tmpConnectionHash=this._getConnectionHash(pTarget);if(tmpConnectionHash){this._FlowView.selectConnection(tmpConnectionHash);}}// ---- Utilities ----
+_getElementType(pTarget){if(!pTarget)return'background';let tmpType=pTarget.getAttribute?pTarget.getAttribute('data-element-type'):null;if(tmpType)return tmpType;let tmpParent=pTarget.parentElement;let tmpDepth=0;while(tmpParent&&tmpDepth<5){tmpType=tmpParent.getAttribute?tmpParent.getAttribute('data-element-type'):null;if(tmpType)return tmpType;tmpParent=tmpParent.parentElement;tmpDepth++;}return'background';}_getNodeHash(pTarget){if(!pTarget)return null;let tmpHash=pTarget.getAttribute?pTarget.getAttribute('data-node-hash'):null;if(tmpHash)return tmpHash;let tmpParent=pTarget.parentElement;let tmpDepth=0;while(tmpParent&&tmpDepth<5){tmpHash=tmpParent.getAttribute?tmpParent.getAttribute('data-node-hash'):null;if(tmpHash)return tmpHash;tmpParent=tmpParent.parentElement;tmpDepth++;}return null;}_getPanelHash(pTarget){if(!pTarget)return null;let tmpHash=pTarget.getAttribute?pTarget.getAttribute('data-panel-hash'):null;if(tmpHash)return tmpHash;let tmpParent=pTarget.parentElement;let tmpDepth=0;while(tmpParent&&tmpDepth<5){tmpHash=tmpParent.getAttribute?tmpParent.getAttribute('data-panel-hash'):null;if(tmpHash)return tmpHash;tmpParent=tmpParent.parentElement;tmpDepth++;}return null;}_getConnectionHash(pTarget){if(!pTarget)return null;let tmpHash=pTarget.getAttribute?pTarget.getAttribute('data-connection-hash'):null;if(tmpHash)return tmpHash;let tmpParent=pTarget.parentElement;let tmpDepth=0;while(tmpParent&&tmpDepth<5){tmpHash=tmpParent.getAttribute?tmpParent.getAttribute('data-connection-hash'):null;if(tmpHash)return tmpHash;tmpParent=tmpParent.parentElement;tmpDepth++;}return null;}}module.exports=PictServiceFlowInteractionManager;module.exports.INTERACTION_STATES=INTERACTION_STATES;},{"fable-serviceproviderbase":2}],35:[function(require,module,exports){const libFableServiceProviderBase=require('fable-serviceproviderbase');class PictServiceFlowLayout extends libFableServiceProviderBase{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictServiceFlowLayout';this._FlowView=pOptions&&pOptions.FlowView?pOptions.FlowView:null;// Layout configuration
+this._HorizontalSpacing=250;this._VerticalSpacing=120;this._StartX=100;this._StartY=100;}/**
+	 * Snap a coordinate to the nearest grid point
+	 * @param {number} pValue - The coordinate value
+	 * @param {number} pGridSize - The grid size
+	 * @returns {number}
+	 */snapToGrid(pValue,pGridSize){if(!pGridSize||pGridSize<=0)return pValue;return Math.round(pValue/pGridSize)*pGridSize;}/**
+	 * Auto-layout nodes using a simple left-to-right topological approach
+	 * @param {Array} pNodes - Array of node data objects
+	 * @param {Array} pConnections - Array of connection data objects
+	 */autoLayout(pNodes,pConnections){if(!pNodes||pNodes.length===0)return;// Build adjacency information
+let tmpNodeMap={};let tmpInDegree={};let tmpOutEdges={};for(let i=0;i<pNodes.length;i++){let tmpNode=pNodes[i];tmpNodeMap[tmpNode.Hash]=tmpNode;tmpInDegree[tmpNode.Hash]=0;tmpOutEdges[tmpNode.Hash]=[];}for(let i=0;i<pConnections.length;i++){let tmpConn=pConnections[i];if(tmpInDegree.hasOwnProperty(tmpConn.TargetNodeHash)){tmpInDegree[tmpConn.TargetNodeHash]++;}if(tmpOutEdges.hasOwnProperty(tmpConn.SourceNodeHash)){tmpOutEdges[tmpConn.SourceNodeHash].push(tmpConn.TargetNodeHash);}}// Topological sort (Kahn's algorithm)
+let tmpLayers=[];let tmpQueue=[];let tmpAssigned={};// Start with nodes that have no incoming edges
+for(let tmpHash in tmpInDegree){if(tmpInDegree[tmpHash]===0){tmpQueue.push(tmpHash);}}while(tmpQueue.length>0){let tmpCurrentLayer=[];let tmpNextQueue=[];for(let i=0;i<tmpQueue.length;i++){let tmpNodeHash=tmpQueue[i];if(tmpAssigned[tmpNodeHash])continue;tmpAssigned[tmpNodeHash]=true;tmpCurrentLayer.push(tmpNodeHash);// Process outgoing edges
+let tmpEdges=tmpOutEdges[tmpNodeHash]||[];for(let j=0;j<tmpEdges.length;j++){let tmpTargetHash=tmpEdges[j];tmpInDegree[tmpTargetHash]--;if(tmpInDegree[tmpTargetHash]<=0&&!tmpAssigned[tmpTargetHash]){tmpNextQueue.push(tmpTargetHash);}}}if(tmpCurrentLayer.length>0){tmpLayers.push(tmpCurrentLayer);}tmpQueue=tmpNextQueue;}// Handle any remaining unassigned nodes (cycles or disconnected)
+let tmpRemainingNodes=[];for(let i=0;i<pNodes.length;i++){if(!tmpAssigned[pNodes[i].Hash]){tmpRemainingNodes.push(pNodes[i].Hash);}}if(tmpRemainingNodes.length>0){tmpLayers.push(tmpRemainingNodes);}// Assign positions based on layers
+let tmpCurrentX=this._StartX;for(let tmpLayerIndex=0;tmpLayerIndex<tmpLayers.length;tmpLayerIndex++){let tmpLayer=tmpLayers[tmpLayerIndex];let tmpMaxWidth=0;// Calculate the total height for this layer to center vertically
+let tmpTotalHeight=0;for(let i=0;i<tmpLayer.length;i++){let tmpNode=tmpNodeMap[tmpLayer[i]];if(tmpNode){tmpTotalHeight+=tmpNode.Height||80;if(i<tmpLayer.length-1){tmpTotalHeight+=this._VerticalSpacing;}}}let tmpCurrentY=this._StartY;for(let i=0;i<tmpLayer.length;i++){let tmpNode=tmpNodeMap[tmpLayer[i]];if(!tmpNode)continue;tmpNode.X=tmpCurrentX;tmpNode.Y=tmpCurrentY;let tmpWidth=tmpNode.Width||180;let tmpHeight=tmpNode.Height||80;tmpMaxWidth=Math.max(tmpMaxWidth,tmpWidth);tmpCurrentY+=tmpHeight+this._VerticalSpacing;}tmpCurrentX+=tmpMaxWidth+this._HorizontalSpacing;}}/**
+	 * Auto-layout a subset of nodes, positioning them to the right of
+	 * any fixed (already-positioned) nodes.
+	 *
+	 * Uses the same topological sort approach as autoLayout, but only
+	 * repositions the nodes in pNodesToLayout. The pFixedNodes are used
+	 * to compute a bounding box that the new layout avoids.
+	 *
+	 * @param {Array} pNodesToLayout - Nodes that need new positions
+	 * @param {Array} pFixedNodes - Nodes that already have positions (read-only)
+	 * @param {Array} pConnections - All connections in the flow
+	 */autoLayoutSubset(pNodesToLayout,pFixedNodes,pConnections){if(!pNodesToLayout||pNodesToLayout.length===0)return;// Compute the starting X position to the right of all fixed nodes
+let tmpStartX=this._StartX;let tmpStartY=this._StartY;if(pFixedNodes&&pFixedNodes.length>0){let tmpMaxX=-Infinity;for(let i=0;i<pFixedNodes.length;i++){let tmpRight=pFixedNodes[i].X+(pFixedNodes[i].Width||180);if(tmpRight>tmpMaxX){tmpMaxX=tmpRight;}}// Place unmatched nodes to the right of all fixed nodes
+tmpStartX=tmpMaxX+this._HorizontalSpacing;}// Build a set of nodes we are laying out for quick lookup
+let tmpNodeSet={};for(let i=0;i<pNodesToLayout.length;i++){tmpNodeSet[pNodesToLayout[i].Hash]=true;}// Build adjacency information only for nodes in the subset
+let tmpNodeMap={};let tmpInDegree={};let tmpOutEdges={};for(let i=0;i<pNodesToLayout.length;i++){let tmpNode=pNodesToLayout[i];tmpNodeMap[tmpNode.Hash]=tmpNode;tmpInDegree[tmpNode.Hash]=0;tmpOutEdges[tmpNode.Hash]=[];}// Only count edges between nodes in the subset
+for(let i=0;i<pConnections.length;i++){let tmpConn=pConnections[i];let tmpSourceInSubset=tmpNodeSet[tmpConn.SourceNodeHash];let tmpTargetInSubset=tmpNodeSet[tmpConn.TargetNodeHash];if(tmpSourceInSubset&&tmpTargetInSubset){tmpInDegree[tmpConn.TargetNodeHash]++;tmpOutEdges[tmpConn.SourceNodeHash].push(tmpConn.TargetNodeHash);}}// Topological sort (Kahn's algorithm)
+let tmpLayers=[];let tmpQueue=[];let tmpAssigned={};for(let tmpHash in tmpInDegree){if(tmpInDegree[tmpHash]===0){tmpQueue.push(tmpHash);}}while(tmpQueue.length>0){let tmpCurrentLayer=[];let tmpNextQueue=[];for(let i=0;i<tmpQueue.length;i++){let tmpNodeHash=tmpQueue[i];if(tmpAssigned[tmpNodeHash])continue;tmpAssigned[tmpNodeHash]=true;tmpCurrentLayer.push(tmpNodeHash);let tmpEdges=tmpOutEdges[tmpNodeHash]||[];for(let j=0;j<tmpEdges.length;j++){let tmpTargetHash=tmpEdges[j];tmpInDegree[tmpTargetHash]--;if(tmpInDegree[tmpTargetHash]<=0&&!tmpAssigned[tmpTargetHash]){tmpNextQueue.push(tmpTargetHash);}}}if(tmpCurrentLayer.length>0){tmpLayers.push(tmpCurrentLayer);}tmpQueue=tmpNextQueue;}// Handle remaining unassigned nodes (cycles or disconnected)
+let tmpRemainingNodes=[];for(let i=0;i<pNodesToLayout.length;i++){if(!tmpAssigned[pNodesToLayout[i].Hash]){tmpRemainingNodes.push(pNodesToLayout[i].Hash);}}if(tmpRemainingNodes.length>0){tmpLayers.push(tmpRemainingNodes);}// Assign positions based on layers, starting from tmpStartX
+let tmpCurrentX=tmpStartX;for(let tmpLayerIndex=0;tmpLayerIndex<tmpLayers.length;tmpLayerIndex++){let tmpLayer=tmpLayers[tmpLayerIndex];let tmpMaxWidth=0;let tmpCurrentY=tmpStartY;for(let i=0;i<tmpLayer.length;i++){let tmpNode=tmpNodeMap[tmpLayer[i]];if(!tmpNode)continue;tmpNode.X=tmpCurrentX;tmpNode.Y=tmpCurrentY;let tmpWidth=tmpNode.Width||180;let tmpHeight=tmpNode.Height||80;tmpMaxWidth=Math.max(tmpMaxWidth,tmpWidth);tmpCurrentY+=tmpHeight+this._VerticalSpacing;}tmpCurrentX+=tmpMaxWidth+this._HorizontalSpacing;}}/**
+	 * Center all nodes around a given point
+	 * @param {Array} pNodes
+	 * @param {number} pCenterX
+	 * @param {number} pCenterY
+	 */centerNodes(pNodes,pCenterX,pCenterY){if(!pNodes||pNodes.length===0)return;let tmpMinX=Infinity,tmpMinY=Infinity;let tmpMaxX=-Infinity,tmpMaxY=-Infinity;for(let i=0;i<pNodes.length;i++){tmpMinX=Math.min(tmpMinX,pNodes[i].X);tmpMinY=Math.min(tmpMinY,pNodes[i].Y);tmpMaxX=Math.max(tmpMaxX,pNodes[i].X+(pNodes[i].Width||180));tmpMaxY=Math.max(tmpMaxY,pNodes[i].Y+(pNodes[i].Height||80));}let tmpCurrentCenterX=(tmpMinX+tmpMaxX)/2;let tmpCurrentCenterY=(tmpMinY+tmpMaxY)/2;let tmpOffsetX=pCenterX-tmpCurrentCenterX;let tmpOffsetY=pCenterY-tmpCurrentCenterY;for(let i=0;i<pNodes.length;i++){pNodes[i].X+=tmpOffsetX;pNodes[i].Y+=tmpOffsetY;}}}module.exports=PictServiceFlowLayout;},{"fable-serviceproviderbase":2}],36:[function(require,module,exports){const libFableServiceProviderBase=require('fable-serviceproviderbase');/**
+ * PictService-Flow-PanelManager
+ *
+ * Manages the lifecycle of properties panels in the flow diagram:
+ * opening, closing, toggling, and position updates for panels
+ * associated with flow nodes.
+ */class PictServiceFlowPanelManager extends libFableServiceProviderBase{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictServiceFlowPanelManager';this._FlowView=pOptions&&pOptions.FlowView?pOptions.FlowView:null;}/**
+	 * Open a properties panel for a node.
+	 * @param {string} pNodeHash - The hash of the node to open a panel for
+	 * @returns {Object|false} The panel data, or false if the node was not found
+	 */openPanel(pNodeHash){let tmpNode=this._FlowView.getNode(pNodeHash);if(!tmpNode)return false;let tmpNodeTypeConfig=this._FlowView._NodeTypeProvider.getNodeType(tmpNode.Type);if(!tmpNodeTypeConfig)return false;// Check if a panel is already open for this node
+let tmpExisting=this._FlowView._FlowData.OpenPanels.find(pPanel=>pPanel.NodeHash===pNodeHash);if(tmpExisting)return tmpExisting;let tmpPanelConfig=tmpNodeTypeConfig.PropertiesPanel;let tmpPanelHash=`panel-${this.fable.getUUID()}`;let tmpWidth,tmpHeight,tmpPanelType,tmpTitle;if(tmpPanelConfig){tmpWidth=tmpPanelConfig.DefaultWidth||300;tmpHeight=tmpPanelConfig.DefaultHeight||200;tmpPanelType=tmpPanelConfig.PanelType||'Base';tmpTitle=tmpPanelConfig.Title||tmpNodeTypeConfig.Label||'Properties';}else{// No PropertiesPanel configured — open an auto-generated info panel
+tmpWidth=240;tmpHeight=180;tmpPanelType='Info';tmpTitle=tmpNodeTypeConfig.Label||tmpNode.Title||'Node Info';}let tmpPanelData={Hash:tmpPanelHash,NodeHash:pNodeHash,PanelType:tmpPanelType,Title:tmpTitle,X:tmpNode.X+tmpNode.Width+30,Y:tmpNode.Y,Width:tmpWidth,Height:tmpHeight};this._FlowView._FlowData.OpenPanels.push(tmpPanelData);this._FlowView.renderFlow();this._FlowView.marshalFromView();if(this._FlowView._EventHandlerProvider){this._FlowView._EventHandlerProvider.fireEvent('onPanelOpened',tmpPanelData);this._FlowView._EventHandlerProvider.fireEvent('onFlowChanged',this._FlowView._FlowData);}return tmpPanelData;}/**
+	 * Close a properties panel by panel hash.
+	 * @param {string} pPanelHash
+	 * @returns {boolean}
+	 */closePanel(pPanelHash){let tmpIndex=this._FlowView._FlowData.OpenPanels.findIndex(pPanel=>pPanel.Hash===pPanelHash);if(tmpIndex<0)return false;let tmpRemovedPanel=this._FlowView._FlowData.OpenPanels.splice(tmpIndex,1)[0];// Clean up the panel instance
+if(this._FlowView._PropertiesPanelView){this._FlowView._PropertiesPanelView.destroyPanel(pPanelHash);}this._FlowView.renderFlow();this._FlowView.marshalFromView();if(this._FlowView._EventHandlerProvider){this._FlowView._EventHandlerProvider.fireEvent('onPanelClosed',tmpRemovedPanel);this._FlowView._EventHandlerProvider.fireEvent('onFlowChanged',this._FlowView._FlowData);}return true;}/**
+	 * Close all panels for a given node.
+	 * @param {string} pNodeHash
+	 * @returns {boolean}
+	 */closePanelForNode(pNodeHash){let tmpPanelsToClose=this._FlowView._FlowData.OpenPanels.filter(pPanel=>pPanel.NodeHash===pNodeHash);if(tmpPanelsToClose.length===0)return false;for(let i=0;i<tmpPanelsToClose.length;i++){let tmpIndex=this._FlowView._FlowData.OpenPanels.indexOf(tmpPanelsToClose[i]);if(tmpIndex>=0){this._FlowView._FlowData.OpenPanels.splice(tmpIndex,1);}if(this._FlowView._PropertiesPanelView){this._FlowView._PropertiesPanelView.destroyPanel(tmpPanelsToClose[i].Hash);}}return true;}/**
+	 * Toggle a properties panel for a node (open if closed, close if open).
+	 * @param {string} pNodeHash
+	 * @returns {Object|false}
+	 */togglePanel(pNodeHash){let tmpExisting=this._FlowView._FlowData.OpenPanels.find(pPanel=>pPanel.NodeHash===pNodeHash);if(tmpExisting){this.closePanel(tmpExisting.Hash);return false;}return this.openPanel(pNodeHash);}/**
+	 * Update a panel's position (for drag).
+	 * @param {string} pPanelHash
+	 * @param {number} pX
+	 * @param {number} pY
+	 */updatePanelPosition(pPanelHash,pX,pY){let tmpPanel=this._FlowView._FlowData.OpenPanels.find(pPanel=>pPanel.Hash===pPanelHash);if(!tmpPanel)return;tmpPanel.X=pX;tmpPanel.Y=pY;// Reset tether handle positions when panel moves
+this._FlowView._resetHandlesForPanel(pPanelHash);// Update the foreignObject position directly for smooth dragging
+if(this._FlowView._PanelsLayer){let tmpFO=this._FlowView._PanelsLayer.querySelector(`[data-panel-hash="${pPanelHash}"]`);if(tmpFO){tmpFO.setAttribute('x',String(pX));tmpFO.setAttribute('y',String(pY));}}// Update the tether for this panel
+this._FlowView._renderTethersForNode(tmpPanel.NodeHash);}}module.exports=PictServiceFlowPanelManager;},{"fable-serviceproviderbase":2}],37:[function(require,module,exports){const libFableServiceProviderBase=require('fable-serviceproviderbase');/**
+ * PictService-Flow-PathGenerator
+ *
+ * Centralizes SVG path generation for the flow diagram.
+ * Provides shared building blocks used by both the ConnectionRenderer
+ * (port-to-port connections) and the TetherService (panel-to-node tethers).
+ *
+ * Responsibilities:
+ *   - Departure/approach point calculation from anchors
+ *   - Auto orthogonal corner computation for right-angle paths
+ *   - Cubic bezier evaluation at arbitrary parameter t
+ *   - SVG path string assembly (bezier, split-bezier, orthogonal)
+ */class PictServiceFlowPathGenerator extends libFableServiceProviderBase{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictServiceFlowPathGenerator';this._FlowView=pOptions&&pOptions.FlowView?pOptions.FlowView:null;}// ---- Departure / Approach Calculation ----
+/**
+	 * Compute departure and approach points from start/end anchors.
+	 * The departure point extends outward from the start in its side direction,
+	 * and the approach point extends outward from the end in its side direction.
+	 *
+	 * @param {{x: number, y: number, side: string}} pFrom - Start anchor with side
+	 * @param {{x: number, y: number, side: string}} pTo - End anchor with side
+	 * @param {number} pDepartDist - Distance for departure/approach straight segments
+	 * @returns {{departX: number, departY: number, approachX: number, approachY: number, fromDir: {dx: number, dy: number}, toDir: {dx: number, dy: number}}}
+	 */computeDepartApproach(pFrom,pTo,pDepartDist){let tmpGeometry=this._FlowView._GeometryProvider;let tmpFromDir=tmpGeometry.sideDirection(pFrom.side||'right');let tmpToDir=tmpGeometry.sideDirection(pTo.side||'left');return{departX:pFrom.x+tmpFromDir.dx*pDepartDist,departY:pFrom.y+tmpFromDir.dy*pDepartDist,approachX:pTo.x+tmpToDir.dx*pDepartDist,approachY:pTo.y+tmpToDir.dy*pDepartDist,fromDir:tmpFromDir,toDir:tmpToDir};}// ---- Orthogonal Corner Calculation ----
+/**
+	 * Compute auto orthogonal corners for an L-shaped or Z-shaped path.
+	 * Determines corner placement based on departure/approach directions.
+	 *
+	 * Used by both connection and tether renderers for right-angle paths.
+	 *
+	 * @param {number} pDepartX
+	 * @param {number} pDepartY
+	 * @param {number} pApproachX
+	 * @param {number} pApproachY
+	 * @param {{dx: number, dy: number}} pFromDir - Departure direction vector
+	 * @param {{dx: number, dy: number}} pToDir - Approach direction vector
+	 * @param {number} pMidOffset - Offset for the corridor midpoint
+	 * @returns {{corner1: {x: number, y: number}, corner2: {x: number, y: number}, midpoint: {x: number, y: number}}}
+	 */computeAutoOrthogonalCorners(pDepartX,pDepartY,pApproachX,pApproachY,pFromDir,pToDir,pMidOffset){let tmpOffset=pMidOffset||0;let tmpFromHoriz=Math.abs(pFromDir.dx)>0;let tmpToHoriz=Math.abs(pToDir.dx)>0;let tmpCorner1,tmpCorner2,tmpMidpoint;if(tmpFromHoriz&&tmpToHoriz){// Both horizontal departure/approach: corridor is vertical
+let tmpMidX=(pDepartX+pApproachX)/2+tmpOffset;tmpCorner1={x:tmpMidX,y:pDepartY};tmpCorner2={x:tmpMidX,y:pApproachY};tmpMidpoint={x:tmpMidX,y:(pDepartY+pApproachY)/2};}else if(!tmpFromHoriz&&!tmpToHoriz){// Both vertical: corridor is horizontal
+let tmpMidY=(pDepartY+pApproachY)/2+tmpOffset;tmpCorner1={x:pDepartX,y:tmpMidY};tmpCorner2={x:pApproachX,y:tmpMidY};tmpMidpoint={x:(pDepartX+pApproachX)/2,y:tmpMidY};}else if(tmpFromHoriz&&!tmpToHoriz){// Horizontal→Vertical: single L-bend
+tmpCorner1={x:pApproachX+tmpOffset,y:pDepartY};tmpCorner2={x:pApproachX+tmpOffset,y:pApproachY};tmpMidpoint={x:pApproachX+tmpOffset,y:(pDepartY+pApproachY)/2};}else{// Vertical→Horizontal: single L-bend
+tmpCorner1={x:pDepartX,y:pApproachY+tmpOffset};tmpCorner2={x:pApproachX,y:pApproachY+tmpOffset};tmpMidpoint={x:(pDepartX+pApproachX)/2,y:pApproachY+tmpOffset};}return{corner1:tmpCorner1,corner2:tmpCorner2,midpoint:tmpMidpoint};}// ---- Bezier Evaluation ----
+/**
+	 * Evaluate a cubic bezier curve at parameter t.
+	 * B(t) = (1-t)³P0 + 3(1-t)²tP1 + 3(1-t)t²P2 + t³P3
+	 *
+	 * @param {{x: number, y: number}} pP0 - Start point
+	 * @param {{x: number, y: number}} pP1 - First control point
+	 * @param {{x: number, y: number}} pP2 - Second control point
+	 * @param {{x: number, y: number}} pP3 - End point
+	 * @param {number} pT - Parameter in range [0, 1]
+	 * @returns {{x: number, y: number}}
+	 */evaluateCubicBezier(pP0,pP1,pP2,pP3,pT){let tmpOMT=1-pT;let tmpOMT2=tmpOMT*tmpOMT;let tmpOMT3=tmpOMT2*tmpOMT;let tmpT2=pT*pT;let tmpT3=tmpT2*pT;return{x:tmpOMT3*pP0.x+3*tmpOMT2*pT*pP1.x+3*tmpOMT*tmpT2*pP2.x+tmpT3*pP3.x,y:tmpOMT3*pP0.y+3*tmpOMT2*pT*pP1.y+3*tmpOMT*tmpT2*pP2.y+tmpT3*pP3.y};}// ---- SVG Path String Assembly ----
+/**
+	 * Build an SVG bezier path string.
+	 * Pattern: M start L depart C cp1, cp2, approach L end
+	 *
+	 * @param {{x: number, y: number}} pStart - Start point
+	 * @param {{x: number, y: number}} pDepart - Departure point after straight segment
+	 * @param {{x: number, y: number}} pCP1 - First control point
+	 * @param {{x: number, y: number}} pCP2 - Second control point
+	 * @param {{x: number, y: number}} pApproach - Approach point before final straight segment
+	 * @param {{x: number, y: number}} pEnd - End point
+	 * @returns {string} SVG path d attribute
+	 */buildBezierPathString(pStart,pDepart,pCP1,pCP2,pApproach,pEnd){return`M ${pStart.x} ${pStart.y} L ${pDepart.x} ${pDepart.y} C ${pCP1.x} ${pCP1.y}, ${pCP2.x} ${pCP2.y}, ${pApproach.x} ${pApproach.y} L ${pEnd.x} ${pEnd.y}`;}/**
+	 * Build an SVG split bezier path string (two cubic segments through a handle point).
+	 * Pattern: M start L depart C cp1a, cp1b, handle C cp2a, cp2b, approach L end
+	 *
+	 * @param {{x: number, y: number}} pStart
+	 * @param {{x: number, y: number}} pDepart
+	 * @param {{x: number, y: number}} pCP1a - First segment's first control point
+	 * @param {{x: number, y: number}} pCP1b - First segment's second control point
+	 * @param {{x: number, y: number}} pHandle - Handle point where the two segments meet
+	 * @param {{x: number, y: number}} pCP2a - Second segment's first control point
+	 * @param {{x: number, y: number}} pCP2b - Second segment's second control point
+	 * @param {{x: number, y: number}} pApproach
+	 * @param {{x: number, y: number}} pEnd
+	 * @returns {string} SVG path d attribute
+	 */buildSplitBezierPathString(pStart,pDepart,pCP1a,pCP1b,pHandle,pCP2a,pCP2b,pApproach,pEnd){return`M ${pStart.x} ${pStart.y} L ${pDepart.x} ${pDepart.y} C ${pCP1a.x} ${pCP1a.y}, ${pCP1b.x} ${pCP1b.y}, ${pHandle.x} ${pHandle.y} C ${pCP2a.x} ${pCP2a.y}, ${pCP2b.x} ${pCP2b.y}, ${pApproach.x} ${pApproach.y} L ${pEnd.x} ${pEnd.y}`;}/**
+	 * Build an SVG orthogonal (right-angle) path string.
+	 * Pattern: M start L depart L corner1 L corner2 L approach L end
+	 *
+	 * @param {{x: number, y: number}} pStart
+	 * @param {{x: number, y: number}} pDepart
+	 * @param {{x: number, y: number}} pCorner1
+	 * @param {{x: number, y: number}} pCorner2
+	 * @param {{x: number, y: number}} pApproach
+	 * @param {{x: number, y: number}} pEnd
+	 * @returns {string} SVG path d attribute
+	 */buildOrthogonalPathString(pStart,pDepart,pCorner1,pCorner2,pApproach,pEnd){return`M ${pStart.x} ${pStart.y} L ${pDepart.x} ${pDepart.y} L ${pCorner1.x} ${pCorner1.y} L ${pCorner2.x} ${pCorner2.y} L ${pApproach.x} ${pApproach.y} L ${pEnd.x} ${pEnd.y}`;}}module.exports=PictServiceFlowPathGenerator;},{"fable-serviceproviderbase":2}],38:[function(require,module,exports){const libFableServiceProviderBase=require('fable-serviceproviderbase');/**
+ * PictService-Flow-SelectionManager
+ *
+ * Manages selection state for nodes, connections, and tethers in the flow diagram.
+ * Handles selecting, deselecting, and deleting selected elements.
+ */class PictServiceFlowSelectionManager extends libFableServiceProviderBase{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictServiceFlowSelectionManager';this._FlowView=pOptions&&pOptions.FlowView?pOptions.FlowView:null;}/**
+	 * Select a node
+	 * @param {string|null} pNodeHash - Hash of the node to select, or null to deselect
+	 */selectNode(pNodeHash){let tmpPreviousSelection=this._FlowView._FlowData.ViewState.SelectedNodeHash;this._FlowView._FlowData.ViewState.SelectedNodeHash=pNodeHash;this._FlowView._FlowData.ViewState.SelectedConnectionHash=null;this._FlowView._FlowData.ViewState.SelectedTetherHash=null;this._FlowView.renderFlow();if(this._FlowView._EventHandlerProvider&&pNodeHash!==tmpPreviousSelection){let tmpNode=pNodeHash?this._FlowView._FlowData.Nodes.find(pNode=>pNode.Hash===pNodeHash):null;this._FlowView._EventHandlerProvider.fireEvent('onNodeSelected',tmpNode);}}/**
+	 * Select a connection
+	 * @param {string|null} pConnectionHash - Hash of the connection to select, or null to deselect
+	 */selectConnection(pConnectionHash){let tmpPreviousSelection=this._FlowView._FlowData.ViewState.SelectedConnectionHash;this._FlowView._FlowData.ViewState.SelectedConnectionHash=pConnectionHash;this._FlowView._FlowData.ViewState.SelectedNodeHash=null;this._FlowView._FlowData.ViewState.SelectedTetherHash=null;this._FlowView.renderFlow();if(this._FlowView._EventHandlerProvider&&pConnectionHash!==tmpPreviousSelection){let tmpConnection=pConnectionHash?this._FlowView._FlowData.Connections.find(pConn=>pConn.Hash===pConnectionHash):null;this._FlowView._EventHandlerProvider.fireEvent('onConnectionSelected',tmpConnection);}}/**
+	 * Select a tether by its panel hash.
+	 * @param {string|null} pPanelHash - Hash of the panel whose tether to select, or null to deselect
+	 */selectTether(pPanelHash){let tmpPreviousSelection=this._FlowView._FlowData.ViewState.SelectedTetherHash;this._FlowView._FlowData.ViewState.SelectedTetherHash=pPanelHash;this._FlowView._FlowData.ViewState.SelectedNodeHash=null;this._FlowView._FlowData.ViewState.SelectedConnectionHash=null;this._FlowView.renderFlow();if(this._FlowView._EventHandlerProvider&&pPanelHash!==tmpPreviousSelection){let tmpPanel=pPanelHash?this._FlowView._FlowData.OpenPanels.find(pPanel=>pPanel.Hash===pPanelHash):null;this._FlowView._EventHandlerProvider.fireEvent('onTetherSelected',tmpPanel);}}/**
+	 * Deselect all nodes and connections
+	 */deselectAll(){this._FlowView._FlowData.ViewState.SelectedNodeHash=null;this._FlowView._FlowData.ViewState.SelectedConnectionHash=null;this._FlowView._FlowData.ViewState.SelectedTetherHash=null;this._FlowView.renderFlow();}/**
+	 * Delete the currently selected node or connection
+	 * @returns {boolean}
+	 */deleteSelected(){if(this._FlowView._FlowData.ViewState.SelectedNodeHash){return this._FlowView.removeNode(this._FlowView._FlowData.ViewState.SelectedNodeHash);}if(this._FlowView._FlowData.ViewState.SelectedConnectionHash){return this._FlowView.removeConnection(this._FlowView._FlowData.ViewState.SelectedConnectionHash);}return false;}}module.exports=PictServiceFlowSelectionManager;},{"fable-serviceproviderbase":2}],39:[function(require,module,exports){const libFableServiceProviderBase=require('fable-serviceproviderbase');/**
+ * PictService-Flow-Tether
+ *
+ * Centralizes all tether geometry, path generation, handle state management,
+ * and SVG rendering for the lines that connect properties panels to their nodes.
+ *
+ * Delegates to shared providers for:
+ *   - SVG element creation (_FlowView._SVGHelperProvider)
+ *   - Geometry calculations (_FlowView._GeometryProvider)
+ *   - Path string building (_FlowView._PathGenerator)
+ *
+ * Responsibilities:
+ *   - Smart 4-quadrant anchor detection (which edge of the node/panel to connect)
+ *   - Bezier and orthogonal path generation
+ *   - Auto-midpoint and auto-corner calculations
+ *   - Handle position updates during drag
+ *   - Handle reset when nodes or panels move
+ *   - Line mode toggling (bezier <-> orthogonal)
+ *   - SVG element creation for tether lines, hit areas, and drag handles
+ */class PictServiceFlowTether extends libFableServiceProviderBase{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictServiceFlowTether';this._FlowView=pOptions&&pOptions.FlowView?pOptions.FlowView:null;}// ---- Anchor Calculation ----
+/**
+	 * Determine which node edge and panel edge to connect based on 4-quadrant detection.
+	 * Uses the relative position of the panel center to the node center.
+	 *
+	 * @param {Object} pPanelData - Panel data with X, Y, Width, Height
+	 * @param {Object} pNodeData - Node data with X, Y, Width, Height
+	 * @returns {{nodeAnchor: {x,y,side}, panelAnchor: {x,y,side}}}
+	 */getSmartAnchors(pPanelData,pNodeData){let tmpNodeCX=pNodeData.X+pNodeData.Width/2;let tmpNodeCY=pNodeData.Y+pNodeData.Height/2;let tmpPanelCX=pPanelData.X+pPanelData.Width/2;let tmpPanelCY=pPanelData.Y+pPanelData.Height/2;let tmpDX=tmpPanelCX-tmpNodeCX;let tmpDY=tmpPanelCY-tmpNodeCY;let tmpNodeSide,tmpPanelSide;if(Math.abs(tmpDX)>=Math.abs(tmpDY)){// Panel is primarily to the left or right
+if(tmpDX>=0){tmpNodeSide='right';tmpPanelSide='left';}else{tmpNodeSide='left';tmpPanelSide='right';}}else{// Panel is primarily above or below
+if(tmpDY>=0){tmpNodeSide='bottom';tmpPanelSide='top';}else{tmpNodeSide='top';tmpPanelSide='bottom';}}let tmpNodeAnchor=this._FlowView._GeometryProvider.getEdgeCenter(pNodeData,tmpNodeSide);let tmpPanelAnchor=this._FlowView._GeometryProvider.getEdgeCenter(pPanelData,tmpPanelSide);return{nodeAnchor:Object.assign(tmpNodeAnchor,{side:tmpNodeSide}),panelAnchor:Object.assign(tmpPanelAnchor,{side:tmpPanelSide})};}// ---- Path Generation ----
+/**
+	 * Generate a bezier path between two anchor points with directional departure/approach.
+	 * @param {Object} pFrom - {x, y, side}
+	 * @param {Object} pTo - {x, y, side}
+	 * @param {number|null} pHandleX - User-set handle X or null for auto
+	 * @param {number|null} pHandleY - User-set handle Y or null for auto
+	 * @returns {string} SVG path d attribute
+	 */generateBezierPath(pFrom,pTo,pHandleX,pHandleY){let tmpDepartDist=20;let tmpFromDir=this._FlowView._GeometryProvider.sideDirection(pFrom.side);let tmpToDir=this._FlowView._GeometryProvider.sideDirection(pTo.side);let tmpDepartX=pFrom.x+tmpFromDir.dx*tmpDepartDist;let tmpDepartY=pFrom.y+tmpFromDir.dy*tmpDepartDist;let tmpApproachX=pTo.x+tmpToDir.dx*tmpDepartDist;let tmpApproachY=pTo.y+tmpToDir.dy*tmpDepartDist;if(pHandleX==null||pHandleY==null){// Auto bezier: simple cubic from depart to approach
+let tmpSpanX=Math.abs(tmpApproachX-tmpDepartX);let tmpSpanY=Math.abs(tmpApproachY-tmpDepartY);let tmpSpan=Math.max(tmpSpanX,tmpSpanY,40);let tmpCPDist=tmpSpan*0.4;let tmpCP1X=tmpDepartX+tmpFromDir.dx*tmpCPDist;let tmpCP1Y=tmpDepartY+tmpFromDir.dy*tmpCPDist;let tmpCP2X=tmpApproachX+tmpToDir.dx*tmpCPDist;let tmpCP2Y=tmpApproachY+tmpToDir.dy*tmpCPDist;return this._FlowView._PathGenerator.buildBezierPathString({x:pFrom.x,y:pFrom.y},{x:tmpDepartX,y:tmpDepartY},{x:tmpCP1X,y:tmpCP1Y},{x:tmpCP2X,y:tmpCP2Y},{x:tmpApproachX,y:tmpApproachY},{x:pTo.x,y:pTo.y});}// User-set handle: split bezier into two segments through handle
+let tmpCP1aDist=30;let tmpCP1aX=tmpDepartX+tmpFromDir.dx*tmpCP1aDist;let tmpCP1aY=tmpDepartY+tmpFromDir.dy*tmpCP1aDist;let tmpCP2aDist=30;let tmpCP2aX=tmpApproachX+tmpToDir.dx*tmpCP2aDist;let tmpCP2aY=tmpApproachY+tmpToDir.dy*tmpCP2aDist;// Tangent at the handle — direction from first segment end to second segment start
+let tmpTangentX=tmpApproachX-tmpDepartX;let tmpTangentY=tmpApproachY-tmpDepartY;let tmpTangentLen=Math.sqrt(tmpTangentX*tmpTangentX+tmpTangentY*tmpTangentY)||1;tmpTangentX/=tmpTangentLen;tmpTangentY/=tmpTangentLen;let tmpTangentDist=25;let tmpCP1bX=pHandleX-tmpTangentX*tmpTangentDist;let tmpCP1bY=pHandleY-tmpTangentY*tmpTangentDist;let tmpCP2bX=pHandleX+tmpTangentX*tmpTangentDist;let tmpCP2bY=pHandleY+tmpTangentY*tmpTangentDist;return this._FlowView._PathGenerator.buildSplitBezierPathString({x:pFrom.x,y:pFrom.y},{x:tmpDepartX,y:tmpDepartY},{x:tmpCP1aX,y:tmpCP1aY},{x:tmpCP1bX,y:tmpCP1bY},{x:pHandleX,y:pHandleY},{x:tmpCP2bX,y:tmpCP2bY},{x:tmpCP2aX,y:tmpCP2aY},{x:tmpApproachX,y:tmpApproachY},{x:pTo.x,y:pTo.y});}/**
+	 * Generate an orthogonal (90-degree) path between two anchor points.
+	 * @param {Object} pFrom - {x, y, side}
+	 * @param {Object} pTo - {x, y, side}
+	 * @param {Object|null} pCorners - {corner1: {x,y}, corner2: {x,y}} or null for auto
+	 * @param {number} pMidOffset - Offset for the corridor midpoint
+	 * @returns {string} SVG path d attribute
+	 */generateOrthogonalPath(pFrom,pTo,pCorners,pMidOffset){let tmpDepartDist=20;let tmpFromDir=this._FlowView._GeometryProvider.sideDirection(pFrom.side);let tmpToDir=this._FlowView._GeometryProvider.sideDirection(pTo.side);let tmpDepartX=pFrom.x+tmpFromDir.dx*tmpDepartDist;let tmpDepartY=pFrom.y+tmpFromDir.dy*tmpDepartDist;let tmpApproachX=pTo.x+tmpToDir.dx*tmpDepartDist;let tmpApproachY=pTo.y+tmpToDir.dy*tmpDepartDist;let tmpCorner1,tmpCorner2;if(pCorners&&pCorners.corner1&&pCorners.corner2){tmpCorner1=pCorners.corner1;tmpCorner2=pCorners.corner2;}else{// Auto-calculate corners based on direction
+let tmpAutoCorners=this._FlowView._PathGenerator.computeAutoOrthogonalCorners(tmpDepartX,tmpDepartY,tmpApproachX,tmpApproachY,tmpFromDir,tmpToDir,pMidOffset);tmpCorner1=tmpAutoCorners.corner1;tmpCorner2=tmpAutoCorners.corner2;}return this._FlowView._PathGenerator.buildOrthogonalPathString({x:pFrom.x,y:pFrom.y},{x:tmpDepartX,y:tmpDepartY},{x:tmpCorner1.x,y:tmpCorner1.y},{x:tmpCorner2.x,y:tmpCorner2.y},{x:tmpApproachX,y:tmpApproachY},{x:pTo.x,y:pTo.y});}// ---- Handle Position Computation ----
+/**
+	 * Get auto-calculated bezier midpoint for a tether at t=0.5 on the curve.
+	 * @param {Object} pFrom - {x, y, side}
+	 * @param {Object} pTo - {x, y, side}
+	 * @returns {{x: number, y: number}}
+	 */getAutoMidpoint(pFrom,pTo){let tmpDepartDist=20;let tmpFromDir=this._FlowView._GeometryProvider.sideDirection(pFrom.side);let tmpToDir=this._FlowView._GeometryProvider.sideDirection(pTo.side);let tmpDepartX=pFrom.x+tmpFromDir.dx*tmpDepartDist;let tmpDepartY=pFrom.y+tmpFromDir.dy*tmpDepartDist;let tmpApproachX=pTo.x+tmpToDir.dx*tmpDepartDist;let tmpApproachY=pTo.y+tmpToDir.dy*tmpDepartDist;let tmpSpanX=Math.abs(tmpApproachX-tmpDepartX);let tmpSpanY=Math.abs(tmpApproachY-tmpDepartY);let tmpSpan=Math.max(tmpSpanX,tmpSpanY,40);let tmpCPDist=tmpSpan*0.4;let tmpP0={x:tmpDepartX,y:tmpDepartY};let tmpP1={x:tmpDepartX+tmpFromDir.dx*tmpCPDist,y:tmpDepartY+tmpFromDir.dy*tmpCPDist};let tmpP2={x:tmpApproachX+tmpToDir.dx*tmpCPDist,y:tmpApproachY+tmpToDir.dy*tmpCPDist};let tmpP3={x:tmpApproachX,y:tmpApproachY};// Evaluate cubic bezier at t=0.5
+return this._FlowView._PathGenerator.evaluateCubicBezier(tmpP0,tmpP1,tmpP2,tmpP3,0.5);}/**
+	 * Get full orthogonal geometry including corners and midpoint for handle rendering.
+	 * @param {Object} pFrom - {x, y, side}
+	 * @param {Object} pTo - {x, y, side}
+	 * @param {Object} pPanelData - Panel data with tether handle properties
+	 * @returns {{corner1: {x,y}, corner2: {x,y}, midpoint: {x,y}}}
+	 */getOrthoGeometry(pFrom,pTo,pPanelData){let tmpDepartDist=20;let tmpFromDir=this._FlowView._GeometryProvider.sideDirection(pFrom.side);let tmpToDir=this._FlowView._GeometryProvider.sideDirection(pTo.side);let tmpDepartX=pFrom.x+tmpFromDir.dx*tmpDepartDist;let tmpDepartY=pFrom.y+tmpFromDir.dy*tmpDepartDist;let tmpApproachX=pTo.x+tmpToDir.dx*tmpDepartDist;let tmpApproachY=pTo.y+tmpToDir.dy*tmpDepartDist;let tmpCorners;if(pPanelData.TetherHandleCustomized&&pPanelData.TetherOrthoCorner1X!=null){tmpCorners=this._FlowView._PathGenerator.computeAutoOrthogonalCorners(tmpDepartX,tmpDepartY,tmpApproachX,tmpApproachY,tmpFromDir,tmpToDir,pPanelData.TetherOrthoMidOffset||0);tmpCorners.corner1={x:pPanelData.TetherOrthoCorner1X,y:pPanelData.TetherOrthoCorner1Y};tmpCorners.corner2={x:pPanelData.TetherOrthoCorner2X,y:pPanelData.TetherOrthoCorner2Y};}else{tmpCorners=this._FlowView._PathGenerator.computeAutoOrthogonalCorners(tmpDepartX,tmpDepartY,tmpApproachX,tmpApproachY,tmpFromDir,tmpToDir,pPanelData.TetherOrthoMidOffset||0);}let tmpMidpoint={x:(tmpCorners.corner1.x+tmpCorners.corner2.x)/2,y:(tmpCorners.corner1.y+tmpCorners.corner2.y)/2};return{corner1:tmpCorners.corner1,corner2:tmpCorners.corner2,midpoint:tmpMidpoint};}// ---- Path Generation (high-level) ----
+/**
+	 * Generate the SVG path string for a tether based on its panel data and anchors.
+	 * @param {Object} pPanelData - Panel data with tether handle properties
+	 * @param {Object} pFrom - {x, y, side} panel anchor
+	 * @param {Object} pTo - {x, y, side} node anchor
+	 * @returns {string} SVG path d attribute
+	 */generatePath(pPanelData,pFrom,pTo){let tmpLineMode=pPanelData.TetherLineMode||'bezier';if(tmpLineMode==='orthogonal'){let tmpCorners=null;if(pPanelData.TetherHandleCustomized&&pPanelData.TetherOrthoCorner1X!=null){tmpCorners={corner1:{x:pPanelData.TetherOrthoCorner1X,y:pPanelData.TetherOrthoCorner1Y},corner2:{x:pPanelData.TetherOrthoCorner2X,y:pPanelData.TetherOrthoCorner2Y}};}return this.generateOrthogonalPath(pFrom,pTo,tmpCorners,pPanelData.TetherOrthoMidOffset||0);}else{let tmpHandleX=pPanelData.TetherHandleCustomized&&pPanelData.TetherBezierHandleX!=null?pPanelData.TetherBezierHandleX:null;let tmpHandleY=pPanelData.TetherHandleCustomized&&pPanelData.TetherBezierHandleY!=null?pPanelData.TetherBezierHandleY:null;return this.generateBezierPath(pFrom,pTo,tmpHandleX,tmpHandleY);}}// ---- Handle State Management ----
+/**
+	 * Update a tether handle position during drag.
+	 * @param {Object} pPanelData - Panel data to update
+	 * @param {string} pHandleType - 'bezier-midpoint', 'ortho-corner1', 'ortho-corner2', 'ortho-midpoint'
+	 * @param {number} pX
+	 * @param {number} pY
+	 */updateHandlePosition(pPanelData,pHandleType,pX,pY){pPanelData.TetherHandleCustomized=true;switch(pHandleType){case'bezier-midpoint':pPanelData.TetherBezierHandleX=pX;pPanelData.TetherBezierHandleY=pY;break;case'ortho-corner1':pPanelData.TetherOrthoCorner1X=pX;pPanelData.TetherOrthoCorner1Y=pY;break;case'ortho-corner2':pPanelData.TetherOrthoCorner2X=pX;pPanelData.TetherOrthoCorner2Y=pY;break;case'ortho-midpoint':// Store the desired position for offset computation
+pPanelData.TetherOrthoMidOffset=pPanelData.TetherOrthoMidOffset||0;pPanelData._TetherMidDragX=pX;pPanelData._TetherMidDragY=pY;break;}}/**
+	 * Reset tether handle positions to auto for a single panel.
+	 * Preserves TetherLineMode but clears all handle coordinates.
+	 * @param {Object} pPanelData - Panel data to reset
+	 */resetHandlePositions(pPanelData){if(pPanelData.TetherHandleCustomized){pPanelData.TetherHandleCustomized=false;pPanelData.TetherBezierHandleX=null;pPanelData.TetherBezierHandleY=null;pPanelData.TetherOrthoCorner1X=null;pPanelData.TetherOrthoCorner1Y=null;pPanelData.TetherOrthoCorner2X=null;pPanelData.TetherOrthoCorner2Y=null;pPanelData.TetherOrthoMidOffset=0;}}/**
+	 * Reset tether handle positions for all panels attached to a node.
+	 * Called when a node moves.
+	 * @param {Array} pOpenPanels - Array of all open panel data objects
+	 * @param {string} pNodeHash - The node hash whose panels should be reset
+	 */resetHandlesForNode(pOpenPanels,pNodeHash){for(let i=0;i<pOpenPanels.length;i++){let tmpPanel=pOpenPanels[i];if(tmpPanel.NodeHash===pNodeHash){this.resetHandlePositions(tmpPanel);}}}/**
+	 * Toggle tether line mode between bezier and orthogonal.
+	 * Resets handle positions on toggle.
+	 * @param {Object} pPanelData - Panel data to toggle
+	 * @returns {string} The new line mode ('bezier' or 'orthogonal')
+	 */toggleLineMode(pPanelData){let tmpCurrentMode=pPanelData.TetherLineMode||'bezier';pPanelData.TetherLineMode=tmpCurrentMode==='bezier'?'orthogonal':'bezier';pPanelData.TetherHandleCustomized=false;pPanelData.TetherBezierHandleX=null;pPanelData.TetherBezierHandleY=null;pPanelData.TetherOrthoCorner1X=null;pPanelData.TetherOrthoCorner1Y=null;pPanelData.TetherOrthoCorner2X=null;pPanelData.TetherOrthoCorner2Y=null;pPanelData.TetherOrthoMidOffset=0;return pPanelData.TetherLineMode;}// ---- SVG Rendering ----
+/**
+	 * Render a tether from a panel to its node.
+	 * Creates SVG path elements for the line and hit area, plus drag handles when selected.
+	 *
+	 * @param {Object} pPanelData - Panel data with position and tether properties
+	 * @param {Object} pNodeData - Node data with position
+	 * @param {SVGGElement} pTethersLayer - SVG group to append elements to
+	 * @param {boolean} pIsSelected - Whether this tether is currently selected
+	 * @param {string} pViewIdentifier - The flow view identifier (for marker URL)
+	 */renderTether(pPanelData,pNodeData,pTethersLayer,pIsSelected,pViewIdentifier){if(!pNodeData)return;let tmpAnchors=this.getSmartAnchors(pPanelData,pNodeData);let tmpFrom=tmpAnchors.panelAnchor;let tmpTo=tmpAnchors.nodeAnchor;let tmpPath=this.generatePath(pPanelData,tmpFrom,tmpTo);// Hit area and visible tether path
+let tmpShapeProvider=this._FlowView._ConnectorShapesProvider;if(tmpShapeProvider){let tmpHitArea=tmpShapeProvider.createTetherHitAreaElement(tmpPath,pPanelData.Hash);pTethersLayer.appendChild(tmpHitArea);let tmpPathElement=tmpShapeProvider.createTetherPathElement(tmpPath,pPanelData.Hash,pIsSelected,pViewIdentifier);pTethersLayer.appendChild(tmpPathElement);}else{let tmpHitArea=this._FlowView._SVGHelperProvider.createSVGElement('path');tmpHitArea.setAttribute('class','pict-flow-tether-hitarea');tmpHitArea.setAttribute('d',tmpPath);tmpHitArea.setAttribute('data-element-type','tether-hitarea');tmpHitArea.setAttribute('data-panel-hash',pPanelData.Hash);pTethersLayer.appendChild(tmpHitArea);let tmpPathElement=this._FlowView._SVGHelperProvider.createSVGElement('path');tmpPathElement.setAttribute('class',`pict-flow-tether-line${pIsSelected?' selected':''}`);tmpPathElement.setAttribute('d',tmpPath);tmpPathElement.setAttribute('marker-end',`url(#flow-tether-arrowhead-${pViewIdentifier})`);tmpPathElement.setAttribute('data-element-type','tether');tmpPathElement.setAttribute('data-panel-hash',pPanelData.Hash);pTethersLayer.appendChild(tmpPathElement);}// Render drag handles when selected
+if(pIsSelected){this._renderHandles(pPanelData,pTethersLayer,tmpFrom,tmpTo);}}/**
+	 * Render drag handles for a selected tether.
+	 * @param {Object} pPanelData
+	 * @param {SVGGElement} pTethersLayer
+	 * @param {Object} pFrom - Panel anchor {x, y, side}
+	 * @param {Object} pTo - Node anchor {x, y, side}
+	 */_renderHandles(pPanelData,pTethersLayer,pFrom,pTo){let tmpLineMode=pPanelData.TetherLineMode||'bezier';if(tmpLineMode==='orthogonal'){let tmpGeom=this.getOrthoGeometry(pFrom,pTo,pPanelData);// Corner 1 handle
+this._createHandle(pTethersLayer,pPanelData.Hash,'ortho-corner1',tmpGeom.corner1.x,tmpGeom.corner1.y,'pict-flow-tether-handle');// Midpoint handle
+this._createHandle(pTethersLayer,pPanelData.Hash,'ortho-midpoint',tmpGeom.midpoint.x,tmpGeom.midpoint.y,'pict-flow-tether-handle-midpoint');// Corner 2 handle
+this._createHandle(pTethersLayer,pPanelData.Hash,'ortho-corner2',tmpGeom.corner2.x,tmpGeom.corner2.y,'pict-flow-tether-handle');}else{// Bezier: single midpoint handle
+let tmpMidX,tmpMidY;if(pPanelData.TetherHandleCustomized&&pPanelData.TetherBezierHandleX!=null){tmpMidX=pPanelData.TetherBezierHandleX;tmpMidY=pPanelData.TetherBezierHandleY;}else{let tmpMid=this.getAutoMidpoint(pFrom,pTo);tmpMidX=tmpMid.x;tmpMidY=tmpMid.y;}this._createHandle(pTethersLayer,pPanelData.Hash,'bezier-midpoint',tmpMidX,tmpMidY,'pict-flow-tether-handle-midpoint');}}/**
+	 * Create a single tether drag handle circle.
+	 * @param {SVGGElement} pLayer
+	 * @param {string} pPanelHash
+	 * @param {string} pHandleType
+	 * @param {number} pX
+	 * @param {number} pY
+	 * @param {string} pClassName
+	 */_createHandle(pLayer,pPanelHash,pHandleType,pX,pY,pClassName){let tmpShapeProvider=this._FlowView._ConnectorShapesProvider;let tmpShapeKey=pClassName==='pict-flow-tether-handle-midpoint'?'tether-handle-midpoint':'tether-handle';if(tmpShapeProvider){let tmpHandle=tmpShapeProvider.createHandleElement(pPanelHash,pHandleType,pX,pY,tmpShapeKey);tmpHandle.setAttribute('data-element-type','tether-handle');tmpHandle.setAttribute('data-panel-hash',pPanelHash);pLayer.appendChild(tmpHandle);}else{let tmpCircle=this._FlowView._SVGHelperProvider.createSVGElement('circle');tmpCircle.setAttribute('class',pClassName);tmpCircle.setAttribute('cx',String(pX));tmpCircle.setAttribute('cy',String(pY));tmpCircle.setAttribute('r','6');tmpCircle.setAttribute('data-element-type','tether-handle');tmpCircle.setAttribute('data-panel-hash',pPanelHash);tmpCircle.setAttribute('data-handle-type',pHandleType);pLayer.appendChild(tmpCircle);}}}module.exports=PictServiceFlowTether;},{"fable-serviceproviderbase":2}],40:[function(require,module,exports){const libFableServiceProviderBase=require('fable-serviceproviderbase');/**
+ * PictService-Flow-ViewportManager
+ *
+ * Manages viewport transforms (pan/zoom), coordinate conversion between
+ * screen and SVG space, zoom-to-fit calculations, and fullscreen toggling
+ * for the flow diagram.
+ */class PictServiceFlowViewportManager extends libFableServiceProviderBase{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictServiceFlowViewportManager';this._FlowView=pOptions&&pOptions.FlowView?pOptions.FlowView:null;this._IsFullscreen=false;}/**
+	 * Update the viewport transform (pan and zoom)
+	 */updateViewportTransform(){if(!this._FlowView._ViewportElement)return;let tmpVS=this._FlowView._FlowData.ViewState;this._FlowView._ViewportElement.setAttribute('transform',`translate(${tmpVS.PanX}, ${tmpVS.PanY}) scale(${tmpVS.Zoom})`);}/**
+	 * Set zoom level
+	 * @param {number} pZoom - The zoom level
+	 * @param {number} [pFocusX] - X coordinate to zoom toward (SVG space)
+	 * @param {number} [pFocusY] - Y coordinate to zoom toward (SVG space)
+	 */setZoom(pZoom,pFocusX,pFocusY){let tmpNewZoom=Math.max(this._FlowView.options.MinZoom,Math.min(this._FlowView.options.MaxZoom,pZoom));let tmpOldZoom=this._FlowView._FlowData.ViewState.Zoom;if(typeof pFocusX==='number'&&typeof pFocusY==='number'){// Zoom toward focus point
+let tmpVS=this._FlowView._FlowData.ViewState;tmpVS.PanX=pFocusX-(pFocusX-tmpVS.PanX)*(tmpNewZoom/tmpOldZoom);tmpVS.PanY=pFocusY-(pFocusY-tmpVS.PanY)*(tmpNewZoom/tmpOldZoom);}this._FlowView._FlowData.ViewState.Zoom=tmpNewZoom;this.updateViewportTransform();}/**
+	 * Zoom to fit all nodes in the viewport
+	 */zoomToFit(){if(this._FlowView._FlowData.Nodes.length===0)return;if(!this._FlowView._SVGElement)return;let tmpMinX=Infinity,tmpMinY=Infinity;let tmpMaxX=-Infinity,tmpMaxY=-Infinity;for(let i=0;i<this._FlowView._FlowData.Nodes.length;i++){let tmpNode=this._FlowView._FlowData.Nodes[i];tmpMinX=Math.min(tmpMinX,tmpNode.X);tmpMinY=Math.min(tmpMinY,tmpNode.Y);tmpMaxX=Math.max(tmpMaxX,tmpNode.X+tmpNode.Width);tmpMaxY=Math.max(tmpMaxY,tmpNode.Y+tmpNode.Height);}let tmpPadding=50;let tmpFlowWidth=tmpMaxX-tmpMinX+tmpPadding*2;let tmpFlowHeight=tmpMaxY-tmpMinY+tmpPadding*2;let tmpSVGRect=this._FlowView._SVGElement.getBoundingClientRect();let tmpScaleX=tmpSVGRect.width/tmpFlowWidth;let tmpScaleY=tmpSVGRect.height/tmpFlowHeight;let tmpZoom=Math.min(tmpScaleX,tmpScaleY,1.0);// Don't zoom in past 1.0
+tmpZoom=Math.max(this._FlowView.options.MinZoom,Math.min(this._FlowView.options.MaxZoom,tmpZoom));let tmpCenterX=(tmpMinX+tmpMaxX)/2;let tmpCenterY=(tmpMinY+tmpMaxY)/2;this._FlowView._FlowData.ViewState.Zoom=tmpZoom;this._FlowView._FlowData.ViewState.PanX=tmpSVGRect.width/2-tmpCenterX*tmpZoom;this._FlowView._FlowData.ViewState.PanY=tmpSVGRect.height/2-tmpCenterY*tmpZoom;this.updateViewportTransform();}/**
+	 * Convert screen coordinates to SVG viewport coordinates
+	 * @param {number} pScreenX
+	 * @param {number} pScreenY
+	 * @returns {{x: number, y: number}}
+	 */screenToSVGCoords(pScreenX,pScreenY){if(!this._FlowView._SVGElement){return{x:pScreenX,y:pScreenY};}let tmpPoint=this._FlowView._SVGElement.createSVGPoint();tmpPoint.x=pScreenX;tmpPoint.y=pScreenY;let tmpCTM=this._FlowView._SVGElement.getScreenCTM();if(tmpCTM){let tmpInverse=tmpCTM.inverse();let tmpTransformed=tmpPoint.matrixTransform(tmpInverse);// Account for viewport pan/zoom
+let tmpVS=this._FlowView._FlowData.ViewState;return{x:(tmpTransformed.x-tmpVS.PanX)/tmpVS.Zoom,y:(tmpTransformed.y-tmpVS.PanY)/tmpVS.Zoom};}return{x:pScreenX,y:pScreenY};}/**
+	 * Toggle fullscreen mode on the flow editor container.
+	 * Uses a CSS fixed-position overlay instead of the Fullscreen API.
+	 * @returns {boolean} The new fullscreen state
+	 */toggleFullscreen(){let tmpViewIdentifier=this._FlowView.options.ViewIdentifier;let tmpContainerElements=this._FlowView.pict.ContentAssignment.getElement(`#Flow-Wrapper-${tmpViewIdentifier}`);if(tmpContainerElements.length<1)return this._IsFullscreen;let tmpContainer=tmpContainerElements[0];this._IsFullscreen=!this._IsFullscreen;if(this._IsFullscreen){tmpContainer.classList.add('pict-flow-fullscreen');}else{tmpContainer.classList.remove('pict-flow-fullscreen');}return this._IsFullscreen;}/**
+	 * Exit fullscreen mode if currently active.
+	 */exitFullscreen(){if(!this._IsFullscreen)return;let tmpViewIdentifier=this._FlowView.options.ViewIdentifier;let tmpContainerElements=this._FlowView.pict.ContentAssignment.getElement(`#Flow-Wrapper-${tmpViewIdentifier}`);if(tmpContainerElements.length>0){tmpContainerElements[0].classList.remove('pict-flow-fullscreen');}this._IsFullscreen=false;}}module.exports=PictServiceFlowViewportManager;},{"fable-serviceproviderbase":2}],41:[function(require,module,exports){const libPictView=require('pict-view');const _DefaultConfiguration={ViewIdentifier:'Flow-FloatingToolbar',DefaultRenderable:'Flow-FloatingToolbar-Content',DefaultDestinationAddress:'#Flow-FloatingToolbar-Container',AutoRender:false,FlowViewIdentifier:'Pict-Flow',CSS:false,Templates:[{Hash:'Flow-FloatingToolbar-Template',Template:/*html*/`
+<div class="pict-flow-floating-toolbar" id="Flow-FloatingToolbar-{~D:Record.FlowViewIdentifier~}">
+	<div class="pict-flow-floating-grip" id="Flow-FloatingGrip-{~D:Record.FlowViewIdentifier~}" title="Drag to move · Double-click to collapse">
+		<span id="Flow-FloatingIcon-grip-{~D:Record.FlowViewIdentifier~}"></span>
+	</div>
+	<button class="pict-flow-floating-btn" data-flow-action="add-node" title="Add Node">
+		<span id="Flow-FloatingIcon-plus-{~D:Record.FlowViewIdentifier~}"></span>
+	</button>
+	<button class="pict-flow-floating-btn danger" data-flow-action="delete-selected" title="Delete Selected">
+		<span id="Flow-FloatingIcon-trash-{~D:Record.FlowViewIdentifier~}"></span>
+	</button>
+	<div class="pict-flow-floating-separator"></div>
+	<button class="pict-flow-floating-btn" data-flow-action="zoom-in" title="Zoom In">
+		<span id="Flow-FloatingIcon-zoom-in-{~D:Record.FlowViewIdentifier~}"></span>
+	</button>
+	<button class="pict-flow-floating-btn" data-flow-action="zoom-out" title="Zoom Out">
+		<span id="Flow-FloatingIcon-zoom-out-{~D:Record.FlowViewIdentifier~}"></span>
+	</button>
+	<button class="pict-flow-floating-btn" data-flow-action="zoom-fit" title="Fit to View">
+		<span id="Flow-FloatingIcon-zoom-fit-{~D:Record.FlowViewIdentifier~}"></span>
+	</button>
+	<div class="pict-flow-floating-separator"></div>
+	<button class="pict-flow-floating-btn" data-flow-action="auto-layout" title="Auto Layout">
+		<span id="Flow-FloatingIcon-auto-layout-{~D:Record.FlowViewIdentifier~}"></span>
+	</button>
+	<button class="pict-flow-floating-btn" data-flow-action="cards-popup" title="Cards">
+		<span id="Flow-FloatingIcon-cards-{~D:Record.FlowViewIdentifier~}"></span>
+	</button>
+	<button class="pict-flow-floating-btn" data-flow-action="layout-popup" title="Layout">
+		<span id="Flow-FloatingIcon-layout-{~D:Record.FlowViewIdentifier~}"></span>
+	</button>
+	<button class="pict-flow-floating-btn" data-flow-action="fullscreen" title="Toggle Fullscreen">
+		<span id="Flow-FloatingIcon-fullscreen-{~D:Record.FlowViewIdentifier~}"></span>
+	</button>
+	<div class="pict-flow-floating-separator"></div>
+	<button class="pict-flow-floating-btn" data-flow-action="dock-toolbar" title="Dock Toolbar">
+		<span id="Flow-FloatingIcon-dock-{~D:Record.FlowViewIdentifier~}"></span>
+	</button>
+</div>
+`}],Renderables:[{RenderableHash:'Flow-FloatingToolbar-Content',TemplateHash:'Flow-FloatingToolbar-Template',DestinationAddress:'#Flow-FloatingToolbar-Container',RenderMethod:'replace'}]};class PictViewFlowFloatingToolbar extends libPictView{constructor(pFable,pOptions,pServiceHash){let tmpOptions=Object.assign({},JSON.parse(JSON.stringify(_DefaultConfiguration)),pOptions);super(pFable,tmpOptions,pServiceHash);this.serviceType='PictViewFlowFloatingToolbar';this._ToolbarView=null;this._FlowView=null;this._IsCollapsed=false;this._IsDragging=false;this._DragStartX=0;this._DragStartY=0;this._DragStartLeft=0;this._DragStartTop=0;this._BoundMouseMove=null;this._BoundMouseUp=null;}render(pRenderableHash,pRenderDestinationAddress,pTemplateRecordAddress){return super.render(pRenderableHash,pRenderDestinationAddress,this.options);}onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent){let tmpFlowViewIdentifier=this.options.FlowViewIdentifier;// Bind click delegation for action buttons
+let tmpFloatingToolbar=this.pict.ContentAssignment.getElement(`#Flow-FloatingToolbar-${tmpFlowViewIdentifier}`);if(tmpFloatingToolbar.length>0){tmpFloatingToolbar[0].addEventListener('click',pEvent=>{let tmpTarget=pEvent.target;if(!tmpTarget)return;let tmpButton=tmpTarget.closest('[data-flow-action]');if(!tmpButton)return;let tmpAction=tmpButton.getAttribute('data-flow-action');if(tmpAction==='dock-toolbar'){if(this._ToolbarView){this._ToolbarView._setToolbarMode('docked');}return;}// Delegate all other actions to the docked toolbar
+if(this._ToolbarView){this._ToolbarView._handleToolbarAction(tmpAction);}});}// Bind drag behavior on the grip
+let tmpGrip=this.pict.ContentAssignment.getElement(`#Flow-FloatingGrip-${tmpFlowViewIdentifier}`);if(tmpGrip.length>0){tmpGrip[0].addEventListener('mousedown',pEvent=>{this._startDrag(pEvent);});// Double-click grip to toggle collapsed state
+tmpGrip[0].addEventListener('dblclick',pEvent=>{pEvent.preventDefault();pEvent.stopPropagation();this._toggleCollapse();});}// Populate icons
+this._populateIcons();return super.onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent);}/**
+	 * Populate SVG icons into all floating toolbar button spans.
+	 */_populateIcons(){let tmpIconProvider=this._FlowView?this._FlowView._IconProvider:null;if(!tmpIconProvider)return;let tmpFlowViewIdentifier=this.options.FlowViewIdentifier;let tmpIconMap={'grip':'grip','plus':'plus','trash':'trash','zoom-in':'zoom-in','zoom-out':'zoom-out','zoom-fit':'zoom-fit','auto-layout':'auto-layout','cards':'cards','layout':'layout','fullscreen':'fullscreen','dock':'dock'};let tmpKeys=Object.keys(tmpIconMap);for(let i=0;i<tmpKeys.length;i++){let tmpElementId=`Flow-FloatingIcon-${tmpKeys[i]}-${tmpFlowViewIdentifier}`;let tmpElements=this.pict.ContentAssignment.getElement(`#${tmpElementId}`);if(tmpElements.length>0){tmpElements[0].innerHTML=tmpIconProvider.getIconSVGMarkup(tmpIconMap[tmpKeys[i]],16);}}}/**
+	 * Toggle the floating toolbar between expanded and collapsed (grip-only square) states.
+	 */_toggleCollapse(){let tmpFlowViewIdentifier=this.options.FlowViewIdentifier;let tmpToolbar=this.pict.ContentAssignment.getElement(`#Flow-FloatingToolbar-${tmpFlowViewIdentifier}`);if(tmpToolbar.length<1)return;this._IsCollapsed=!this._IsCollapsed;if(this._IsCollapsed){tmpToolbar[0].classList.add('collapsed');}else{tmpToolbar[0].classList.remove('collapsed');}}/**
+	 * Start dragging the floating toolbar.
+	 * @param {MouseEvent} pEvent
+	 */_startDrag(pEvent){pEvent.preventDefault();let tmpFlowViewIdentifier=this.options.FlowViewIdentifier;let tmpToolbar=this.pict.ContentAssignment.getElement(`#Flow-FloatingToolbar-${tmpFlowViewIdentifier}`);if(tmpToolbar.length<1)return;let tmpEl=tmpToolbar[0];this._IsDragging=true;this._DragStartX=pEvent.clientX;this._DragStartY=pEvent.clientY;this._DragStartLeft=tmpEl.offsetLeft;this._DragStartTop=tmpEl.offsetTop;this._BoundMouseMove=pMoveEvent=>{this._onDragMove(pMoveEvent);};this._BoundMouseUp=()=>{this._onDragEnd();};document.addEventListener('mousemove',this._BoundMouseMove);document.addEventListener('mouseup',this._BoundMouseUp);}/**
+	 * Handle drag movement.
+	 * @param {MouseEvent} pEvent
+	 */_onDragMove(pEvent){if(!this._IsDragging)return;let tmpFlowViewIdentifier=this.options.FlowViewIdentifier;let tmpToolbar=this.pict.ContentAssignment.getElement(`#Flow-FloatingToolbar-${tmpFlowViewIdentifier}`);if(tmpToolbar.length<1)return;let tmpEl=tmpToolbar[0];let tmpDeltaX=pEvent.clientX-this._DragStartX;let tmpDeltaY=pEvent.clientY-this._DragStartY;let tmpNewLeft=this._DragStartLeft+tmpDeltaX;let tmpNewTop=this._DragStartTop+tmpDeltaY;// Clamp to parent bounds
+let tmpParent=tmpEl.parentElement;if(tmpParent){let tmpMaxLeft=tmpParent.clientWidth-tmpEl.offsetWidth;let tmpMaxTop=tmpParent.clientHeight-tmpEl.offsetHeight;tmpNewLeft=Math.max(0,Math.min(tmpNewLeft,tmpMaxLeft));tmpNewTop=Math.max(0,Math.min(tmpNewTop,tmpMaxTop));}tmpEl.style.left=tmpNewLeft+'px';tmpEl.style.top=tmpNewTop+'px';}/**
+	 * End dragging.
+	 */_onDragEnd(){this._IsDragging=false;if(this._BoundMouseMove){document.removeEventListener('mousemove',this._BoundMouseMove);this._BoundMouseMove=null;}if(this._BoundMouseUp){document.removeEventListener('mouseup',this._BoundMouseUp);this._BoundMouseUp=null;}// Save position
+if(this._ToolbarView){let tmpFlowViewIdentifier=this.options.FlowViewIdentifier;let tmpToolbar=this.pict.ContentAssignment.getElement(`#Flow-FloatingToolbar-${tmpFlowViewIdentifier}`);if(tmpToolbar.length>0){this._ToolbarView._FloatingPosition.X=tmpToolbar[0].offsetLeft;this._ToolbarView._FloatingPosition.Y=tmpToolbar[0].offsetTop;}}}/**
+	 * Show the floating toolbar at the saved position.
+	 */show(){let tmpFlowViewIdentifier=this.options.FlowViewIdentifier;let tmpContainer=this.pict.ContentAssignment.getElement(`#Flow-FloatingToolbar-Container-${tmpFlowViewIdentifier}`);if(tmpContainer.length>0){tmpContainer[0].style.display='block';}let tmpToolbar=this.pict.ContentAssignment.getElement(`#Flow-FloatingToolbar-${tmpFlowViewIdentifier}`);if(tmpToolbar.length>0&&this._ToolbarView){tmpToolbar[0].style.left=this._ToolbarView._FloatingPosition.X+'px';tmpToolbar[0].style.top=this._ToolbarView._FloatingPosition.Y+'px';}// Restore expanded state when showing
+if(this._IsCollapsed&&tmpToolbar.length>0){this._IsCollapsed=false;tmpToolbar[0].classList.remove('collapsed');}}/**
+	 * Hide the floating toolbar.
+	 */hide(){let tmpFlowViewIdentifier=this.options.FlowViewIdentifier;let tmpContainer=this.pict.ContentAssignment.getElement(`#Flow-FloatingToolbar-Container-${tmpFlowViewIdentifier}`);if(tmpContainer.length>0){tmpContainer[0].style.display='none';}}}module.exports=PictViewFlowFloatingToolbar;module.exports.default_configuration=_DefaultConfiguration;},{"pict-view":64}],42:[function(require,module,exports){const libPictView=require('pict-view');const _DefaultConfiguration={ViewIdentifier:'Flow-NodeRenderer',AutoRender:false,// Title bar height for nodes
+NodeTitleBarHeight:22};class PictViewFlowNode extends libPictView{constructor(pFable,pOptions,pServiceHash){let tmpOptions=Object.assign({},JSON.parse(JSON.stringify(_DefaultConfiguration)),pOptions);super(pFable,tmpOptions,pServiceHash);this.serviceType='PictViewFlowNode';this._FlowView=null;}/**
+	 * Render a node into the nodes SVG layer
+	 * @param {Object} pNodeData - The node data object
+	 * @param {SVGGElement} pNodesLayer - The SVG <g> element to append to
+	 * @param {boolean} pIsSelected - Whether this node is selected
+	 * @param {Object} pNodeTypeConfig - The node type configuration
+	 */renderNode(pNodeData,pNodesLayer,pIsSelected,pNodeTypeConfig){let tmpGroup=this._FlowView._SVGHelperProvider.createSVGElement('g');// Build CSS class list with optional per-type modifier classes
+let tmpClassList=`pict-flow-node ${pIsSelected?'selected':''} pict-flow-node-${pNodeData.Type||'default'}`;if(pNodeTypeConfig){if(pNodeTypeConfig.PortLabelsOnHover)tmpClassList+=' pict-flow-node-port-labels-hover';if(pNodeTypeConfig.PortLabelsVertical)tmpClassList+=' pict-flow-node-port-labels-vertical';}tmpGroup.setAttribute('class',tmpClassList);tmpGroup.setAttribute('transform',`translate(${pNodeData.X}, ${pNodeData.Y})`);tmpGroup.setAttribute('data-node-hash',pNodeData.Hash);tmpGroup.setAttribute('data-element-type','node');let tmpWidth=pNodeData.Width||180;let tmpHeight=pNodeData.Height||80;let tmpTitleBarHeight=this.options.NodeTitleBarHeight;// Ensure node is tall enough for all ports in their zones
+let tmpGeomProvider=this._FlowView._GeometryProvider;if(tmpGeomProvider&&pNodeData.Ports&&pNodeData.Ports.length>0){let tmpMinHeight=tmpGeomProvider.computeMinimumNodeHeight(pNodeData.Ports,tmpTitleBarHeight);if(tmpMinHeight>tmpHeight){tmpHeight=tmpMinHeight;}}// Write the adjusted dimensions back to the node data so that
+// connection rendering (which reads pNodeData.Width/Height to
+// compute port positions) uses the same values we render with.
+pNodeData.Width=tmpWidth;pNodeData.Height=tmpHeight;// Determine node body mode from theme (bracket vs rect)
+let tmpNodeBodyMode='rect';if(this._FlowView._ThemeProvider){let tmpActiveTheme=this._FlowView._ThemeProvider.getActiveTheme();if(tmpActiveTheme&&tmpActiveTheme.NodeBodyMode){tmpNodeBodyMode=tmpActiveTheme.NodeBodyMode;}}if(tmpNodeBodyMode==='bracket'){this._renderBracketNodeBody(tmpGroup,pNodeData,tmpWidth,tmpHeight,tmpTitleBarHeight,pNodeTypeConfig);}else{this._renderRectNodeBody(tmpGroup,pNodeData,tmpWidth,tmpHeight,tmpTitleBarHeight,pNodeTypeConfig);}// Determine if this node has a title-bar icon (FlowCard with CardMetadata)
+let tmpHasTitleIcon=false;let tmpTitleIconSize=12;let tmpTitleIconMarginLeft=8;let tmpTitleIconGap=4;if(pNodeTypeConfig&&pNodeTypeConfig.CardMetadata){let tmpMeta=pNodeTypeConfig.CardMetadata;let tmpIconProvider=this._FlowView._IconProvider;if(tmpMeta.Icon||tmpIconProvider){tmpHasTitleIcon=true;}}// Title text (position adjusts when a title-bar icon is present)
+let tmpTitle=this._FlowView._SVGHelperProvider.createSVGElement('text');tmpTitle.setAttribute('class','pict-flow-node-title');if(tmpHasTitleIcon){tmpTitle.setAttribute('x',String(tmpTitleIconMarginLeft+tmpTitleIconSize+tmpTitleIconGap));tmpTitle.setAttribute('text-anchor','start');}else{tmpTitle.setAttribute('x',String(tmpWidth/2));tmpTitle.setAttribute('text-anchor','middle');}tmpTitle.setAttribute('y',String(tmpTitleBarHeight/2+1));tmpTitle.setAttribute('dominant-baseline','central');tmpTitle.textContent=pNodeData.Title||'Untitled';tmpGroup.appendChild(tmpTitle);// Determine whether labels should be rendered
+let tmpShowTypeLabel=!pNodeTypeConfig||pNodeTypeConfig.ShowTypeLabel!==false;let tmpLabelsInFront=!pNodeTypeConfig||pNodeTypeConfig.LabelsInFront!==false;// Helper: render type label + code badge + tooltip (the "middle labels")
+let tmpRenderTypeLabels=()=>{// Type label (below title bar — hover-only for FlowCard nodes via CSS)
+if(tmpShowTypeLabel&&pNodeTypeConfig&&pNodeTypeConfig.Label&&pNodeTypeConfig.Label!==pNodeData.Title){let tmpTypeLabel=this._FlowView._SVGHelperProvider.createSVGElement('text');tmpTypeLabel.setAttribute('class','pict-flow-node-type-label');tmpTypeLabel.setAttribute('x',String(tmpWidth/2));tmpTypeLabel.setAttribute('y',String(tmpTitleBarHeight+16));tmpTypeLabel.setAttribute('text-anchor','middle');tmpTypeLabel.setAttribute('dominant-baseline','central');tmpTypeLabel.textContent=pNodeTypeConfig.Label;tmpGroup.appendChild(tmpTypeLabel);}// FlowCard metadata: icon in title bar, code badge in body (hover-only via CSS)
+if(pNodeTypeConfig&&pNodeTypeConfig.CardMetadata){let tmpMeta=pNodeTypeConfig.CardMetadata;let tmpIconProvider=this._FlowView._IconProvider;let tmpTitleIconRendered=false;// Icon position in title bar (vertically centered)
+let tmpIconX=tmpTitleIconMarginLeft;let tmpIconY=(tmpTitleBarHeight-tmpTitleIconSize)/2;if(tmpMeta.Icon&&tmpIconProvider&&!tmpIconProvider.isEmojiIcon(tmpMeta.Icon)){// SVG icon via the icon provider — rendered into title bar
+let tmpResolvedKey=tmpIconProvider.resolveIconKey(tmpMeta);let tmpIconGroup=tmpIconProvider.renderIconIntoSVGGroup(tmpResolvedKey,tmpGroup,tmpIconX,tmpIconY,tmpTitleIconSize);if(tmpIconGroup){tmpIconGroup.setAttribute('class',(tmpIconGroup.getAttribute('class')||'')+' pict-flow-node-title-icon');}tmpTitleIconRendered=true;}else if(tmpMeta.Icon&&tmpIconProvider&&tmpIconProvider.isEmojiIcon(tmpMeta.Icon)){// Emoji icon in title bar
+let tmpIconText=this._FlowView._SVGHelperProvider.createSVGElement('text');tmpIconText.setAttribute('class','pict-flow-node-card-icon pict-flow-node-title-icon-emoji');tmpIconText.setAttribute('font-size',String(tmpTitleIconSize));tmpIconText.setAttribute('text-anchor','middle');tmpIconText.setAttribute('dominant-baseline','central');tmpIconText.setAttribute('pointer-events','none');tmpIconText.setAttribute('x',String(tmpIconX+tmpTitleIconSize/2));tmpIconText.setAttribute('y',String(tmpTitleBarHeight/2));tmpIconText.textContent=tmpMeta.Icon;tmpGroup.appendChild(tmpIconText);tmpTitleIconRendered=true;}else if(tmpMeta.Icon){// No icon provider — text fallback in title bar
+let tmpIconText=this._FlowView._SVGHelperProvider.createSVGElement('text');tmpIconText.setAttribute('class','pict-flow-node-card-icon pict-flow-node-title-icon-emoji');tmpIconText.setAttribute('font-size',String(tmpTitleIconSize));tmpIconText.setAttribute('text-anchor','middle');tmpIconText.setAttribute('dominant-baseline','central');tmpIconText.setAttribute('pointer-events','none');tmpIconText.setAttribute('x',String(tmpIconX+tmpTitleIconSize/2));tmpIconText.setAttribute('y',String(tmpTitleBarHeight/2));tmpIconText.textContent=tmpMeta.Icon;tmpGroup.appendChild(tmpIconText);tmpTitleIconRendered=true;}// Default fallback icon in title bar
+if(!tmpTitleIconRendered&&tmpIconProvider){let tmpIconGroup=tmpIconProvider.renderIconIntoSVGGroup('default',tmpGroup,tmpIconX,tmpIconY,tmpTitleIconSize);if(tmpIconGroup){tmpIconGroup.setAttribute('class',(tmpIconGroup.getAttribute('class')||'')+' pict-flow-node-title-icon');}}// Code badge in body (hover-only via CSS, skipped when ShowTypeLabel is false)
+let tmpBodyCenterY=tmpTitleBarHeight+(tmpHeight-tmpTitleBarHeight)/2;if(tmpShowTypeLabel&&tmpMeta.Code){let tmpCodeText=this._FlowView._SVGHelperProvider.createSVGElement('text');tmpCodeText.setAttribute('class','pict-flow-node-card-code');tmpCodeText.setAttribute('font-size','10');tmpCodeText.setAttribute('font-family','monospace');tmpCodeText.setAttribute('fill','#7f8c8d');tmpCodeText.setAttribute('text-anchor','middle');tmpCodeText.setAttribute('dominant-baseline','central');tmpCodeText.setAttribute('pointer-events','none');tmpCodeText.setAttribute('x',String(tmpWidth/2));tmpCodeText.setAttribute('y',String(tmpBodyCenterY));tmpCodeText.textContent=tmpMeta.Code;tmpGroup.appendChild(tmpCodeText);}// Tooltip via SVG <title> element
+if(tmpMeta.Tooltip||tmpMeta.Description){let tmpSVGTitle=this._FlowView._SVGHelperProvider.createSVGElement('title');tmpSVGTitle.textContent=tmpMeta.Tooltip||tmpMeta.Description;tmpGroup.appendChild(tmpSVGTitle);}}};// Render order depends on LabelsInFront:
+//   true  (default): body content first, then labels + ports (labels on top)
+//   false:           labels + ports first, then body content (content on top)
+if(tmpLabelsInFront){this._renderBodyContent(pNodeData,tmpGroup,tmpWidth,tmpHeight,pNodeTypeConfig);tmpRenderTypeLabels();this._renderPorts(pNodeData,tmpGroup,tmpWidth,tmpHeight,pNodeTypeConfig);}else{tmpRenderTypeLabels();this._renderPorts(pNodeData,tmpGroup,tmpWidth,tmpHeight,pNodeTypeConfig);this._renderBodyContent(pNodeData,tmpGroup,tmpWidth,tmpHeight,pNodeTypeConfig);}// Panel indicator icon (small rect in bottom-right corner)
+if(pNodeTypeConfig&&pNodeTypeConfig.PropertiesPanel){let tmpIndicatorSize=10;let tmpIndicatorMargin=4;let tmpIndicatorX=tmpWidth-tmpIndicatorSize-tmpIndicatorMargin;let tmpIndicatorY=tmpHeight-tmpIndicatorSize-tmpIndicatorMargin;let tmpShapeProvider=this._FlowView._ConnectorShapesProvider;let tmpIndicator;if(tmpShapeProvider){tmpIndicator=tmpShapeProvider.createPanelIndicatorElement(pNodeData.Hash,tmpIndicatorX,tmpIndicatorY,tmpIndicatorSize,tmpIndicatorSize);}else{tmpIndicator=this._FlowView._SVGHelperProvider.createSVGElement('rect');tmpIndicator.setAttribute('class','pict-flow-node-panel-indicator');tmpIndicator.setAttribute('x',String(tmpIndicatorX));tmpIndicator.setAttribute('y',String(tmpIndicatorY));tmpIndicator.setAttribute('width',String(tmpIndicatorSize));tmpIndicator.setAttribute('height',String(tmpIndicatorSize));tmpIndicator.setAttribute('rx','2');tmpIndicator.setAttribute('ry','2');tmpIndicator.setAttribute('data-node-hash',pNodeData.Hash);tmpIndicator.setAttribute('data-element-type','panel-indicator');}let tmpIndicatorTitle=this._FlowView._SVGHelperProvider.createSVGElement('title');tmpIndicatorTitle.textContent='Double-click to open properties';tmpIndicator.appendChild(tmpIndicatorTitle);tmpGroup.appendChild(tmpIndicator);}pNodesLayer.appendChild(tmpGroup);}/**
+	 * Render ports for a node
+	 * @param {Object} pNodeData
+	 * @param {SVGGElement} pGroup - The node's SVG group
+	 * @param {number} pWidth
+	 * @param {number} pHeight
+	 * @param {Object} [pNodeTypeConfig] - Node type configuration (for label display options)
+	 */_renderPorts(pNodeData,pGroup,pWidth,pHeight,pNodeTypeConfig){if(!pNodeData.Ports||!Array.isArray(pNodeData.Ports))return;let tmpPortLabelsVertical=pNodeTypeConfig&&pNodeTypeConfig.PortLabelsVertical;let tmpPortLabelPadding=pNodeTypeConfig&&pNodeTypeConfig.PortLabelPadding;let tmpPortLabelsOutside=pNodeTypeConfig&&pNodeTypeConfig.PortLabelsOutside;let tmpGeometryProvider=this._FlowView._GeometryProvider;// Group ports by their Side value (supports all 12 positions)
+let tmpPortsBySide={};for(let i=0;i<pNodeData.Ports.length;i++){let tmpPort=pNodeData.Ports[i];let tmpSide=tmpPort.Side||(tmpPort.Direction==='input'?'left':'right');if(!tmpPortsBySide[tmpSide]){tmpPortsBySide[tmpSide]=[];}tmpPortsBySide[tmpSide].push(tmpPort);}for(let tmpSide in tmpPortsBySide){let tmpPorts=tmpPortsBySide[tmpSide];// Determine the edge for label positioning
+let tmpEdge=tmpGeometryProvider?tmpGeometryProvider.getEdgeFromSide(tmpSide):tmpSide;for(let i=0;i<tmpPorts.length;i++){let tmpPort=tmpPorts[i];let tmpPosition=this._getPortLocalPosition(tmpSide,i,tmpPorts.length,pWidth,pHeight);// Port label badge — flush against the node edge with no
+// border on the edge side; rendered before the port circle
+// so the circle visually sits on top of the badge
+let tmpLabelElement=null;if(tmpPort.Label){let tmpPortTypeColorMap={'event-in':'#3498db','event-out':'#2ecc71','setting':'#e67e22','value':'#f1c40f','error':'#e74c3c'};let tmpBorderColor=tmpPort.PortType?tmpPortTypeColorMap[tmpPort.PortType]||'#95a5a6':'#95a5a6';let tmpBadgeHeight=12;let tmpBadgePadH=5;let tmpBadgeBorderW=2;let tmpEdgePad=1;let tmpPortRadius=5;let tmpTextLen=tmpPort.Label.length*5;let tmpBadgeX,tmpBadgeY,tmpBadgeWidth;let tmpTextX,tmpTextAnchor;let tmpStripeX,tmpStripeY,tmpStripeW,tmpStripeH;let tmpBorderPath;if(tmpEdge==='left'){tmpBadgeWidth=tmpPortRadius+tmpBadgePadH+tmpTextLen+tmpBadgePadH+tmpBadgeBorderW;tmpBadgeX=tmpEdgePad;tmpBadgeY=tmpPosition.y-tmpBadgeHeight/2;tmpTextX=tmpBadgeX+tmpPortRadius+tmpBadgePadH;tmpTextAnchor='start';tmpStripeX=tmpBadgeX+tmpBadgeWidth-tmpBadgeBorderW;tmpStripeY=tmpBadgeY;tmpStripeW=tmpBadgeBorderW;tmpStripeH=tmpBadgeHeight;tmpBorderPath='M '+tmpBadgeX+' '+tmpBadgeY+' L '+(tmpBadgeX+tmpBadgeWidth)+' '+tmpBadgeY+' L '+(tmpBadgeX+tmpBadgeWidth)+' '+(tmpBadgeY+tmpBadgeHeight)+' L '+tmpBadgeX+' '+(tmpBadgeY+tmpBadgeHeight);}else if(tmpEdge==='right'){tmpBadgeWidth=tmpBadgeBorderW+tmpBadgePadH+tmpTextLen+tmpBadgePadH+tmpPortRadius;tmpBadgeX=pWidth-tmpBadgeWidth-tmpEdgePad;tmpBadgeY=tmpPosition.y-tmpBadgeHeight/2;tmpTextX=tmpBadgeX+tmpBadgeBorderW+tmpBadgePadH;tmpTextAnchor='start';tmpStripeX=tmpBadgeX;tmpStripeY=tmpBadgeY;tmpStripeW=tmpBadgeBorderW;tmpStripeH=tmpBadgeHeight;tmpBorderPath='M '+(tmpBadgeX+tmpBadgeWidth)+' '+tmpBadgeY+' L '+tmpBadgeX+' '+tmpBadgeY+' L '+tmpBadgeX+' '+(tmpBadgeY+tmpBadgeHeight)+' L '+(tmpBadgeX+tmpBadgeWidth)+' '+(tmpBadgeY+tmpBadgeHeight);}else if(tmpEdge==='top'){tmpBadgeWidth=tmpTextLen+tmpBadgePadH*2;tmpBadgeX=tmpPosition.x-tmpBadgeWidth/2;tmpBadgeY=tmpEdgePad;tmpTextX=tmpPosition.x;tmpTextAnchor='middle';tmpStripeX=tmpBadgeX;tmpStripeY=tmpBadgeY+tmpBadgeHeight-tmpBadgeBorderW;tmpStripeW=tmpBadgeWidth;tmpStripeH=tmpBadgeBorderW;tmpBorderPath='M '+tmpBadgeX+' '+tmpBadgeY+' L '+tmpBadgeX+' '+(tmpBadgeY+tmpBadgeHeight)+' L '+(tmpBadgeX+tmpBadgeWidth)+' '+(tmpBadgeY+tmpBadgeHeight)+' L '+(tmpBadgeX+tmpBadgeWidth)+' '+tmpBadgeY;}else{tmpBadgeWidth=tmpTextLen+tmpBadgePadH*2;tmpBadgeX=tmpPosition.x-tmpBadgeWidth/2;tmpBadgeY=pHeight-tmpBadgeHeight-tmpEdgePad;tmpTextX=tmpPosition.x;tmpTextAnchor='middle';tmpStripeX=tmpBadgeX;tmpStripeY=tmpBadgeY;tmpStripeW=tmpBadgeWidth;tmpStripeH=tmpBadgeBorderW;tmpBorderPath='M '+tmpBadgeX+' '+(tmpBadgeY+tmpBadgeHeight)+' L '+tmpBadgeX+' '+tmpBadgeY+' L '+(tmpBadgeX+tmpBadgeWidth)+' '+tmpBadgeY+' L '+(tmpBadgeX+tmpBadgeWidth)+' '+(tmpBadgeY+tmpBadgeHeight);}// Background rect (cream, no stroke — border drawn separately)
+let tmpBgRect=this._FlowView._SVGHelperProvider.createSVGElement('rect');tmpBgRect.setAttribute('class','pict-flow-port-label-bg');tmpBgRect.setAttribute('x',String(tmpBadgeX));tmpBgRect.setAttribute('y',String(tmpBadgeY));tmpBgRect.setAttribute('width',String(tmpBadgeWidth));tmpBgRect.setAttribute('height',String(tmpBadgeHeight));tmpBgRect.setAttribute('fill','var(--pf-port-label-bg, rgba(255, 253, 240, 0.5))');pGroup.appendChild(tmpBgRect);// 3-sided border path (open on the edge-facing side)
+let tmpBorderPathEl=this._FlowView._SVGHelperProvider.createSVGElement('path');tmpBorderPathEl.setAttribute('class','pict-flow-port-label-bg');tmpBorderPathEl.setAttribute('d',tmpBorderPath);tmpBorderPathEl.setAttribute('fill','none');tmpBorderPathEl.setAttribute('stroke',tmpBorderColor);tmpBorderPathEl.setAttribute('stroke-width','0.75');pGroup.appendChild(tmpBorderPathEl);// Colored stripe on the inner side
+let tmpStripe=this._FlowView._SVGHelperProvider.createSVGElement('rect');tmpStripe.setAttribute('class','pict-flow-port-label-bg');tmpStripe.setAttribute('x',String(tmpStripeX));tmpStripe.setAttribute('y',String(tmpStripeY));tmpStripe.setAttribute('width',String(tmpStripeW));tmpStripe.setAttribute('height',String(tmpStripeH));tmpStripe.setAttribute('fill',tmpBorderColor);pGroup.appendChild(tmpStripe);// Text label — appended after circle for z-order
+tmpLabelElement=this._FlowView._SVGHelperProvider.createSVGElement('text');tmpLabelElement.setAttribute('class','pict-flow-port-label');tmpLabelElement.setAttribute('fill','var(--pf-port-label-text, #2c3e50)');tmpLabelElement.textContent=tmpPort.Label;tmpLabelElement.setAttribute('x',String(tmpTextX));tmpLabelElement.setAttribute('y',String(tmpBadgeY+tmpBadgeHeight/2));tmpLabelElement.setAttribute('text-anchor',tmpTextAnchor);tmpLabelElement.setAttribute('dominant-baseline','central');}// Port circle (rendered on top of badge background)
+let tmpShapeProvider=this._FlowView._ConnectorShapesProvider;let tmpCircle;if(tmpShapeProvider){tmpCircle=tmpShapeProvider.createPortElement(tmpPort,tmpPosition,pNodeData.Hash);}else{tmpCircle=this._FlowView._SVGHelperProvider.createSVGElement('circle');let tmpPortClass=`pict-flow-port ${tmpPort.Direction}`;if(tmpPort.PortType){tmpPortClass+=` port-type-${tmpPort.PortType}`;}tmpCircle.setAttribute('class',tmpPortClass);tmpCircle.setAttribute('cx',String(tmpPosition.x));tmpCircle.setAttribute('cy',String(tmpPosition.y));tmpCircle.setAttribute('r','5');tmpCircle.setAttribute('data-port-hash',tmpPort.Hash);tmpCircle.setAttribute('data-node-hash',pNodeData.Hash);tmpCircle.setAttribute('data-port-direction',tmpPort.Direction);if(tmpPort.PortType){tmpCircle.setAttribute('data-port-type',tmpPort.PortType);}tmpCircle.setAttribute('data-element-type','port');}pGroup.appendChild(tmpCircle);// Port label text (on top of everything)
+if(tmpLabelElement){pGroup.appendChild(tmpLabelElement);}}}}/**
+	 * Calculate port position relative to node origin.
+	 *
+	 * For left and right side ports, positioning is offset below the title bar
+	 * so that ports never overlap the header area.
+	 *
+	 * @param {string} pSide - 'left', 'right', 'top', 'bottom'
+	 * @param {number} pIndex - Index of this port on its side
+	 * @param {number} pTotal - Total ports on this side
+	 * @param {number} pWidth - Node width
+	 * @param {number} pHeight - Node height
+	 * @returns {{x: number, y: number}}
+	 */_getPortLocalPosition(pSide,pIndex,pTotal,pWidth,pHeight){return this._FlowView._GeometryProvider.getPortLocalPosition(pSide,pIndex,pTotal,pWidth,pHeight,this.options.NodeTitleBarHeight);}/**
+	 * Render custom body content for a node (svg, html, or canvas).
+	 *
+	 * Checks for a BodyContent configuration on the node type and renders
+	 * the appropriate content type into the node's SVG group.
+	 *
+	 * @param {Object} pNodeData - The node data object
+	 * @param {SVGGElement} pGroup - The node's SVG group
+	 * @param {number} pWidth - Node width
+	 * @param {number} pHeight - Node height
+	 * @param {Object} pNodeTypeConfig - The node type configuration
+	 */_renderBodyContent(pNodeData,pGroup,pWidth,pHeight,pNodeTypeConfig){if(!pNodeTypeConfig||!pNodeTypeConfig.BodyContent)return;let tmpBodyContent=pNodeTypeConfig.BodyContent;let tmpContentType=tmpBodyContent.ContentType;if(!tmpContentType)return;let tmpTitleBarHeight=this.options.NodeTitleBarHeight;let tmpPadding=typeof tmpBodyContent.Padding==='number'?tmpBodyContent.Padding:2;let tmpBodyBounds={x:tmpPadding,y:tmpTitleBarHeight+tmpPadding,width:pWidth-tmpPadding*2,height:pHeight-tmpTitleBarHeight-tmpPadding*2};let tmpPict=this._FlowView.pict||this.pict;// Register any templates defined in the BodyContent config (once)
+if(tmpBodyContent.Templates&&Array.isArray(tmpBodyContent.Templates)){if(!this._registeredBodyTemplates){this._registeredBodyTemplates=new Set();}for(let i=0;i<tmpBodyContent.Templates.length;i++){let tmpTpl=tmpBodyContent.Templates[i];if(tmpTpl.Hash&&tmpTpl.Template&&!this._registeredBodyTemplates.has(tmpTpl.Hash)){tmpPict.TemplateProvider.addTemplate(tmpTpl.Hash,tmpTpl.Template,'PictViewFlowNode-BodyContent');this._registeredBodyTemplates.add(tmpTpl.Hash);}}}switch(tmpContentType){case'svg':this._renderBodyContentSVG(pNodeData,pGroup,tmpBodyContent,tmpBodyBounds,pNodeTypeConfig,tmpPict);break;case'html':this._renderBodyContentHTML(pNodeData,pGroup,tmpBodyContent,tmpBodyBounds,pNodeTypeConfig,tmpPict);break;case'canvas':this._renderBodyContentCanvas(pNodeData,pGroup,tmpBodyContent,tmpBodyBounds,pNodeTypeConfig);break;default:this.log.warn('PictViewFlowNode _renderBodyContent: unknown ContentType ['+tmpContentType+']');break;}}/**
+	 * Render SVG body content into a <g> group.
+	 */_renderBodyContentSVG(pNodeData,pGroup,pBodyContent,pBounds,pNodeTypeConfig,pPict){let tmpContentGroup=this._FlowView._SVGHelperProvider.createSVGElement('g');tmpContentGroup.setAttribute('class','pict-flow-node-body-content');tmpContentGroup.setAttribute('transform',`translate(${pBounds.x}, ${pBounds.y})`);// Render template content
+let tmpRenderedContent=this._resolveBodyTemplate(pBodyContent,pNodeData,pPict);if(tmpRenderedContent){// Parse SVG markup into the group via a temporary SVG element
+let tmpTempSVG=document.createElementNS('http://www.w3.org/2000/svg','svg');tmpTempSVG.innerHTML=tmpRenderedContent;while(tmpTempSVG.firstChild){tmpContentGroup.appendChild(tmpTempSVG.firstChild);}}// Invoke render callback if provided
+if(typeof pBodyContent.RenderCallback==='function'){pBodyContent.RenderCallback(tmpContentGroup,pNodeData,pNodeTypeConfig,pBounds);}pGroup.appendChild(tmpContentGroup);}/**
+	 * Render HTML body content into a foreignObject.
+	 */_renderBodyContentHTML(pNodeData,pGroup,pBodyContent,pBounds,pNodeTypeConfig,pPict){let tmpFO=this._FlowView._SVGHelperProvider.createSVGElement('foreignObject');tmpFO.setAttribute('class','pict-flow-node-body-content-fo');tmpFO.setAttribute('x',String(pBounds.x));tmpFO.setAttribute('y',String(pBounds.y));tmpFO.setAttribute('width',String(pBounds.width));tmpFO.setAttribute('height',String(pBounds.height));let tmpDiv=document.createElement('div');tmpDiv.setAttribute('xmlns','http://www.w3.org/1999/xhtml');tmpDiv.setAttribute('class','pict-flow-node-body-content-html');// Pointer event isolation — prevent node drag/canvas pan
+tmpDiv.addEventListener('pointerdown',pEvent=>{pEvent.stopPropagation();});tmpDiv.addEventListener('wheel',pEvent=>{pEvent.stopPropagation();});// Render template content
+let tmpRenderedContent=this._resolveBodyTemplate(pBodyContent,pNodeData,pPict);if(tmpRenderedContent){tmpDiv.innerHTML=tmpRenderedContent;}// Invoke render callback if provided
+if(typeof pBodyContent.RenderCallback==='function'){pBodyContent.RenderCallback(tmpDiv,pNodeData,pNodeTypeConfig,pBounds);}tmpFO.appendChild(tmpDiv);pGroup.appendChild(tmpFO);}/**
+	 * Render canvas body content into a foreignObject.
+	 */_renderBodyContentCanvas(pNodeData,pGroup,pBodyContent,pBounds,pNodeTypeConfig){let tmpFO=this._FlowView._SVGHelperProvider.createSVGElement('foreignObject');tmpFO.setAttribute('class','pict-flow-node-body-content-fo');tmpFO.setAttribute('x',String(pBounds.x));tmpFO.setAttribute('y',String(pBounds.y));tmpFO.setAttribute('width',String(pBounds.width));tmpFO.setAttribute('height',String(pBounds.height));let tmpCanvas=document.createElement('canvas');tmpCanvas.setAttribute('xmlns','http://www.w3.org/1999/xhtml');tmpCanvas.setAttribute('class','pict-flow-node-body-content-canvas');tmpCanvas.width=Math.floor(pBounds.width);tmpCanvas.height=Math.floor(pBounds.height);tmpCanvas.style.width='100%';tmpCanvas.style.height='100%';// Pointer event isolation
+tmpCanvas.addEventListener('pointerdown',pEvent=>{pEvent.stopPropagation();});tmpCanvas.addEventListener('wheel',pEvent=>{pEvent.stopPropagation();});// Invoke render callback (the primary rendering path for canvas)
+if(typeof pBodyContent.RenderCallback==='function'){pBodyContent.RenderCallback(tmpCanvas,pNodeData,pNodeTypeConfig,pBounds);}tmpFO.appendChild(tmpCanvas);pGroup.appendChild(tmpFO);}/**
+	 * Resolve and render a body content template string.
+	 * @param {Object} pBodyContent - The BodyContent config
+	 * @param {Object} pNodeData - The node data (template record)
+	 * @param {Object} pPict - The Pict instance
+	 * @returns {string|null} Rendered template content, or null
+	 */_resolveBodyTemplate(pBodyContent,pNodeData,pPict){if(pBodyContent.TemplateHash){return pPict.parseTemplateByHash(pBodyContent.TemplateHash,pNodeData);}if(pBodyContent.Template){return pPict.parseTemplate(pBodyContent.Template,pNodeData,null,[pNodeData]);}return null;}// ── Node Body Renderers ──────────────────────────────────────────────
+/**
+	 * Render the standard rect-based node body (default mode).
+	 * @param {SVGGElement} pGroup
+	 * @param {Object} pNodeData
+	 * @param {number} pWidth
+	 * @param {number} pHeight
+	 * @param {number} pTitleBarHeight
+	 * @param {Object} pNodeTypeConfig
+	 */_renderRectNodeBody(pGroup,pNodeData,pWidth,pHeight,pTitleBarHeight,pNodeTypeConfig){// Node body (main rectangle)
+let tmpBody=this._FlowView._SVGHelperProvider.createSVGElement('rect');tmpBody.setAttribute('class','pict-flow-node-body');tmpBody.setAttribute('x','0');tmpBody.setAttribute('y','0');tmpBody.setAttribute('width',String(pWidth));tmpBody.setAttribute('height',String(pHeight));tmpBody.setAttribute('data-node-hash',pNodeData.Hash);tmpBody.setAttribute('data-element-type','node-body');// Apply custom styles from node type
+if(pNodeTypeConfig&&pNodeTypeConfig.BodyStyle){for(let tmpStyleKey in pNodeTypeConfig.BodyStyle){tmpBody.setAttribute(tmpStyleKey,pNodeTypeConfig.BodyStyle[tmpStyleKey]);}}// Apply per-instance style overrides (for node-specific editing)
+// These must be applied as inline styles so they override CSS rules
+// (CSS declarations take precedence over SVG presentation attributes).
+if(pNodeData.Style){let tmpInlineStyles=[];if(pNodeData.Style.BodyFill)tmpInlineStyles.push('fill:'+pNodeData.Style.BodyFill);if(pNodeData.Style.BodyStroke)tmpInlineStyles.push('stroke:'+pNodeData.Style.BodyStroke);if(pNodeData.Style.BodyStrokeWidth)tmpInlineStyles.push('stroke-width:'+pNodeData.Style.BodyStrokeWidth);if(tmpInlineStyles.length>0){tmpBody.setAttribute('style',tmpInlineStyles.join(';'));}}pGroup.appendChild(tmpBody);// Title bar background (top portion)
+let tmpTitleBar=this._FlowView._SVGHelperProvider.createSVGElement('rect');tmpTitleBar.setAttribute('class','pict-flow-node-title-bar');tmpTitleBar.setAttribute('x','0');tmpTitleBar.setAttribute('y','0');tmpTitleBar.setAttribute('width',String(pWidth));tmpTitleBar.setAttribute('height',String(pTitleBarHeight));tmpTitleBar.setAttribute('data-node-hash',pNodeData.Hash);tmpTitleBar.setAttribute('data-element-type','node-body');// Apply custom title bar color
+if(pNodeTypeConfig&&pNodeTypeConfig.TitleBarColor){tmpTitleBar.setAttribute('fill',pNodeTypeConfig.TitleBarColor);}pGroup.appendChild(tmpTitleBar);// Title bar bottom fill (to square off the rounded corners at the bottom of the title bar)
+let tmpTitleBarBottom=this._FlowView._SVGHelperProvider.createSVGElement('rect');tmpTitleBarBottom.setAttribute('class','pict-flow-node-title-bar-bottom');tmpTitleBarBottom.setAttribute('x','0');tmpTitleBarBottom.setAttribute('y',String(pTitleBarHeight-8));tmpTitleBarBottom.setAttribute('width',String(pWidth));tmpTitleBarBottom.setAttribute('height','8');tmpTitleBarBottom.setAttribute('data-node-hash',pNodeData.Hash);tmpTitleBarBottom.setAttribute('data-element-type','node-body');if(pNodeTypeConfig&&pNodeTypeConfig.TitleBarColor){tmpTitleBarBottom.setAttribute('fill',pNodeTypeConfig.TitleBarColor);}// Per-instance title bar color override
+// Applied as inline style to override CSS rules.
+if(pNodeData.Style&&pNodeData.Style.TitleBarColor){tmpTitleBar.setAttribute('style','fill:'+pNodeData.Style.TitleBarColor);tmpTitleBarBottom.setAttribute('style','fill:'+pNodeData.Style.TitleBarColor);}pGroup.appendChild(tmpTitleBarBottom);}/**
+	 * Render a bracket-style node body (used by sketch/blueprint themes).
+	 *
+	 * The bracket body consists of:
+	 * 1. A fill rect for the body background (no stroke)
+	 * 2. A fill rect for the title bar background (no stroke)
+	 * 3. A bracket path drawn via the noise provider (outline + title divider)
+	 *
+	 * @param {SVGGElement} pGroup
+	 * @param {Object} pNodeData
+	 * @param {number} pWidth
+	 * @param {number} pHeight
+	 * @param {number} pTitleBarHeight
+	 * @param {Object} pNodeTypeConfig
+	 */_renderBracketNodeBody(pGroup,pNodeData,pWidth,pHeight,pTitleBarHeight,pNodeTypeConfig){// 1. Body fill rect (background only, no stroke)
+let tmpBodyFill=this._FlowView._SVGHelperProvider.createSVGElement('rect');tmpBodyFill.setAttribute('class','pict-flow-node-body pict-flow-node-bracket-fill');tmpBodyFill.setAttribute('x','0');tmpBodyFill.setAttribute('y','0');tmpBodyFill.setAttribute('width',String(pWidth));tmpBodyFill.setAttribute('height',String(pHeight));tmpBodyFill.setAttribute('data-node-hash',pNodeData.Hash);tmpBodyFill.setAttribute('data-element-type','node-body');// Per-instance style overrides
+if(pNodeData.Style){let tmpInlineStyles=[];if(pNodeData.Style.BodyFill)tmpInlineStyles.push('fill:'+pNodeData.Style.BodyFill);if(tmpInlineStyles.length>0){tmpBodyFill.setAttribute('style',tmpInlineStyles.join(';'));}}pGroup.appendChild(tmpBodyFill);// 2. Title bar fill rect (background only, no stroke)
+let tmpTitleFill=this._FlowView._SVGHelperProvider.createSVGElement('rect');tmpTitleFill.setAttribute('class','pict-flow-node-title-bar pict-flow-node-bracket-title-fill');tmpTitleFill.setAttribute('x','0');tmpTitleFill.setAttribute('y','0');tmpTitleFill.setAttribute('width',String(pWidth));tmpTitleFill.setAttribute('height',String(pTitleBarHeight));tmpTitleFill.setAttribute('data-node-hash',pNodeData.Hash);tmpTitleFill.setAttribute('data-element-type','node-body');if(pNodeTypeConfig&&pNodeTypeConfig.TitleBarColor){tmpTitleFill.setAttribute('style','fill:'+pNodeTypeConfig.TitleBarColor);}if(pNodeData.Style&&pNodeData.Style.TitleBarColor){tmpTitleFill.setAttribute('style','fill:'+pNodeData.Style.TitleBarColor);}pGroup.appendChild(tmpTitleFill);// 3. Bracket path (outline + title divider with optional noise)
+let tmpBracketConfig={SerifLength:6,TitleSeparator:true};if(this._FlowView._ThemeProvider){let tmpActiveTheme=this._FlowView._ThemeProvider.getActiveTheme();if(tmpActiveTheme&&tmpActiveTheme.BracketConfig){tmpBracketConfig=Object.assign(tmpBracketConfig,tmpActiveTheme.BracketConfig);}}let tmpAmplitude=0;if(this._FlowView._ThemeProvider){tmpAmplitude=this._FlowView._ThemeProvider.getNodeNoiseAmplitude();}let tmpBracketD='';if(this._FlowView._NoiseProvider){tmpBracketD=this._FlowView._NoiseProvider.generateBracketPath(pWidth,pHeight,tmpBracketConfig.SerifLength,tmpBracketConfig.TitleSeparator?pTitleBarHeight:0,tmpAmplitude,pNodeData.Hash);}let tmpBracketPath=this._FlowView._SVGHelperProvider.createSVGElement('path');tmpBracketPath.setAttribute('class','pict-flow-node-bracket');tmpBracketPath.setAttribute('d',tmpBracketD);tmpBracketPath.setAttribute('data-node-hash',pNodeData.Hash);tmpBracketPath.setAttribute('data-element-type','node-body');// Per-instance stroke overrides
+if(pNodeData.Style){let tmpInlineStyles=[];if(pNodeData.Style.BodyStroke)tmpInlineStyles.push('stroke:'+pNodeData.Style.BodyStroke);if(pNodeData.Style.BodyStrokeWidth)tmpInlineStyles.push('stroke-width:'+pNodeData.Style.BodyStrokeWidth);if(tmpInlineStyles.length>0){tmpBracketPath.setAttribute('style',tmpInlineStyles.join(';'));}}pGroup.appendChild(tmpBracketPath);}}module.exports=PictViewFlowNode;module.exports.default_configuration=_DefaultConfiguration;},{"pict-view":64}],43:[function(require,module,exports){const libPictView=require('pict-view');const _DefaultConfiguration={ViewIdentifier:'Flow-PropertiesPanel',AutoRender:false,Templates:[{Hash:'Flow-InfoPanel-Wrapper',Template:'<div class="pict-flow-info-panel">{~D:Record.PanelContent~}</div>'},{Hash:'Flow-InfoPanel-Header-Icon',Template:'<div class="pict-flow-info-panel-header with-icon">{~D:Record.Icon~} {~D:Record.Label~}</div>'},{Hash:'Flow-InfoPanel-Header',Template:'<div class="pict-flow-info-panel-header">{~D:Record.Label~}</div>'},{Hash:'Flow-InfoPanel-Description',Template:'<div class="pict-flow-info-panel-description">{~D:Record.Description~}</div>'},{Hash:'Flow-InfoPanel-Badges',Template:'<div class="pict-flow-info-panel-badges">{~D:Record.BadgesContent~}</div>'},{Hash:'Flow-InfoPanel-Badge-Category',Template:'<span class="pict-flow-info-panel-badge category">{~D:Record.Category~}</span>'},{Hash:'Flow-InfoPanel-Badge-Code',Template:'<span class="pict-flow-info-panel-badge code">{~D:Record.Code~}</span>'},{Hash:'Flow-InfoPanel-Section-Inputs',Template:'<div class="pict-flow-info-panel-section"><div class="pict-flow-info-panel-section-title">Inputs</div>{~D:Record.PortsContent~}</div>'},{Hash:'Flow-InfoPanel-Section-Outputs',Template:'<div class="pict-flow-info-panel-section"><div class="pict-flow-info-panel-section-title">Outputs</div>{~D:Record.PortsContent~}</div>'},{Hash:'Flow-InfoPanel-Port-Input',Template:'<div class="pict-flow-info-panel-port input">{~D:Record.Label~}{~D:Record.Constraint~}</div>'},{Hash:'Flow-InfoPanel-Port-Output',Template:'<div class="pict-flow-info-panel-port output">{~D:Record.Label~}</div>'},{Hash:'Flow-InfoPanel-Port-Constraint',Template:' <span class="pict-flow-info-panel-port-constraint">{~D:Record.ConstraintText~}</span>'},{Hash:'Flow-InfoPanel-Section-Generic',Template:'<div class="pict-flow-info-panel-section"><div class="pict-flow-info-panel-section-title">{~D:Record.SectionTitle~}</div>{~D:Record.PortsContent~}</div>'},{Hash:'Flow-InfoPanel-Port-Event',Template:'<div class="pict-flow-info-panel-port event">{~D:Record.Label~}</div>'},{Hash:'Flow-InfoPanel-Port-Value',Template:'<div class="pict-flow-info-panel-port value">{~D:Record.Label~}{~D:Record.DataType~}</div>'},{Hash:'Flow-InfoPanel-Port-DataType',Template:' <span class="pict-flow-info-panel-port-constraint">{~D:Record.DataTypeText~}</span>'},{Hash:'Flow-NodeProps-Editor',Template:'<div class="pict-flow-node-props-fields"><div class="pict-flow-node-props-field"><label class="pict-flow-node-props-label">Title</label><input type="text" class="pict-flow-node-props-input" data-prop="Title" value="{~D:Record.Title~}" /></div><div class="pict-flow-node-props-field"><label class="pict-flow-node-props-label">Width</label><input type="number" class="pict-flow-node-props-input" data-prop="Width" value="{~D:Record.Width~}" min="60" step="10" /></div><div class="pict-flow-node-props-field"><label class="pict-flow-node-props-label">Height</label><input type="number" class="pict-flow-node-props-input" data-prop="Height" value="{~D:Record.Height~}" min="40" step="10" /></div><div class="pict-flow-node-props-field"><label class="pict-flow-node-props-label">Body Fill</label><input type="color" class="pict-flow-node-props-input pict-flow-node-props-color" data-prop="Style.BodyFill" value="{~D:Record.BodyFillValue~}" /></div><div class="pict-flow-node-props-field"><label class="pict-flow-node-props-label">Body Stroke</label><input type="color" class="pict-flow-node-props-input pict-flow-node-props-color" data-prop="Style.BodyStroke" value="{~D:Record.BodyStrokeValue~}" /></div><div class="pict-flow-node-props-field"><label class="pict-flow-node-props-label">Stroke Width</label><input type="number" class="pict-flow-node-props-input" data-prop="Style.BodyStrokeWidth" value="{~D:Record.BodyStrokeWidthValue~}" min="0" max="10" step="0.5" /></div><div class="pict-flow-node-props-field"><label class="pict-flow-node-props-label">Title Bar</label><input type="color" class="pict-flow-node-props-input pict-flow-node-props-color" data-prop="Style.TitleBarColor" value="{~D:Record.TitleBarColorValue~}" /></div></div>'}]};/**
+ * PictView-Flow-PropertiesPanel
+ *
+ * Renders and manages all open properties panels on the flow graph.
+ * Panels are SVG foreignObject elements containing HTML, placed inside
+ * the viewport group so they zoom/pan with the graph.
+ *
+ * Responsibilities:
+ *   - Reconcile DOM (add new panels, remove closed ones, update positions)
+ *   - Render tether lines from each panel to its node
+ *   - Manage panel instance cache (PictFlowCardPropertiesPanel subclasses)
+ *   - Isolate HTML events from SVG interactions
+ */class PictViewFlowPropertiesPanel extends libPictView{constructor(pFable,pOptions,pServiceHash){let tmpOptions=Object.assign({},JSON.parse(JSON.stringify(_DefaultConfiguration)),pOptions);super(pFable,tmpOptions,pServiceHash);this.serviceType='PictViewFlowPropertiesPanel';this._FlowView=null;// Cache of active panel instances: Map<panelHash, PictFlowCardPropertiesPanel>
+this._PanelInstances={};}/**
+	 * Render all open panels and their tethers.
+	 *
+	 * Uses DOM reconciliation for panels (to preserve live HTML state)
+	 * and clear-and-rebuild for tethers (trivial SVG lines).
+	 *
+	 * @param {Array} pOpenPanels - Array of panel data objects from _FlowData.OpenPanels
+	 * @param {SVGGElement} pPanelsLayer - The SVG <g> for panel foreignObjects
+	 * @param {SVGGElement} pTethersLayer - The SVG <g> for tether lines
+	 * @param {string|null} pSelectedTetherHash - Hash of the selected tether's panel, or null
+	 */renderPanels(pOpenPanels,pPanelsLayer,pTethersLayer,pSelectedTetherHash){if(!pPanelsLayer||!pTethersLayer)return;if(!this._FlowView)return;let tmpOpenPanels=Array.isArray(pOpenPanels)?pOpenPanels:[];// --- Reconcile panels layer (add new, remove closed, update positions) ---
+let tmpExistingPanelHashes=new Set();let tmpExistingForeignObjects=pPanelsLayer.querySelectorAll('.pict-flow-panel-foreign-object');for(let i=0;i<tmpExistingForeignObjects.length;i++){tmpExistingPanelHashes.add(tmpExistingForeignObjects[i].getAttribute('data-panel-hash'));}let tmpDesiredPanelHashes=new Set();for(let i=0;i<tmpOpenPanels.length;i++){tmpDesiredPanelHashes.add(tmpOpenPanels[i].Hash);}// Remove panels that are no longer open
+for(let i=0;i<tmpExistingForeignObjects.length;i++){let tmpHash=tmpExistingForeignObjects[i].getAttribute('data-panel-hash');if(!tmpDesiredPanelHashes.has(tmpHash)){tmpExistingForeignObjects[i].remove();// Destroy cached instance
+if(this._PanelInstances[tmpHash]){this._PanelInstances[tmpHash].destroy();delete this._PanelInstances[tmpHash];}}}// Add or update panels
+for(let i=0;i<tmpOpenPanels.length;i++){let tmpPanelData=tmpOpenPanels[i];if(tmpExistingPanelHashes.has(tmpPanelData.Hash)){// Update position of existing panel
+let tmpFO=pPanelsLayer.querySelector(`[data-panel-hash="${tmpPanelData.Hash}"]`);if(tmpFO){tmpFO.setAttribute('x',String(tmpPanelData.X));tmpFO.setAttribute('y',String(tmpPanelData.Y));tmpFO.setAttribute('width',String(tmpPanelData.Width));tmpFO.setAttribute('height',String(tmpPanelData.Height));}}else{// Create new panel
+this._createPanelForeignObject(tmpPanelData,pPanelsLayer);}}// --- Clear and rebuild tethers ---
+while(pTethersLayer.firstChild){pTethersLayer.removeChild(pTethersLayer.firstChild);}for(let i=0;i<tmpOpenPanels.length;i++){let tmpIsSelected=pSelectedTetherHash===tmpOpenPanels[i].Hash;this._renderTether(tmpOpenPanels[i],pTethersLayer,tmpIsSelected);}}/**
+	 * Create a foreignObject containing the panel chrome and content.
+	 * Delegates to the PanelChrome provider for template-based chrome creation,
+	 * then renders panel content into the body container.
+	 *
+	 * @param {Object} pPanelData - Panel data from OpenPanels
+	 * @param {SVGGElement} pPanelsLayer
+	 */_createPanelForeignObject(pPanelData,pPanelsLayer){let tmpPanelChromeProvider=this._FlowView._PanelChromeProvider;if(!tmpPanelChromeProvider)return;let tmpBody=tmpPanelChromeProvider.createPanelForeignObject(pPanelData,pPanelsLayer);// Render the panel content via the panel type implementation
+if(tmpBody){this._renderPanelContent(pPanelData,tmpBody);}// Render the collapsible node properties editor at the bottom of the panel
+let tmpFO=pPanelsLayer.querySelector(`[data-panel-hash="${pPanelData.Hash}"]`);if(tmpFO){this._renderNodePropsEditor(pPanelData,tmpFO);}}/**
+	 * Instantiate (or reuse) the panel type implementation and render into the body container.
+	 *
+	 * @param {Object} pPanelData
+	 * @param {HTMLDivElement} pBodyContainer
+	 */_renderPanelContent(pPanelData,pBodyContainer){let tmpNodeData=this._FlowView.getNode(pPanelData.NodeHash);if(!tmpNodeData)return;let tmpNodeTypeConfig=this._FlowView._NodeTypeProvider.getNodeType(tmpNodeData.Type);if(!tmpNodeTypeConfig)return;// If no PropertiesPanel is configured, render the auto-generated info panel
+if(!tmpNodeTypeConfig.PropertiesPanel){this._renderInfoPanelContent(pBodyContainer,tmpNodeData,tmpNodeTypeConfig);return;}let tmpPanelConfig=tmpNodeTypeConfig.PropertiesPanel;let tmpPanelType=tmpPanelConfig.PanelType||'Base';// Try to get a registered panel type service
+let tmpServiceName=`PictFlowCardPropertiesPanel-${tmpPanelType}`;let tmpInstance=null;if(this._PanelInstances[pPanelData.Hash]){// Reuse existing instance
+tmpInstance=this._PanelInstances[pPanelData.Hash];}else{// Create a new instance
+if(this.fable.servicesMap.hasOwnProperty(tmpServiceName)){tmpInstance=this.fable.instantiateServiceProviderWithoutRegistration(tmpServiceName,tmpPanelConfig);}else if(this.fable.servicesMap.hasOwnProperty('PictFlowCardPropertiesPanel')){// Fall back to base class
+tmpInstance=this.fable.instantiateServiceProviderWithoutRegistration('PictFlowCardPropertiesPanel',tmpPanelConfig);}if(tmpInstance){tmpInstance._FlowView=this._FlowView;this._PanelInstances[pPanelData.Hash]=tmpInstance;}}if(tmpInstance){tmpInstance.render(pBodyContainer,tmpNodeData);}// After the form renders, append port summary sections showing
+// event inputs, event outputs, and state outputs.
+// SettingsInputs are already visible as form fields above.
+this._renderPortSummary(pBodyContainer,tmpNodeTypeConfig);}/**
+	 * Render an auto-generated info panel for nodes without a configured PropertiesPanel.
+	 * Shows the node type, description, and a summary of input/output ports with
+	 * their connection constraints.
+	 *
+	 * Uses configuration-based templates from _DefaultConfiguration.Templates
+	 * rendered via pict.parseTemplateByHash().
+	 *
+	 * @param {HTMLDivElement} pContainer
+	 * @param {Object} pNodeData
+	 * @param {Object} pNodeTypeConfig
+	 */_renderInfoPanelContent(pContainer,pNodeData,pNodeTypeConfig){let tmpMeta=pNodeTypeConfig.CardMetadata||{};let tmpPorts=pNodeTypeConfig.DefaultPorts||[];let tmpInputs=tmpPorts.filter(pPort=>pPort.Direction==='input');let tmpOutputs=tmpPorts.filter(pPort=>pPort.Direction==='output');let tmpLabel=pNodeTypeConfig.Label||pNodeData.Type;// Build content by rendering configuration-based templates
+let tmpContentParts=[];// Header
+let tmpIconProvider=this._FlowView._IconProvider;if(tmpMeta.Icon&&tmpIconProvider&&!tmpIconProvider.isEmojiIcon(tmpMeta.Icon)){// SVG icon markup for the header
+let tmpResolvedKey=tmpIconProvider.resolveIconKey(tmpMeta);let tmpIconMarkup=tmpIconProvider.getIconSVGMarkup(tmpResolvedKey,18);tmpContentParts.push(this.pict.parseTemplateByHash('Flow-InfoPanel-Header-Icon',{Icon:tmpIconMarkup,Label:tmpLabel}));}else if(tmpMeta.Icon){tmpContentParts.push(this.pict.parseTemplateByHash('Flow-InfoPanel-Header-Icon',{Icon:tmpMeta.Icon,Label:tmpLabel}));}else if(tmpIconProvider){// No icon specified — render default fallback
+let tmpDefaultMarkup=tmpIconProvider.getIconSVGMarkup('default',18);tmpContentParts.push(this.pict.parseTemplateByHash('Flow-InfoPanel-Header-Icon',{Icon:tmpDefaultMarkup,Label:tmpLabel}));}else{tmpContentParts.push(this.pict.parseTemplateByHash('Flow-InfoPanel-Header',{Label:tmpLabel}));}// Description
+if(tmpMeta.Description){tmpContentParts.push(this.pict.parseTemplateByHash('Flow-InfoPanel-Description',{Description:tmpMeta.Description}));}// Category + Code badges
+if(tmpMeta.Category||tmpMeta.Code){let tmpBadgesContent='';if(tmpMeta.Category){tmpBadgesContent+=this.pict.parseTemplateByHash('Flow-InfoPanel-Badge-Category',{Category:tmpMeta.Category});}if(tmpMeta.Code){tmpBadgesContent+=this.pict.parseTemplateByHash('Flow-InfoPanel-Badge-Code',{Code:tmpMeta.Code});}tmpContentParts.push(this.pict.parseTemplateByHash('Flow-InfoPanel-Badges',{BadgesContent:tmpBadgesContent}));}// Inputs
+if(tmpInputs.length>0){let tmpPortsContent='';for(let i=0;i<tmpInputs.length;i++){let tmpPort=tmpInputs[i];let tmpConstraint=this._getPortConstraintHTML(tmpPort);tmpPortsContent+=this.pict.parseTemplateByHash('Flow-InfoPanel-Port-Input',{Label:tmpPort.Label||'In',Constraint:tmpConstraint});}tmpContentParts.push(this.pict.parseTemplateByHash('Flow-InfoPanel-Section-Inputs',{PortsContent:tmpPortsContent}));}// Outputs
+if(tmpOutputs.length>0){let tmpPortsContent='';for(let i=0;i<tmpOutputs.length;i++){let tmpPort=tmpOutputs[i];tmpPortsContent+=this.pict.parseTemplateByHash('Flow-InfoPanel-Port-Output',{Label:tmpPort.Label||'Out'});}tmpContentParts.push(this.pict.parseTemplateByHash('Flow-InfoPanel-Section-Outputs',{PortsContent:tmpPortsContent}));}pContainer.innerHTML=this.pict.parseTemplateByHash('Flow-InfoPanel-Wrapper',{PanelContent:tmpContentParts.join('')});}/**
+	 * Render port summary sections below the form panel content.
+	 * Shows event inputs, event outputs, and state outputs — the ports
+	 * that the form does not cover (since the form only shows SettingsInputs).
+	 *
+	 * @param {HTMLDivElement} pContainer
+	 * @param {Object} pNodeTypeConfig
+	 */_renderPortSummary(pContainer,pNodeTypeConfig){let tmpPorts=pNodeTypeConfig.DefaultPorts||[];if(tmpPorts.length===0)return;// Categorize ports by type (settings are already shown as form fields)
+let tmpEventInputs=[];let tmpEventOutputs=[];let tmpStateOutputs=[];for(let i=0;i<tmpPorts.length;i++){let tmpPort=tmpPorts[i];let tmpPortType=tmpPort.PortType||'';if(tmpPortType==='event-in'){tmpEventInputs.push(tmpPort);}else if(tmpPortType==='event-out'||tmpPortType==='error'){tmpEventOutputs.push(tmpPort);}else if(tmpPortType==='value'){tmpStateOutputs.push(tmpPort);}}// Only render if there are non-settings ports to show
+if(tmpEventInputs.length===0&&tmpEventOutputs.length===0&&tmpStateOutputs.length===0){return;}let tmpSummaryParts=[];// Event Inputs
+if(tmpEventInputs.length>0){let tmpPortsContent='';for(let i=0;i<tmpEventInputs.length;i++){tmpPortsContent+=this.pict.parseTemplateByHash('Flow-InfoPanel-Port-Event',{Label:tmpEventInputs[i].Label||tmpEventInputs[i].Name||'Event In'});}tmpSummaryParts.push(this.pict.parseTemplateByHash('Flow-InfoPanel-Section-Generic',{SectionTitle:'Event Inputs',PortsContent:tmpPortsContent}));}// Event Outputs
+if(tmpEventOutputs.length>0){let tmpPortsContent='';for(let i=0;i<tmpEventOutputs.length;i++){let tmpPort=tmpEventOutputs[i];let tmpLabel=tmpPort.Label||tmpPort.Name||'Event Out';if(tmpPort.PortType==='error'){tmpLabel+=' ⚠';}tmpPortsContent+=this.pict.parseTemplateByHash('Flow-InfoPanel-Port-Event',{Label:tmpLabel});}tmpSummaryParts.push(this.pict.parseTemplateByHash('Flow-InfoPanel-Section-Generic',{SectionTitle:'Event Outputs',PortsContent:tmpPortsContent}));}// State Outputs
+if(tmpStateOutputs.length>0){let tmpPortsContent='';for(let i=0;i<tmpStateOutputs.length;i++){let tmpPort=tmpStateOutputs[i];let tmpLabel=tmpPort.Label||tmpPort.Name||'Output';let tmpDataType='';if(tmpPort.DataType){tmpDataType=this.pict.parseTemplateByHash('Flow-InfoPanel-Port-DataType',{DataTypeText:tmpPort.DataType});}tmpPortsContent+=this.pict.parseTemplateByHash('Flow-InfoPanel-Port-Value',{Label:tmpLabel,DataType:tmpDataType});}tmpSummaryParts.push(this.pict.parseTemplateByHash('Flow-InfoPanel-Section-Generic',{SectionTitle:'State Outputs',PortsContent:tmpPortsContent}));}if(tmpSummaryParts.length>0){// Create a wrapper div for the port summary and append it to the container
+let tmpSummaryDiv=document.createElement('div');tmpSummaryDiv.className='pict-flow-info-panel pict-flow-port-summary';tmpSummaryDiv.innerHTML=tmpSummaryParts.join('');pContainer.appendChild(tmpSummaryDiv);}}/**
+	 * Build the constraint markup for a port using configuration templates.
+	 *
+	 * @param {Object} pPort
+	 * @returns {string} Rendered constraint HTML or empty string
+	 */_getPortConstraintHTML(pPort){let tmpMin=typeof pPort.MinimumInputCount==='number'?pPort.MinimumInputCount:0;let tmpMax=typeof pPort.MaximumInputCount==='number'?pPort.MaximumInputCount:-1;if(tmpMin>0||tmpMax>0){let tmpConstraintText='';if(tmpMax<0){tmpConstraintText=`(min ${tmpMin})`;}else if(tmpMin===tmpMax){tmpConstraintText=`(exactly ${tmpMin})`;}else{tmpConstraintText=`(${tmpMin}\u2013${tmpMax})`;}return this.pict.parseTemplateByHash('Flow-InfoPanel-Port-Constraint',{ConstraintText:tmpConstraintText});}return'';}/**
+	 * Render the collapsible node properties editor into a panel's foreignObject.
+	 * Populates the editor fields with current node values and wires up live
+	 * change handlers for immediate visual feedback.
+	 *
+	 * @param {Object} pPanelData - Panel data from OpenPanels
+	 * @param {Element} pForeignObject - The panel's SVG foreignObject element
+	 */_renderNodePropsEditor(pPanelData,pForeignObject){let tmpNodeData=this._FlowView.getNode(pPanelData.NodeHash);if(!tmpNodeData)return;let tmpPropsBody=pForeignObject.querySelector('.pict-flow-panel-node-props-body');if(!tmpPropsBody)return;// Build the template record with safe defaults for Style values
+let tmpStyle=tmpNodeData.Style||{};// Resolve default colors from the node type config or CSS token defaults
+let tmpNodeTypeConfig=this._FlowView._NodeTypeProvider.getNodeType(tmpNodeData.Type);let tmpDefaultTitleBarColor='#2c3e50';let tmpDefaultBodyFill='#ffffff';let tmpDefaultBodyStroke='#d0d4d8';if(tmpNodeTypeConfig){if(tmpNodeTypeConfig.TitleBarColor)tmpDefaultTitleBarColor=tmpNodeTypeConfig.TitleBarColor;if(tmpNodeTypeConfig.BodyStyle){if(tmpNodeTypeConfig.BodyStyle.fill)tmpDefaultBodyFill=tmpNodeTypeConfig.BodyStyle.fill;if(tmpNodeTypeConfig.BodyStyle.stroke)tmpDefaultBodyStroke=tmpNodeTypeConfig.BodyStyle.stroke;}}let tmpRecord={Title:tmpNodeData.Title||'',Width:tmpNodeData.Width||180,Height:tmpNodeData.Height||80,BodyFillValue:tmpStyle.BodyFill||tmpDefaultBodyFill,BodyStrokeValue:tmpStyle.BodyStroke||tmpDefaultBodyStroke,BodyStrokeWidthValue:tmpStyle.BodyStrokeWidth||1,TitleBarColorValue:tmpStyle.TitleBarColor||tmpDefaultTitleBarColor};tmpPropsBody.innerHTML=this.pict.parseTemplateByHash('Flow-NodeProps-Editor',tmpRecord);// Wire up the expand/collapse toggle with dynamic panel height adjustment
+let tmpHeader=pForeignObject.querySelector('.pict-flow-panel-node-props-header');if(tmpHeader){// Store the original panel height before the section was expanded
+let tmpOriginalHeight=parseInt(pForeignObject.getAttribute('height'),10)||200;tmpHeader.addEventListener('click',pEvent=>{pEvent.stopPropagation();let tmpIsExpanded=tmpPropsBody.style.display!=='none';tmpPropsBody.style.display=tmpIsExpanded?'none':'block';let tmpChevron=tmpHeader.querySelector('.pict-flow-panel-node-props-chevron');if(tmpChevron){tmpChevron.classList.toggle('expanded',!tmpIsExpanded);}// Resize the foreignObject to accommodate the expanded/collapsed section
+let tmpEditorHeight=tmpIsExpanded?0:tmpPropsBody.scrollHeight;let tmpNewHeight=tmpOriginalHeight+tmpEditorHeight;pForeignObject.setAttribute('height',String(tmpNewHeight));// Update the panel data so tethers and position tracking stay in sync
+let tmpPanelDataEntry=this._FlowView._FlowData.OpenPanels.find(pPanel=>pPanel.Hash===pPanelData.Hash);if(tmpPanelDataEntry){tmpPanelDataEntry.Height=tmpNewHeight;}});}// Wire up live change handlers on all input fields
+let tmpInputs=tmpPropsBody.querySelectorAll('.pict-flow-node-props-input');for(let i=0;i<tmpInputs.length;i++){let tmpInput=tmpInputs[i];let tmpProp=tmpInput.getAttribute('data-prop');tmpInput.addEventListener('input',pEvent=>{pEvent.stopPropagation();this._applyNodePropChange(pPanelData.NodeHash,tmpProp,tmpInput.value,tmpInput.type);});// Prevent pointer events from propagating to SVG drag handler
+tmpInput.addEventListener('pointerdown',pEvent=>{pEvent.stopPropagation();});}}/**
+	 * Apply a node property change from the properties editor and re-render.
+	 *
+	 * @param {string} pNodeHash - Hash of the node to update
+	 * @param {string} pPropPath - Property path (e.g. 'Title', 'Width', 'Style.BodyFill')
+	 * @param {string} pValue - The new value from the input
+	 * @param {string} pInputType - The input element type ('text', 'number', 'color')
+	 */_applyNodePropChange(pNodeHash,pPropPath,pValue,pInputType){let tmpNodeData=this._FlowView.getNode(pNodeHash);if(!tmpNodeData)return;// Parse numeric values
+let tmpValue=pValue;if(pInputType==='number'){tmpValue=parseFloat(pValue);if(isNaN(tmpValue))return;}// Apply the value based on the property path
+if(pPropPath==='Title'){tmpNodeData.Title=tmpValue;}else if(pPropPath==='Width'){tmpNodeData.Width=tmpValue;}else if(pPropPath==='Height'){tmpNodeData.Height=tmpValue;}else if(pPropPath.startsWith('Style.')){if(!tmpNodeData.Style)tmpNodeData.Style={};let tmpStyleKey=pPropPath.substring(6);// Remove 'Style.' prefix
+tmpNodeData.Style[tmpStyleKey]=tmpValue;}// Re-render the flow to reflect changes
+this._FlowView.renderFlow();this._FlowView.marshalFromView();// Fire change event
+if(this._FlowView._EventHandlerProvider){this._FlowView._EventHandlerProvider.fireEvent('onFlowChanged',this._FlowView._FlowData);}}/**
+	 * Render a tether from a panel to its node.
+	 * Delegates to the TetherService for geometry, path generation, and SVG element creation.
+	 *
+	 * @param {Object} pPanelData
+	 * @param {SVGGElement} pTethersLayer
+	 * @param {boolean} pIsSelected
+	 */_renderTether(pPanelData,pTethersLayer,pIsSelected){let tmpTetherService=this._FlowView._TetherService;if(!tmpTetherService)return;let tmpNodeData=this._FlowView.getNode(pPanelData.NodeHash);if(!tmpNodeData)return;let tmpViewIdentifier=this._FlowView.options.ViewIdentifier;tmpTetherService.renderTether(pPanelData,tmpNodeData,pTethersLayer,pIsSelected,tmpViewIdentifier);}/**
+	 * Marshal data from all open panels back into their node Data objects.
+	 */marshalAllFromPanels(){for(let tmpPanelHash in this._PanelInstances){let tmpInstance=this._PanelInstances[tmpPanelHash];if(tmpInstance&&tmpInstance._NodeData){tmpInstance.marshalFromPanel(tmpInstance._NodeData);}}}/**
+	 * Destroy a specific panel instance and clean up.
+	 *
+	 * @param {string} pPanelHash
+	 */destroyPanel(pPanelHash){if(this._PanelInstances[pPanelHash]){this._PanelInstances[pPanelHash].destroy();delete this._PanelInstances[pPanelHash];}}/**
+	 * Destroy all panel instances.
+	 */destroyAllPanels(){for(let tmpPanelHash in this._PanelInstances){this._PanelInstances[tmpPanelHash].destroy();}this._PanelInstances={};}}module.exports=PictViewFlowPropertiesPanel;module.exports.default_configuration=_DefaultConfiguration;},{"pict-view":64}],44:[function(require,module,exports){const libPictView=require('pict-view');const _DefaultConfiguration={ViewIdentifier:'Flow-Toolbar',DefaultRenderable:'Flow-Toolbar-Content',DefaultDestinationAddress:'#Flow-Toolbar-Container',AutoRender:false,FlowViewIdentifier:'Pict-Flow',EnablePalette:true,CSS:false,Templates:[{Hash:'Flow-Toolbar-Template',Template:/*html*/`
+<div class="pict-flow-toolbar" id="Flow-Toolbar-Bar-{~D:Record.FlowViewIdentifier~}">
+	<div class="pict-flow-toolbar-group">
+		<button class="pict-flow-toolbar-btn" data-flow-action="add-node" id="Flow-Toolbar-AddNode-{~D:Record.FlowViewIdentifier~}" title="Add Node">
+			<span class="pict-flow-toolbar-btn-icon" id="Flow-Toolbar-Icon-plus-{~D:Record.FlowViewIdentifier~}"></span>
+			<span class="pict-flow-toolbar-btn-text">Node</span>
+		</button>
+		<button class="pict-flow-toolbar-btn danger" data-flow-action="delete-selected" title="Delete Node">
+			<span class="pict-flow-toolbar-btn-icon" id="Flow-Toolbar-Icon-trash-{~D:Record.FlowViewIdentifier~}"></span>
+		</button>
+	</div>
+	<div class="pict-flow-toolbar-group">
+		<button class="pict-flow-toolbar-btn" data-flow-action="cards-popup" id="Flow-Toolbar-Cards-{~D:Record.FlowViewIdentifier~}" title="Card Palette">
+			<span class="pict-flow-toolbar-btn-icon" id="Flow-Toolbar-Icon-cards-{~D:Record.FlowViewIdentifier~}"></span>
+			<span class="pict-flow-toolbar-btn-text">Cards</span>
+			<span class="pict-flow-toolbar-btn-chevron" id="Flow-Toolbar-CardsChevron-{~D:Record.FlowViewIdentifier~}"></span>
+		</button>
+	</div>
+	<div class="pict-flow-toolbar-group">
+		<button class="pict-flow-toolbar-btn" data-flow-action="layout-popup" id="Flow-Toolbar-Layout-{~D:Record.FlowViewIdentifier~}" title="Manage Layouts">
+			<span class="pict-flow-toolbar-btn-icon" id="Flow-Toolbar-Icon-layout-{~D:Record.FlowViewIdentifier~}"></span>
+			<span class="pict-flow-toolbar-btn-text">Layout</span>
+			<span class="pict-flow-toolbar-btn-chevron" id="Flow-Toolbar-LayoutChevron-{~D:Record.FlowViewIdentifier~}"></span>
+		</button>
+		<button class="pict-flow-toolbar-btn" data-flow-action="auto-layout" title="Auto Layout">
+			<span class="pict-flow-toolbar-btn-icon" id="Flow-Toolbar-Icon-auto-layout-{~D:Record.FlowViewIdentifier~}"></span>
+			<span class="pict-flow-toolbar-btn-text">Auto Layout</span>
+		</button>
+	</div>
+	<div class="pict-flow-toolbar-group">
+		<button class="pict-flow-toolbar-btn" data-flow-action="zoom-in" title="Zoom In">
+			<span class="pict-flow-toolbar-btn-icon" id="Flow-Toolbar-Icon-zoom-in-{~D:Record.FlowViewIdentifier~}"></span>
+		</button>
+		<button class="pict-flow-toolbar-btn" data-flow-action="zoom-out" title="Zoom Out">
+			<span class="pict-flow-toolbar-btn-icon" id="Flow-Toolbar-Icon-zoom-out-{~D:Record.FlowViewIdentifier~}"></span>
+		</button>
+		<button class="pict-flow-toolbar-btn" data-flow-action="zoom-fit" title="Fit to View">
+			<span class="pict-flow-toolbar-btn-icon" id="Flow-Toolbar-Icon-zoom-fit-{~D:Record.FlowViewIdentifier~}"></span>
+		</button>
+	</div>
+	<div class="pict-flow-toolbar-group pict-flow-toolbar-right">
+		<button class="pict-flow-toolbar-btn" data-flow-action="settings-popup" id="Flow-Toolbar-Settings-{~D:Record.FlowViewIdentifier~}" title="Theme Settings">
+			<span class="pict-flow-toolbar-btn-icon" id="Flow-Toolbar-Icon-settings-{~D:Record.FlowViewIdentifier~}"></span>
+		</button>
+		<button class="pict-flow-toolbar-btn" data-flow-action="fullscreen" id="Flow-Toolbar-Fullscreen-{~D:Record.FlowViewIdentifier~}" title="Toggle Fullscreen">
+			<span class="pict-flow-toolbar-btn-icon" id="Flow-Toolbar-Fullscreen-Icon-{~D:Record.FlowViewIdentifier~}"></span>
+		</button>
+		<button class="pict-flow-toolbar-btn" data-flow-action="toggle-floating" title="Float">
+			<span class="pict-flow-toolbar-btn-icon" id="Flow-Toolbar-Icon-grip-{~D:Record.FlowViewIdentifier~}"></span>
+		</button>
+		<button class="pict-flow-toolbar-btn" data-flow-action="collapse-toolbar" title="Collapse Toolbar">
+			<span class="pict-flow-toolbar-btn-icon" id="Flow-Toolbar-Icon-collapse-{~D:Record.FlowViewIdentifier~}"></span>
+		</button>
+	</div>
+</div>
+<div class="pict-flow-toolbar-collapsed" id="Flow-Toolbar-Collapsed-{~D:Record.FlowViewIdentifier~}">
+	<button class="pict-flow-toolbar-expand-btn" data-flow-action="expand-toolbar" title="Expand Toolbar" id="Flow-Toolbar-ExpandBtn-{~D:Record.FlowViewIdentifier~}">
+		<span id="Flow-Toolbar-Icon-expand-{~D:Record.FlowViewIdentifier~}"></span>
+	</button>
+</div>
+<div class="pict-flow-toolbar-popup-anchor" id="Flow-Toolbar-PopupAnchor-{~D:Record.FlowViewIdentifier~}">
+</div>
+`}],Renderables:[{RenderableHash:'Flow-Toolbar-Content',TemplateHash:'Flow-Toolbar-Template',DestinationAddress:'#Flow-Toolbar-Container',RenderMethod:'replace'}]};class PictViewFlowToolbar extends libPictView{constructor(pFable,pOptions,pServiceHash){let tmpOptions=Object.assign({},JSON.parse(JSON.stringify(_DefaultConfiguration)),pOptions);super(pFable,tmpOptions,pServiceHash);this.serviceType='PictViewFlowToolbar';this._FlowView=null;// Toolbar mode state
+this._ToolbarMode='docked';// 'docked' | 'floating' | 'collapsed'
+this._ActivePopup=null;// 'add-node' | 'cards' | 'layout' | null
+this._FloatingPosition={X:80,Y:80};this._DocumentClickHandler=null;this._FloatingToolbarView=null;}render(pRenderableHash,pRenderDestinationAddress,pTemplateRecordAddress){// Pass this.options as the template record so {~D:Record.FlowViewIdentifier~}
+// resolves correctly in the toolbar template.
+return super.render(pRenderableHash,pRenderDestinationAddress,this.options);}onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent){let tmpFlowViewIdentifier=this.options.FlowViewIdentifier;// Bind toolbar button events via event delegation
+let tmpToolbarBar=this.pict.ContentAssignment.getElement(`#Flow-Toolbar-Bar-${tmpFlowViewIdentifier}`);if(tmpToolbarBar.length>0){tmpToolbarBar[0].addEventListener('click',pEvent=>{let tmpTarget=pEvent.target;if(!tmpTarget)return;// Walk up to find the button with the action
+let tmpButton=tmpTarget.closest('[data-flow-action]');if(!tmpButton)return;let tmpAction=tmpButton.getAttribute('data-flow-action');this._handleToolbarAction(tmpAction);});}// Bind expand button click (it's outside the main toolbar bar)
+let tmpExpandBtn=this.pict.ContentAssignment.getElement(`#Flow-Toolbar-ExpandBtn-${tmpFlowViewIdentifier}`);if(tmpExpandBtn.length>0){tmpExpandBtn[0].addEventListener('click',()=>{this._setToolbarMode('docked');});}// Populate SVG icons for toolbar buttons
+this._populateToolbarIcons();return super.onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent);}// ── Icon Population ───────────────────────────────────────────────────
+/**
+	 * Populate SVG icons for all toolbar buttons.
+	 */_populateToolbarIcons(){let tmpIconProvider=this._FlowView?this._FlowView._IconProvider:null;if(!tmpIconProvider)return;let tmpFlowViewIdentifier=this.options.FlowViewIdentifier;// Map of element ID suffix → icon key
+let tmpIconMap={'plus':'plus','trash':'trash','zoom-in':'zoom-in','zoom-out':'zoom-out','zoom-fit':'zoom-fit','auto-layout':'auto-layout','cards':'cards','layout':'layout','settings':'settings','grip':'grip','collapse':'collapse','expand':'expand'};let tmpKeys=Object.keys(tmpIconMap);for(let i=0;i<tmpKeys.length;i++){let tmpElementId=`Flow-Toolbar-Icon-${tmpKeys[i]}-${tmpFlowViewIdentifier}`;let tmpElements=this.pict.ContentAssignment.getElement(`#${tmpElementId}`);if(tmpElements.length>0){tmpElements[0].innerHTML=tmpIconProvider.getIconSVGMarkup(tmpIconMap[tmpKeys[i]],14);}}// Fullscreen icon
+let tmpFullscreenIcon=this.pict.ContentAssignment.getElement(`#Flow-Toolbar-Fullscreen-Icon-${tmpFlowViewIdentifier}`);if(tmpFullscreenIcon.length>0){tmpFullscreenIcon[0].innerHTML=tmpIconProvider.getIconSVGMarkup('fullscreen',14);}// Chevrons (smaller)
+let tmpCardsChevron=this.pict.ContentAssignment.getElement(`#Flow-Toolbar-CardsChevron-${tmpFlowViewIdentifier}`);if(tmpCardsChevron.length>0){tmpCardsChevron[0].innerHTML=tmpIconProvider.getIconSVGMarkup('chevron-down',8);}let tmpLayoutChevron=this.pict.ContentAssignment.getElement(`#Flow-Toolbar-LayoutChevron-${tmpFlowViewIdentifier}`);if(tmpLayoutChevron.length>0){tmpLayoutChevron[0].innerHTML=tmpIconProvider.getIconSVGMarkup('chevron-down',8);}}// ── Popup Management ──────────────────────────────────────────────────
+/**
+	 * Open a popup below a trigger button.
+	 * @param {string} pType - 'add-node' | 'cards' | 'layout'
+	 */_openPopup(pType){// Toggle off if already open
+if(this._ActivePopup===pType){this._closePopup();return;}// Close any existing popup first
+this._closePopup();let tmpFlowViewIdentifier=this.options.FlowViewIdentifier;let tmpAnchor=this.pict.ContentAssignment.getElement(`#Flow-Toolbar-PopupAnchor-${tmpFlowViewIdentifier}`);if(tmpAnchor.length<1)return;// Create popup div
+let tmpPopup=document.createElement('div');tmpPopup.className='pict-flow-toolbar-popup';tmpPopup.setAttribute('id',`Flow-Toolbar-Popup-${tmpFlowViewIdentifier}`);// Build popup content
+switch(pType){case'add-node':this._buildAddNodePopup(tmpPopup);break;case'cards':this._buildCardsPopup(tmpPopup);break;case'layout':this._buildLayoutPopup(tmpPopup);break;case'settings':this._buildSettingsPopup(tmpPopup);break;}tmpAnchor[0].appendChild(tmpPopup);this._ActivePopup=pType;// Position the popup below the trigger button
+this._positionPopup(tmpPopup,pType);// Click-outside-to-close handler (delayed to avoid catching the opening click)
+setTimeout(()=>{this._DocumentClickHandler=pEvent=>{if(!tmpPopup.contains(pEvent.target)){// Check if click was on the trigger button itself (toggle behavior)
+let tmpButton=pEvent.target.closest('[data-flow-action]');if(tmpButton){let tmpAction=tmpButton.getAttribute('data-flow-action');if(tmpAction===pType||tmpAction===pType.replace('-popup','')+'-popup'){return;// Let the toggle handle it
+}}this._closePopup();}};document.addEventListener('click',this._DocumentClickHandler,true);},0);// Focus search input if Add Node popup
+if(pType==='add-node'){let tmpSearch=tmpPopup.querySelector('.pict-flow-popup-search');if(tmpSearch){setTimeout(()=>{tmpSearch.focus();},50);}}}/**
+	 * Close the active popup and clean up.
+	 */_closePopup(){if(this._DocumentClickHandler){document.removeEventListener('click',this._DocumentClickHandler,true);this._DocumentClickHandler=null;}let tmpFlowViewIdentifier=this.options.FlowViewIdentifier;let tmpPopup=this.pict.ContentAssignment.getElement(`#Flow-Toolbar-Popup-${tmpFlowViewIdentifier}`);if(tmpPopup.length>0){tmpPopup[0].parentNode.removeChild(tmpPopup[0]);}this._ActivePopup=null;}/**
+	 * Position a popup below its trigger button.
+	 * @param {HTMLElement} pPopupDiv
+	 * @param {string} pType
+	 */_positionPopup(pPopupDiv,pType){let tmpFlowViewIdentifier=this.options.FlowViewIdentifier;// Determine which button triggered the popup
+let tmpTriggerSelector;switch(pType){case'add-node':tmpTriggerSelector=`#Flow-Toolbar-AddNode-${tmpFlowViewIdentifier}`;break;case'cards':tmpTriggerSelector=`#Flow-Toolbar-Cards-${tmpFlowViewIdentifier}`;break;case'layout':tmpTriggerSelector=`#Flow-Toolbar-Layout-${tmpFlowViewIdentifier}`;break;case'settings':tmpTriggerSelector=`#Flow-Toolbar-Settings-${tmpFlowViewIdentifier}`;break;default:return;}let tmpTriggerElements=this.pict.ContentAssignment.getElement(tmpTriggerSelector);if(tmpTriggerElements.length<1)return;let tmpAnchor=this.pict.ContentAssignment.getElement(`#Flow-Toolbar-PopupAnchor-${tmpFlowViewIdentifier}`);if(tmpAnchor.length<1)return;let tmpTriggerRect=tmpTriggerElements[0].getBoundingClientRect();let tmpAnchorRect=tmpAnchor[0].getBoundingClientRect();let tmpLeft=tmpTriggerRect.left-tmpAnchorRect.left;pPopupDiv.style.left=tmpLeft+'px';pPopupDiv.style.top='0px';}// ── Add Node Popup ────────────────────────────────────────────────────
+/**
+	 * Build the searchable Add Node popup content.
+	 * @param {HTMLElement} pContainer
+	 */_buildAddNodePopup(pContainer){// Search wrapper
+let tmpSearchWrapper=document.createElement('div');tmpSearchWrapper.className='pict-flow-popup-search-wrapper';let tmpSearchIcon=document.createElement('span');tmpSearchIcon.className='pict-flow-popup-search-icon';let tmpIconProvider=this._FlowView?this._FlowView._IconProvider:null;if(tmpIconProvider){tmpSearchIcon.innerHTML=tmpIconProvider.getIconSVGMarkup('search',12);}tmpSearchWrapper.appendChild(tmpSearchIcon);let tmpSearchInput=document.createElement('input');tmpSearchInput.className='pict-flow-popup-search';tmpSearchInput.setAttribute('type','text');tmpSearchInput.setAttribute('placeholder','Search node types...');tmpSearchWrapper.appendChild(tmpSearchInput);pContainer.appendChild(tmpSearchWrapper);// Node list
+let tmpListDiv=document.createElement('div');tmpListDiv.className='pict-flow-popup-node-list';pContainer.appendChild(tmpListDiv);// Initial population
+this._populateNodeList(tmpListDiv,'');// Filter on input
+tmpSearchInput.addEventListener('input',()=>{this._populateNodeList(tmpListDiv,tmpSearchInput.value);});}/**
+	 * Populate the node list in the Add Node popup, filtered by search text.
+	 * @param {HTMLElement} pListDiv
+	 * @param {string} pFilter
+	 */_populateNodeList(pListDiv,pFilter){if(!this._FlowView||!this._FlowView._NodeTypeProvider)return;// Clear
+while(pListDiv.firstChild){pListDiv.removeChild(pListDiv.firstChild);}let tmpTypes=this._FlowView._NodeTypeProvider.getNodeTypes();let tmpTypeKeys=Object.keys(tmpTypes);let tmpFilter=(pFilter||'').toLowerCase().trim();let tmpIconProvider=this._FlowView._IconProvider;let tmpMatchCount=0;for(let i=0;i<tmpTypeKeys.length;i++){let tmpTypeConfig=tmpTypes[tmpTypeKeys[i]];let tmpMeta=tmpTypeConfig.CardMetadata||{};// Skip disabled cards
+if(tmpMeta.Enabled===false)continue;// Filter match: label, code, or category
+if(tmpFilter){let tmpLabel=(tmpTypeConfig.Label||'').toLowerCase();let tmpCode=(tmpMeta.Code||'').toLowerCase();let tmpCategory=(tmpMeta.Category||'').toLowerCase();if(tmpLabel.indexOf(tmpFilter)<0&&tmpCode.indexOf(tmpFilter)<0&&tmpCategory.indexOf(tmpFilter)<0){continue;}}tmpMatchCount++;let tmpRow=document.createElement('div');tmpRow.className='pict-flow-popup-list-item';tmpRow.setAttribute('data-node-type',tmpTypeKeys[i]);// Icon
+let tmpIconSpan=document.createElement('span');tmpIconSpan.className='pict-flow-popup-list-item-icon';if(tmpIconProvider){let tmpResolvedKey=tmpIconProvider.resolveIconKey(tmpMeta);tmpIconSpan.innerHTML=tmpIconProvider.getIconSVGMarkup(tmpResolvedKey,16);}tmpRow.appendChild(tmpIconSpan);// Label
+let tmpLabelSpan=document.createElement('span');tmpLabelSpan.className='pict-flow-popup-list-item-label';tmpLabelSpan.textContent=tmpTypeConfig.Label;tmpRow.appendChild(tmpLabelSpan);// Code badge
+if(tmpMeta.Code){let tmpCodeSpan=document.createElement('span');tmpCodeSpan.className='pict-flow-popup-list-item-code';tmpCodeSpan.textContent=tmpMeta.Code;tmpRow.appendChild(tmpCodeSpan);}// Click handler
+tmpRow.addEventListener('click',()=>{this._addNodeAtCenter(tmpTypeKeys[i]);this._closePopup();});pListDiv.appendChild(tmpRow);}if(tmpMatchCount===0){let tmpEmpty=document.createElement('div');tmpEmpty.className='pict-flow-popup-list-empty';tmpEmpty.textContent='No matching node types';pListDiv.appendChild(tmpEmpty);}}// ── Cards Popup ───────────────────────────────────────────────────────
+/**
+	 * Build the Cards popup content (reuses palette rendering).
+	 * @param {HTMLElement} pContainer
+	 */_buildCardsPopup(pContainer){this._renderPalette(pContainer);}/**
+	 * Render the card palette with categories and card chips into a container.
+	 * @param {HTMLElement} pContainer - The target container element
+	 */_renderPalette(pContainer){if(!this._FlowView||!this._FlowView._NodeTypeProvider)return;let tmpCategories=this._FlowView._NodeTypeProvider.getCardsByCategory();let tmpCategoryKeys=Object.keys(tmpCategories);if(tmpCategoryKeys.length===0){let tmpEmpty=document.createElement('div');tmpEmpty.className='pict-flow-popup-list-empty';tmpEmpty.textContent='No card types available';pContainer.appendChild(tmpEmpty);return;}for(let i=0;i<tmpCategoryKeys.length;i++){let tmpCategoryName=tmpCategoryKeys[i];let tmpCards=tmpCategories[tmpCategoryName];let tmpCategoryDiv=document.createElement('div');tmpCategoryDiv.className='pict-flow-palette-category';tmpCategoryDiv.style.padding='0.35em 0.5em';let tmpCategoryLabel=document.createElement('div');tmpCategoryLabel.className='pict-flow-palette-category-label';tmpCategoryLabel.textContent=tmpCategoryName;tmpCategoryDiv.appendChild(tmpCategoryLabel);let tmpCardsDiv=document.createElement('div');tmpCardsDiv.className='pict-flow-palette-cards';for(let j=0;j<tmpCards.length;j++){let tmpCardConfig=tmpCards[j];let tmpMeta=tmpCardConfig.CardMetadata||{};let tmpCardEl=document.createElement('div');tmpCardEl.className='pict-flow-palette-card';if(tmpMeta.Enabled===false){tmpCardEl.classList.add('disabled');}tmpCardEl.setAttribute('data-card-type',tmpCardConfig.Hash);if(tmpMeta.Tooltip){tmpCardEl.setAttribute('title',tmpMeta.Tooltip);}else if(tmpMeta.Description){tmpCardEl.setAttribute('title',tmpMeta.Description);}// Icon or color swatch
+if(tmpMeta.Icon){let tmpIconSpan=document.createElement('span');tmpIconSpan.className='pict-flow-palette-card-icon';let tmpIconProvider=this._FlowView._IconProvider;if(tmpIconProvider&&!tmpIconProvider.isEmojiIcon(tmpMeta.Icon)){let tmpResolvedKey=tmpIconProvider.resolveIconKey(tmpMeta);tmpIconSpan.innerHTML=tmpIconProvider.getIconSVGMarkup(tmpResolvedKey,14);}else{tmpIconSpan.textContent=tmpMeta.Icon;}tmpCardEl.appendChild(tmpIconSpan);}else if(this._FlowView._IconProvider){let tmpIconSpan=document.createElement('span');tmpIconSpan.className='pict-flow-palette-card-icon';tmpIconSpan.innerHTML=this._FlowView._IconProvider.getIconSVGMarkup('default',14);tmpCardEl.appendChild(tmpIconSpan);}else if(tmpCardConfig.TitleBarColor){let tmpSwatch=document.createElement('span');tmpSwatch.className='pict-flow-palette-card-swatch';tmpSwatch.style.backgroundColor=tmpCardConfig.TitleBarColor;tmpCardEl.appendChild(tmpSwatch);}// Title
+let tmpTitleSpan=document.createElement('span');tmpTitleSpan.className='pict-flow-palette-card-title';tmpTitleSpan.textContent=tmpCardConfig.Label;tmpCardEl.appendChild(tmpTitleSpan);// Code badge
+if(tmpMeta.Code){let tmpCodeSpan=document.createElement('span');tmpCodeSpan.className='pict-flow-palette-card-code';tmpCodeSpan.textContent=tmpMeta.Code;tmpCardEl.appendChild(tmpCodeSpan);}// Click handler
+tmpCardEl.addEventListener('click',()=>{this._addCardFromPalette(tmpCardConfig.Hash);this._closePopup();});tmpCardsDiv.appendChild(tmpCardEl);}tmpCategoryDiv.appendChild(tmpCardsDiv);pContainer.appendChild(tmpCategoryDiv);}}// ── Layout Popup ──────────────────────────────────────────────────────
+/**
+	 * Build the Layout popup content.
+	 * @param {HTMLElement} pContainer
+	 */_buildLayoutPopup(pContainer){let tmpIconProvider=this._FlowView?this._FlowView._IconProvider:null;// Save Layout section at top
+let tmpSaveSection=document.createElement('div');tmpSaveSection.className='pict-flow-popup-layout-save-section';// Save input row (hidden initially)
+let tmpSaveInputRow=document.createElement('div');tmpSaveInputRow.className='pict-flow-popup-layout-save-input-row';tmpSaveInputRow.style.display='none';let tmpSaveInput=document.createElement('input');tmpSaveInput.className='pict-flow-popup-layout-save-input';tmpSaveInput.setAttribute('type','text');tmpSaveInput.setAttribute('placeholder','Layout name...');tmpSaveInputRow.appendChild(tmpSaveInput);let tmpSaveConfirmBtn=document.createElement('button');tmpSaveConfirmBtn.className='pict-flow-popup-layout-save-confirm';tmpSaveConfirmBtn.title='Save';if(tmpIconProvider){tmpSaveConfirmBtn.innerHTML=tmpIconProvider.getIconSVGMarkup('save',14);}else{tmpSaveConfirmBtn.textContent='✓';}tmpSaveInputRow.appendChild(tmpSaveConfirmBtn);// "Save Current Layout" clickable row
+let tmpSaveRow=document.createElement('div');tmpSaveRow.className='pict-flow-popup-layout-save';let tmpSaveIcon=document.createElement('span');tmpSaveIcon.className='pict-flow-popup-layout-save-icon';if(tmpIconProvider){tmpSaveIcon.innerHTML=tmpIconProvider.getIconSVGMarkup('save',14);}tmpSaveRow.appendChild(tmpSaveIcon);let tmpSaveText=document.createElement('span');tmpSaveText.textContent='Save Current Layout';tmpSaveRow.appendChild(tmpSaveText);// Click "Save Current Layout" to reveal the input row
+tmpSaveRow.addEventListener('click',()=>{tmpSaveRow.style.display='none';tmpSaveInputRow.style.display='';tmpSaveInput.value='';setTimeout(()=>{tmpSaveInput.focus();},50);});// Confirm save via button click
+let tmpDoSave=()=>{let tmpName=tmpSaveInput.value.trim();if(tmpName==='')return;this._FlowView._LayoutProvider.saveLayout(tmpName);// Refresh the popup content
+while(pContainer.firstChild){pContainer.removeChild(pContainer.firstChild);}this._buildLayoutPopup(pContainer);};tmpSaveConfirmBtn.addEventListener('click',tmpDoSave);// Confirm save via Enter key
+tmpSaveInput.addEventListener('keydown',pEvent=>{if(pEvent.key==='Enter'){pEvent.preventDefault();tmpDoSave();}else if(pEvent.key==='Escape'){// Cancel — hide input, show the save row again
+tmpSaveInputRow.style.display='none';tmpSaveRow.style.display='';}});// Prevent clicks inside the input from closing the popup
+tmpSaveInput.addEventListener('click',pEvent=>{pEvent.stopPropagation();});tmpSaveSection.appendChild(tmpSaveRow);tmpSaveSection.appendChild(tmpSaveInputRow);pContainer.appendChild(tmpSaveSection);// Divider
+let tmpDivider=document.createElement('div');tmpDivider.className='pict-flow-popup-divider';pContainer.appendChild(tmpDivider);// Layout rows
+if(!this._FlowView||!this._FlowView._LayoutProvider){let tmpEmpty=document.createElement('div');tmpEmpty.className='pict-flow-popup-list-empty';tmpEmpty.textContent='No saved layouts';pContainer.appendChild(tmpEmpty);return;}let tmpLayouts=this._FlowView._LayoutProvider.getLayouts();if(tmpLayouts.length===0){let tmpEmpty=document.createElement('div');tmpEmpty.className='pict-flow-popup-list-empty';tmpEmpty.textContent='No saved layouts';pContainer.appendChild(tmpEmpty);return;}for(let i=0;i<tmpLayouts.length;i++){let tmpLayout=tmpLayouts[i];let tmpRow=document.createElement('div');tmpRow.className='pict-flow-popup-layout-row';let tmpNameSpan=document.createElement('span');tmpNameSpan.className='pict-flow-popup-layout-name';tmpNameSpan.textContent=tmpLayout.Name;tmpRow.appendChild(tmpNameSpan);// Delete button (visible on hover via CSS)
+let tmpDeleteBtn=document.createElement('button');tmpDeleteBtn.className='pict-flow-popup-layout-delete';tmpDeleteBtn.title='Delete layout';if(tmpIconProvider){tmpDeleteBtn.innerHTML=tmpIconProvider.getIconSVGMarkup('trash',12);}else{tmpDeleteBtn.textContent='×';}tmpRow.appendChild(tmpDeleteBtn);// Click row → restore layout
+tmpRow.addEventListener('click',pEvent=>{// Don't restore if they clicked the delete button
+if(pEvent.target.closest('.pict-flow-popup-layout-delete')){return;}this._FlowView._LayoutProvider.restoreLayout(tmpLayout.Hash);this._closePopup();});// Click delete → delete layout and refresh popup
+tmpDeleteBtn.addEventListener('click',pEvent=>{pEvent.stopPropagation();this._FlowView._LayoutProvider.deleteLayout(tmpLayout.Hash);// Refresh the popup content
+while(pContainer.firstChild){pContainer.removeChild(pContainer.firstChild);}this._buildLayoutPopup(pContainer);});pContainer.appendChild(tmpRow);}}// ── Settings Popup ───────────────────────────────────────────────────
+/**
+	 * Build the Settings popup content (theme dropdown + noise slider).
+	 * @param {HTMLElement} pContainer
+	 */_buildSettingsPopup(pContainer){if(!this._FlowView||!this._FlowView._ThemeProvider)return;let tmpThemeProvider=this._FlowView._ThemeProvider;// Theme selector section
+let tmpThemeSection=document.createElement('div');tmpThemeSection.className='pict-flow-popup-settings-section';let tmpThemeLabel=document.createElement('label');tmpThemeLabel.className='pict-flow-popup-settings-label';tmpThemeLabel.textContent='Theme';tmpThemeSection.appendChild(tmpThemeLabel);let tmpThemeSelect=document.createElement('select');tmpThemeSelect.className='pict-flow-popup-settings-select';let tmpThemeKeys=tmpThemeProvider.getThemeKeys();let tmpActiveKey=tmpThemeProvider.getActiveThemeKey();for(let i=0;i<tmpThemeKeys.length;i++){let tmpOption=document.createElement('option');tmpOption.value=tmpThemeKeys[i];let tmpTheme=tmpThemeProvider._Themes[tmpThemeKeys[i]];tmpOption.textContent=tmpTheme.Label||tmpThemeKeys[i];if(tmpThemeKeys[i]===tmpActiveKey){tmpOption.selected=true;}tmpThemeSelect.appendChild(tmpOption);}tmpThemeSelect.addEventListener('change',()=>{this._FlowView.setTheme(tmpThemeSelect.value);// Refresh the noise slider visibility
+this._refreshNoiseSlider(pContainer);});// Prevent popup close on select interaction
+tmpThemeSelect.addEventListener('click',pEvent=>{pEvent.stopPropagation();});tmpThemeSection.appendChild(tmpThemeSelect);pContainer.appendChild(tmpThemeSection);// Divider
+let tmpDivider=document.createElement('div');tmpDivider.className='pict-flow-popup-divider';pContainer.appendChild(tmpDivider);// Noise level section
+let tmpNoiseSection=document.createElement('div');tmpNoiseSection.className='pict-flow-popup-settings-section pict-flow-popup-settings-noise';tmpNoiseSection.setAttribute('data-settings-type','noise');let tmpNoiseLabel=document.createElement('label');tmpNoiseLabel.className='pict-flow-popup-settings-label';tmpNoiseLabel.textContent='Noise';tmpNoiseSection.appendChild(tmpNoiseLabel);let tmpNoiseRow=document.createElement('div');tmpNoiseRow.className='pict-flow-popup-settings-slider-row';let tmpNoiseSlider=document.createElement('input');tmpNoiseSlider.type='range';tmpNoiseSlider.className='pict-flow-popup-settings-slider';tmpNoiseSlider.min='0';tmpNoiseSlider.max='100';tmpNoiseSlider.value=String(Math.round(tmpThemeProvider.getNoiseLevel()*100));let tmpNoiseValue=document.createElement('span');tmpNoiseValue.className='pict-flow-popup-settings-slider-value';tmpNoiseValue.textContent=tmpNoiseSlider.value+'%';tmpNoiseSlider.addEventListener('input',()=>{let tmpLevel=parseInt(tmpNoiseSlider.value,10)/100;tmpNoiseValue.textContent=tmpNoiseSlider.value+'%';this._FlowView.setNoiseLevel(tmpLevel);});// Prevent popup close on slider interaction
+tmpNoiseSlider.addEventListener('click',pEvent=>{pEvent.stopPropagation();});tmpNoiseSlider.addEventListener('pointerdown',pEvent=>{pEvent.stopPropagation();});tmpNoiseRow.appendChild(tmpNoiseSlider);tmpNoiseRow.appendChild(tmpNoiseValue);tmpNoiseSection.appendChild(tmpNoiseRow);pContainer.appendChild(tmpNoiseSection);// Show/hide noise slider based on active theme
+this._refreshNoiseSlider(pContainer);}/**
+	 * Show or hide the noise slider based on whether the active theme supports noise.
+	 * @param {HTMLElement} pContainer - The settings popup container
+	 */_refreshNoiseSlider(pContainer){let tmpNoiseSection=pContainer.querySelector('[data-settings-type="noise"]');if(!tmpNoiseSection)return;let tmpTheme=this._FlowView._ThemeProvider.getActiveTheme();if(tmpTheme&&tmpTheme.NoiseConfig&&tmpTheme.NoiseConfig.Enabled){tmpNoiseSection.style.display='';// Update slider value to reflect theme default
+let tmpSlider=tmpNoiseSection.querySelector('.pict-flow-popup-settings-slider');let tmpValueLabel=tmpNoiseSection.querySelector('.pict-flow-popup-settings-slider-value');if(tmpSlider){let tmpLevel=Math.round(this._FlowView._ThemeProvider.getNoiseLevel()*100);tmpSlider.value=String(tmpLevel);if(tmpValueLabel)tmpValueLabel.textContent=tmpLevel+'%';}}else{tmpNoiseSection.style.display='none';}}// ── Toolbar Mode Switching ────────────────────────────────────────────
+/**
+	 * Switch between docked, floating, and collapsed modes.
+	 * @param {string} pMode - 'docked' | 'floating' | 'collapsed'
+	 */_setToolbarMode(pMode){// Close any active popup first
+this._closePopup();let tmpFlowViewIdentifier=this.options.FlowViewIdentifier;let tmpBar=this.pict.ContentAssignment.getElement(`#Flow-Toolbar-Bar-${tmpFlowViewIdentifier}`);let tmpCollapsed=this.pict.ContentAssignment.getElement(`#Flow-Toolbar-Collapsed-${tmpFlowViewIdentifier}`);switch(pMode){case'docked':// Show toolbar bar
+if(tmpBar.length>0)tmpBar[0].style.display='';// Hide collapsed button
+if(tmpCollapsed.length>0)tmpCollapsed[0].classList.remove('visible');// Hide floating toolbar
+if(this._FloatingToolbarView)this._FloatingToolbarView.hide();break;case'floating':// Hide toolbar bar
+if(tmpBar.length>0)tmpBar[0].style.display='none';// Hide collapsed button
+if(tmpCollapsed.length>0)tmpCollapsed[0].classList.remove('visible');// Show floating toolbar
+this._showFloatingToolbar();break;case'collapsed':// Hide toolbar bar
+if(tmpBar.length>0)tmpBar[0].style.display='none';// Show collapsed button
+if(tmpCollapsed.length>0)tmpCollapsed[0].classList.add('visible');// Hide floating toolbar
+if(this._FloatingToolbarView)this._FloatingToolbarView.hide();break;}this._ToolbarMode=pMode;}/**
+	 * Lazily create and show the floating toolbar.
+	 */_showFloatingToolbar(){if(!this._FlowView)return;if(!this._FloatingToolbarView){let tmpFlowViewIdentifier=this.options.FlowViewIdentifier;this._FloatingToolbarView=this.fable.instantiateServiceProviderWithoutRegistration('PictViewFlowFloatingToolbar',{FlowViewIdentifier:tmpFlowViewIdentifier,DefaultDestinationAddress:`#Flow-FloatingToolbar-Container-${tmpFlowViewIdentifier}`});this._FloatingToolbarView._ToolbarView=this;this._FloatingToolbarView._FlowView=this._FlowView;this._FloatingToolbarView.render();}this._FloatingToolbarView.show();}// ── Node Placement Helpers ────────────────────────────────────────────
+/**
+	 * Add a node at the center of the visible viewport.
+	 * @param {string} pNodeType - The node type hash
+	 */_addNodeAtCenter(pNodeType){if(!this._FlowView)return;let tmpVS=this._FlowView.viewState;// Calculate the center of the visible SVG area
+let tmpSVGContainer=this._FlowView._SVGElement;let tmpWidth=tmpSVGContainer?tmpSVGContainer.clientWidth:600;let tmpHeight=tmpSVGContainer?tmpSVGContainer.clientHeight:400;let tmpCenterX=(-tmpVS.PanX+tmpWidth/2)/tmpVS.Zoom;let tmpCenterY=(-tmpVS.PanY+tmpHeight/2)/tmpVS.Zoom;// Slight offset to avoid stacking
+let tmpNodeCount=this._FlowView.flowData.Nodes.length;tmpCenterX+=tmpNodeCount%5*30;tmpCenterY+=tmpNodeCount%5*30;this._FlowView.addNode(pNodeType,tmpCenterX,tmpCenterY);}/**
+	 * Add a node from a palette card click.
+	 * @param {string} pCardType - The card type hash
+	 */_addCardFromPalette(pCardType){if(!this._FlowView)return;let tmpVS=this._FlowView.viewState;let tmpX=(-tmpVS.PanX+200)/tmpVS.Zoom;let tmpY=(-tmpVS.PanY+200)/tmpVS.Zoom;// Offset to avoid overlap
+let tmpNodeCount=this._FlowView.flowData.Nodes.length;tmpX+=tmpNodeCount%5*40;tmpY+=tmpNodeCount%5*40;this._FlowView.addNode(pCardType,tmpX,tmpY);}// ── Action Handler ────────────────────────────────────────────────────
+/**
+	 * Handle a toolbar action
+	 * @param {string} pAction
+	 */_handleToolbarAction(pAction){if(!this._FlowView)return;let tmpFlowViewIdentifier=this.options.FlowViewIdentifier;switch(pAction){case'add-node':this._openPopup('add-node');break;case'delete-selected':this._FlowView.deleteSelected();break;case'zoom-in':this._FlowView.setZoom(this._FlowView.viewState.Zoom+this._FlowView.options.ZoomStep);break;case'zoom-out':this._FlowView.setZoom(this._FlowView.viewState.Zoom-this._FlowView.options.ZoomStep);break;case'zoom-fit':this._FlowView.zoomToFit();break;case'auto-layout':this._FlowView.autoLayout();break;case'cards-popup':this._openPopup('cards');break;case'layout-popup':this._openPopup('layout');break;case'settings-popup':this._openPopup('settings');break;case'toggle-floating':if(this._ToolbarMode==='floating'){this._setToolbarMode('docked');}else{this._setToolbarMode('floating');}break;case'collapse-toolbar':this._setToolbarMode('collapsed');break;case'expand-toolbar':this._setToolbarMode('docked');break;case'fullscreen':{let tmpIsFullscreen=this._FlowView.toggleFullscreen();let tmpIconProvider=this._FlowView._IconProvider;let tmpIconElements=this.pict.ContentAssignment.getElement(`#Flow-Toolbar-Fullscreen-Icon-${tmpFlowViewIdentifier}`);if(tmpIconElements.length>0&&tmpIconProvider){tmpIconElements[0].innerHTML=tmpIconProvider.getIconSVGMarkup(tmpIsFullscreen?'exit-fullscreen':'fullscreen',14);}let tmpFullscreenBtn=this.pict.ContentAssignment.getElement(`#Flow-Toolbar-Fullscreen-${tmpFlowViewIdentifier}`);if(tmpFullscreenBtn.length>0){tmpFullscreenBtn[0].setAttribute('title',tmpIsFullscreen?'Exit Fullscreen':'Toggle Fullscreen');}}break;default:this.log.warn(`PictViewFlowToolbar: unknown action '${pAction}'`);break;}}}module.exports=PictViewFlowToolbar;module.exports.default_configuration=_DefaultConfiguration;},{"pict-view":64}],45:[function(require,module,exports){const libPictView=require('pict-view');const libPictServiceFlowInteractionManager=require('../services/PictService-Flow-InteractionManager.js');const libPictServiceFlowConnectionRenderer=require('../services/PictService-Flow-ConnectionRenderer.js');const libPictServiceFlowTether=require('../services/PictService-Flow-Tether.js');const libPictServiceFlowLayout=require('../services/PictService-Flow-Layout.js');const libPictServiceFlowPathGenerator=require('../services/PictService-Flow-PathGenerator.js');const libPictServiceFlowViewportManager=require('../services/PictService-Flow-ViewportManager.js');const libPictServiceFlowSelectionManager=require('../services/PictService-Flow-SelectionManager.js');const libPictServiceFlowPanelManager=require('../services/PictService-Flow-PanelManager.js');const libPictProviderFlowNodeTypes=require('../providers/PictProvider-Flow-NodeTypes.js');const libPictProviderFlowEventHandler=require('../providers/PictProvider-Flow-EventHandler.js');const libPictProviderFlowLayouts=require('../providers/PictProvider-Flow-Layouts.js');const libPictProviderFlowSVGHelpers=require('../providers/PictProvider-Flow-SVGHelpers.js');const libPictProviderFlowGeometry=require('../providers/PictProvider-Flow-Geometry.js');const libPictProviderFlowPanelChrome=require('../providers/PictProvider-Flow-PanelChrome.js');const libPictProviderFlowCSS=require('../providers/PictProvider-Flow-CSS.js');const libPictProviderFlowIcons=require('../providers/PictProvider-Flow-Icons.js');const libPictProviderFlowConnectorShapes=require('../providers/PictProvider-Flow-ConnectorShapes.js');const libPictProviderFlowTheme=require('../providers/PictProvider-Flow-Theme.js');const libPictProviderFlowNoise=require('../providers/PictProvider-Flow-Noise.js');const libPictViewFlowNode=require('./PictView-Flow-Node.js');const libPictViewFlowToolbar=require('./PictView-Flow-Toolbar.js');const libPictViewFlowFloatingToolbar=require('./PictView-Flow-FloatingToolbar.js');const libPictViewFlowPropertiesPanel=require('./PictView-Flow-PropertiesPanel.js');const libPictFlowCardPropertiesPanel=require('../PictFlowCardPropertiesPanel.js');const libPanelTemplate=require('../panels/FlowCardPropertiesPanel-Template.js');const libPanelMarkdown=require('../panels/FlowCardPropertiesPanel-Markdown.js');const libPanelForm=require('../panels/FlowCardPropertiesPanel-Form.js');const libPanelView=require('../panels/FlowCardPropertiesPanel-View.js');const _DefaultConfiguration={ViewIdentifier:'Pict-Flow',DefaultRenderable:'Flow-Container',DefaultDestinationAddress:'#Flow-Container',AutoRender:false,FlowDataAddress:false,TargetElementAddress:'#Flow-SVG-Container',EnableToolbar:true,EnablePanning:true,EnableZooming:true,EnableNodeDragging:true,EnableConnectionCreation:true,EnableGridSnap:false,GridSnapSize:20,MinZoom:0.1,MaxZoom:5.0,ZoomStep:0.1,DefaultNodeType:'default',DefaultNodeWidth:180,DefaultNodeHeight:80,CSS:false,Templates:[{Hash:'Flow-PanelChrome-Template',Template:/*html*/`<div class="pict-flow-panel" xmlns="http://www.w3.org/1999/xhtml"><div class="pict-flow-panel-titlebar" data-element-type="panel-titlebar" data-panel-hash="{~D:Record.Hash~}"><span class="pict-flow-panel-title-text">{~D:Record.Title~}</span><span class="pict-flow-panel-close-btn" data-element-type="panel-close" data-panel-hash="{~D:Record.Hash~}"><span class="pict-flow-panel-close-icon"></span></span></div><div class="pict-flow-panel-body" data-panel-hash="{~D:Record.Hash~}"></div><div class="pict-flow-panel-node-props" data-panel-hash="{~D:Record.Hash~}"><div class="pict-flow-panel-node-props-header" data-element-type="node-props-toggle" data-panel-hash="{~D:Record.Hash~}"><span class="pict-flow-panel-node-props-chevron">&#9654;</span><span class="pict-flow-panel-node-props-title">Node Properties</span></div><div class="pict-flow-panel-node-props-body" style="display:none;"></div></div></div>`},{Hash:'Flow-Container-Template',Template:/*html*/`
+<div class="pict-flow-container" id="Flow-Wrapper-{~D:Record.ViewIdentifier~}">
+	<div id="Flow-Toolbar-{~D:Record.ViewIdentifier~}"></div>
+	<div id="Flow-FloatingToolbar-Container-{~D:Record.ViewIdentifier~}" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:100;"></div>
+	<div class="pict-flow-svg-container" id="Flow-SVG-Container-{~D:Record.ViewIdentifier~}">
+		<svg class="pict-flow-svg"
+			id="Flow-SVG-{~D:Record.ViewIdentifier~}"
+			xmlns="http://www.w3.org/2000/svg">
+			<defs>
+				<pattern id="flow-grid-{~D:Record.ViewIdentifier~}"
+					width="20" height="20" patternUnits="userSpaceOnUse">
+					<line x1="20" y1="0" x2="20" y2="20" class="pict-flow-grid-pattern" />
+					<line x1="0" y1="20" x2="20" y2="20" class="pict-flow-grid-pattern" />
+				</pattern>
+			</defs>
+			<rect width="10000" height="10000" x="-5000" y="-5000"
+				fill="url(#flow-grid-{~D:Record.ViewIdentifier~})"
+				class="pict-flow-grid-background" />
+			<g class="pict-flow-viewport" id="Flow-Viewport-{~D:Record.ViewIdentifier~}">
+				<g class="pict-flow-connections-layer" id="Flow-Connections-{~D:Record.ViewIdentifier~}"></g>
+				<g class="pict-flow-nodes-layer" id="Flow-Nodes-{~D:Record.ViewIdentifier~}"></g>
+				<g class="pict-flow-tethers-layer" id="Flow-Tethers-{~D:Record.ViewIdentifier~}"></g>
+				<g class="pict-flow-panels-layer" id="Flow-Panels-{~D:Record.ViewIdentifier~}"></g>
+			</g>
+		</svg>
+	</div>
+</div>
+`}],Renderables:[{RenderableHash:'Flow-Container',TemplateHash:'Flow-Container-Template',DestinationAddress:'#Flow-Container',RenderMethod:'replace'}]};class PictViewFlow extends libPictView{constructor(pFable,pOptions,pServiceHash){let tmpOptions=Object.assign({},JSON.parse(JSON.stringify(_DefaultConfiguration)),pOptions);super(pFable,tmpOptions,pServiceHash);this.serviceType='PictSectionFlow';// Register service types with fable so they can be instantiated
+if(!this.fable.servicesMap.hasOwnProperty('PictServiceFlowInteractionManager')){this.fable.addServiceType('PictServiceFlowInteractionManager',libPictServiceFlowInteractionManager);}if(!this.fable.servicesMap.hasOwnProperty('PictServiceFlowConnectionRenderer')){this.fable.addServiceType('PictServiceFlowConnectionRenderer',libPictServiceFlowConnectionRenderer);}if(!this.fable.servicesMap.hasOwnProperty('PictServiceFlowTether')){this.fable.addServiceType('PictServiceFlowTether',libPictServiceFlowTether);}if(!this.fable.servicesMap.hasOwnProperty('PictServiceFlowLayout')){this.fable.addServiceType('PictServiceFlowLayout',libPictServiceFlowLayout);}if(!this.fable.servicesMap.hasOwnProperty('PictServiceFlowPathGenerator')){this.fable.addServiceType('PictServiceFlowPathGenerator',libPictServiceFlowPathGenerator);}if(!this.fable.servicesMap.hasOwnProperty('PictServiceFlowViewportManager')){this.fable.addServiceType('PictServiceFlowViewportManager',libPictServiceFlowViewportManager);}if(!this.fable.servicesMap.hasOwnProperty('PictServiceFlowSelectionManager')){this.fable.addServiceType('PictServiceFlowSelectionManager',libPictServiceFlowSelectionManager);}if(!this.fable.servicesMap.hasOwnProperty('PictServiceFlowPanelManager')){this.fable.addServiceType('PictServiceFlowPanelManager',libPictServiceFlowPanelManager);}if(!this.fable.servicesMap.hasOwnProperty('PictProviderFlowSVGHelpers')){this.fable.addServiceType('PictProviderFlowSVGHelpers',libPictProviderFlowSVGHelpers);}if(!this.fable.servicesMap.hasOwnProperty('PictProviderFlowGeometry')){this.fable.addServiceType('PictProviderFlowGeometry',libPictProviderFlowGeometry);}if(!this.fable.servicesMap.hasOwnProperty('PictProviderFlowPanelChrome')){this.fable.addServiceType('PictProviderFlowPanelChrome',libPictProviderFlowPanelChrome);}if(!this.fable.servicesMap.hasOwnProperty('PictProviderFlowCSS')){this.fable.addServiceType('PictProviderFlowCSS',libPictProviderFlowCSS);}if(!this.fable.servicesMap.hasOwnProperty('PictProviderFlowIcons')){this.fable.addServiceType('PictProviderFlowIcons',libPictProviderFlowIcons);}if(!this.fable.servicesMap.hasOwnProperty('PictProviderFlowConnectorShapes')){this.fable.addServiceType('PictProviderFlowConnectorShapes',libPictProviderFlowConnectorShapes);}if(!this.fable.servicesMap.hasOwnProperty('PictProviderFlowTheme')){this.fable.addServiceType('PictProviderFlowTheme',libPictProviderFlowTheme);}if(!this.fable.servicesMap.hasOwnProperty('PictProviderFlowNoise')){this.fable.addServiceType('PictProviderFlowNoise',libPictProviderFlowNoise);}if(!this.fable.servicesMap.hasOwnProperty('PictProviderFlowNodeTypes')){this.fable.addServiceType('PictProviderFlowNodeTypes',libPictProviderFlowNodeTypes);}if(!this.fable.servicesMap.hasOwnProperty('PictProviderFlowEventHandler')){this.fable.addServiceType('PictProviderFlowEventHandler',libPictProviderFlowEventHandler);}if(!this.fable.servicesMap.hasOwnProperty('PictProviderFlowLayouts')){this.fable.addServiceType('PictProviderFlowLayouts',libPictProviderFlowLayouts);}if(!this.fable.servicesMap.hasOwnProperty('PictViewFlowNode')){this.fable.addServiceType('PictViewFlowNode',libPictViewFlowNode);}if(!this.fable.servicesMap.hasOwnProperty('PictViewFlowToolbar')){this.fable.addServiceType('PictViewFlowToolbar',libPictViewFlowToolbar);}if(!this.fable.servicesMap.hasOwnProperty('PictViewFlowFloatingToolbar')){this.fable.addServiceType('PictViewFlowFloatingToolbar',libPictViewFlowFloatingToolbar);}if(!this.fable.servicesMap.hasOwnProperty('PictViewFlowPropertiesPanel')){this.fable.addServiceType('PictViewFlowPropertiesPanel',libPictViewFlowPropertiesPanel);}if(!this.fable.servicesMap.hasOwnProperty('PictFlowCardPropertiesPanel')){this.fable.addServiceType('PictFlowCardPropertiesPanel',libPictFlowCardPropertiesPanel);}if(!this.fable.servicesMap.hasOwnProperty('PictFlowCardPropertiesPanel-Template')){this.fable.addServiceType('PictFlowCardPropertiesPanel-Template',libPanelTemplate);}if(!this.fable.servicesMap.hasOwnProperty('PictFlowCardPropertiesPanel-Markdown')){this.fable.addServiceType('PictFlowCardPropertiesPanel-Markdown',libPanelMarkdown);}if(!this.fable.servicesMap.hasOwnProperty('PictFlowCardPropertiesPanel-Form')){this.fable.addServiceType('PictFlowCardPropertiesPanel-Form',libPanelForm);}if(!this.fable.servicesMap.hasOwnProperty('PictFlowCardPropertiesPanel-View')){this.fable.addServiceType('PictFlowCardPropertiesPanel-View',libPanelView);}// Internal state
+this._FlowData={Nodes:[],Connections:[],OpenPanels:[],SavedLayouts:[],ViewState:{PanX:0,PanY:0,Zoom:1,SelectedNodeHash:null,SelectedConnectionHash:null,SelectedTetherHash:null}};this._SVGElement=null;this._ViewportElement=null;this._NodesLayer=null;this._ConnectionsLayer=null;this._TethersLayer=null;this._PanelsLayer=null;this._InteractionManager=null;this._ConnectionRenderer=null;this._TetherService=null;this._LayoutService=null;this._PathGenerator=null;this._ViewportManager=null;this._SelectionManager=null;this._PanelManager=null;this._CSSProvider=null;this._IconProvider=null;this._ConnectorShapesProvider=null;this._ThemeProvider=null;this._NoiseProvider=null;this._SVGHelperProvider=null;this._GeometryProvider=null;this._PanelChromeProvider=null;this._NodeTypeProvider=null;this._LayoutProvider=null;this._EventHandlerProvider=null;this._NodeView=null;this._ToolbarView=null;this._PropertiesPanelView=null;this.initialRenderComplete=false;}get flowData(){return this._FlowData;}get viewState(){return this._FlowData.ViewState;}// Backward-compatible getter for InteractionManager direct access
+get _IsFullscreen(){return this._ViewportManager?this._ViewportManager._IsFullscreen:false;}/**
+	 * Override render to pass view options as the template record,
+	 * so template expressions like {~D:Record.ViewIdentifier~} resolve correctly.
+	 */render(pRenderableHash,pRenderDestinationAddress){return super.render(pRenderableHash,pRenderDestinationAddress,this.options);}renderAsync(pRenderableHash,pRenderDestinationAddress,pTemplateRecordAddress,pRootRenderable,fCallback){// If no record address is explicitly provided, use this.options as the record
+if(typeof pTemplateRecordAddress==='function'||typeof pTemplateRecordAddress==='undefined'){return super.renderAsync(pRenderableHash,pRenderDestinationAddress,this.options,pRootRenderable,pTemplateRecordAddress||fCallback);}return super.renderAsync(pRenderableHash,pRenderDestinationAddress,pTemplateRecordAddress,pRootRenderable,fCallback);}onBeforeInitialize(){super.onBeforeInitialize();// Instantiate theme and noise providers (before CSS so theme state is available)
+this._ThemeProvider=this.fable.instantiateServiceProviderWithoutRegistration('PictProviderFlowTheme',{FlowView:this});this._NoiseProvider=this.fable.instantiateServiceProviderWithoutRegistration('PictProviderFlowNoise');// Apply initial theme from options
+if(this.options.Theme){this._ThemeProvider.setTheme(this.options.Theme);}if(typeof this.options.NoiseLevel==='number'){this._ThemeProvider.setNoiseLevel(this.options.NoiseLevel);}// Instantiate and register the centralized CSS provider
+this._CSSProvider=this.fable.instantiateServiceProviderWithoutRegistration('PictProviderFlowCSS',{FlowView:this});this._CSSProvider.registerCSS();// Instantiate the SVG icon provider
+this._IconProvider=this.fable.instantiateServiceProviderWithoutRegistration('PictProviderFlowIcons',{FlowView:this});this._IconProvider.registerIconTemplates();// Instantiate the connector shapes provider
+this._ConnectorShapesProvider=this.fable.instantiateServiceProviderWithoutRegistration('PictProviderFlowConnectorShapes',{FlowView:this});// Instantiate shared utility providers first (used by services below)
+this._SVGHelperProvider=this.fable.instantiateServiceProviderWithoutRegistration('PictProviderFlowSVGHelpers');this._GeometryProvider=this.fable.instantiateServiceProviderWithoutRegistration('PictProviderFlowGeometry');this._PathGenerator=this.fable.instantiateServiceProviderWithoutRegistration('PictServiceFlowPathGenerator',{FlowView:this});this._PanelChromeProvider=this.fable.instantiateServiceProviderWithoutRegistration('PictProviderFlowPanelChrome',{FlowView:this});// Instantiate services
+this._InteractionManager=this.fable.instantiateServiceProviderWithoutRegistration('PictServiceFlowInteractionManager',{FlowView:this});this._ConnectionRenderer=this.fable.instantiateServiceProviderWithoutRegistration('PictServiceFlowConnectionRenderer',{FlowView:this});this._TetherService=this.fable.instantiateServiceProviderWithoutRegistration('PictServiceFlowTether',{FlowView:this});this._LayoutService=this.fable.instantiateServiceProviderWithoutRegistration('PictServiceFlowLayout',{FlowView:this});this._ViewportManager=this.fable.instantiateServiceProviderWithoutRegistration('PictServiceFlowViewportManager',{FlowView:this});this._SelectionManager=this.fable.instantiateServiceProviderWithoutRegistration('PictServiceFlowSelectionManager',{FlowView:this});this._PanelManager=this.fable.instantiateServiceProviderWithoutRegistration('PictServiceFlowPanelManager',{FlowView:this});// Instantiate providers, passing any additional node types from view options
+this._NodeTypeProvider=this.fable.instantiateServiceProviderWithoutRegistration('PictProviderFlowNodeTypes',{FlowView:this,AdditionalNodeTypes:this.options.NodeTypes});this._EventHandlerProvider=this.fable.instantiateServiceProviderWithoutRegistration('PictProviderFlowEventHandler',{FlowView:this});this._LayoutProvider=this.fable.instantiateServiceProviderWithoutRegistration('PictProviderFlowLayouts',{FlowView:this});this._LayoutProvider.loadPersistedLayouts();return super.onBeforeInitialize();}onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent){if(!this.initialRenderComplete){this.onAfterInitialRender();this.initialRenderComplete=true;}return super.onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent);}onAfterInitialRender(){let tmpViewIdentifier=this.options.ViewIdentifier;// Grab SVG DOM elements
+let tmpSVGElements=this.pict.ContentAssignment.getElement(`#Flow-SVG-${tmpViewIdentifier}`);if(tmpSVGElements.length<1){this.log.error(`PictSectionFlow could not find SVG element #Flow-SVG-${tmpViewIdentifier}`);return false;}this._SVGElement=tmpSVGElements[0];let tmpViewportElements=this.pict.ContentAssignment.getElement(`#Flow-Viewport-${tmpViewIdentifier}`);if(tmpViewportElements.length>0){this._ViewportElement=tmpViewportElements[0];}let tmpNodesElements=this.pict.ContentAssignment.getElement(`#Flow-Nodes-${tmpViewIdentifier}`);if(tmpNodesElements.length>0){this._NodesLayer=tmpNodesElements[0];}let tmpConnectionsElements=this.pict.ContentAssignment.getElement(`#Flow-Connections-${tmpViewIdentifier}`);if(tmpConnectionsElements.length>0){this._ConnectionsLayer=tmpConnectionsElements[0];}let tmpTethersElements=this.pict.ContentAssignment.getElement(`#Flow-Tethers-${tmpViewIdentifier}`);if(tmpTethersElements.length>0){this._TethersLayer=tmpTethersElements[0];}let tmpPanelsElements=this.pict.ContentAssignment.getElement(`#Flow-Panels-${tmpViewIdentifier}`);if(tmpPanelsElements.length>0){this._PanelsLayer=tmpPanelsElements[0];}// Initialize theme and noise providers (fallback if not already created)
+if(!this._ThemeProvider){this._ThemeProvider=this.fable.instantiateServiceProviderWithoutRegistration('PictProviderFlowTheme',{FlowView:this});}if(!this._NoiseProvider){this._NoiseProvider=this.fable.instantiateServiceProviderWithoutRegistration('PictProviderFlowNoise');}// Initialize CSS provider (fallback if not already created)
+if(!this._CSSProvider){this._CSSProvider=this.fable.instantiateServiceProviderWithoutRegistration('PictProviderFlowCSS',{FlowView:this});this._CSSProvider.registerCSS();}// Initialize icon provider (fallback if not already created)
+if(!this._IconProvider){this._IconProvider=this.fable.instantiateServiceProviderWithoutRegistration('PictProviderFlowIcons',{FlowView:this});this._IconProvider.registerIconTemplates();}// Initialize connector shapes provider (fallback if not already created)
+if(!this._ConnectorShapesProvider){this._ConnectorShapesProvider=this.fable.instantiateServiceProviderWithoutRegistration('PictProviderFlowConnectorShapes',{FlowView:this});}// Initialize shared utility providers (used by services below)
+if(!this._SVGHelperProvider){this._SVGHelperProvider=this.fable.instantiateServiceProviderWithoutRegistration('PictProviderFlowSVGHelpers');}if(!this._GeometryProvider){this._GeometryProvider=this.fable.instantiateServiceProviderWithoutRegistration('PictProviderFlowGeometry');}if(!this._PathGenerator){this._PathGenerator=this.fable.instantiateServiceProviderWithoutRegistration('PictServiceFlowPathGenerator',{FlowView:this});}if(!this._PanelChromeProvider){this._PanelChromeProvider=this.fable.instantiateServiceProviderWithoutRegistration('PictProviderFlowPanelChrome',{FlowView:this});}// Initialize services with references
+if(!this._InteractionManager){this._InteractionManager=this.fable.instantiateServiceProviderWithoutRegistration('PictServiceFlowInteractionManager',{FlowView:this});}if(!this._ConnectionRenderer){this._ConnectionRenderer=this.fable.instantiateServiceProviderWithoutRegistration('PictServiceFlowConnectionRenderer',{FlowView:this});}if(!this._TetherService){this._TetherService=this.fable.instantiateServiceProviderWithoutRegistration('PictServiceFlowTether',{FlowView:this});}if(!this._LayoutService){this._LayoutService=this.fable.instantiateServiceProviderWithoutRegistration('PictServiceFlowLayout',{FlowView:this});}if(!this._ViewportManager){this._ViewportManager=this.fable.instantiateServiceProviderWithoutRegistration('PictServiceFlowViewportManager',{FlowView:this});}if(!this._SelectionManager){this._SelectionManager=this.fable.instantiateServiceProviderWithoutRegistration('PictServiceFlowSelectionManager',{FlowView:this});}if(!this._PanelManager){this._PanelManager=this.fable.instantiateServiceProviderWithoutRegistration('PictServiceFlowPanelManager',{FlowView:this});}if(!this._NodeTypeProvider){this._NodeTypeProvider=this.fable.instantiateServiceProviderWithoutRegistration('PictProviderFlowNodeTypes',{FlowView:this,AdditionalNodeTypes:this.options.NodeTypes});}if(!this._EventHandlerProvider){this._EventHandlerProvider=this.fable.instantiateServiceProviderWithoutRegistration('PictProviderFlowEventHandler',{FlowView:this});}if(!this._LayoutProvider){this._LayoutProvider=this.fable.instantiateServiceProviderWithoutRegistration('PictProviderFlowLayouts',{FlowView:this});this._LayoutProvider.loadPersistedLayouts();}// Inject marker defs via the connector shapes provider
+// Note: insertAdjacentHTML does not work on SVG elements (wrong namespace),
+// so we parse via a temporary <svg> element to ensure SVG namespace.
+if(this._ConnectorShapesProvider&&this._SVGElement){let tmpDefs=this._SVGElement.querySelector('defs');if(tmpDefs){let tmpMarkerMarkup=this._ConnectorShapesProvider.generateMarkerDefs(tmpViewIdentifier);let tmpTempSVG=document.createElementNS('http://www.w3.org/2000/svg','svg');tmpTempSVG.innerHTML=tmpMarkerMarkup;while(tmpTempSVG.firstChild){tmpDefs.appendChild(tmpTempSVG.firstChild);}}}// Setup the toolbar if enabled
+if(this.options.EnableToolbar){this._ToolbarView=this.fable.instantiateServiceProviderWithoutRegistration('PictViewFlowToolbar',Object.assign({},libPictViewFlowToolbar.default_configuration,{ViewIdentifier:`Flow-Toolbar-${tmpViewIdentifier}`,DefaultDestinationAddress:`#Flow-Toolbar-${tmpViewIdentifier}`,FlowViewIdentifier:tmpViewIdentifier}));// Use the toolbar's render method after it's set up
+if(this._ToolbarView&&typeof this._ToolbarView.render==='function'){this._ToolbarView._FlowView=this;this._ToolbarView.render();}}// Setup the node renderer
+this._NodeView=this.fable.instantiateServiceProviderWithoutRegistration('PictViewFlowNode',Object.assign({},libPictViewFlowNode.default_configuration,{ViewIdentifier:`Flow-NodeRenderer-${tmpViewIdentifier}`,AutoRender:false}));this._NodeView._FlowView=this;// Setup the properties panel renderer
+this._PropertiesPanelView=this.fable.instantiateServiceProviderWithoutRegistration('PictViewFlowPropertiesPanel',Object.assign({},libPictViewFlowPropertiesPanel.default_configuration,{ViewIdentifier:`Flow-PropertiesPanel-${tmpViewIdentifier}`,AutoRender:false}));this._PropertiesPanelView._FlowView=this;// Bind interaction events
+this._InteractionManager.initialize(this._SVGElement,this._ViewportElement);// Load initial flow data if an address is configured
+if(this.options.FlowDataAddress){this.marshalToView();}// Render the initial flow
+this.renderFlow();}/**
+	 * Marshal data from AppData into the flow view
+	 */marshalToView(){if(this.options.FlowDataAddress){const tmpAddressSpace={Fable:this.fable,Pict:this.pict||this.fable,AppData:this.pict?this.pict.AppData:this.fable.AppData,Bundle:this.Bundle,Options:this.options};let tmpData=this.fable.manifest.getValueByHash(tmpAddressSpace,this.options.FlowDataAddress);if(typeof tmpData==='object'&&tmpData!==null){this.setFlowData(tmpData);}}}/**
+	 * Marshal data from the flow view back to AppData
+	 */marshalFromView(){if(this.options.FlowDataAddress){const tmpAddressSpace={Fable:this.fable,Pict:this.pict||this.fable,AppData:this.pict?this.pict.AppData:this.fable.AppData,Bundle:this.Bundle,Options:this.options};this.fable.manifest.setValueByHash(tmpAddressSpace,this.options.FlowDataAddress,JSON.parse(JSON.stringify(this._FlowData)));}}/**
+	 * Get the complete flow data object
+	 * @returns {Object} The flow data including nodes, connections, and view state
+	 */getFlowData(){return JSON.parse(JSON.stringify(this._FlowData));}/**
+	 * Set the complete flow data object and re-render
+	 * @param {Object} pFlowData - The flow data to set
+	 */setFlowData(pFlowData){if(typeof pFlowData!=='object'||pFlowData===null){this.log.warn('PictSectionFlow setFlowData received invalid data');return;}this._FlowData={Nodes:Array.isArray(pFlowData.Nodes)?pFlowData.Nodes:[],Connections:Array.isArray(pFlowData.Connections)?pFlowData.Connections:[],OpenPanels:Array.isArray(pFlowData.OpenPanels)?pFlowData.OpenPanels:[],SavedLayouts:Array.isArray(pFlowData.SavedLayouts)?pFlowData.SavedLayouts:[],ViewState:Object.assign({PanX:0,PanY:0,Zoom:1,SelectedNodeHash:null,SelectedConnectionHash:null,SelectedTetherHash:null},pFlowData.ViewState||{})};// Merge any browser-persisted layouts into the newly loaded data
+if(this._LayoutProvider){this._LayoutProvider.loadPersistedLayouts();}if(this.initialRenderComplete){this.renderFlow();}}/**
+	 * Add a new node to the flow
+	 * @param {string} pType - The node type hash
+	 * @param {number} pX - X position
+	 * @param {number} pY - Y position
+	 * @param {string} [pTitle] - Optional title
+	 * @param {Object} [pData] - Optional additional data
+	 * @returns {Object} The created node
+	 */addNode(pType,pX,pY,pTitle,pData){let tmpType=pType||this.options.DefaultNodeType;let tmpNodeTypeConfig=this._NodeTypeProvider.getNodeType(tmpType);let tmpNodeHash=`node-${this.fable.getUUID()}`;let tmpNode={Hash:tmpNodeHash,Type:tmpType,X:pX||100,Y:pY||100,Width:tmpNodeTypeConfig&&tmpNodeTypeConfig.DefaultWidth||this.options.DefaultNodeWidth,Height:tmpNodeTypeConfig&&tmpNodeTypeConfig.DefaultHeight||this.options.DefaultNodeHeight,Title:pTitle||tmpNodeTypeConfig&&tmpNodeTypeConfig.Label||'New Node',Ports:tmpNodeTypeConfig&&tmpNodeTypeConfig.DefaultPorts?JSON.parse(JSON.stringify(tmpNodeTypeConfig.DefaultPorts)):[{Hash:`port-in-${this.fable.getUUID()}`,Direction:'input',Side:'left',Label:'In'},{Hash:`port-out-${this.fable.getUUID()}`,Direction:'output',Side:'right',Label:'Out'}],Data:pData||{}};// Ensure each port has a unique hash
+for(let i=0;i<tmpNode.Ports.length;i++){if(!tmpNode.Ports[i].Hash){tmpNode.Ports[i].Hash=`port-${tmpNode.Ports[i].Direction}-${this.fable.getUUID()}`;}}this._FlowData.Nodes.push(tmpNode);this.renderFlow();this.marshalFromView();if(this._EventHandlerProvider){this._EventHandlerProvider.fireEvent('onNodeAdded',tmpNode);this._EventHandlerProvider.fireEvent('onFlowChanged',this._FlowData);}return tmpNode;}/**
+	 * Remove a node and all its connections
+	 * @param {string} pNodeHash - The hash of the node to remove
+	 * @returns {boolean} Whether the node was removed
+	 */removeNode(pNodeHash){let tmpNodeIndex=this._FlowData.Nodes.findIndex(pNode=>pNode.Hash===pNodeHash);if(tmpNodeIndex<0){this.log.warn(`PictSectionFlow removeNode: node ${pNodeHash} not found`);return false;}let tmpRemovedNode=this._FlowData.Nodes.splice(tmpNodeIndex,1)[0];// Remove all connections involving this node
+this._FlowData.Connections=this._FlowData.Connections.filter(pConnection=>{return pConnection.SourceNodeHash!==pNodeHash&&pConnection.TargetNodeHash!==pNodeHash;});// Close any open panels for this node
+this.closePanelForNode(pNodeHash);// Clear selection if this node was selected
+if(this._FlowData.ViewState.SelectedNodeHash===pNodeHash){this._FlowData.ViewState.SelectedNodeHash=null;}this.renderFlow();this.marshalFromView();if(this._EventHandlerProvider){this._EventHandlerProvider.fireEvent('onNodeRemoved',tmpRemovedNode);this._EventHandlerProvider.fireEvent('onFlowChanged',this._FlowData);}return true;}/**
+	 * Add a connection between two ports
+	 * @param {string} pSourceNodeHash
+	 * @param {string} pSourcePortHash
+	 * @param {string} pTargetNodeHash
+	 * @param {string} pTargetPortHash
+	 * @param {Object} [pData] - Optional additional data
+	 * @returns {Object|false} The created connection, or false if invalid
+	 */addConnection(pSourceNodeHash,pSourcePortHash,pTargetNodeHash,pTargetPortHash,pData){// Validate that both nodes and ports exist
+let tmpSourceNode=this._FlowData.Nodes.find(pNode=>pNode.Hash===pSourceNodeHash);let tmpTargetNode=this._FlowData.Nodes.find(pNode=>pNode.Hash===pTargetNodeHash);if(!tmpSourceNode||!tmpTargetNode){this.log.warn('PictSectionFlow addConnection: source or target node not found');return false;}let tmpSourcePort=tmpSourceNode.Ports.find(pPort=>pPort.Hash===pSourcePortHash);let tmpTargetPort=tmpTargetNode.Ports.find(pPort=>pPort.Hash===pTargetPortHash);if(!tmpSourcePort||!tmpTargetPort){this.log.warn('PictSectionFlow addConnection: source or target port not found');return false;}// Prevent self-connections
+if(pSourceNodeHash===pTargetNodeHash){this.log.warn('PictSectionFlow addConnection: cannot connect a node to itself');return false;}// Check for duplicate connections
+let tmpDuplicate=this._FlowData.Connections.find(pConn=>{return pConn.SourceNodeHash===pSourceNodeHash&&pConn.SourcePortHash===pSourcePortHash&&pConn.TargetNodeHash===pTargetNodeHash&&pConn.TargetPortHash===pTargetPortHash;});if(tmpDuplicate){this.log.warn('PictSectionFlow addConnection: duplicate connection');return false;}let tmpConnection={Hash:`conn-${this.fable.getUUID()}`,SourceNodeHash:pSourceNodeHash,SourcePortHash:pSourcePortHash,TargetNodeHash:pTargetNodeHash,TargetPortHash:pTargetPortHash,Data:pData||{}};this._FlowData.Connections.push(tmpConnection);this.renderFlow();this.marshalFromView();if(this._EventHandlerProvider){this._EventHandlerProvider.fireEvent('onConnectionCreated',tmpConnection);this._EventHandlerProvider.fireEvent('onFlowChanged',this._FlowData);}return tmpConnection;}/**
+	 * Remove a connection
+	 * @param {string} pConnectionHash - The hash of the connection to remove
+	 * @returns {boolean} Whether the connection was removed
+	 */removeConnection(pConnectionHash){let tmpConnectionIndex=this._FlowData.Connections.findIndex(pConn=>pConn.Hash===pConnectionHash);if(tmpConnectionIndex<0){this.log.warn(`PictSectionFlow removeConnection: connection ${pConnectionHash} not found`);return false;}let tmpRemovedConnection=this._FlowData.Connections.splice(tmpConnectionIndex,1)[0];if(this._FlowData.ViewState.SelectedConnectionHash===pConnectionHash){this._FlowData.ViewState.SelectedConnectionHash=null;}this.renderFlow();this.marshalFromView();if(this._EventHandlerProvider){this._EventHandlerProvider.fireEvent('onConnectionRemoved',tmpRemovedConnection);this._EventHandlerProvider.fireEvent('onFlowChanged',this._FlowData);}return true;}/**
+	 * Select a node
+	 * @param {string|null} pNodeHash - Hash of the node to select, or null to deselect
+	 */selectNode(pNodeHash){return this._SelectionManager.selectNode(pNodeHash);}/**
+	 * Select a connection
+	 * @param {string|null} pConnectionHash - Hash of the connection to select, or null to deselect
+	 */selectConnection(pConnectionHash){return this._SelectionManager.selectConnection(pConnectionHash);}/**
+	 * Deselect all nodes and connections
+	 */deselectAll(){return this._SelectionManager.deselectAll();}/**
+	 * Delete the currently selected node or connection
+	 * @returns {boolean}
+	 */deleteSelected(){return this._SelectionManager.deleteSelected();}/**
+	 * Update the viewport transform (pan and zoom)
+	 */updateViewportTransform(){return this._ViewportManager.updateViewportTransform();}/**
+	 * Set zoom level
+	 * @param {number} pZoom - The zoom level
+	 * @param {number} [pFocusX] - X coordinate to zoom toward (SVG space)
+	 * @param {number} [pFocusY] - Y coordinate to zoom toward (SVG space)
+	 */setZoom(pZoom,pFocusX,pFocusY){return this._ViewportManager.setZoom(pZoom,pFocusX,pFocusY);}/**
+	 * Zoom to fit all nodes in the viewport
+	 */zoomToFit(){return this._ViewportManager.zoomToFit();}/**
+	 * Apply auto-layout to all nodes
+	 */autoLayout(){if(this._LayoutService){this._LayoutService.autoLayout(this._FlowData.Nodes,this._FlowData.Connections);this.renderFlow();this.marshalFromView();if(this._EventHandlerProvider){this._EventHandlerProvider.fireEvent('onFlowChanged',this._FlowData);}}}/**
+	 * Toggle fullscreen mode on the flow editor container.
+	 * Uses a CSS fixed-position overlay instead of the Fullscreen API.
+	 * @returns {boolean} The new fullscreen state
+	 */toggleFullscreen(){return this._ViewportManager.toggleFullscreen();}/**
+	 * Exit fullscreen mode if currently active.
+	 */exitFullscreen(){return this._ViewportManager.exitFullscreen();}// ── Theme API ────────────────────────────────────────────────────────
+/**
+	 * Switch the active theme and re-render.
+	 * @param {string} pThemeKey - Theme key (e.g. 'default', 'sketch', 'blueprint', 'mono', 'retro-80s', 'retro-90s')
+	 */setTheme(pThemeKey){if(!this._ThemeProvider){this.log.warn('PictSectionFlow setTheme: ThemeProvider not available');return;}let tmpApplied=this._ThemeProvider.setTheme(pThemeKey);if(!tmpApplied)return;// Re-register CSS with the new theme overrides
+if(this._CSSProvider){this._CSSProvider.registerCSS();}// Re-inject marker defs (arrowhead colors may have changed)
+this._reinjectMarkerDefs();// Full re-render
+if(this.initialRenderComplete){this.renderFlow();}if(this._EventHandlerProvider){this._EventHandlerProvider.fireEvent('onThemeChanged',pThemeKey);}}/**
+	 * Set the noise level (0 to 1) and re-render.
+	 * @param {number} pLevel - 0 = precise, 1 = maximum wobble
+	 */setNoiseLevel(pLevel){if(!this._ThemeProvider){this.log.warn('PictSectionFlow setNoiseLevel: ThemeProvider not available');return;}this._ThemeProvider.setNoiseLevel(pLevel);// Full re-render to apply new noise
+if(this.initialRenderComplete){this.renderFlow();}}/**
+	 * Get the current noise level (0 to 1).
+	 * @returns {number}
+	 */getNoiseLevel(){if(this._ThemeProvider){return this._ThemeProvider.getNoiseLevel();}return 0;}/**
+	 * Get the active theme key.
+	 * @returns {string}
+	 */getThemeKey(){if(this._ThemeProvider){return this._ThemeProvider.getActiveThemeKey();}return'default';}/**
+	 * Re-inject SVG marker definitions (arrowheads).
+	 * Called after a theme switch to update arrowhead colors.
+	 */_reinjectMarkerDefs(){if(!this._ConnectorShapesProvider||!this._SVGElement)return;let tmpViewIdentifier=this.options.ViewIdentifier;let tmpDefs=this._SVGElement.querySelector('defs');if(!tmpDefs)return;// Remove existing marker elements
+let tmpExistingMarkers=tmpDefs.querySelectorAll('marker');for(let i=0;i<tmpExistingMarkers.length;i++){tmpExistingMarkers[i].remove();}// Re-generate and inject
+let tmpMarkerMarkup=this._ConnectorShapesProvider.generateMarkerDefs(tmpViewIdentifier);let tmpTempSVG=document.createElementNS('http://www.w3.org/2000/svg','svg');tmpTempSVG.innerHTML=tmpMarkerMarkup;while(tmpTempSVG.firstChild){tmpDefs.appendChild(tmpTempSVG.firstChild);}}/**
+	 * Get a node by hash
+	 * @param {string} pNodeHash
+	 * @returns {Object|null}
+	 */getNode(pNodeHash){return this._FlowData.Nodes.find(pNode=>pNode.Hash===pNodeHash)||null;}/**
+	 * Get a connection by hash
+	 * @param {string} pConnectionHash
+	 * @returns {Object|null}
+	 */getConnection(pConnectionHash){return this._FlowData.Connections.find(pConn=>pConn.Hash===pConnectionHash)||null;}/**
+	 * Select a tether by its panel hash.
+	 * @param {string|null} pPanelHash - Hash of the panel whose tether to select, or null to deselect
+	 */selectTether(pPanelHash){return this._SelectionManager.selectTether(pPanelHash);}/**
+	 * Update a connection handle position during drag (for real-time feedback).
+	 * @param {string} pConnectionHash
+	 * @param {string} pHandleType - 'bezier-midpoint', 'ortho-corner1', 'ortho-corner2', 'ortho-midpoint'
+	 * @param {number} pX
+	 * @param {number} pY
+	 */updateConnectionHandle(pConnectionHash,pHandleType,pX,pY){let tmpConnection=this.getConnection(pConnectionHash);if(!tmpConnection)return;if(!tmpConnection.Data)tmpConnection.Data={};tmpConnection.Data.HandleCustomized=true;switch(pHandleType){case'bezier-midpoint':tmpConnection.Data.BezierHandleX=pX;tmpConnection.Data.BezierHandleY=pY;break;case'ortho-corner1':tmpConnection.Data.OrthoCorner1X=pX;tmpConnection.Data.OrthoCorner1Y=pY;break;case'ortho-corner2':tmpConnection.Data.OrthoCorner2X=pX;tmpConnection.Data.OrthoCorner2Y=pY;break;case'ortho-midpoint':{// Midpoint drag shifts the corridor offset
+let tmpSourcePos=this.getPortPosition(tmpConnection.SourceNodeHash,tmpConnection.SourcePortHash);let tmpTargetPos=this.getPortPosition(tmpConnection.TargetNodeHash,tmpConnection.TargetPortHash);if(tmpSourcePos&&tmpTargetPos){let tmpGeom=this._ConnectionRenderer._computeDirectionalGeometry(tmpSourcePos,tmpTargetPos);let tmpStartDir=tmpGeom.startDir;// Compute offset along the corridor axis
+if(Math.abs(tmpStartDir.dx)>Math.abs(tmpStartDir.dy)){// Horizontal departure — corridor is vertical, shift is along X
+let tmpAutoMidX=(tmpGeom.departX+tmpGeom.approachX)/2;tmpConnection.Data.OrthoMidOffset=pX-tmpAutoMidX;}else{// Vertical departure — corridor is horizontal, shift is along Y
+let tmpAutoMidY=(tmpGeom.departY+tmpGeom.approachY)/2;tmpConnection.Data.OrthoMidOffset=pY-tmpAutoMidY;}}break;}}this._renderSingleConnection(pConnectionHash);}/**
+	 * Update a tether handle position during drag (for real-time feedback).
+	 * Delegates state update to the TetherService.
+	 * @param {string} pPanelHash
+	 * @param {string} pHandleType - 'bezier-midpoint', 'ortho-corner1', 'ortho-corner2', 'ortho-midpoint'
+	 * @param {number} pX
+	 * @param {number} pY
+	 */updateTetherHandle(pPanelHash,pHandleType,pX,pY){let tmpPanel=this._FlowData.OpenPanels.find(pPanel=>pPanel.Hash===pPanelHash);if(!tmpPanel)return;if(this._TetherService){this._TetherService.updateHandlePosition(tmpPanel,pHandleType,pX,pY);}this._renderSingleTether(pPanelHash);}/**
+	 * Re-render a single connection (remove and re-add) for smooth drag performance.
+	 * @param {string} pConnectionHash
+	 */_renderSingleConnection(pConnectionHash){if(!this._ConnectionsLayer)return;// Remove existing elements for this connection
+let tmpExisting=this._ConnectionsLayer.querySelectorAll(`[data-connection-hash="${pConnectionHash}"]`);for(let i=0;i<tmpExisting.length;i++){tmpExisting[i].remove();}let tmpConnection=this.getConnection(pConnectionHash);if(!tmpConnection)return;let tmpIsSelected=this._FlowData.ViewState.SelectedConnectionHash===pConnectionHash;this._ConnectionRenderer.renderConnection(tmpConnection,this._ConnectionsLayer,tmpIsSelected);}/**
+	 * Re-render a single tether (remove and re-add) for smooth drag performance.
+	 * @param {string} pPanelHash
+	 */_renderSingleTether(pPanelHash){if(!this._TethersLayer||!this._TetherService)return;// Remove existing tether elements for this panel
+let tmpExisting=this._TethersLayer.querySelectorAll(`[data-panel-hash="${pPanelHash}"]`);for(let i=0;i<tmpExisting.length;i++){tmpExisting[i].remove();}let tmpPanel=this._FlowData.OpenPanels.find(pPanel=>pPanel.Hash===pPanelHash);if(!tmpPanel)return;let tmpNodeData=this.getNode(tmpPanel.NodeHash);if(!tmpNodeData)return;let tmpIsSelected=this._FlowData.ViewState.SelectedTetherHash===pPanelHash;this._TetherService.renderTether(tmpPanel,tmpNodeData,this._TethersLayer,tmpIsSelected,this.options.ViewIdentifier);}/**
+	 * Reset handle positions for all connections/tethers involving a node.
+	 * Called when a node moves. Preserves LineMode but resets handle coordinates to auto.
+	 * @param {string} pNodeHash
+	 */_resetHandlesForNode(pNodeHash){// Reset connection handles
+for(let i=0;i<this._FlowData.Connections.length;i++){let tmpConn=this._FlowData.Connections[i];if(tmpConn.SourceNodeHash===pNodeHash||tmpConn.TargetNodeHash===pNodeHash){if(tmpConn.Data&&tmpConn.Data.HandleCustomized){tmpConn.Data.HandleCustomized=false;tmpConn.Data.BezierHandleX=null;tmpConn.Data.BezierHandleY=null;tmpConn.Data.OrthoCorner1X=null;tmpConn.Data.OrthoCorner1Y=null;tmpConn.Data.OrthoCorner2X=null;tmpConn.Data.OrthoCorner2Y=null;tmpConn.Data.OrthoMidOffset=0;}}}// Reset tether handles for panels attached to this node
+if(this._TetherService){this._TetherService.resetHandlesForNode(this._FlowData.OpenPanels,pNodeHash);}}/**
+	 * Reset tether handle positions for a specific panel.
+	 * Called when a panel is dragged.
+	 * @param {string} pPanelHash
+	 */_resetHandlesForPanel(pPanelHash){let tmpPanel=this._FlowData.OpenPanels.find(pPanel=>pPanel.Hash===pPanelHash);if(!tmpPanel)return;if(this._TetherService){this._TetherService.resetHandlePositions(tmpPanel);}}/**
+	 * Get a port's absolute position in SVG coordinates.
+	 *
+	 * For left and right side ports, positioning is offset below the title bar
+	 * so that connection endpoints match the rendered port circles.
+	 *
+	 * @param {string} pNodeHash
+	 * @param {string} pPortHash
+	 * @returns {{x: number, y: number, side: string}|null}
+	 */getPortPosition(pNodeHash,pPortHash){let tmpNode=this.getNode(pNodeHash);if(!tmpNode)return null;let tmpPort=tmpNode.Ports.find(p=>p.Hash===pPortHash);if(!tmpPort)return null;// Count ports on the same side (matching both direction and side)
+let tmpSameSidePorts=tmpNode.Ports.filter(p=>p.Side===tmpPort.Side);let tmpPortIndex=tmpSameSidePorts.indexOf(tmpPort);let tmpPortCount=tmpSameSidePorts.length;let tmpTitleBarHeight=this._NodeView&&this._NodeView.options.NodeTitleBarHeight||28;// Use the adjusted node height that accounts for minimum port
+// spacing.  Connections render before nodes, so the node renderer
+// may not have written back its adjusted height yet.
+let tmpHeight=tmpNode.Height||80;if(this._GeometryProvider&&tmpNode.Ports&&tmpNode.Ports.length>0){let tmpMinHeight=this._GeometryProvider.computeMinimumNodeHeight(tmpNode.Ports,tmpTitleBarHeight);if(tmpMinHeight>tmpHeight){tmpHeight=tmpMinHeight;}}let tmpLocal=this._GeometryProvider.getPortLocalPosition(tmpPort.Side,tmpPortIndex,tmpPortCount,tmpNode.Width,tmpHeight,tmpTitleBarHeight);return{x:tmpNode.X+tmpLocal.x,y:tmpNode.Y+tmpLocal.y,side:tmpPort.Side||'right'};}/**
+	 * Convert screen coordinates to SVG viewport coordinates
+	 * @param {number} pScreenX
+	 * @param {number} pScreenY
+	 * @returns {{x: number, y: number}}
+	 */screenToSVGCoords(pScreenX,pScreenY){return this._ViewportManager.screenToSVGCoords(pScreenX,pScreenY);}/**
+	 * Render the complete flow diagram
+	 */renderFlow(){if(!this._NodesLayer||!this._ConnectionsLayer)return;// Clear existing SVG content
+while(this._NodesLayer.firstChild){this._NodesLayer.removeChild(this._NodesLayer.firstChild);}while(this._ConnectionsLayer.firstChild){this._ConnectionsLayer.removeChild(this._ConnectionsLayer.firstChild);}// Render connections first (behind nodes)
+for(let i=0;i<this._FlowData.Connections.length;i++){let tmpConnection=this._FlowData.Connections[i];let tmpIsSelected=this._FlowData.ViewState.SelectedConnectionHash===tmpConnection.Hash;this._ConnectionRenderer.renderConnection(tmpConnection,this._ConnectionsLayer,tmpIsSelected);}// Render nodes
+for(let i=0;i<this._FlowData.Nodes.length;i++){let tmpNode=this._FlowData.Nodes[i];let tmpIsSelected=this._FlowData.ViewState.SelectedNodeHash===tmpNode.Hash;let tmpNodeTypeConfig=this._NodeTypeProvider.getNodeType(tmpNode.Type);// Enrich saved port data with metadata from the node type's DefaultPorts.
+// Saved flow data may not include PortType or may have stale Side values,
+// so we match each port to its DefaultPort counterpart by Label and Direction,
+// then copy over PortType and Side from the authoritative node type definition.
+if(tmpNodeTypeConfig&&tmpNodeTypeConfig.DefaultPorts&&tmpNode.Ports){for(let p=0;p<tmpNode.Ports.length;p++){let tmpPort=tmpNode.Ports[p];for(let d=0;d<tmpNodeTypeConfig.DefaultPorts.length;d++){let tmpDefault=tmpNodeTypeConfig.DefaultPorts[d];if(tmpDefault.Label===tmpPort.Label&&tmpDefault.Direction===tmpPort.Direction){if(tmpDefault.PortType){tmpPort.PortType=tmpDefault.PortType;}if(tmpDefault.Side){tmpPort.Side=tmpDefault.Side;}break;}}}}this._NodeView.renderNode(tmpNode,this._NodesLayer,tmpIsSelected,tmpNodeTypeConfig);}// Render properties panels and tethers
+if(this._PropertiesPanelView&&this._PanelsLayer&&this._TethersLayer){this._PropertiesPanelView.renderPanels(this._FlowData.OpenPanels,this._PanelsLayer,this._TethersLayer,this._FlowData.ViewState.SelectedTetherHash);}// Update viewport transform
+this.updateViewportTransform();}/**
+	 * Update a single node's position in the SVG without full re-render (for drag performance)
+	 * @param {string} pNodeHash
+	 * @param {number} pX
+	 * @param {number} pY
+	 */updateNodePosition(pNodeHash,pX,pY){let tmpNode=this.getNode(pNodeHash);if(!tmpNode)return;if(this.options.EnableGridSnap){pX=this._LayoutService.snapToGrid(pX,this.options.GridSnapSize);pY=this._LayoutService.snapToGrid(pY,this.options.GridSnapSize);}tmpNode.X=pX;tmpNode.Y=pY;// Reset customized handle positions for connections/tethers involving this node
+this._resetHandlesForNode(pNodeHash);// Update the node's SVG group transform for smooth dragging
+let tmpNodeGroup=this._NodesLayer.querySelector(`[data-node-hash="${pNodeHash}"]`);if(tmpNodeGroup){tmpNodeGroup.setAttribute('transform',`translate(${pX}, ${pY})`);}// Re-render connections that involve this node
+this._renderConnectionsForNode(pNodeHash);// Update tethers for any panels attached to this node
+this._renderTethersForNode(pNodeHash);}/**
+	 * Re-render only connections that involve a specific node (for drag performance)
+	 * @param {string} pNodeHash
+	 */_renderConnectionsForNode(pNodeHash){let tmpAffectedConnections=this._FlowData.Connections.filter(pConn=>{return pConn.SourceNodeHash===pNodeHash||pConn.TargetNodeHash===pNodeHash;});for(let i=0;i<tmpAffectedConnections.length;i++){let tmpConn=tmpAffectedConnections[i];let tmpIsSelected=this._FlowData.ViewState.SelectedConnectionHash===tmpConn.Hash;// Remove existing connection SVG elements
+let tmpExisting=this._ConnectionsLayer.querySelectorAll(`[data-connection-hash="${tmpConn.Hash}"]`);for(let j=0;j<tmpExisting.length;j++){tmpExisting[j].remove();}// Re-render this connection
+this._ConnectionRenderer.renderConnection(tmpConn,this._ConnectionsLayer,tmpIsSelected);}}/**
+	 * Re-render tethers for panels attached to a specific node (for drag performance).
+	 * @param {string} pNodeHash
+	 */_renderTethersForNode(pNodeHash){if(!this._TethersLayer||!this._TetherService)return;let tmpAffectedPanels=this._FlowData.OpenPanels.filter(pPanel=>pPanel.NodeHash===pNodeHash);if(tmpAffectedPanels.length===0)return;// Remove existing tethers for these panels and re-render via TetherService
+for(let i=0;i<tmpAffectedPanels.length;i++){let tmpExisting=this._TethersLayer.querySelectorAll(`[data-panel-hash="${tmpAffectedPanels[i].Hash}"]`);for(let j=0;j<tmpExisting.length;j++){tmpExisting[j].remove();}let tmpNodeData=this.getNode(tmpAffectedPanels[i].NodeHash);if(!tmpNodeData)continue;let tmpIsSelected=this._FlowData.ViewState.SelectedTetherHash===tmpAffectedPanels[i].Hash;this._TetherService.renderTether(tmpAffectedPanels[i],tmpNodeData,this._TethersLayer,tmpIsSelected,this.options.ViewIdentifier);}}// ---- Properties Panel Management ----
+/**
+	 * Open a properties panel for a node.
+	 * @param {string} pNodeHash - The hash of the node to open a panel for
+	 * @returns {Object|false} The panel data, or false if the node has no PropertiesPanel config
+	 */openPanel(pNodeHash){return this._PanelManager.openPanel(pNodeHash);}/**
+	 * Close a properties panel by panel hash.
+	 * @param {string} pPanelHash
+	 * @returns {boolean}
+	 */closePanel(pPanelHash){return this._PanelManager.closePanel(pPanelHash);}/**
+	 * Close all panels for a given node.
+	 * @param {string} pNodeHash
+	 * @returns {boolean}
+	 */closePanelForNode(pNodeHash){return this._PanelManager.closePanelForNode(pNodeHash);}/**
+	 * Toggle a properties panel for a node (open if closed, close if open).
+	 * @param {string} pNodeHash
+	 * @returns {Object|false}
+	 */togglePanel(pNodeHash){return this._PanelManager.togglePanel(pNodeHash);}/**
+	 * Update a panel's position (for drag).
+	 * @param {string} pPanelHash
+	 * @param {number} pX
+	 * @param {number} pY
+	 */updatePanelPosition(pPanelHash,pX,pY){return this._PanelManager.updatePanelPosition(pPanelHash,pX,pY);}}module.exports=PictViewFlow;module.exports.default_configuration=_DefaultConfiguration;},{"../PictFlowCardPropertiesPanel.js":17,"../panels/FlowCardPropertiesPanel-Form.js":18,"../panels/FlowCardPropertiesPanel-Markdown.js":19,"../panels/FlowCardPropertiesPanel-Template.js":20,"../panels/FlowCardPropertiesPanel-View.js":21,"../providers/PictProvider-Flow-CSS.js":22,"../providers/PictProvider-Flow-ConnectorShapes.js":23,"../providers/PictProvider-Flow-EventHandler.js":24,"../providers/PictProvider-Flow-Geometry.js":25,"../providers/PictProvider-Flow-Icons.js":26,"../providers/PictProvider-Flow-Layouts.js":27,"../providers/PictProvider-Flow-NodeTypes.js":28,"../providers/PictProvider-Flow-Noise.js":29,"../providers/PictProvider-Flow-PanelChrome.js":30,"../providers/PictProvider-Flow-SVGHelpers.js":31,"../providers/PictProvider-Flow-Theme.js":32,"../services/PictService-Flow-ConnectionRenderer.js":33,"../services/PictService-Flow-InteractionManager.js":34,"../services/PictService-Flow-Layout.js":35,"../services/PictService-Flow-PanelManager.js":36,"../services/PictService-Flow-PathGenerator.js":37,"../services/PictService-Flow-SelectionManager.js":38,"../services/PictService-Flow-Tether.js":39,"../services/PictService-Flow-ViewportManager.js":40,"./PictView-Flow-FloatingToolbar.js":41,"./PictView-Flow-Node.js":42,"./PictView-Flow-PropertiesPanel.js":43,"./PictView-Flow-Toolbar.js":44,"pict-view":64}],46:[function(require,module,exports){/**
  * Pict-MDE-CodeMirror: Helper module for PictSectionMarkdownEditor
  *
  * Handles CodeMirror editor instance creation, extension configuration,
@@ -961,7 +4598,7 @@ continue;}// Build a human-readable size label
 let tmpSizeBytes=Math.round(tmpPayloadLength*0.75);// base64 to bytes approx
 let tmpSizeLabel;if(tmpSizeBytes>=1024*1024){tmpSizeLabel=(tmpSizeBytes/(1024*1024)).toFixed(1)+'MB';}else if(tmpSizeBytes>=1024){tmpSizeLabel=Math.round(tmpSizeBytes/1024)+'KB';}else{tmpSizeLabel=tmpSizeBytes+'B';}let tmpMimeType=tmpMatch[1]||'image';let tmpWidgetLabel=`\u2026${tmpSizeLabel})`;// Replace from the start of the base64 payload to after the closing paren
 let tmpWidget=tmpDecoration.replace({widget:new DataURIWidget(tmpWidgetLabel)});tmpDecorations.push(tmpWidget.range(tmpPayloadStart,tmpPayloadEnd+1));}}return tmpDecoration.set(tmpDecorations,true);}// Create the ViewPlugin
-let tmpPlugin=tmpViewPlugin.fromClass(class{constructor(pEditorView){this.decorations=buildDecorations(pEditorView);}update(pUpdate){if(pUpdate.docChanged||pUpdate.viewportChanged){this.decorations=buildDecorations(pUpdate.view);}}},{decorations:pPlugin=>pPlugin.decorations});return tmpPlugin;};};},{}],16:[function(require,module,exports){/**
+let tmpPlugin=tmpViewPlugin.fromClass(class{constructor(pEditorView){this.decorations=buildDecorations(pEditorView);}update(pUpdate){if(pUpdate.docChanged||pUpdate.viewportChanged){this.decorations=buildDecorations(pUpdate.view);}}},{decorations:pPlugin=>pPlugin.decorations});return tmpPlugin;};};},{}],47:[function(require,module,exports){/**
  * Pict-MDE-DragAndReorder: Helper module for PictSectionMarkdownEditor
  *
  * Handles segment drag-and-drop reordering, active segment management,
@@ -1043,7 +4680,7 @@ tmpQuadrantTR.classList.add('pict-mde-sidebar-at-cursor');tmpQuadrantTR.style.se
 	 * Reset the sidebar back to default sticky positioning (no cursor tracking).
 	 *
 	 * @param {number} pSegmentIndex - The internal segment index
-	 */pView._resetSidebarPosition=function _resetSidebarPosition(pSegmentIndex){let tmpSegmentEl=document.getElementById(`PictMDE-Segment-${pSegmentIndex}`);if(!tmpSegmentEl){return;}let tmpQuadrantTR=tmpSegmentEl.querySelector('.pict-mde-quadrant-tr');if(!tmpQuadrantTR){return;}tmpQuadrantTR.classList.remove('pict-mde-sidebar-at-cursor');tmpQuadrantTR.style.removeProperty('--pict-mde-sidebar-top');};};},{}],17:[function(require,module,exports){/**
+	 */pView._resetSidebarPosition=function _resetSidebarPosition(pSegmentIndex){let tmpSegmentEl=document.getElementById(`PictMDE-Segment-${pSegmentIndex}`);if(!tmpSegmentEl){return;}let tmpQuadrantTR=tmpSegmentEl.querySelector('.pict-mde-quadrant-tr');if(!tmpQuadrantTR){return;}tmpQuadrantTR.classList.remove('pict-mde-sidebar-at-cursor');tmpQuadrantTR.style.removeProperty('--pict-mde-sidebar-top');};};},{}],48:[function(require,module,exports){/**
  * Pict-MDE-Formatting: Helper module for PictSectionMarkdownEditor
  *
  * Handles markdown formatting operations (bold, italic, code, heading, link)
@@ -1072,7 +4709,7 @@ let tmpLine=tmpState.doc.lineAt(tmpFrom);let tmpLineText=tmpLine.text;// Toggle:
 if(tmpLineText.startsWith(tmpFormat.prefix)){tmpChanges={from:tmpLine.from,to:tmpLine.from+tmpFormat.prefix.length,insert:''};}else{tmpChanges={from:tmpLine.from,insert:tmpFormat.prefix};}tmpEditor.dispatch({changes:tmpChanges});}else if(tmpFormat.before&&tmpFormat.after){// Surround style (links)
 if(tmpHasSelection){let tmpInsert=tmpFormat.before+tmpSelectedText+tmpFormat.after;tmpChanges={from:tmpFrom,to:tmpTo,insert:tmpInsert};// Place cursor on the "url" part
 tmpCursorPos=tmpFrom+tmpFormat.before.length+tmpSelectedText.length+2;tmpEditor.dispatch({changes:tmpChanges,selection:{anchor:tmpCursorPos,head:tmpCursorPos+3}});}else{let tmpInsert=tmpFormat.before+tmpFormat.after;tmpChanges={from:tmpFrom,insert:tmpInsert};tmpCursorPos=tmpFrom+tmpFormat.before.length;tmpEditor.dispatch({changes:tmpChanges,selection:{anchor:tmpCursorPos}});}}// Re-focus the editor after clicking a sidebar button
-tmpEditor.focus();};};},{}],18:[function(require,module,exports){/**
+tmpEditor.focus();};};},{}],49:[function(require,module,exports){/**
  * Pict-MDE-ImageHandling: Helper module for PictSectionMarkdownEditor
  *
  * Handles image operations: file picker, file processing (hook or base64
@@ -1130,7 +4767,7 @@ let tmpHTML='';for(let i=0;i<tmpMatches.length;i++){let tmpAlt=tmpMatches[i].alt
 	 */pView._wireImageDragEvents=function _wireImageDragEvents(pEditorContainer,pSegmentIndex){pEditorContainer.addEventListener('dragover',pEvent=>{// Only handle file drags, not segment-reorder drags
 if(pView._dragSourceIndex>=0){return;}if(!pEvent.dataTransfer||!pEvent.dataTransfer.types||pEvent.dataTransfer.types.indexOf('Files')<0){return;}pEvent.preventDefault();pEvent.dataTransfer.dropEffect='copy';pEditorContainer.classList.add('pict-mde-image-dragover');});pEditorContainer.addEventListener('dragleave',pEvent=>{// Only clear if actually leaving the element
 if(!pEditorContainer.contains(pEvent.relatedTarget)){pEditorContainer.classList.remove('pict-mde-image-dragover');}});pEditorContainer.addEventListener('drop',pEvent=>{pEditorContainer.classList.remove('pict-mde-image-dragover');// Only handle file drops, not segment-reorder drops
-if(pView._dragSourceIndex>=0){return;}if(!pEvent.dataTransfer||!pEvent.dataTransfer.files||pEvent.dataTransfer.files.length<1){return;}let tmpFile=pEvent.dataTransfer.files[0];if(tmpFile.type&&tmpFile.type.startsWith('image/')){pEvent.preventDefault();pEvent.stopPropagation();pView._processImageFile(tmpFile,pSegmentIndex);}});};};},{}],19:[function(require,module,exports){/**
+if(pView._dragSourceIndex>=0){return;}if(!pEvent.dataTransfer||!pEvent.dataTransfer.files||pEvent.dataTransfer.files.length<1){return;}let tmpFile=pEvent.dataTransfer.files[0];if(tmpFile.type&&tmpFile.type.startsWith('image/')){pEvent.preventDefault();pEvent.stopPropagation();pView._processImageFile(tmpFile,pSegmentIndex);}});};};},{}],50:[function(require,module,exports){/**
  * Pict-MDE-RichPreview: Helper module for PictSectionMarkdownEditor
  *
  * Handles rich content preview rendering via pict-section-content:
@@ -1207,7 +4844,7 @@ pView._renderedViewGeneration++;let tmpGeneration=pView._renderedViewGeneration;
 let tmpContentContainer=tmpContainer.querySelector(`#${tmpRenderedViewID} .pict-content`);if(tmpContentContainer){let tmpContentID='PictMDE-RenderedViewContent';tmpContentContainer.id=tmpContentID;pView._postRenderMermaid(tmpContentID,-1,tmpGeneration);pView._postRenderKaTeX(tmpContentID);}};/**
 	 * Switch back from rendered view to the editing view: rebuild the
 	 * full editor UI from the data.
-	 */pView._restoreEditingView=function _restoreEditingView(){let tmpContainer=pView._getContainerElement();if(!tmpContainer){return;}tmpContainer.classList.remove('pict-mde-rendered-mode');pView._buildEditorUI();};};},{"pict-section-content":12}],20:[function(require,module,exports){module.exports={"DefaultRenderable":"MarkdownEditor-Wrap","DefaultDestinationAddress":"#MarkdownEditor-Container-Div","Templates":[{"Hash":"MarkdownEditor-Container","Template":/*html*/`<div class="pict-mde" id="PictMDE-Container"></div>`},{"Hash":"MarkdownEditor-Segment","Template":/*html*/`<div class="pict-mde-segment" id="PictMDE-Segment-{~D:Record.SegmentIndex~}" data-segment-index="{~D:Record.SegmentIndex~}">
+	 */pView._restoreEditingView=function _restoreEditingView(){let tmpContainer=pView._getContainerElement();if(!tmpContainer){return;}tmpContainer.classList.remove('pict-mde-rendered-mode');pView._buildEditorUI();};};},{"pict-section-content":12}],51:[function(require,module,exports){module.exports={"DefaultRenderable":"MarkdownEditor-Wrap","DefaultDestinationAddress":"#MarkdownEditor-Container-Div","Templates":[{"Hash":"MarkdownEditor-Container","Template":/*html*/`<div class="pict-mde" id="PictMDE-Container"></div>`},{"Hash":"MarkdownEditor-Segment","Template":/*html*/`<div class="pict-mde-segment" id="PictMDE-Segment-{~D:Record.SegmentIndex~}" data-segment-index="{~D:Record.SegmentIndex~}">
 	<div class="pict-mde-left-controls">
 		<div class="pict-mde-quadrant-tl"></div>
 		<div class="pict-mde-quadrant-bl"></div>
@@ -1903,7 +5540,7 @@ let tmpContentContainer=tmpContainer.querySelector(`#${tmpRenderedViewID} .pict-
 		padding: 4px 4px;
 	}
 }
-`};},{}],21:[function(require,module,exports){const libPictViewClass=require('pict-view');const libPictSectionContent=require('pict-section-content');const _DefaultConfiguration=require('./Pict-Section-MarkdownEditor-DefaultConfiguration.js');// Helper modules
+`};},{}],52:[function(require,module,exports){const libPictViewClass=require('pict-view');const libPictSectionContent=require('pict-section-content');const _DefaultConfiguration=require('./Pict-Section-MarkdownEditor-DefaultConfiguration.js');// Helper modules
 const libFormatting=require('./Pict-MDE-Formatting.js');const libImageHandling=require('./Pict-MDE-ImageHandling.js');const libDragAndReorder=require('./Pict-MDE-DragAndReorder.js');const libRichPreview=require('./Pict-MDE-RichPreview.js');const libCodeMirror=require('./Pict-MDE-CodeMirror.js');class PictSectionMarkdownEditor extends libPictViewClass{constructor(pFable,pOptions,pServiceHash){let tmpOptions=Object.assign({},_DefaultConfiguration,pOptions);super(pFable,tmpOptions,pServiceHash);this.initialRenderComplete=false;// CodeMirror prototype references (injected by consumer or found on window)
 this._codeMirrorModules=null;// Map of segment index to CodeMirror EditorView instance
 this._segmentEditors={};// Internal segment counter (monotonically increasing for unique IDs)
@@ -2142,7 +5779,7 @@ this._swapHiddenPreviewState(tmpLogicalIndex,tmpLogicalIndex+1);this._buildEdito
 	 */marshalFromView(){super.marshalFromView();this._marshalAllEditorsToData();}/**
 	 * Destroy all editors and clean up.
 	 */destroy(){for(let tmpIndex in this._segmentEditors){if(this._segmentEditors[tmpIndex]){this._segmentEditors[tmpIndex].destroy();}}this._segmentEditors={};// Clear rich preview debounce timers
-for(let tmpIndex in this._richPreviewTimers){clearTimeout(this._richPreviewTimers[tmpIndex]);}this._richPreviewTimers={};this._richPreviewGenerations={};}}module.exports=PictSectionMarkdownEditor;module.exports.default_configuration=_DefaultConfiguration;},{"./Pict-MDE-CodeMirror.js":15,"./Pict-MDE-DragAndReorder.js":16,"./Pict-MDE-Formatting.js":17,"./Pict-MDE-ImageHandling.js":18,"./Pict-MDE-RichPreview.js":19,"./Pict-Section-MarkdownEditor-DefaultConfiguration.js":20,"pict-section-content":12,"pict-view":33}],22:[function(require,module,exports){module.exports={ViewIdentifier:'Pict-ObjectEditor',DefaultRenderable:'ObjectEditor-Container',DefaultDestinationAddress:'#ObjectEditor-Container',AutoRender:false,// Address in AppData where the JSON object lives
+for(let tmpIndex in this._richPreviewTimers){clearTimeout(this._richPreviewTimers[tmpIndex]);}this._richPreviewTimers={};this._richPreviewGenerations={};}}module.exports=PictSectionMarkdownEditor;module.exports.default_configuration=_DefaultConfiguration;},{"./Pict-MDE-CodeMirror.js":46,"./Pict-MDE-DragAndReorder.js":47,"./Pict-MDE-Formatting.js":48,"./Pict-MDE-ImageHandling.js":49,"./Pict-MDE-RichPreview.js":50,"./Pict-Section-MarkdownEditor-DefaultConfiguration.js":51,"pict-section-content":12,"pict-view":64}],53:[function(require,module,exports){module.exports={ViewIdentifier:'Pict-ObjectEditor',DefaultRenderable:'ObjectEditor-Container',DefaultDestinationAddress:'#ObjectEditor-Container',AutoRender:false,// Address in AppData where the JSON object lives
 ObjectDataAddress:false,// Maximum depth to auto-expand on initial load
 InitialExpandDepth:1,// Whether editing is enabled (vs read-only inspector mode)
 Editable:true,// Whether to show type indicator badges
@@ -2414,12 +6051,12 @@ IndentPixels:20,CSS:/*css*/`
 	white-space: nowrap;
 	padding: 0 8px;
 }
-`,MacroTemplates:{Node:{RowOpen:'<div class="pict-oe-row" style="padding-left:{~D:Record.PaddingLeft~}px" data-path="{~D:Record.EscapedPath~}">',RowClose:'</div>',Toggle:'<span class="pict-oe-toggle" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].toggleNode(\'{~D:Record.EscapedPath~}\')">{~D:Record.ToggleArrow~}</span>',Spacer:'<span class="pict-oe-spacer"></span>',KeyName:'<span class="pict-oe-key">{~D:Record.EscapedKey~}</span>',KeyIndex:'<span class="pict-oe-key"><span class="pict-oe-array-index">{~D:Record.ArrayIndex~}</span></span>',Separator:'<span class="pict-oe-separator">:</span>',TypeBadge:'<span class="pict-oe-type-badge">{~D:Record.TypeLabel~}</span>',Summary:'<span class="pict-oe-summary">{~D:Record.SummaryText~}</span>',ValueStringEditable:'<span class="pict-oe-value pict-oe-value-string" ondblclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].beginEdit(\'{~D:Record.EscapedPath~}\', \'string\')" title="{~D:Record.EscapedTitle~}">{~D:Record.EscapedValue~}</span>',ValueStringReadOnly:'<span class="pict-oe-value pict-oe-value-string" title="{~D:Record.EscapedTitle~}">{~D:Record.EscapedValue~}</span>',ValueNumberEditable:'<span class="pict-oe-value pict-oe-value-number" ondblclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].beginEdit(\'{~D:Record.EscapedPath~}\', \'number\')">{~D:Record.EscapedValue~}</span>',ValueNumberReadOnly:'<span class="pict-oe-value pict-oe-value-number">{~D:Record.EscapedValue~}</span>',ValueBooleanEditable:'<span class="pict-oe-value pict-oe-value-boolean" style="cursor:pointer" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].toggleBoolean(\'{~D:Record.EscapedPath~}\')">{~D:Record.DisplayValue~}</span>',ValueBooleanReadOnly:'<span class="pict-oe-value pict-oe-value-boolean">{~D:Record.DisplayValue~}</span>',ValueNull:'<span class="pict-oe-value pict-oe-value-null">null</span>',ActionsOpen:'<span class="pict-oe-actions">',ActionsClose:'</span>',ButtonRemove:'<span class="pict-oe-action-btn pict-oe-action-remove" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].removeNode(\'{~D:Record.EscapedPath~}\')" title="Remove">\u00D7</span>',ButtonAddObject:'<span class="pict-oe-action-btn pict-oe-action-add" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].beginAddToObject(\'{~D:Record.EscapedPath~}\')" title="Add">+</span>',ButtonAddArray:'<span class="pict-oe-action-btn pict-oe-action-add" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].beginAddToArray(\'{~D:Record.EscapedPath~}\')" title="Add">+</span>',ButtonMoveUp:'<span class="pict-oe-action-btn pict-oe-action-move" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].moveArrayElementUp(\'{~D:Record.EscapedArrayPath~}\', {~D:Record.ArrayIndex~})" title="Move up">\u25B2</span>',ButtonMoveDown:'<span class="pict-oe-action-btn pict-oe-action-move" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].moveArrayElementDown(\'{~D:Record.EscapedArrayPath~}\', {~D:Record.ArrayIndex~})" title="Move down">\u25BC</span>',RootAddObject:'<div class="pict-oe-root-add" data-path=""><span class="pict-oe-action-btn pict-oe-action-add" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].beginAddToObject(\'\')" title="Add property">+ add property</span></div>',RootAddArray:'<div class="pict-oe-root-add" data-path=""><span class="pict-oe-action-btn pict-oe-action-add" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].beginAddToArray(\'\')" title="Add element">+ add element</span></div>'}},Templates:[{Hash:'ObjectEditor-Container-Template',Template:'<div class="pict-objecteditor" id="ObjectEditor-Tree-{~D:Context[0].Hash~}"></div>'},{Hash:'ObjectEditor-Node-String',Template:'{~D:Record.Macro.RowOpen~}{~D:Record.Macro.Spacer~}{~D:Record.Macro.Key~}{~D:Record.Macro.Separator~}{~D:Record.Macro.Value~}{~D:Record.Macro.Actions~}{~D:Record.Macro.RowClose~}'},{Hash:'ObjectEditor-Node-Number',Template:'{~D:Record.Macro.RowOpen~}{~D:Record.Macro.Spacer~}{~D:Record.Macro.Key~}{~D:Record.Macro.Separator~}{~D:Record.Macro.Value~}{~D:Record.Macro.Actions~}{~D:Record.Macro.RowClose~}'},{Hash:'ObjectEditor-Node-Boolean',Template:'{~D:Record.Macro.RowOpen~}{~D:Record.Macro.Spacer~}{~D:Record.Macro.Key~}{~D:Record.Macro.Separator~}{~D:Record.Macro.Value~}{~D:Record.Macro.Actions~}{~D:Record.Macro.RowClose~}'},{Hash:'ObjectEditor-Node-Null',Template:'{~D:Record.Macro.RowOpen~}{~D:Record.Macro.Spacer~}{~D:Record.Macro.Key~}{~D:Record.Macro.Separator~}{~D:Record.Macro.Value~}{~D:Record.Macro.Actions~}{~D:Record.Macro.RowClose~}'},{Hash:'ObjectEditor-Node-Object',Template:'{~D:Record.Macro.RowOpen~}{~D:Record.Macro.Toggle~}{~D:Record.Macro.Key~}{~D:Record.Macro.TypeBadge~}{~D:Record.Macro.Summary~}{~D:Record.Macro.Actions~}{~D:Record.Macro.RowClose~}'},{Hash:'ObjectEditor-Node-Array',Template:'{~D:Record.Macro.RowOpen~}{~D:Record.Macro.Toggle~}{~D:Record.Macro.Key~}{~D:Record.Macro.TypeBadge~}{~D:Record.Macro.Summary~}{~D:Record.Macro.Actions~}{~D:Record.Macro.RowClose~}'}],Renderables:[{RenderableHash:'ObjectEditor-Container',TemplateHash:'ObjectEditor-Container-Template',DestinationAddress:'#ObjectEditor-Container',RenderMethod:'replace'}]};},{}],23:[function(require,module,exports){// Pict Section: Object Editor
+`,MacroTemplates:{Node:{RowOpen:'<div class="pict-oe-row" style="padding-left:{~D:Record.PaddingLeft~}px" data-path="{~D:Record.EscapedPath~}">',RowClose:'</div>',Toggle:'<span class="pict-oe-toggle" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].toggleNode(\'{~D:Record.EscapedPath~}\')">{~D:Record.ToggleArrow~}</span>',Spacer:'<span class="pict-oe-spacer"></span>',KeyName:'<span class="pict-oe-key">{~D:Record.EscapedKey~}</span>',KeyIndex:'<span class="pict-oe-key"><span class="pict-oe-array-index">{~D:Record.ArrayIndex~}</span></span>',Separator:'<span class="pict-oe-separator">:</span>',TypeBadge:'<span class="pict-oe-type-badge">{~D:Record.TypeLabel~}</span>',Summary:'<span class="pict-oe-summary">{~D:Record.SummaryText~}</span>',ValueStringEditable:'<span class="pict-oe-value pict-oe-value-string" ondblclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].beginEdit(\'{~D:Record.EscapedPath~}\', \'string\')" title="{~D:Record.EscapedTitle~}">{~D:Record.EscapedValue~}</span>',ValueStringReadOnly:'<span class="pict-oe-value pict-oe-value-string" title="{~D:Record.EscapedTitle~}">{~D:Record.EscapedValue~}</span>',ValueNumberEditable:'<span class="pict-oe-value pict-oe-value-number" ondblclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].beginEdit(\'{~D:Record.EscapedPath~}\', \'number\')">{~D:Record.EscapedValue~}</span>',ValueNumberReadOnly:'<span class="pict-oe-value pict-oe-value-number">{~D:Record.EscapedValue~}</span>',ValueBooleanEditable:'<span class="pict-oe-value pict-oe-value-boolean" style="cursor:pointer" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].toggleBoolean(\'{~D:Record.EscapedPath~}\')">{~D:Record.DisplayValue~}</span>',ValueBooleanReadOnly:'<span class="pict-oe-value pict-oe-value-boolean">{~D:Record.DisplayValue~}</span>',ValueNull:'<span class="pict-oe-value pict-oe-value-null">null</span>',ActionsOpen:'<span class="pict-oe-actions">',ActionsClose:'</span>',ButtonRemove:'<span class="pict-oe-action-btn pict-oe-action-remove" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].removeNode(\'{~D:Record.EscapedPath~}\')" title="Remove">\u00D7</span>',ButtonAddObject:'<span class="pict-oe-action-btn pict-oe-action-add" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].beginAddToObject(\'{~D:Record.EscapedPath~}\')" title="Add">+</span>',ButtonAddArray:'<span class="pict-oe-action-btn pict-oe-action-add" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].beginAddToArray(\'{~D:Record.EscapedPath~}\')" title="Add">+</span>',ButtonMoveUp:'<span class="pict-oe-action-btn pict-oe-action-move" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].moveArrayElementUp(\'{~D:Record.EscapedArrayPath~}\', {~D:Record.ArrayIndex~})" title="Move up">\u25B2</span>',ButtonMoveDown:'<span class="pict-oe-action-btn pict-oe-action-move" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].moveArrayElementDown(\'{~D:Record.EscapedArrayPath~}\', {~D:Record.ArrayIndex~})" title="Move down">\u25BC</span>',RootAddObject:'<div class="pict-oe-root-add" data-path=""><span class="pict-oe-action-btn pict-oe-action-add" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].beginAddToObject(\'\')" title="Add property">+ add property</span></div>',RootAddArray:'<div class="pict-oe-root-add" data-path=""><span class="pict-oe-action-btn pict-oe-action-add" onclick="{~P~}.views[\'{~D:Context[0].Hash~}\'].beginAddToArray(\'\')" title="Add element">+ add element</span></div>'}},Templates:[{Hash:'ObjectEditor-Container-Template',Template:'<div class="pict-objecteditor" id="ObjectEditor-Tree-{~D:Context[0].Hash~}"></div>'},{Hash:'ObjectEditor-Node-String',Template:'{~D:Record.Macro.RowOpen~}{~D:Record.Macro.Spacer~}{~D:Record.Macro.Key~}{~D:Record.Macro.Separator~}{~D:Record.Macro.Value~}{~D:Record.Macro.Actions~}{~D:Record.Macro.RowClose~}'},{Hash:'ObjectEditor-Node-Number',Template:'{~D:Record.Macro.RowOpen~}{~D:Record.Macro.Spacer~}{~D:Record.Macro.Key~}{~D:Record.Macro.Separator~}{~D:Record.Macro.Value~}{~D:Record.Macro.Actions~}{~D:Record.Macro.RowClose~}'},{Hash:'ObjectEditor-Node-Boolean',Template:'{~D:Record.Macro.RowOpen~}{~D:Record.Macro.Spacer~}{~D:Record.Macro.Key~}{~D:Record.Macro.Separator~}{~D:Record.Macro.Value~}{~D:Record.Macro.Actions~}{~D:Record.Macro.RowClose~}'},{Hash:'ObjectEditor-Node-Null',Template:'{~D:Record.Macro.RowOpen~}{~D:Record.Macro.Spacer~}{~D:Record.Macro.Key~}{~D:Record.Macro.Separator~}{~D:Record.Macro.Value~}{~D:Record.Macro.Actions~}{~D:Record.Macro.RowClose~}'},{Hash:'ObjectEditor-Node-Object',Template:'{~D:Record.Macro.RowOpen~}{~D:Record.Macro.Toggle~}{~D:Record.Macro.Key~}{~D:Record.Macro.TypeBadge~}{~D:Record.Macro.Summary~}{~D:Record.Macro.Actions~}{~D:Record.Macro.RowClose~}'},{Hash:'ObjectEditor-Node-Array',Template:'{~D:Record.Macro.RowOpen~}{~D:Record.Macro.Toggle~}{~D:Record.Macro.Key~}{~D:Record.Macro.TypeBadge~}{~D:Record.Macro.Summary~}{~D:Record.Macro.Actions~}{~D:Record.Macro.RowClose~}'}],Renderables:[{RenderableHash:'ObjectEditor-Container',TemplateHash:'ObjectEditor-Container-Template',DestinationAddress:'#ObjectEditor-Container',RenderMethod:'replace'}]};},{}],54:[function(require,module,exports){// Pict Section: Object Editor
 // A tree-based JSON object viewer and editor for Pict applications.
 // The main object editor view class
 module.exports=require('./views/PictView-ObjectEditor.js');// Node type views
 module.exports.PictViewObjectEditorNode=require('./views/PictView-ObjectEditor-Node.js');module.exports.PictViewObjectEditorNodeString=require('./views/PictView-ObjectEditor-NodeString.js');module.exports.PictViewObjectEditorNodeNumber=require('./views/PictView-ObjectEditor-NodeNumber.js');module.exports.PictViewObjectEditorNodeBoolean=require('./views/PictView-ObjectEditor-NodeBoolean.js');module.exports.PictViewObjectEditorNodeNull=require('./views/PictView-ObjectEditor-NodeNull.js');module.exports.PictViewObjectEditorNodeObject=require('./views/PictView-ObjectEditor-NodeObject.js');module.exports.PictViewObjectEditorNodeArray=require('./views/PictView-ObjectEditor-NodeArray.js');// Default configuration
-module.exports.default_configuration=require('./Pict-Section-ObjectEditor-DefaultConfiguration.js');},{"./Pict-Section-ObjectEditor-DefaultConfiguration.js":22,"./views/PictView-ObjectEditor-Node.js":24,"./views/PictView-ObjectEditor-NodeArray.js":25,"./views/PictView-ObjectEditor-NodeBoolean.js":26,"./views/PictView-ObjectEditor-NodeNull.js":27,"./views/PictView-ObjectEditor-NodeNumber.js":28,"./views/PictView-ObjectEditor-NodeObject.js":29,"./views/PictView-ObjectEditor-NodeString.js":30,"./views/PictView-ObjectEditor.js":31}],24:[function(require,module,exports){const libPictView=require('pict-view');/**
+module.exports.default_configuration=require('./Pict-Section-ObjectEditor-DefaultConfiguration.js');},{"./Pict-Section-ObjectEditor-DefaultConfiguration.js":53,"./views/PictView-ObjectEditor-Node.js":55,"./views/PictView-ObjectEditor-NodeArray.js":56,"./views/PictView-ObjectEditor-NodeBoolean.js":57,"./views/PictView-ObjectEditor-NodeNull.js":58,"./views/PictView-ObjectEditor-NodeNumber.js":59,"./views/PictView-ObjectEditor-NodeObject.js":60,"./views/PictView-ObjectEditor-NodeString.js":61,"./views/PictView-ObjectEditor.js":62}],55:[function(require,module,exports){const libPictView=require('pict-view');/**
  * Base class for all object editor node type renderers.
  *
  * Each subclass implements renderNodeHTML() to return an HTML string
@@ -2465,35 +6102,35 @@ if(!pOptions.ShowTypeIndicators){pNode.Macro.TypeBadge='';}}/**
 	 * Escape a string for safe use in HTML attributes.
 	 */escapeAttribute(pString){if(typeof pString!=='string'){return'';}return pString.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}/**
 	 * Escape a string for safe use in HTML content.
-	 */escapeHTML(pString){if(typeof pString!=='string'){return'';}return pString.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}}module.exports=PictViewObjectEditorNode;},{"pict-view":33}],25:[function(require,module,exports){const libPictViewObjectEditorNode=require('./PictView-ObjectEditor-Node.js');class PictViewObjectEditorNodeArray extends libPictViewObjectEditorNode{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictViewObjectEditorNodeArray';}renderNodeHTML(pNode,pValue,pOptions){// Set type-specific display properties on the node descriptor
+	 */escapeHTML(pString){if(typeof pString!=='string'){return'';}return pString.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}}module.exports=PictViewObjectEditorNode;},{"pict-view":64}],56:[function(require,module,exports){const libPictViewObjectEditorNode=require('./PictView-ObjectEditor-Node.js');class PictViewObjectEditorNodeArray extends libPictViewObjectEditorNode{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictViewObjectEditorNodeArray';}renderNodeHTML(pNode,pValue,pOptions){// Set type-specific display properties on the node descriptor
 let tmpLength=Array.isArray(pValue)?pValue.length:0;pNode.TypeLabel='Array';let tmpNoun=tmpLength===1?'item':'items';pNode.SummaryText='['+tmpLength+' '+tmpNoun+']';// Compile all MacroTemplates onto pNode.Macro
 this.compileMacros(pNode,pValue,pOptions);// Compose container actions (includes add button)
 pNode.Macro.Actions=this.compileContainerActions(pNode,pOptions,'array');// Render via per-type template
-return this.pict.parseTemplate(this.pict.TemplateProvider.getTemplate('ObjectEditor-Node-Array'),pNode,null,[this._ObjectEditorView]);}}module.exports=PictViewObjectEditorNodeArray;},{"./PictView-ObjectEditor-Node.js":24}],26:[function(require,module,exports){const libPictViewObjectEditorNode=require('./PictView-ObjectEditor-Node.js');class PictViewObjectEditorNodeBoolean extends libPictViewObjectEditorNode{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictViewObjectEditorNodeBoolean';}renderNodeHTML(pNode,pValue,pOptions){// Set type-specific display properties on the node descriptor
+return this.pict.parseTemplate(this.pict.TemplateProvider.getTemplate('ObjectEditor-Node-Array'),pNode,null,[this._ObjectEditorView]);}}module.exports=PictViewObjectEditorNodeArray;},{"./PictView-ObjectEditor-Node.js":55}],57:[function(require,module,exports){const libPictViewObjectEditorNode=require('./PictView-ObjectEditor-Node.js');class PictViewObjectEditorNodeBoolean extends libPictViewObjectEditorNode{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictViewObjectEditorNodeBoolean';}renderNodeHTML(pNode,pValue,pOptions){// Set type-specific display properties on the node descriptor
 pNode.DisplayValue=pValue?'true':'false';// Compile all MacroTemplates onto pNode.Macro
 this.compileMacros(pNode,pValue,pOptions);// Select editable or read-only value macro
 pNode.Macro.Value=pOptions.Editable?pNode.Macro.ValueBooleanEditable:pNode.Macro.ValueBooleanReadOnly;// Compose actions
 pNode.Macro.Actions=this.compileActions(pNode,pOptions);// Render via per-type template
-return this.pict.parseTemplate(this.pict.TemplateProvider.getTemplate('ObjectEditor-Node-Boolean'),pNode,null,[this._ObjectEditorView]);}}module.exports=PictViewObjectEditorNodeBoolean;},{"./PictView-ObjectEditor-Node.js":24}],27:[function(require,module,exports){const libPictViewObjectEditorNode=require('./PictView-ObjectEditor-Node.js');class PictViewObjectEditorNodeNull extends libPictViewObjectEditorNode{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictViewObjectEditorNodeNull';}renderNodeHTML(pNode,pValue,pOptions){// Compile all MacroTemplates onto pNode.Macro
+return this.pict.parseTemplate(this.pict.TemplateProvider.getTemplate('ObjectEditor-Node-Boolean'),pNode,null,[this._ObjectEditorView]);}}module.exports=PictViewObjectEditorNodeBoolean;},{"./PictView-ObjectEditor-Node.js":55}],58:[function(require,module,exports){const libPictViewObjectEditorNode=require('./PictView-ObjectEditor-Node.js');class PictViewObjectEditorNodeNull extends libPictViewObjectEditorNode{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictViewObjectEditorNodeNull';}renderNodeHTML(pNode,pValue,pOptions){// Compile all MacroTemplates onto pNode.Macro
 this.compileMacros(pNode,pValue,pOptions);// Null always uses the static ValueNull macro
 pNode.Macro.Value=pNode.Macro.ValueNull;// Compose actions
 pNode.Macro.Actions=this.compileActions(pNode,pOptions);// Render via per-type template
-return this.pict.parseTemplate(this.pict.TemplateProvider.getTemplate('ObjectEditor-Node-Null'),pNode,null,[this._ObjectEditorView]);}}module.exports=PictViewObjectEditorNodeNull;},{"./PictView-ObjectEditor-Node.js":24}],28:[function(require,module,exports){const libPictViewObjectEditorNode=require('./PictView-ObjectEditor-Node.js');class PictViewObjectEditorNodeNumber extends libPictViewObjectEditorNode{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictViewObjectEditorNodeNumber';}renderNodeHTML(pNode,pValue,pOptions){// Set type-specific display properties on the node descriptor
+return this.pict.parseTemplate(this.pict.TemplateProvider.getTemplate('ObjectEditor-Node-Null'),pNode,null,[this._ObjectEditorView]);}}module.exports=PictViewObjectEditorNodeNull;},{"./PictView-ObjectEditor-Node.js":55}],59:[function(require,module,exports){const libPictViewObjectEditorNode=require('./PictView-ObjectEditor-Node.js');class PictViewObjectEditorNodeNumber extends libPictViewObjectEditorNode{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictViewObjectEditorNodeNumber';}renderNodeHTML(pNode,pValue,pOptions){// Set type-specific display properties on the node descriptor
 pNode.EscapedValue=this.escapeHTML(String(pValue));// Compile all MacroTemplates onto pNode.Macro
 this.compileMacros(pNode,pValue,pOptions);// Select editable or read-only value macro
 pNode.Macro.Value=pOptions.Editable?pNode.Macro.ValueNumberEditable:pNode.Macro.ValueNumberReadOnly;// Compose actions
 pNode.Macro.Actions=this.compileActions(pNode,pOptions);// Render via per-type template
-return this.pict.parseTemplate(this.pict.TemplateProvider.getTemplate('ObjectEditor-Node-Number'),pNode,null,[this._ObjectEditorView]);}}module.exports=PictViewObjectEditorNodeNumber;},{"./PictView-ObjectEditor-Node.js":24}],29:[function(require,module,exports){const libPictViewObjectEditorNode=require('./PictView-ObjectEditor-Node.js');class PictViewObjectEditorNodeObject extends libPictViewObjectEditorNode{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictViewObjectEditorNodeObject';}renderNodeHTML(pNode,pValue,pOptions){// Set type-specific display properties on the node descriptor
+return this.pict.parseTemplate(this.pict.TemplateProvider.getTemplate('ObjectEditor-Node-Number'),pNode,null,[this._ObjectEditorView]);}}module.exports=PictViewObjectEditorNodeNumber;},{"./PictView-ObjectEditor-Node.js":55}],60:[function(require,module,exports){const libPictViewObjectEditorNode=require('./PictView-ObjectEditor-Node.js');class PictViewObjectEditorNodeObject extends libPictViewObjectEditorNode{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictViewObjectEditorNodeObject';}renderNodeHTML(pNode,pValue,pOptions){// Set type-specific display properties on the node descriptor
 let tmpKeyCount=0;if(pValue&&typeof pValue==='object'&&!Array.isArray(pValue)){tmpKeyCount=Object.keys(pValue).length;}pNode.TypeLabel='Object';let tmpNoun=tmpKeyCount===1?'key':'keys';pNode.SummaryText='{'+tmpKeyCount+' '+tmpNoun+'}';// Compile all MacroTemplates onto pNode.Macro
 this.compileMacros(pNode,pValue,pOptions);// Compose container actions (includes add button)
 pNode.Macro.Actions=this.compileContainerActions(pNode,pOptions,'object');// Render via per-type template
-return this.pict.parseTemplate(this.pict.TemplateProvider.getTemplate('ObjectEditor-Node-Object'),pNode,null,[this._ObjectEditorView]);}}module.exports=PictViewObjectEditorNodeObject;},{"./PictView-ObjectEditor-Node.js":24}],30:[function(require,module,exports){const libPictViewObjectEditorNode=require('./PictView-ObjectEditor-Node.js');class PictViewObjectEditorNodeString extends libPictViewObjectEditorNode{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictViewObjectEditorNodeString';}renderNodeHTML(pNode,pValue,pOptions){// Set type-specific display properties on the node descriptor
+return this.pict.parseTemplate(this.pict.TemplateProvider.getTemplate('ObjectEditor-Node-Object'),pNode,null,[this._ObjectEditorView]);}}module.exports=PictViewObjectEditorNodeObject;},{"./PictView-ObjectEditor-Node.js":55}],61:[function(require,module,exports){const libPictViewObjectEditorNode=require('./PictView-ObjectEditor-Node.js');class PictViewObjectEditorNodeString extends libPictViewObjectEditorNode{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this.serviceType='PictViewObjectEditorNodeString';}renderNodeHTML(pNode,pValue,pOptions){// Set type-specific display properties on the node descriptor
 let tmpDisplayValue=typeof pValue==='string'?pValue:'';// Truncate long strings for display
 let tmpTruncated=tmpDisplayValue.length>120?tmpDisplayValue.substring(0,120)+'\u2026':tmpDisplayValue;pNode.EscapedValue=this.escapeHTML(tmpTruncated);pNode.EscapedTitle=this.escapeAttribute(tmpDisplayValue);// Compile all MacroTemplates onto pNode.Macro
 this.compileMacros(pNode,pValue,pOptions);// Select editable or read-only value macro
 pNode.Macro.Value=pOptions.Editable?pNode.Macro.ValueStringEditable:pNode.Macro.ValueStringReadOnly;// Compose actions
 pNode.Macro.Actions=this.compileActions(pNode,pOptions);// Render via per-type template
-return this.pict.parseTemplate(this.pict.TemplateProvider.getTemplate('ObjectEditor-Node-String'),pNode,null,[this._ObjectEditorView]);}}module.exports=PictViewObjectEditorNodeString;},{"./PictView-ObjectEditor-Node.js":24}],31:[function(require,module,exports){const libPictView=require('pict-view');const libNodeString=require('./PictView-ObjectEditor-NodeString.js');const libNodeNumber=require('./PictView-ObjectEditor-NodeNumber.js');const libNodeBoolean=require('./PictView-ObjectEditor-NodeBoolean.js');const libNodeNull=require('./PictView-ObjectEditor-NodeNull.js');const libNodeObject=require('./PictView-ObjectEditor-NodeObject.js');const libNodeArray=require('./PictView-ObjectEditor-NodeArray.js');const _DefaultConfiguration=require('../Pict-Section-ObjectEditor-DefaultConfiguration.js');class PictViewObjectEditor extends libPictView{constructor(pFable,pOptions,pServiceHash){let tmpOptions=Object.assign({},_DefaultConfiguration,pOptions);super(pFable,tmpOptions,pServiceHash);this.initialRenderComplete=false;// Set of expanded path strings
+return this.pict.parseTemplate(this.pict.TemplateProvider.getTemplate('ObjectEditor-Node-String'),pNode,null,[this._ObjectEditorView]);}}module.exports=PictViewObjectEditorNodeString;},{"./PictView-ObjectEditor-Node.js":55}],62:[function(require,module,exports){const libPictView=require('pict-view');const libNodeString=require('./PictView-ObjectEditor-NodeString.js');const libNodeNumber=require('./PictView-ObjectEditor-NodeNumber.js');const libNodeBoolean=require('./PictView-ObjectEditor-NodeBoolean.js');const libNodeNull=require('./PictView-ObjectEditor-NodeNull.js');const libNodeObject=require('./PictView-ObjectEditor-NodeObject.js');const libNodeArray=require('./PictView-ObjectEditor-NodeArray.js');const _DefaultConfiguration=require('../Pict-Section-ObjectEditor-DefaultConfiguration.js');class PictViewObjectEditor extends libPictView{constructor(pFable,pOptions,pServiceHash){let tmpOptions=Object.assign({},_DefaultConfiguration,pOptions);super(pFable,tmpOptions,pServiceHash);this.initialRenderComplete=false;// Set of expanded path strings
 this._ExpandedPaths=new Set();// Map of data type -> node renderer instance
 this._NodeRenderers={};}onBeforeInitialize(){super.onBeforeInitialize();// Register node type service types if they aren't already present
 let tmpNodeTypes={'PictViewObjectEditorNodeString':libNodeString,'PictViewObjectEditorNodeNumber':libNodeNumber,'PictViewObjectEditorNodeBoolean':libNodeBoolean,'PictViewObjectEditorNodeNull':libNodeNull,'PictViewObjectEditorNodeObject':libNodeObject,'PictViewObjectEditorNodeArray':libNodeArray};let tmpNodeTypeKeys=Object.keys(tmpNodeTypes);for(let i=0;i<tmpNodeTypeKeys.length;i++){let tmpKey=tmpNodeTypeKeys[i];if(!this.fable.servicesMap.hasOwnProperty(tmpKey)){this.fable.addServiceType(tmpKey,tmpNodeTypes[tmpKey]);}}// Instantiate one renderer per data type
@@ -2606,7 +6243,7 @@ let tmpOldIndices=Object.keys(tmpPathsByIndex);for(let i=0;i<tmpOldIndices.lengt
 	 * Recursively expand paths up to a given depth.
 	 */_expandToDepth(pValue,pBasePath,pCurrentDepth,pMaxDepth){if(pValue===null||pValue===undefined||typeof pValue!=='object'){return;}if(Array.isArray(pValue)){for(let i=0;i<pValue.length;i++){let tmpChildPath=pBasePath?pBasePath+'['+i+']':'['+i+']';if(typeof pValue[i]==='object'&&pValue[i]!==null){// Mark this child as expanded (it's an object or array that can be toggled)
 this._ExpandedPaths.add(tmpChildPath);if(pCurrentDepth+1<pMaxDepth){this._expandToDepth(pValue[i],tmpChildPath,pCurrentDepth+1,pMaxDepth);}}}}else{let tmpKeys=Object.keys(pValue);for(let i=0;i<tmpKeys.length;i++){let tmpKey=tmpKeys[i];let tmpChildPath=pBasePath?pBasePath+'.'+tmpKey:tmpKey;let tmpChildValue=pValue[tmpKey];if(typeof tmpChildValue==='object'&&tmpChildValue!==null){// Mark this child as expanded (it's an object or array that can be toggled)
-this._ExpandedPaths.add(tmpChildPath);if(pCurrentDepth+1<pMaxDepth){this._expandToDepth(tmpChildValue,tmpChildPath,pCurrentDepth+1,pMaxDepth);}}}}}}module.exports=PictViewObjectEditor;module.exports.default_configuration=_DefaultConfiguration;},{"../Pict-Section-ObjectEditor-DefaultConfiguration.js":22,"./PictView-ObjectEditor-NodeArray.js":25,"./PictView-ObjectEditor-NodeBoolean.js":26,"./PictView-ObjectEditor-NodeNull.js":27,"./PictView-ObjectEditor-NodeNumber.js":28,"./PictView-ObjectEditor-NodeObject.js":29,"./PictView-ObjectEditor-NodeString.js":30,"pict-view":33}],32:[function(require,module,exports){module.exports={"name":"pict-view","version":"1.0.67","description":"Pict View Base Class","main":"source/Pict-View.js","scripts":{"test":"npx quack test","tests":"npx quack test -g","start":"node source/Pict-View.js","coverage":"npx quack coverage","build":"npx quack build","docker-dev-build":"docker build ./ -f Dockerfile_LUXURYCode -t pict-view-image:local","docker-dev-run":"docker run -it -d --name pict-view-dev -p 30001:8080 -p 38086:8086 -v \"$PWD/.config:/home/coder/.config\"  -v \"$PWD:/home/coder/pict-view\" -u \"$(id -u):$(id -g)\" -e \"DOCKER_USER=$USER\" pict-view-image:local","docker-dev-shell":"docker exec -it pict-view-dev /bin/bash","types":"tsc -p .","lint":"eslint source/**"},"types":"types/source/Pict-View.d.ts","repository":{"type":"git","url":"git+https://github.com/stevenvelozo/pict-view.git"},"author":"steven velozo <steven@velozo.com>","license":"MIT","bugs":{"url":"https://github.com/stevenvelozo/pict-view/issues"},"homepage":"https://github.com/stevenvelozo/pict-view#readme","devDependencies":{"@eslint/js":"^9.39.1","browser-env":"^3.3.0","eslint":"^9.39.1","pict":"^1.0.348","quackage":"^1.0.58","typescript":"^5.9.3"},"mocha":{"diff":true,"extension":["js"],"package":"./package.json","reporter":"spec","slow":"75","timeout":"5000","ui":"tdd","watch-files":["source/**/*.js","test/**/*.js"],"watch-ignore":["lib/vendor"]},"dependencies":{"fable":"^3.1.63","fable-serviceproviderbase":"^3.0.19"}};},{}],33:[function(require,module,exports){const libFableServiceBase=require('fable-serviceproviderbase');const libPackage=require('../package.json');const defaultPictViewSettings={DefaultRenderable:false,DefaultDestinationAddress:false,DefaultTemplateRecordAddress:false,ViewIdentifier:false,// If this is set to true, when the App initializes this will.
+this._ExpandedPaths.add(tmpChildPath);if(pCurrentDepth+1<pMaxDepth){this._expandToDepth(tmpChildValue,tmpChildPath,pCurrentDepth+1,pMaxDepth);}}}}}}module.exports=PictViewObjectEditor;module.exports.default_configuration=_DefaultConfiguration;},{"../Pict-Section-ObjectEditor-DefaultConfiguration.js":53,"./PictView-ObjectEditor-NodeArray.js":56,"./PictView-ObjectEditor-NodeBoolean.js":57,"./PictView-ObjectEditor-NodeNull.js":58,"./PictView-ObjectEditor-NodeNumber.js":59,"./PictView-ObjectEditor-NodeObject.js":60,"./PictView-ObjectEditor-NodeString.js":61,"pict-view":64}],63:[function(require,module,exports){module.exports={"name":"pict-view","version":"1.0.67","description":"Pict View Base Class","main":"source/Pict-View.js","scripts":{"test":"npx quack test","tests":"npx quack test -g","start":"node source/Pict-View.js","coverage":"npx quack coverage","build":"npx quack build","docker-dev-build":"docker build ./ -f Dockerfile_LUXURYCode -t pict-view-image:local","docker-dev-run":"docker run -it -d --name pict-view-dev -p 30001:8080 -p 38086:8086 -v \"$PWD/.config:/home/coder/.config\"  -v \"$PWD:/home/coder/pict-view\" -u \"$(id -u):$(id -g)\" -e \"DOCKER_USER=$USER\" pict-view-image:local","docker-dev-shell":"docker exec -it pict-view-dev /bin/bash","types":"tsc -p .","lint":"eslint source/**"},"types":"types/source/Pict-View.d.ts","repository":{"type":"git","url":"git+https://github.com/stevenvelozo/pict-view.git"},"author":"steven velozo <steven@velozo.com>","license":"MIT","bugs":{"url":"https://github.com/stevenvelozo/pict-view/issues"},"homepage":"https://github.com/stevenvelozo/pict-view#readme","devDependencies":{"@eslint/js":"^9.39.1","browser-env":"^3.3.0","eslint":"^9.39.1","pict":"^1.0.348","quackage":"^1.0.58","typescript":"^5.9.3"},"mocha":{"diff":true,"extension":["js"],"package":"./package.json","reporter":"spec","slow":"75","timeout":"5000","ui":"tdd","watch-files":["source/**/*.js","test/**/*.js"],"watch-ignore":["lib/vendor"]},"dependencies":{"fable":"^3.1.63","fable-serviceproviderbase":"^3.0.19"}};},{}],64:[function(require,module,exports){const libFableServiceBase=require('fable-serviceproviderbase');const libPackage=require('../package.json');const defaultPictViewSettings={DefaultRenderable:false,DefaultDestinationAddress:false,DefaultTemplateRecordAddress:false,ViewIdentifier:false,// If this is set to true, when the App initializes this will.
 // After the App initializes, initialize will be called as soon as it's added.
 AutoInitialize:true,AutoInitializeOrdinal:0,// If this is set to true, when the App autorenders (on load) this will.
 // After the App initializes, render will be called as soon as it's added.
@@ -2897,7 +6534,7 @@ tmpView.onAfterRender(tmpEvent.Data.Renderable);}}return true;}/**
 	 * Lifecycle hook that triggers after data is marshaled into the view (async flow).
 	 *
 	 * @param {ErrorCallback} fCallback - The callback to call when the async operation is complete.
-	 */onAfterMarshalToViewAsync(fCallback){this.onAfterMarshalToView();return fCallback();}/** @return {boolean} - True if the object is a PictView. */get isPictView(){return true;}}module.exports=PictView;},{"../package.json":32,"fable-serviceproviderbase":2}],34:[function(require,module,exports){module.exports={"Name":"Retold Facto","Hash":"Facto-Full","MainViewportViewIdentifier":"Facto-Full-Layout","MainViewportDestinationAddress":"#Facto-Full-Application-Container","MainViewportDefaultDataAddress":"AppData.Facto","AutoSolveAfterInitialize":true,"AutoRenderMainViewportViewAfterInitialize":false,"AutoRenderViewsAfterInitialize":false,"pict_configuration":{"Product":"Retold-Facto-Full"}};},{}],35:[function(require,module,exports){const libPictApplication=require('pict-application');const libPictRouter=require('pict-router');const THEME_LIST=[{Key:'turquoise-deluxe',Label:'Turquoise Deluxe',Colors:['#f6f0e4','#18a5a0','#3a9468','#c44836','#12908c']},{Key:'facto-dark',Label:'Facto Dark',Colors:['#12151e','#4a90d9','#28a745','#dc3545','#6366f1']},{Key:'facto-light',Label:'Facto Light',Colors:['#f5f6f8','#3b82f6','#22c55e','#ef4444','#6366f1']},{Key:'midnight-blue',Label:'Midnight Blue',Colors:['#0a0e1a','#3b82f6','#10b981','#f87171','#60a5fa']},{Key:'slate',Label:'Slate',Colors:['#1e2228','#6b8aae','#5ea37a','#c85a5a','#82a0c4']},{Key:'warm-earth',Label:'Warm Earth',Colors:['#1a1610','#c4956a','#8a9a5a','#b04050','#4a9090']},{Key:'high-contrast',Label:'High Contrast',Colors:['#000000','#58a6ff','#3fb950','#f85149','#d29922']}];// Shared provider (same API layer as accordion app)
+	 */onAfterMarshalToViewAsync(fCallback){this.onAfterMarshalToView();return fCallback();}/** @return {boolean} - True if the object is a PictView. */get isPictView(){return true;}}module.exports=PictView;},{"../package.json":63,"fable-serviceproviderbase":2}],65:[function(require,module,exports){module.exports={"Name":"Retold Facto","Hash":"Facto-Full","MainViewportViewIdentifier":"Facto-Full-Layout","MainViewportDestinationAddress":"#Facto-Full-Application-Container","MainViewportDefaultDataAddress":"AppData.Facto","AutoSolveAfterInitialize":true,"AutoRenderMainViewportViewAfterInitialize":false,"AutoRenderViewsAfterInitialize":false,"pict_configuration":{"Product":"Retold-Facto-Full"}};},{}],66:[function(require,module,exports){const libPictApplication=require('pict-application');const libPictRouter=require('pict-router');const THEME_LIST=[{Key:'turquoise-deluxe',Label:'Turquoise Deluxe',Colors:['#f6f0e4','#18a5a0','#3a9468','#c44836','#12908c']},{Key:'facto-dark',Label:'Facto Dark',Colors:['#12151e','#4a90d9','#28a745','#dc3545','#6366f1']},{Key:'facto-light',Label:'Facto Light',Colors:['#f5f6f8','#3b82f6','#22c55e','#ef4444','#6366f1']},{Key:'midnight-blue',Label:'Midnight Blue',Colors:['#0a0e1a','#3b82f6','#10b981','#f87171','#60a5fa']},{Key:'slate',Label:'Slate',Colors:['#1e2228','#6b8aae','#5ea37a','#c85a5a','#82a0c4']},{Key:'warm-earth',Label:'Warm Earth',Colors:['#1a1610','#c4956a','#8a9a5a','#b04050','#4a9090']},{Key:'high-contrast',Label:'High Contrast',Colors:['#000000','#58a6ff','#3fb950','#f85149','#d29922']}];// Shared provider (same API layer as accordion app)
 const libProvider=require('../pict-app/providers/Pict-Provider-Facto.js');// Shell views
 const libViewLayout=require('./views/PictView-Facto-Full-Layout.js');const libViewTopBar=require('./views/PictView-Facto-Full-TopBar.js');const libViewBottomBar=require('./views/PictView-Facto-Full-BottomBar.js');// Content views
 const libViewDashboard=require('./views/PictView-Facto-Full-Dashboard.js');const libViewSourceResearch=require('./views/PictView-Facto-Full-SourceResearch.js');const libViewIngestJobs=require('./views/PictView-Facto-Full-IngestJobs.js');const libViewSources=require('./views/PictView-Facto-Full-Sources.js');const libViewDatasets=require('./views/PictView-Facto-Full-Datasets.js');const libViewRecords=require('./views/PictView-Facto-Full-Records.js');const libViewProjections=require('./views/PictView-Facto-Full-Projections.js');const libViewDashboards=require('./views/PictView-Facto-Full-Dashboards.js');const libViewRecordViewer=require('./views/PictView-Facto-Full-RecordViewer.js');const libViewSourceDetail=require('./views/PictView-Facto-Full-SourceDetail.js');class FactoFullApplication extends libPictApplication{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);// Skip premature route resolution during addRoute(); the Layout view
@@ -2908,7 +6545,7 @@ this.pict.addProvider('PictRouter',require('./providers/PictRouter-Facto-Configu
 this.pict.addView('Facto-Full-Layout',libViewLayout.default_configuration,libViewLayout);this.pict.addView('Facto-Full-TopBar',libViewTopBar.default_configuration,libViewTopBar);this.pict.addView('Facto-Full-BottomBar',libViewBottomBar.default_configuration,libViewBottomBar);// Content views
 this.pict.addView('Facto-Full-Dashboard',libViewDashboard.default_configuration,libViewDashboard);this.pict.addView('Facto-Full-SourceResearch',libViewSourceResearch.default_configuration,libViewSourceResearch);this.pict.addView('Facto-Full-IngestJobs',libViewIngestJobs.default_configuration,libViewIngestJobs);this.pict.addView('Facto-Full-Sources',libViewSources.default_configuration,libViewSources);this.pict.addView('Facto-Full-Datasets',libViewDatasets.default_configuration,libViewDatasets);this.pict.addView('Facto-Full-Records',libViewRecords.default_configuration,libViewRecords);this.pict.addView('Facto-Full-Projections',libViewProjections.default_configuration,libViewProjections);this.pict.addView('Facto-Full-Dashboards',libViewDashboards.default_configuration,libViewDashboards);this.pict.addView('Facto-Full-RecordViewer',libViewRecordViewer.default_configuration,libViewRecordViewer);this.pict.addView('Facto-Full-SourceDetail',libViewSourceDetail.default_configuration,libViewSourceDetail);}onAfterInitializeAsync(fCallback){// Apply saved theme before first render
 this.loadSavedTheme();// Initialize application state
-this.pict.AppData.Facto={CatalogEntries:[],Sources:[],Datasets:[],Records:[],IngestJobs:[],SelectedSource:null,SelectedDataset:null,RecordPage:0,RecordPageSize:50,CurrentRecordContent:{},CurrentDocumentSegments:[],CurrentTheme:'turquoise-deluxe',CurrentRoute:''};// Expose pict globally for inline onclick handlers
+this.pict.AppData.Facto={CatalogEntries:[],Sources:[],Datasets:[],Records:[],IngestJobs:[],SelectedSource:null,SelectedDataset:null,RecordPage:0,RecordPageSize:50,CurrentRecordContent:{},CurrentDocumentSegments:[],StoreConnections:[],AvailableConnectionTypes:[],ProjectionMappings:[],DiscoveredFields:{},CurrentTheme:'turquoise-deluxe',CurrentRoute:''};// Expose pict globally for inline onclick handlers
 window.pict=this.pict;// Register all parameterized routes BEFORE rendering the layout,
 // so they are available when resolve() fires after the DOM is ready.
 let tmpSelf=this;this.pict.providers.PictRouter.addRoute('/Record/:IDRecord',pMatch=>{let tmpIDRecord=pMatch&&pMatch.data?pMatch.data.IDRecord:null;if(tmpIDRecord){tmpSelf.showRecordView(tmpIDRecord);}});this.pict.providers.PictRouter.addRoute('/Source/:IDSource',pMatch=>{let tmpIDSource=pMatch&&pMatch.data?pMatch.data.IDSource:null;if(tmpIDSource){tmpSelf.showSourceView(tmpIDSource);}});this.pict.providers.PictRouter.addRoute('/Source/:IDSource/Doc/:IDDoc',pMatch=>{let tmpIDSource=pMatch&&pMatch.data?pMatch.data.IDSource:null;let tmpIDDoc=pMatch&&pMatch.data?pMatch.data.IDDoc:null;if(tmpIDSource){tmpSelf.showSourceView(tmpIDSource,tmpIDDoc);}});// Render the layout shell — this cascades into TopBar, BottomBar
@@ -2919,7 +6556,7 @@ this._setActiveNav('Records');}showSourceView(pIDSource,pIDDoc){let tmpView=this
 this._setActiveNav('SourceResearch');}showView(pViewIdentifier){if(pViewIdentifier in this.pict.views){this.pict.views[pViewIdentifier].render();}else{this.pict.log.warn(`View [${pViewIdentifier}] not found; falling back to dashboard.`);this.pict.views['Facto-Full-Dashboard'].render();}// Derive the route name from the view identifier for nav highlighting
 // e.g. "Facto-Full-SourceResearch" → "SourceResearch"
 let tmpRoute=pViewIdentifier.replace('Facto-Full-','');this._setActiveNav(tmpRoute);}_setActiveNav(pRoute){this.pict.AppData.Facto.CurrentRoute=pRoute;let tmpTopBar=this.pict.views['Facto-Full-TopBar'];if(tmpTopBar&&typeof tmpTopBar.highlightRoute==='function'){tmpTopBar.highlightRoute(pRoute);}}// --- Theme ---
-applyTheme(pThemeKey){let tmpThemeKey=pThemeKey||'turquoise-deluxe';if(tmpThemeKey==='turquoise-deluxe'){delete document.body.dataset.theme;}else{document.body.dataset.theme=tmpThemeKey;}localStorage.setItem('facto-theme',tmpThemeKey);if(this.pict.AppData.Facto){this.pict.AppData.Facto.CurrentTheme=tmpThemeKey;}}loadSavedTheme(){let tmpSavedTheme=localStorage.getItem('facto-theme')||'turquoise-deluxe';this.applyTheme(tmpSavedTheme);}getThemeList(){return THEME_LIST;}}module.exports=FactoFullApplication;module.exports.default_configuration=require('./Pict-Application-Facto-Full-Configuration.json');},{"../pict-app/providers/Pict-Provider-Facto.js":53,"./Pict-Application-Facto-Full-Configuration.json":34,"./providers/PictRouter-Facto-Configuration.json":36,"./views/PictView-Facto-Full-BottomBar.js":37,"./views/PictView-Facto-Full-Dashboard.js":38,"./views/PictView-Facto-Full-Dashboards.js":39,"./views/PictView-Facto-Full-Datasets.js":40,"./views/PictView-Facto-Full-IngestJobs.js":41,"./views/PictView-Facto-Full-Layout.js":42,"./views/PictView-Facto-Full-Projections.js":43,"./views/PictView-Facto-Full-RecordViewer.js":44,"./views/PictView-Facto-Full-Records.js":45,"./views/PictView-Facto-Full-SourceDetail.js":46,"./views/PictView-Facto-Full-SourceResearch.js":47,"./views/PictView-Facto-Full-Sources.js":48,"./views/PictView-Facto-Full-TopBar.js":49,"pict-application":5,"pict-router":8}],36:[function(require,module,exports){module.exports={"ProviderIdentifier":"Pict-Router","AutoInitialize":true,"AutoInitializeOrdinal":0,"Routes":[{"path":"/Home","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-Dashboard`)~}"},{"path":"/SourceResearch","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-SourceResearch`)~}"},{"path":"/IngestJobs","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-IngestJobs`)~}"},{"path":"/Sources","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-Sources`)~}"},{"path":"/Datasets","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-Datasets`)~}"},{"path":"/Records","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-Records`)~}"},{"path":"/Projections","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-Projections`)~}"},{"path":"/Dashboards","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-Dashboards`)~}"}]};},{}],37:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-BottomBar",DefaultRenderable:"Facto-Full-BottomBar-Content",DefaultDestinationAddress:"#Facto-Full-BottomBar-Container",AutoRender:false,CSS:/*css*/`
+applyTheme(pThemeKey){let tmpThemeKey=pThemeKey||'turquoise-deluxe';if(tmpThemeKey==='turquoise-deluxe'){delete document.body.dataset.theme;}else{document.body.dataset.theme=tmpThemeKey;}localStorage.setItem('facto-theme',tmpThemeKey);if(this.pict.AppData.Facto){this.pict.AppData.Facto.CurrentTheme=tmpThemeKey;}}loadSavedTheme(){let tmpSavedTheme=localStorage.getItem('facto-theme')||'turquoise-deluxe';this.applyTheme(tmpSavedTheme);}getThemeList(){return THEME_LIST;}}module.exports=FactoFullApplication;module.exports.default_configuration=require('./Pict-Application-Facto-Full-Configuration.json');},{"../pict-app/providers/Pict-Provider-Facto.js":86,"./Pict-Application-Facto-Full-Configuration.json":65,"./providers/PictRouter-Facto-Configuration.json":67,"./views/PictView-Facto-Full-BottomBar.js":68,"./views/PictView-Facto-Full-Dashboard.js":69,"./views/PictView-Facto-Full-Dashboards.js":70,"./views/PictView-Facto-Full-Datasets.js":71,"./views/PictView-Facto-Full-IngestJobs.js":72,"./views/PictView-Facto-Full-Layout.js":73,"./views/PictView-Facto-Full-Projections.js":74,"./views/PictView-Facto-Full-RecordViewer.js":75,"./views/PictView-Facto-Full-Records.js":76,"./views/PictView-Facto-Full-SourceDetail.js":77,"./views/PictView-Facto-Full-SourceResearch.js":78,"./views/PictView-Facto-Full-Sources.js":79,"./views/PictView-Facto-Full-TopBar.js":80,"pict-application":5,"pict-router":8}],67:[function(require,module,exports){module.exports={"ProviderIdentifier":"Pict-Router","AutoInitialize":true,"AutoInitializeOrdinal":0,"Routes":[{"path":"/Home","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-Dashboard`)~}"},{"path":"/SourceResearch","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-SourceResearch`)~}"},{"path":"/IngestJobs","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-IngestJobs`)~}"},{"path":"/Sources","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-Sources`)~}"},{"path":"/Datasets","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-Datasets`)~}"},{"path":"/Records","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-Records`)~}"},{"path":"/Projections","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-Projections`)~}"},{"path":"/Dashboards","template":"{~LV:Pict.PictApplication.showView(`Facto-Full-Dashboards`)~}"}]};},{}],68:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-BottomBar",DefaultRenderable:"Facto-Full-BottomBar-Content",DefaultDestinationAddress:"#Facto-Full-BottomBar-Container",AutoRender:false,CSS:/*css*/`
 		.facto-bottombar {
 			display: flex;
 			align-items: center;
@@ -2944,7 +6581,7 @@ applyTheme(pThemeKey){let tmpThemeKey=pThemeKey||'turquoise-deluxe';if(tmpThemeK
 	<span>Retold Facto Data Warehouse</span>
 	<span>Retold</span>
 </div>
-`}],Renderables:[{RenderableHash:"Facto-Full-BottomBar-Content",TemplateHash:"Facto-Full-BottomBar-Template",DestinationAddress:"#Facto-Full-BottomBar-Container",RenderMethod:"replace"}]};class FactoFullBottomBarView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}}module.exports=FactoFullBottomBarView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":33}],38:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-Dashboard",DefaultRenderable:"Facto-Full-Dashboard-Content",DefaultDestinationAddress:"#Facto-Full-Content-Container",AutoRender:false,CSS:/*css*/`
+`}],Renderables:[{RenderableHash:"Facto-Full-BottomBar-Content",TemplateHash:"Facto-Full-BottomBar-Template",DestinationAddress:"#Facto-Full-BottomBar-Container",RenderMethod:"replace"}]};class FactoFullBottomBarView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}}module.exports=FactoFullBottomBarView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":64}],69:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-Dashboard",DefaultRenderable:"Facto-Full-Dashboard-Content",DefaultDestinationAddress:"#Facto-Full-Content-Container",AutoRender:false,CSS:/*css*/`
 		.facto-dashboard-stat {
 			text-align: center;
 		}
@@ -3008,7 +6645,7 @@ applyTheme(pThemeKey){let tmpThemeKey=pThemeKey||'turquoise-deluxe';if(tmpThemeK
 	</div>
 </div>
 `}],Renderables:[{RenderableHash:"Facto-Full-Dashboard-Content",TemplateHash:"Facto-Full-Dashboard-Template",DestinationAddress:"#Facto-Full-Content-Container",RenderMethod:"replace"}]};class FactoFullDashboardView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent){let tmpProvider=this.pict.providers.Facto;// Load counts in parallel
-tmpProvider.loadSources().then(()=>{let tmpEl=document.getElementById('Facto-Full-Dash-SourceCount');if(tmpEl)tmpEl.textContent=(this.pict.AppData.Facto.Sources||[]).length;});tmpProvider.loadDatasets().then(()=>{let tmpEl=document.getElementById('Facto-Full-Dash-DatasetCount');if(tmpEl)tmpEl.textContent=(this.pict.AppData.Facto.Datasets||[]).length;});tmpProvider.loadRecords().then(()=>{let tmpEl=document.getElementById('Facto-Full-Dash-RecordCount');if(tmpEl)tmpEl.textContent=(this.pict.AppData.Facto.Records||[]).length;});tmpProvider.loadIngestJobs().then(()=>{let tmpEl=document.getElementById('Facto-Full-Dash-IngestCount');if(tmpEl)tmpEl.textContent=(this.pict.AppData.Facto.IngestJobs||[]).length;});tmpProvider.loadCatalogEntries().then(()=>{let tmpEl=document.getElementById('Facto-Full-Dash-CatalogCount');if(tmpEl)tmpEl.textContent=(this.pict.AppData.Facto.CatalogEntries||[]).length;});return super.onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent);}}module.exports=FactoFullDashboardView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":33}],39:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-Dashboards",DefaultRenderable:"Facto-Full-Dashboards-Content",DefaultDestinationAddress:"#Facto-Full-Content-Container",AutoRender:false,Templates:[{Hash:"Facto-Full-Dashboards-Template",Template:/*html*/`
+tmpProvider.loadSources().then(()=>{let tmpEl=document.getElementById('Facto-Full-Dash-SourceCount');if(tmpEl)tmpEl.textContent=(this.pict.AppData.Facto.Sources||[]).length;});tmpProvider.loadDatasets().then(()=>{let tmpEl=document.getElementById('Facto-Full-Dash-DatasetCount');if(tmpEl)tmpEl.textContent=(this.pict.AppData.Facto.Datasets||[]).length;});tmpProvider.loadRecords().then(()=>{let tmpEl=document.getElementById('Facto-Full-Dash-RecordCount');if(tmpEl)tmpEl.textContent=(this.pict.AppData.Facto.Records||[]).length;});tmpProvider.loadIngestJobs().then(()=>{let tmpEl=document.getElementById('Facto-Full-Dash-IngestCount');if(tmpEl)tmpEl.textContent=(this.pict.AppData.Facto.IngestJobs||[]).length;});tmpProvider.loadCatalogEntries().then(()=>{let tmpEl=document.getElementById('Facto-Full-Dash-CatalogCount');if(tmpEl)tmpEl.textContent=(this.pict.AppData.Facto.CatalogEntries||[]).length;});return super.onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent);}}module.exports=FactoFullDashboardView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":64}],70:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-Dashboards",DefaultRenderable:"Facto-Full-Dashboards-Content",DefaultDestinationAddress:"#Facto-Full-Content-Container",AutoRender:false,Templates:[{Hash:"Facto-Full-Dashboards-Template",Template:/*html*/`
 <div class="facto-content">
 	<div class="facto-content-header">
 		<h1>Dashboards</h1>
@@ -3023,7 +6660,7 @@ tmpProvider.loadSources().then(()=>{let tmpEl=document.getElementById('Facto-Ful
 		</p>
 	</div>
 </div>
-`}],Renderables:[{RenderableHash:"Facto-Full-Dashboards-Content",TemplateHash:"Facto-Full-Dashboards-Template",DestinationAddress:"#Facto-Full-Content-Container",RenderMethod:"replace"}]};class FactoFullDashboardsView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}}module.exports=FactoFullDashboardsView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":33}],40:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-Datasets",DefaultRenderable:"Facto-Full-Datasets-Content",DefaultDestinationAddress:"#Facto-Full-Content-Container",AutoRender:false,Templates:[{Hash:"Facto-Full-Datasets-Template",Template:/*html*/`
+`}],Renderables:[{RenderableHash:"Facto-Full-Dashboards-Content",TemplateHash:"Facto-Full-Dashboards-Template",DestinationAddress:"#Facto-Full-Content-Container",RenderMethod:"replace"}]};class FactoFullDashboardsView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}}module.exports=FactoFullDashboardsView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":64}],71:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-Datasets",DefaultRenderable:"Facto-Full-Datasets-Content",DefaultDestinationAddress:"#Facto-Full-Content-Container",AutoRender:false,Templates:[{Hash:"Facto-Full-Datasets-Template",Template:/*html*/`
 <div class="facto-content">
 	<div class="facto-content-header">
 		<h1>Data Sets</h1>
@@ -3059,7 +6696,7 @@ tmpProvider.loadSources().then(()=>{let tmpEl=document.getElementById('Facto-Ful
 
 	<div id="Facto-Full-Datasets-Status" class="facto-status" style="display:none;"></div>
 </div>
-`}],Renderables:[{RenderableHash:"Facto-Full-Datasets-Content",TemplateHash:"Facto-Full-Datasets-Template",DestinationAddress:"#Facto-Full-Content-Container",RenderMethod:"replace"}]};class FactoFullDatasetsView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent){this.pict.providers.Facto.loadDatasets().then(()=>{this.refreshList();});return super.onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent);}setStatus(pMessage,pType){let tmpEl=document.getElementById('Facto-Full-Datasets-Status');if(!tmpEl)return;tmpEl.className='facto-status facto-status-'+(pType||'info');tmpEl.textContent=pMessage;tmpEl.style.display='block';}refreshList(){let tmpContainer=document.getElementById('Facto-Full-Datasets-List');if(!tmpContainer)return;let tmpDatasets=this.pict.AppData.Facto.Datasets;if(!tmpDatasets||tmpDatasets.length===0){tmpContainer.innerHTML='<div class="facto-empty">No datasets yet. Add one below or provision from Source Research.</div>';return;}let tmpHtml='<table><thead><tr><th>ID</th><th>Hash</th><th>Name</th><th>Type</th><th>Description</th><th>Version Policy</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpDatasets.length;i++){let tmpDS=tmpDatasets[i];let tmpTypeBadge='facto-badge-primary';if(tmpDS.Type==='Projection')tmpTypeBadge='facto-badge-warning';else if(tmpDS.Type==='Derived')tmpTypeBadge='facto-badge-muted';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpDS.IDDataset||'')+'</td>';tmpHtml+='<td><code>'+(tmpDS.Hash||'-')+'</code></td>';tmpHtml+='<td>'+(tmpDS.Name||'')+'</td>';tmpHtml+='<td><span class="facto-badge '+tmpTypeBadge+'">'+(tmpDS.Type||'')+'</span></td>';tmpHtml+='<td>'+(tmpDS.Description||'')+'</td>';tmpHtml+='<td>'+(tmpDS.VersionPolicy||'Append')+'</td>';tmpHtml+='<td><button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.views[\'Facto-Full-Datasets\'].viewStats('+tmpDS.IDDataset+')">Stats</button></td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}viewStats(pIDDataset){let tmpStatsContainer=document.getElementById('Facto-Full-Datasets-Stats');if(!tmpStatsContainer)return;tmpStatsContainer.style.display='block';tmpStatsContainer.innerHTML='<p style="color:var(--facto-text-secondary);">Loading stats for Dataset #'+pIDDataset+'...</p>';this.pict.providers.Facto.loadDatasetStats(pIDDataset).then(pResponse=>{if(pResponse){let tmpHtml='<h3>Dataset #'+pIDDataset+' Statistics</h3>';tmpHtml+='<div class="facto-card-grid" style="margin-top:0.75em;">';tmpHtml+='<div class="facto-card facto-dashboard-stat"><div class="facto-dashboard-stat-value">'+(pResponse.RecordCount||0)+'</div><div class="facto-dashboard-stat-label">Records</div></div>';tmpHtml+='<div class="facto-card facto-dashboard-stat"><div class="facto-dashboard-stat-value">'+(pResponse.SourceCount||0)+'</div><div class="facto-dashboard-stat-label">Sources</div></div>';tmpHtml+='<div class="facto-card facto-dashboard-stat"><div class="facto-dashboard-stat-value">'+(pResponse.CurrentVersion||0)+'</div><div class="facto-dashboard-stat-label">Current Version</div></div>';tmpHtml+='</div>';tmpHtml+='<div style="margin-top:0.75em;"><button class="facto-btn facto-btn-secondary" onclick="document.getElementById(\'Facto-Full-Datasets-Stats\').style.display=\'none\'">Close</button></div>';tmpStatsContainer.innerHTML=tmpHtml;}});}addDataset(){let tmpName=(document.getElementById('Facto-Full-Dataset-Name')||{}).value||'';let tmpType=(document.getElementById('Facto-Full-Dataset-Type')||{}).value||'';let tmpDesc=(document.getElementById('Facto-Full-Dataset-Desc')||{}).value||'';if(!tmpName){this.setStatus('Dataset name is required','warn');return;}this.pict.providers.Facto.createDataset({Name:tmpName,Type:tmpType,Description:tmpDesc}).then(pResponse=>{if(pResponse&&pResponse.IDDataset){this.setStatus('Dataset created: '+tmpName,'ok');document.getElementById('Facto-Full-Dataset-Name').value='';document.getElementById('Facto-Full-Dataset-Desc').value='';return this.pict.providers.Facto.loadDatasets();}else{this.setStatus('Error creating dataset','error');}}).then(()=>{this.refreshList();});}}module.exports=FactoFullDatasetsView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":33}],41:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-IngestJobs",DefaultRenderable:"Facto-Full-IngestJobs-Content",DefaultDestinationAddress:"#Facto-Full-Content-Container",AutoRender:false,Templates:[{Hash:"Facto-Full-IngestJobs-Template",Template:/*html*/`
+`}],Renderables:[{RenderableHash:"Facto-Full-Datasets-Content",TemplateHash:"Facto-Full-Datasets-Template",DestinationAddress:"#Facto-Full-Content-Container",RenderMethod:"replace"}]};class FactoFullDatasetsView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent){this.pict.providers.Facto.loadDatasets().then(()=>{this.refreshList();});return super.onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent);}setStatus(pMessage,pType){let tmpEl=document.getElementById('Facto-Full-Datasets-Status');if(!tmpEl)return;tmpEl.className='facto-status facto-status-'+(pType||'info');tmpEl.textContent=pMessage;tmpEl.style.display='block';}refreshList(){let tmpContainer=document.getElementById('Facto-Full-Datasets-List');if(!tmpContainer)return;let tmpDatasets=this.pict.AppData.Facto.Datasets;if(!tmpDatasets||tmpDatasets.length===0){tmpContainer.innerHTML='<div class="facto-empty">No datasets yet. Add one below or provision from Source Research.</div>';return;}let tmpHtml='<table><thead><tr><th>ID</th><th>Hash</th><th>Name</th><th>Type</th><th>Description</th><th>Version Policy</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpDatasets.length;i++){let tmpDS=tmpDatasets[i];let tmpTypeBadge='facto-badge-primary';if(tmpDS.Type==='Projection')tmpTypeBadge='facto-badge-warning';else if(tmpDS.Type==='Derived')tmpTypeBadge='facto-badge-muted';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpDS.IDDataset||'')+'</td>';tmpHtml+='<td><code>'+(tmpDS.Hash||'-')+'</code></td>';tmpHtml+='<td>'+(tmpDS.Name||'')+'</td>';tmpHtml+='<td><span class="facto-badge '+tmpTypeBadge+'">'+(tmpDS.Type||'')+'</span></td>';tmpHtml+='<td>'+(tmpDS.Description||'')+'</td>';tmpHtml+='<td>'+(tmpDS.VersionPolicy||'Append')+'</td>';tmpHtml+='<td><button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.views[\'Facto-Full-Datasets\'].viewStats('+tmpDS.IDDataset+')">Stats</button></td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}viewStats(pIDDataset){let tmpStatsContainer=document.getElementById('Facto-Full-Datasets-Stats');if(!tmpStatsContainer)return;tmpStatsContainer.style.display='block';tmpStatsContainer.innerHTML='<p style="color:var(--facto-text-secondary);">Loading stats for Dataset #'+pIDDataset+'...</p>';this.pict.providers.Facto.loadDatasetStats(pIDDataset).then(pResponse=>{if(pResponse){let tmpHtml='<h3>Dataset #'+pIDDataset+' Statistics</h3>';tmpHtml+='<div class="facto-card-grid" style="margin-top:0.75em;">';tmpHtml+='<div class="facto-card facto-dashboard-stat"><div class="facto-dashboard-stat-value">'+(pResponse.RecordCount||0)+'</div><div class="facto-dashboard-stat-label">Records</div></div>';tmpHtml+='<div class="facto-card facto-dashboard-stat"><div class="facto-dashboard-stat-value">'+(pResponse.SourceCount||0)+'</div><div class="facto-dashboard-stat-label">Sources</div></div>';tmpHtml+='<div class="facto-card facto-dashboard-stat"><div class="facto-dashboard-stat-value">'+(pResponse.CurrentVersion||0)+'</div><div class="facto-dashboard-stat-label">Current Version</div></div>';tmpHtml+='</div>';tmpHtml+='<div style="margin-top:0.75em;"><button class="facto-btn facto-btn-secondary" onclick="document.getElementById(\'Facto-Full-Datasets-Stats\').style.display=\'none\'">Close</button></div>';tmpStatsContainer.innerHTML=tmpHtml;}});}addDataset(){let tmpName=(document.getElementById('Facto-Full-Dataset-Name')||{}).value||'';let tmpType=(document.getElementById('Facto-Full-Dataset-Type')||{}).value||'';let tmpDesc=(document.getElementById('Facto-Full-Dataset-Desc')||{}).value||'';if(!tmpName){this.setStatus('Dataset name is required','warn');return;}this.pict.providers.Facto.createDataset({Name:tmpName,Type:tmpType,Description:tmpDesc}).then(pResponse=>{if(pResponse&&pResponse.IDDataset){this.setStatus('Dataset created: '+tmpName,'ok');document.getElementById('Facto-Full-Dataset-Name').value='';document.getElementById('Facto-Full-Dataset-Desc').value='';return this.pict.providers.Facto.loadDatasets();}else{this.setStatus('Error creating dataset','error');}}).then(()=>{this.refreshList();});}}module.exports=FactoFullDatasetsView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":64}],72:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-IngestJobs",DefaultRenderable:"Facto-Full-IngestJobs-Content",DefaultDestinationAddress:"#Facto-Full-Content-Container",AutoRender:false,Templates:[{Hash:"Facto-Full-IngestJobs-Template",Template:/*html*/`
 <div class="facto-content">
 	<div class="facto-content-header">
 		<h1>Ingestion Jobs</h1>
@@ -3069,7 +6706,7 @@ tmpProvider.loadSources().then(()=>{let tmpEl=document.getElementById('Facto-Ful
 	<div id="Facto-Full-IngestJobs-List"></div>
 	<div id="Facto-Full-IngestJobs-Status" class="facto-status" style="display:none;"></div>
 </div>
-`}],Renderables:[{RenderableHash:"Facto-Full-IngestJobs-Content",TemplateHash:"Facto-Full-IngestJobs-Template",DestinationAddress:"#Facto-Full-Content-Container",RenderMethod:"replace"}]};class FactoFullIngestJobsView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent){this.pict.providers.Facto.loadIngestJobs().then(()=>{this.refreshList();});return super.onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent);}refreshList(){let tmpContainer=document.getElementById('Facto-Full-IngestJobs-List');if(!tmpContainer)return;let tmpJobs=this.pict.AppData.Facto.IngestJobs;if(!tmpJobs||tmpJobs.length===0){tmpContainer.innerHTML='<div class="facto-empty">No ingestion jobs yet. Jobs are created automatically when data is ingested.</div>';return;}let tmpHtml='<table><thead><tr><th>ID</th><th>Source</th><th>Dataset</th><th>Status</th><th>Version</th><th>Records</th><th>Errors</th><th>Created</th></tr></thead><tbody>';for(let i=0;i<tmpJobs.length;i++){let tmpJob=tmpJobs[i];let tmpStatusBadge='facto-badge-muted';if(tmpJob.Status==='Complete')tmpStatusBadge='facto-badge-success';else if(tmpJob.Status==='Running')tmpStatusBadge='facto-badge-primary';else if(tmpJob.Status==='Error')tmpStatusBadge='facto-badge-error';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpJob.IDIngestJob||'')+'</td>';tmpHtml+='<td>'+(tmpJob.IDSource||'')+'</td>';tmpHtml+='<td>'+(tmpJob.IDDataset||'')+'</td>';tmpHtml+='<td><span class="facto-badge '+tmpStatusBadge+'">'+(tmpJob.Status||'Pending')+'</span></td>';tmpHtml+='<td>'+(tmpJob.DatasetVersion||'')+'</td>';tmpHtml+='<td>'+(tmpJob.RecordsIngested||0)+'</td>';tmpHtml+='<td>'+(tmpJob.RecordsErrored||0)+'</td>';tmpHtml+='<td>'+(tmpJob.CreatingIDUser?new Date(tmpJob.CreateDate).toLocaleString():tmpJob.CreateDate||'')+'</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}}module.exports=FactoFullIngestJobsView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":33}],42:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-Layout",DefaultRenderable:"Facto-Full-Layout-Shell",DefaultDestinationAddress:"#Facto-Full-Application-Container",AutoRender:false,Templates:[{Hash:"Facto-Full-Layout-Shell-Template",Template:/*html*/`
+`}],Renderables:[{RenderableHash:"Facto-Full-IngestJobs-Content",TemplateHash:"Facto-Full-IngestJobs-Template",DestinationAddress:"#Facto-Full-Content-Container",RenderMethod:"replace"}]};class FactoFullIngestJobsView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent){this.pict.providers.Facto.loadIngestJobs().then(()=>{this.refreshList();});return super.onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent);}refreshList(){let tmpContainer=document.getElementById('Facto-Full-IngestJobs-List');if(!tmpContainer)return;let tmpJobs=this.pict.AppData.Facto.IngestJobs;if(!tmpJobs||tmpJobs.length===0){tmpContainer.innerHTML='<div class="facto-empty">No ingestion jobs yet. Jobs are created automatically when data is ingested.</div>';return;}let tmpHtml='<table><thead><tr><th>ID</th><th>Source</th><th>Dataset</th><th>Status</th><th>Version</th><th>Records</th><th>Errors</th><th>Created</th></tr></thead><tbody>';for(let i=0;i<tmpJobs.length;i++){let tmpJob=tmpJobs[i];let tmpStatusBadge='facto-badge-muted';if(tmpJob.Status==='Complete')tmpStatusBadge='facto-badge-success';else if(tmpJob.Status==='Running')tmpStatusBadge='facto-badge-primary';else if(tmpJob.Status==='Error')tmpStatusBadge='facto-badge-error';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpJob.IDIngestJob||'')+'</td>';tmpHtml+='<td>'+(tmpJob.IDSource||'')+'</td>';tmpHtml+='<td>'+(tmpJob.IDDataset||'')+'</td>';tmpHtml+='<td><span class="facto-badge '+tmpStatusBadge+'">'+(tmpJob.Status||'Pending')+'</span></td>';tmpHtml+='<td>'+(tmpJob.DatasetVersion||'')+'</td>';tmpHtml+='<td>'+(tmpJob.RecordsIngested||0)+'</td>';tmpHtml+='<td>'+(tmpJob.RecordsErrored||0)+'</td>';tmpHtml+='<td>'+(tmpJob.CreatingIDUser?new Date(tmpJob.CreateDate).toLocaleString():tmpJob.CreateDate||'')+'</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}}module.exports=FactoFullIngestJobsView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":64}],73:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-Layout",DefaultRenderable:"Facto-Full-Layout-Shell",DefaultDestinationAddress:"#Facto-Full-Application-Container",AutoRender:false,Templates:[{Hash:"Facto-Full-Layout-Shell-Template",Template:/*html*/`
 <div id="Facto-Full-TopBar-Container"></div>
 <div id="Facto-Full-Content-Container"></div>
 <div id="Facto-Full-BottomBar-Container"></div>
@@ -3078,52 +6715,633 @@ this.pict.views['Facto-Full-TopBar'].render();this.pict.views['Facto-Full-Bottom
 // The application will call resolve() after this, which will
 // override with the correct view if a hash route is present.
 this.pict.views['Facto-Full-Dashboard'].render();// Inject all view CSS into the PICT-CSS style element
-this.pict.CSSMap.injectCSS();return super.onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent);}}module.exports=FactoFullLayoutView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":33}],43:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-Projections",DefaultRenderable:"Facto-Full-Projections-Content",DefaultDestinationAddress:"#Facto-Full-Content-Container",AutoRender:false,CSS:/*css*/`
-		.facto-projection-results {
-			margin-top: 1.25em;
-			padding-top: 1.25em;
-			border-top: 1px solid var(--facto-border-subtle);
+this.pict.CSSMap.injectCSS();return super.onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent);}}module.exports=FactoFullLayoutView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":64}],74:[function(require,module,exports){const libPictView=require('pict-view');const MICRODDL_TYPE_MAP={'@':{DataType:'AutoIdentity',Label:'Auto ID',HasSize:false},'%':{DataType:'GUID',Label:'GUID',HasSize:false},'$':{DataType:'String',Label:'String',HasSize:true},'*':{DataType:'Text',Label:'Text',HasSize:false},'#':{DataType:'Numeric',Label:'Numeric',HasSize:false},'.':{DataType:'Decimal',Label:'Decimal',HasSize:true},'&':{DataType:'DateTime',Label:'Date/Time',HasSize:false},'^':{DataType:'Boolean',Label:'Boolean',HasSize:false}};const DATATYPE_TO_SYMBOL={};for(let tmpSymbol in MICRODDL_TYPE_MAP){DATATYPE_TO_SYMBOL[MICRODDL_TYPE_MAP[tmpSymbol].DataType]=tmpSymbol;}const _ViewConfiguration={ViewIdentifier:"Facto-Full-Projections",DefaultRenderable:"Facto-Full-Projections-Content",DefaultDestinationAddress:"#Facto-Full-Content-Container",AutoRender:false,CSS:/*css*/`
+		/* Projections page layout */
+		.facto-proj-tabs {
+			display: flex;
+			gap: 0;
+			border-bottom: 2px solid var(--facto-border-subtle, #e8ddc8);
+			margin-bottom: 1.25em;
 		}
-		.facto-projection-results pre {
-			max-height: 400px;
+		.facto-proj-tab {
+			padding: 0.6em 1.25em;
+			font-size: 0.85em;
+			font-weight: 600;
+			cursor: pointer;
+			border: none;
+			background: transparent;
+			color: var(--facto-text-tertiary, #a09070);
+			border-bottom: 2px solid transparent;
+			margin-bottom: -2px;
+			transition: color 0.15s, border-color 0.15s;
+		}
+		.facto-proj-tab:hover {
+			color: var(--facto-text-secondary, #786848);
+		}
+		.facto-proj-tab.active {
+			color: var(--facto-brand, #18a5a0);
+			border-bottom-color: var(--facto-brand, #18a5a0);
+		}
+		.facto-proj-panel {
+			display: none;
+		}
+		.facto-proj-panel.active {
+			display: block;
+		}
+
+		/* Schema editor */
+		.facto-schema-editor {
+			display: none;
+		}
+		.facto-schema-editor.active {
+			display: block;
+		}
+		.facto-schema-header {
+			display: flex;
+			align-items: center;
+			gap: 1em;
+			margin-bottom: 1em;
+		}
+		.facto-schema-header h3 {
+			margin: 0;
+			flex: 1;
+		}
+		.facto-schema-mode-tabs {
+			display: flex;
+			gap: 0;
+			border: 1px solid var(--facto-border, #d6c8ae);
+			border-radius: 6px;
+			overflow: hidden;
+		}
+		.facto-schema-mode-tab {
+			padding: 0.35em 0.8em;
+			font-size: 0.78em;
+			cursor: pointer;
+			border: none;
+			background: transparent;
+			color: var(--facto-text-secondary, #786848);
+			transition: background 0.15s, color 0.15s;
+		}
+		.facto-schema-mode-tab:not(:last-child) {
+			border-right: 1px solid var(--facto-border, #d6c8ae);
+		}
+		.facto-schema-mode-tab.active {
+			background: var(--facto-brand-a12, rgba(24,165,160,0.12));
+			color: var(--facto-brand, #18a5a0);
+		}
+
+		/* Column builder table */
+		.facto-col-builder {
+			width: 100%;
+			border-collapse: collapse;
+			margin-bottom: 0.75em;
+		}
+		.facto-col-builder th {
+			text-align: left;
+			font-size: 0.72em;
+			font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			color: var(--facto-text-tertiary, #a09070);
+			padding: 0.5em 0.4em;
+			border-bottom: 1px solid var(--facto-border, #d6c8ae);
+		}
+		.facto-col-builder td {
+			padding: 0.35em 0.4em;
+			border-bottom: 1px solid var(--facto-border-subtle, #e8ddc8);
+			vertical-align: middle;
+		}
+		.facto-col-builder input,
+		.facto-col-builder select {
+			width: 100%;
+			padding: 0.3em 0.5em;
+			font-size: 0.85em;
+			border: 1px solid var(--facto-border, #d6c8ae);
+			border-radius: 4px;
+			background: var(--facto-bg-input, #fcf8f0);
+			color: var(--facto-text, #3a3020);
+		}
+		.facto-col-builder .facto-col-size {
+			width: 80px;
+		}
+		.facto-col-remove-btn {
+			background: transparent;
+			border: none;
+			color: var(--facto-error, #c44836);
+			cursor: pointer;
+			font-size: 1.1em;
+			padding: 0.2em 0.4em;
+			border-radius: 4px;
+		}
+		.facto-col-remove-btn:hover {
+			background: rgba(196, 72, 54, 0.1);
+		}
+
+		/* DDL editor */
+		.facto-ddl-editor {
+			width: 100%;
+			min-height: 160px;
+			font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+			font-size: 0.85em;
+			padding: 0.75em;
+			border: 1px solid var(--facto-border, #d6c8ae);
+			border-radius: 6px;
+			background: var(--facto-bg-input, #fcf8f0);
+			color: var(--facto-text, #3a3020);
+			resize: vertical;
+			tab-size: 4;
+		}
+
+		/* Schema preview */
+		.facto-schema-preview {
+			padding: 0.6em 0.8em;
+			font-family: 'SF Mono', 'Fira Code', monospace;
+			font-size: 0.78em;
+			background: var(--facto-bg-code, #f0e8d8);
+			border: 1px solid var(--facto-border-subtle, #e8ddc8);
+			border-radius: 6px;
+			white-space: pre-wrap;
+			max-height: 200px;
 			overflow: auto;
+			color: var(--facto-text-secondary, #786848);
+			margin-top: 0.5em;
+		}
+
+		/* Connection form */
+		.facto-conn-form {
+			display: none;
+			padding: 1em;
+			background: var(--facto-bg-surface, #fcf8f0);
+			border: 1px solid var(--facto-border, #d6c8ae);
+			border-radius: 8px;
+			margin-bottom: 1em;
+		}
+		.facto-conn-form.active {
+			display: block;
+		}
+		.facto-conn-form-grid {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 0.6em;
+		}
+		.facto-conn-form-grid label {
+			font-size: 0.78em;
+			font-weight: 600;
+			color: var(--facto-text-secondary, #786848);
+			display: block;
+			margin-bottom: 0.2em;
+		}
+		.facto-conn-form-grid input,
+		.facto-conn-form-grid select {
+			width: 100%;
+			padding: 0.4em 0.6em;
+			font-size: 0.85em;
+			border: 1px solid var(--facto-border, #d6c8ae);
+			border-radius: 4px;
+			background: var(--facto-bg-input, #fcf8f0);
+			color: var(--facto-text, #3a3020);
+		}
+		.facto-conn-form-actions {
+			grid-column: 1 / -1;
+			display: flex;
+			gap: 0.5em;
+			margin-top: 0.5em;
+		}
+
+		/* Status badges */
+		.facto-status-badge {
+			display: inline-block;
+			padding: 0.15em 0.5em;
+			font-size: 0.72em;
+			font-weight: 600;
+			border-radius: 10px;
+			text-transform: uppercase;
+			letter-spacing: 0.3px;
+		}
+		.facto-status-badge.untested {
+			background: var(--facto-brand-a10, rgba(24,165,160,0.1));
+			color: var(--facto-text-tertiary, #a09070);
+		}
+		.facto-status-badge.ok {
+			background: rgba(58, 148, 104, 0.12);
+			color: var(--facto-success, #3a9468);
+		}
+		.facto-status-badge.failed {
+			background: rgba(196, 72, 54, 0.12);
+			color: var(--facto-error, #c44836);
+		}
+		.facto-status-badge.deployed {
+			background: rgba(58, 148, 104, 0.12);
+			color: var(--facto-success, #3a9468);
+		}
+		.facto-status-badge.pending {
+			background: var(--facto-brand-a10, rgba(24,165,160,0.1));
+			color: var(--facto-text-tertiary, #a09070);
+		}
+
+		/* Deploy dialog */
+		.facto-deploy-dialog {
+			display: none;
+			padding: 1em;
+			background: var(--facto-bg-surface, #fcf8f0);
+			border: 1px solid var(--facto-border, #d6c8ae);
+			border-radius: 8px;
+			margin-top: 1em;
+		}
+		.facto-deploy-dialog.active {
+			display: block;
+		}
+		.facto-deploy-log {
+			font-family: 'SF Mono', monospace;
+			font-size: 0.78em;
+			padding: 0.6em;
+			background: var(--facto-bg-code, #f0e8d8);
+			border: 1px solid var(--facto-border-subtle, #e8ddc8);
+			border-radius: 6px;
+			white-space: pre-wrap;
+			max-height: 200px;
+			overflow: auto;
+			margin-top: 0.5em;
+			color: var(--facto-text-secondary, #786848);
+		}
+
+		/* Mapping editor */
+		.facto-mapping-editor {
+			display: none;
+		}
+		.facto-mapping-editor.active {
+			display: block;
+		}
+		.facto-mapping-header {
+			display: flex;
+			align-items: center;
+			gap: 1em;
+			margin-bottom: 1em;
+		}
+		.facto-mapping-header h3 {
+			margin: 0;
+			flex: 1;
+		}
+		.facto-mapping-list-table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-bottom: 1em;
+		}
+		.facto-mapping-list-table th {
+			text-align: left;
+			font-size: 0.72em;
+			font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			color: var(--facto-text-tertiary, #a09070);
+			padding: 0.5em 0.4em;
+			border-bottom: 1px solid var(--facto-border, #d6c8ae);
+		}
+		.facto-mapping-list-table td {
+			padding: 0.35em 0.4em;
+			border-bottom: 1px solid var(--facto-border-subtle, #e8ddc8);
+			vertical-align: middle;
+		}
+		.facto-flow-container {
+			width: 100%;
+			height: 500px;
+			border: 1px solid var(--facto-border, #d6c8ae);
+			border-radius: 6px;
+			background: var(--facto-bg-surface, #fcf8f0);
+			margin-bottom: 0.75em;
+		}
+		.facto-mapping-json-editor {
+			width: 100%;
+			min-height: 300px;
+			font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+			font-size: 0.85em;
+			padding: 0.75em;
+			border: 1px solid var(--facto-border, #d6c8ae);
+			border-radius: 6px;
+			background: var(--facto-bg-input, #fcf8f0);
+			color: var(--facto-text, #3a3020);
+			resize: vertical;
+			tab-size: 4;
+		}
+		.facto-import-log {
+			font-family: 'SF Mono', monospace;
+			font-size: 0.78em;
+			padding: 0.6em;
+			background: var(--facto-bg-code, #f0e8d8);
+			border: 1px solid var(--facto-border-subtle, #e8ddc8);
+			border-radius: 6px;
+			white-space: pre-wrap;
+			max-height: 300px;
+			overflow: auto;
+			margin-top: 0.5em;
+			color: var(--facto-text-secondary, #786848);
 		}
 	`,Templates:[{Hash:"Facto-Full-Projections-Template",Template:/*html*/`
 <div class="facto-content">
 	<div class="facto-content-header">
 		<h1>Projections</h1>
-		<p>Query, aggregate, and compare records across datasets.</p>
+		<p>Define schemas, manage database connections, and deploy projections to external stores.</p>
 	</div>
 
-	<div class="facto-section">
-		<div class="facto-section-title">Warehouse Summary</div>
-		<div id="Facto-Full-Projections-Summary" class="facto-card-grid"></div>
+	<div class="facto-proj-tabs">
+		<button class="facto-proj-tab active" onclick="{~P~}.views['Facto-Full-Projections'].showTab('projections')">Projections</button>
+		<button class="facto-proj-tab" onclick="{~P~}.views['Facto-Full-Projections'].showTab('connections')">Connections</button>
+		<button class="facto-proj-tab" onclick="{~P~}.views['Facto-Full-Projections'].showTab('query')">Query</button>
 	</div>
 
-	<div class="facto-section" style="margin-top:1.5em;">
-		<div class="facto-section-title">Query Records</div>
-		<div class="facto-inline-group">
-			<div>
-				<label>Dataset ID</label>
-				<input type="number" id="Facto-Full-Proj-DatasetID" placeholder="e.g. 1">
+	<!-- Projections Panel -->
+	<div id="Facto-Proj-Panel-Projections" class="facto-proj-panel active">
+		<div id="Facto-Proj-List-Wrap">
+			<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1em;">
+				<div class="facto-section-title" style="margin:0;">Projection Datasets</div>
+				<button class="facto-btn facto-btn-primary" onclick="{~P~}.views['Facto-Full-Projections'].createProjection()">+ New Projection</button>
 			</div>
-			<div>
-				<label>Type Filter</label>
-				<select id="Facto-Full-Proj-Type">
-					<option value="">All</option>
-					<option value="Raw">Raw</option>
-					<option value="Compositional">Compositional</option>
-					<option value="Projection">Projection</option>
-				</select>
+			<div id="Facto-Proj-List"></div>
+		</div>
+
+		<div id="Facto-Proj-Schema-Editor" class="facto-schema-editor">
+			<div class="facto-schema-header">
+				<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="{~P~}.views['Facto-Full-Projections'].closeSchemaEditor()">&larr; Back</button>
+				<h3 id="Facto-Proj-Schema-Title">Schema Editor</h3>
+				<div class="facto-schema-mode-tabs">
+					<button class="facto-schema-mode-tab active" id="Facto-Proj-ModeTab-Visual" onclick="{~P~}.views['Facto-Full-Projections'].switchEditorMode('visual')">Visual Builder</button>
+					<button class="facto-schema-mode-tab" id="Facto-Proj-ModeTab-DDL" onclick="{~P~}.views['Facto-Full-Projections'].switchEditorMode('ddl')">MicroDDL</button>
+				</div>
+			</div>
+
+			<!-- Visual Builder -->
+			<div id="Facto-Proj-Visual-Wrap">
+				<table class="facto-col-builder">
+					<thead>
+						<tr>
+							<th style="width:35%;">Column Name</th>
+							<th style="width:25%;">Data Type</th>
+							<th style="width:15%;">Size</th>
+							<th style="width:15%;"></th>
+						</tr>
+					</thead>
+					<tbody id="Facto-Proj-ColBuilder-Body"></tbody>
+				</table>
+				<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="{~P~}.views['Facto-Full-Projections'].addColumn()">+ Add Column</button>
+				<div class="facto-section-title" style="margin-top:1em; font-size:0.72em;">Generated MicroDDL</div>
+				<div class="facto-schema-preview" id="Facto-Proj-DDL-Preview"></div>
+			</div>
+
+			<!-- DDL Editor -->
+			<div id="Facto-Proj-DDL-Wrap" style="display:none;">
+				<textarea class="facto-ddl-editor" id="Facto-Proj-DDL-Textarea" placeholder="!MyTable&#10;@IDMyTable&#10;$Name 200&#10;#Count&#10;&CreatedDate"></textarea>
+				<div style="margin-top:0.5em;">
+					<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="{~P~}.views['Facto-Full-Projections'].compileDDL()">Compile &amp; Preview</button>
+				</div>
+				<div class="facto-schema-preview" id="Facto-Proj-Schema-Preview" style="display:none;"></div>
+			</div>
+
+			<div style="margin-top:1em; display:flex; gap:0.5em;">
+				<button class="facto-btn facto-btn-primary" onclick="{~P~}.views['Facto-Full-Projections'].saveSchema()">Save Schema</button>
+				<button class="facto-btn facto-btn-secondary" onclick="{~P~}.views['Facto-Full-Projections'].showDeployDialog()">Deploy to Store</button>
+			</div>
+
+			<!-- Deploy Dialog -->
+			<div id="Facto-Proj-Deploy-Dialog" class="facto-deploy-dialog">
+				<div class="facto-section-title">Deploy Projection Schema</div>
+				<div class="facto-conn-form-grid" style="display:grid; margin-top:0.5em;">
+					<div>
+						<label>Target Connection</label>
+						<select id="Facto-Proj-Deploy-Connection"></select>
+					</div>
+					<div>
+						<label>Table Name</label>
+						<input type="text" id="Facto-Proj-Deploy-TableName" placeholder="e.g. Schools">
+					</div>
+					<div class="facto-conn-form-actions">
+						<button class="facto-btn facto-btn-primary facto-btn-small" onclick="{~P~}.views['Facto-Full-Projections'].deploySchema()">Deploy</button>
+						<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="{~P~}.views['Facto-Full-Projections'].hideDeployDialog()">Cancel</button>
+					</div>
+				</div>
+				<div id="Facto-Proj-Deploy-Log" class="facto-deploy-log" style="display:none;"></div>
 			</div>
 		</div>
-		<button class="facto-btn facto-btn-primary" onclick="{~P~}.views['Facto-Full-Projections'].runQuery()">Run Query</button>
-		<button class="facto-btn facto-btn-secondary" onclick="{~P~}.views['Facto-Full-Projections'].runAggregate()">Aggregate</button>
+
+		<div id="Facto-Proj-Mapping-Editor" class="facto-mapping-editor">
+			<div class="facto-mapping-header">
+				<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="{~P~}.views['Facto-Full-Projections'].closeMappingEditor()">&larr; Back</button>
+				<h3 id="Facto-Proj-Mapping-Title">Mapping Editor</h3>
+				<div class="facto-schema-mode-tabs">
+					<button class="facto-schema-mode-tab active" id="Facto-Proj-MapMode-Flow" onclick="{~P~}.views['Facto-Full-Projections'].switchMapMode('flow')">Visual Mapper</button>
+					<button class="facto-schema-mode-tab" id="Facto-Proj-MapMode-JSON" onclick="{~P~}.views['Facto-Full-Projections'].switchMapMode('json')">JSON Config</button>
+				</div>
+			</div>
+
+			<div id="Facto-Proj-Mapping-List-Wrap">
+				<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75em;">
+					<div class="facto-section-title" style="margin:0;">Existing Mappings</div>
+					<button class="facto-btn facto-btn-primary facto-btn-small" onclick="{~P~}.views['Facto-Full-Projections'].newMapping()">+ New Mapping</button>
+				</div>
+				<div id="Facto-Proj-Mapping-List"></div>
+			</div>
+
+			<div id="Facto-Proj-Mapping-Detail" style="display:none;">
+				<div style="display:flex; gap:0.5em; align-items:center; margin-bottom:0.75em;">
+					<label style="font-size:0.78em; font-weight:600;">Mapping Name</label>
+					<input type="text" id="Facto-Proj-Mapping-Name" placeholder="Mapping name" style="flex:1; padding:0.3em 0.5em; font-size:0.85em; border:1px solid var(--facto-border); border-radius:4px; background:var(--facto-bg-input); color:var(--facto-text);">
+				</div>
+
+				<div style="display:flex; gap:0.5em; align-items:center; margin-bottom:0.75em;">
+					<label style="font-size:0.78em; font-weight:600;">Source</label>
+					<select id="Facto-Proj-Mapping-Source" style="flex:1; padding:0.3em 0.5em; font-size:0.85em; border:1px solid var(--facto-border); border-radius:4px;"></select>
+					<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="{~P~}.views['Facto-Full-Projections'].discoverSourceFields()">Discover Fields</button>
+				</div>
+
+				<div id="Facto-Proj-Flow-Wrap">
+					<div id="Facto-Proj-Flow-Container" class="facto-flow-container"></div>
+				</div>
+
+				<div id="Facto-Proj-JSON-Wrap" style="display:none;">
+					<textarea class="facto-mapping-json-editor" id="Facto-Proj-Mapping-JSON" placeholder='{"Entity":"MyTable","GUIDTemplate":"{~D:Record.IDRecord~}","Mappings":{},"Solvers":[],"ManyfestAddresses":false}'></textarea>
+				</div>
+
+				<div style="margin-top:0.75em; display:flex; gap:0.5em; flex-wrap:wrap; align-items:center;">
+					<button class="facto-btn facto-btn-primary" onclick="{~P~}.views['Facto-Full-Projections'].saveMapping()">Save Mapping</button>
+					<div style="flex:1;"></div>
+					<label style="font-size:0.78em; font-weight:600;">Target Store</label>
+					<select id="Facto-Proj-Import-Store" style="padding:0.3em 0.5em; font-size:0.85em; border:1px solid var(--facto-border); border-radius:4px;"></select>
+					<label style="font-size:0.78em; font-weight:600;">Batch</label>
+					<input type="number" id="Facto-Proj-Import-Batch" value="100" style="width:60px; padding:0.3em 0.5em; font-size:0.85em; border:1px solid var(--facto-border); border-radius:4px;">
+					<button class="facto-btn facto-btn-primary facto-btn-small" onclick="{~P~}.views['Facto-Full-Projections'].executeImport()">Run Import</button>
+				</div>
+
+				<div id="Facto-Proj-Import-Log" class="facto-import-log" style="display:none;"></div>
+			</div>
+		</div>
 	</div>
 
-	<div id="Facto-Full-Projections-Results" class="facto-projection-results" style="display:none;"></div>
+	<!-- Connections Panel -->
+	<div id="Facto-Proj-Panel-Connections" class="facto-proj-panel">
+		<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1em;">
+			<div class="facto-section-title" style="margin:0;">Store Connections</div>
+			<button class="facto-btn facto-btn-primary facto-btn-small" onclick="{~P~}.views['Facto-Full-Projections'].toggleConnectionForm()">+ Add Connection</button>
+		</div>
+
+		<div id="Facto-Proj-ConnForm" class="facto-conn-form">
+			<div class="facto-conn-form-grid">
+				<div>
+					<label>Connection Name</label>
+					<input type="text" id="Facto-Proj-Conn-Name" placeholder="e.g. Production MySQL">
+				</div>
+				<div>
+					<label>Type</label>
+					<select id="Facto-Proj-Conn-Type">
+						<option value="MySQL">MySQL</option>
+						<option value="PostgreSQL">PostgreSQL</option>
+						<option value="MSSQL">MSSQL</option>
+						<option value="SQLite">SQLite</option>
+						<option value="Solr">Solr</option>
+						<option value="RocksDB">RocksDB</option>
+					</select>
+				</div>
+				<div>
+					<label>Host</label>
+					<input type="text" id="Facto-Proj-Conn-Host" placeholder="localhost">
+				</div>
+				<div>
+					<label>Port</label>
+					<input type="number" id="Facto-Proj-Conn-Port" placeholder="3306">
+				</div>
+				<div>
+					<label>User</label>
+					<input type="text" id="Facto-Proj-Conn-User" placeholder="root">
+				</div>
+				<div>
+					<label>Password</label>
+					<input type="password" id="Facto-Proj-Conn-Password" placeholder="password">
+				</div>
+				<div>
+					<label>Database</label>
+					<input type="text" id="Facto-Proj-Conn-Database" placeholder="my_database">
+				</div>
+				<div>
+					<label>&nbsp;</label>
+				</div>
+				<div class="facto-conn-form-actions">
+					<button class="facto-btn facto-btn-primary facto-btn-small" onclick="{~P~}.views['Facto-Full-Projections'].addConnection()">Save Connection</button>
+					<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="{~P~}.views['Facto-Full-Projections'].toggleConnectionForm()">Cancel</button>
+				</div>
+			</div>
+		</div>
+
+		<div id="Facto-Proj-ConnList"></div>
+	</div>
+
+	<!-- Query Panel (existing functionality) -->
+	<div id="Facto-Proj-Panel-Query" class="facto-proj-panel">
+		<div class="facto-section">
+			<div class="facto-section-title">Warehouse Summary</div>
+			<div id="Facto-Full-Projections-Summary" class="facto-card-grid"></div>
+		</div>
+
+		<div class="facto-section" style="margin-top:1.5em;">
+			<div class="facto-section-title">Query Records</div>
+			<div class="facto-inline-group">
+				<div>
+					<label>Dataset ID</label>
+					<input type="number" id="Facto-Full-Proj-DatasetID" placeholder="e.g. 1">
+				</div>
+				<div>
+					<label>Type Filter</label>
+					<select id="Facto-Full-Proj-Type">
+						<option value="">All</option>
+						<option value="Raw">Raw</option>
+						<option value="Compositional">Compositional</option>
+						<option value="Projection">Projection</option>
+					</select>
+				</div>
+			</div>
+			<button class="facto-btn facto-btn-primary" onclick="{~P~}.views['Facto-Full-Projections'].runQuery()">Run Query</button>
+			<button class="facto-btn facto-btn-secondary" onclick="{~P~}.views['Facto-Full-Projections'].runAggregate()">Aggregate</button>
+		</div>
+		<div id="Facto-Full-Projections-Results" class="facto-projection-results" style="display:none;"></div>
+	</div>
 </div>
-`}],Renderables:[{RenderableHash:"Facto-Full-Projections-Content",TemplateHash:"Facto-Full-Projections-Template",DestinationAddress:"#Facto-Full-Content-Container",RenderMethod:"replace"}]};class FactoFullProjectionsView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent){this.pict.providers.Facto.loadProjectionSummary().then(pResponse=>{let tmpContainer=document.getElementById('Facto-Full-Projections-Summary');if(!tmpContainer||!pResponse)return;let tmpHtml='';tmpHtml+='<div class="facto-card facto-dashboard-stat"><div class="facto-dashboard-stat-value">'+(pResponse.TotalRecords||0)+'</div><div class="facto-dashboard-stat-label">Total Records</div></div>';tmpHtml+='<div class="facto-card facto-dashboard-stat"><div class="facto-dashboard-stat-value">'+(pResponse.TotalDatasets||0)+'</div><div class="facto-dashboard-stat-label">Total Datasets</div></div>';tmpHtml+='<div class="facto-card facto-dashboard-stat"><div class="facto-dashboard-stat-value">'+(pResponse.TotalSources||0)+'</div><div class="facto-dashboard-stat-label">Total Sources</div></div>';tmpContainer.innerHTML=tmpHtml;});return super.onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent);}runQuery(){let tmpDatasetID=parseInt((document.getElementById('Facto-Full-Proj-DatasetID')||{}).value)||0;let tmpType=(document.getElementById('Facto-Full-Proj-Type')||{}).value||'';let tmpParams={};if(tmpDatasetID)tmpParams.IDDataset=tmpDatasetID;if(tmpType)tmpParams.Type=tmpType;this.pict.providers.Facto.queryRecords(tmpParams).then(pResponse=>{this._showResults('Query Results',pResponse);});}runAggregate(){let tmpDatasetID=parseInt((document.getElementById('Facto-Full-Proj-DatasetID')||{}).value)||0;let tmpParams={};if(tmpDatasetID)tmpParams.IDDataset=tmpDatasetID;this.pict.providers.Facto.aggregateRecords(tmpParams).then(pResponse=>{this._showResults('Aggregate Results',pResponse);});}_showResults(pTitle,pData){let tmpContainer=document.getElementById('Facto-Full-Projections-Results');if(!tmpContainer)return;tmpContainer.style.display='block';let tmpRecordCount=pData&&pData.Records?pData.Records.length:pData&&pData.Aggregations?pData.Aggregations.length:0;let tmpHtml='<h3>'+pTitle+' ('+tmpRecordCount+')</h3>';tmpHtml+='<pre>'+JSON.stringify(pData,null,2)+'</pre>';tmpHtml+='<button class="facto-btn facto-btn-secondary" style="margin-top:0.5em;" onclick="document.getElementById(\'Facto-Full-Projections-Results\').style.display=\'none\'">Close</button>';tmpContainer.innerHTML=tmpHtml;}}module.exports=FactoFullProjectionsView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":33}],44:[function(require,module,exports){const libPictView=require('pict-view');const libPictSectionObjectEditor=require('pict-section-objecteditor');const _ViewConfiguration={ViewIdentifier:"Facto-Full-RecordViewer",DefaultRenderable:"Facto-Full-RecordViewer-Content",DefaultDestinationAddress:"#Facto-Full-Content-Container",AutoRender:false,CSS:/*css*/`
+`}],Renderables:[{RenderableHash:"Facto-Full-Projections-Content",TemplateHash:"Facto-Full-Projections-Template",DestinationAddress:"#Facto-Full-Content-Container",RenderMethod:"replace"}]};class FactoFullProjectionsView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this._Projections=[];this._Connections=[];this._EditingIDDataset=0;this._EditingName='';this._Columns=[];this._EditorMode='visual';// Mapping editor state
+this._CurrentMappings=[];this._SelectedMappingID=0;this._DiscoveredFields={};this._FlowView=null;this._MapEditorMode='flow';this._MappingSources=[];this._MappingStores=[];}onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent){// Load all data in parallel
+Promise.all([this.pict.providers.Facto.loadProjections(),this.pict.providers.Facto.loadStoreConnections(),this.pict.providers.Facto.loadProjectionSummary()]).then(pResults=>{this._Projections=pResults[0]&&pResults[0].Projections?pResults[0].Projections:[];this._Connections=pResults[1]&&pResults[1].Connections?pResults[1].Connections:[];this.refreshProjectionList();this.refreshConnectionList();// Render warehouse summary
+let tmpSummary=pResults[2]||{};let tmpSumContainer=document.getElementById('Facto-Full-Projections-Summary');if(tmpSumContainer){let tmpHtml='';tmpHtml+='<div class="facto-card facto-dashboard-stat"><div class="facto-dashboard-stat-value">'+(tmpSummary.TotalRecords||0)+'</div><div class="facto-dashboard-stat-label">Total Records</div></div>';tmpHtml+='<div class="facto-card facto-dashboard-stat"><div class="facto-dashboard-stat-value">'+(tmpSummary.TotalDatasets||0)+'</div><div class="facto-dashboard-stat-label">Total Datasets</div></div>';tmpHtml+='<div class="facto-card facto-dashboard-stat"><div class="facto-dashboard-stat-value">'+(tmpSummary.TotalSources||0)+'</div><div class="facto-dashboard-stat-label">Total Sources</div></div>';tmpSumContainer.innerHTML=tmpHtml;}});return super.onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent);}// ================================================================
+// Tab Navigation
+// ================================================================
+showTab(pTabName){let tmpTabButtons=document.querySelectorAll('.facto-proj-tab');let tmpPanels=document.querySelectorAll('.facto-proj-panel');for(let i=0;i<tmpTabButtons.length;i++){tmpTabButtons[i].classList.remove('active');}for(let i=0;i<tmpPanels.length;i++){tmpPanels[i].classList.remove('active');}let tmpPanelMap={'projections':'Facto-Proj-Panel-Projections','connections':'Facto-Proj-Panel-Connections','query':'Facto-Proj-Panel-Query'};let tmpPanel=document.getElementById(tmpPanelMap[pTabName]);if(tmpPanel)tmpPanel.classList.add('active');// Highlight the matching tab button
+for(let i=0;i<tmpTabButtons.length;i++){if(tmpTabButtons[i].textContent.toLowerCase().indexOf(pTabName)>=0){tmpTabButtons[i].classList.add('active');break;}}}// ================================================================
+// Projection List
+// ================================================================
+refreshProjectionList(){let tmpContainer=document.getElementById('Facto-Proj-List');if(!tmpContainer)return;if(this._Projections.length===0){tmpContainer.innerHTML='<div class="facto-card" style="text-align:center; padding:2em; color:var(--facto-text-tertiary);">No projection datasets yet. Create one to get started.</div>';return;}let tmpHtml='<table class="facto-table"><thead><tr>';tmpHtml+='<th>ID</th><th>Name</th><th>Schema Ver.</th><th>Actions</th>';tmpHtml+='</tr></thead><tbody>';for(let i=0;i<this._Projections.length;i++){let tmpProj=this._Projections[i];tmpHtml+='<tr>';tmpHtml+='<td>'+tmpProj.IDDataset+'</td>';tmpHtml+='<td><strong>'+(tmpProj.Name||'\u2014')+'</strong></td>';tmpHtml+='<td>v'+(tmpProj.SchemaVersion||0)+'</td>';tmpHtml+='<td>';tmpHtml+='<button class="facto-btn facto-btn-primary facto-btn-small" onclick="pict.views[\'Facto-Full-Projections\'].editSchema('+tmpProj.IDDataset+', \''+(tmpProj.Name||'').replace(/'/g,"\\'")+'\')">Edit Schema</button> ';tmpHtml+='<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.views[\'Facto-Full-Projections\'].editMappings('+tmpProj.IDDataset+', \''+(tmpProj.Name||'').replace(/'/g,"\\'")+'\')">Mappings</button> ';tmpHtml+='<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.views[\'Facto-Full-Projections\'].viewStores('+tmpProj.IDDataset+')">Stores</button>';tmpHtml+='</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}createProjection(){let tmpName=prompt('Projection name:');if(!tmpName)return;this.pict.providers.Facto.createDataset({Name:tmpName,Type:'Projection',Description:'Projection dataset'}).then(pResponse=>{if(pResponse&&pResponse.Error){alert('Error: '+pResponse.Error);return;}// Reload projections
+this.pict.providers.Facto.loadProjections().then(pResult=>{this._Projections=pResult&&pResult.Projections?pResult.Projections:[];this.refreshProjectionList();});});}viewStores(pIDDataset){this.pict.providers.Facto.loadProjectionStores(pIDDataset).then(pResponse=>{let tmpStores=pResponse&&pResponse.Stores?pResponse.Stores:[];if(tmpStores.length===0){alert('No stores deployed for this projection yet.');return;}let tmpMsg='Deployed Stores:\n\n';for(let i=0;i<tmpStores.length;i++){tmpMsg+='  \u2022 '+tmpStores[i].TargetTableName+' ('+tmpStores[i].Status+')\n';}alert(tmpMsg);});}// ================================================================
+// Schema Editor
+// ================================================================
+editSchema(pIDDataset,pName){this._EditingIDDataset=pIDDataset;this._EditingName=pName||'';let tmpListWrap=document.getElementById('Facto-Proj-List-Wrap');let tmpEditor=document.getElementById('Facto-Proj-Schema-Editor');let tmpTitle=document.getElementById('Facto-Proj-Schema-Title');if(tmpListWrap)tmpListWrap.style.display='none';if(tmpEditor)tmpEditor.classList.add('active');if(tmpTitle)tmpTitle.textContent='Schema: '+(pName||'Untitled');// Load existing schema
+this.pict.providers.Facto.loadProjectionSchema(pIDDataset).then(pResponse=>{let tmpDDL=pResponse&&pResponse.SchemaDefinition?pResponse.SchemaDefinition:'';if(tmpDDL){this._Columns=this.microDDLToColumns(tmpDDL);}else{// Start with a default table and ID column
+this._Columns=[{Name:'ID'+(pName||'Record').replace(/[^a-zA-Z0-9]/g,''),DataType:'AutoIdentity',Size:''}];}this.refreshColumnBuilder();this.updateDDLPreview();// Also set the DDL textarea
+let tmpTextarea=document.getElementById('Facto-Proj-DDL-Textarea');if(tmpTextarea){tmpTextarea.value=tmpDDL||this.columnsToMicroDDL();}});}closeSchemaEditor(){let tmpListWrap=document.getElementById('Facto-Proj-List-Wrap');let tmpEditor=document.getElementById('Facto-Proj-Schema-Editor');if(tmpListWrap)tmpListWrap.style.display='';if(tmpEditor)tmpEditor.classList.remove('active');this._EditingIDDataset=0;this._Columns=[];}switchEditorMode(pMode){this._EditorMode=pMode;let tmpVisualWrap=document.getElementById('Facto-Proj-Visual-Wrap');let tmpDDLWrap=document.getElementById('Facto-Proj-DDL-Wrap');let tmpVisualTab=document.getElementById('Facto-Proj-ModeTab-Visual');let tmpDDLTab=document.getElementById('Facto-Proj-ModeTab-DDL');if(pMode==='visual'){if(tmpVisualWrap)tmpVisualWrap.style.display='';if(tmpDDLWrap)tmpDDLWrap.style.display='none';if(tmpVisualTab)tmpVisualTab.classList.add('active');if(tmpDDLTab)tmpDDLTab.classList.remove('active');// Sync: parse DDL textarea back to columns
+let tmpTextarea=document.getElementById('Facto-Proj-DDL-Textarea');if(tmpTextarea&&tmpTextarea.value.trim()){this._Columns=this.microDDLToColumns(tmpTextarea.value);this.refreshColumnBuilder();this.updateDDLPreview();}}else{if(tmpVisualWrap)tmpVisualWrap.style.display='none';if(tmpDDLWrap)tmpDDLWrap.style.display='';if(tmpVisualTab)tmpVisualTab.classList.remove('active');if(tmpDDLTab)tmpDDLTab.classList.add('active');// Sync: marshal columns to DDL textarea
+this._marshalColumnsFromUI();let tmpTextarea=document.getElementById('Facto-Proj-DDL-Textarea');if(tmpTextarea){tmpTextarea.value=this.columnsToMicroDDL();}}}addColumn(){this._marshalColumnsFromUI();this._Columns.push({Name:'',DataType:'String',Size:'200'});this.refreshColumnBuilder();this.updateDDLPreview();}removeColumn(pIndex){this._marshalColumnsFromUI();this._Columns.splice(pIndex,1);this.refreshColumnBuilder();this.updateDDLPreview();}refreshColumnBuilder(){let tmpBody=document.getElementById('Facto-Proj-ColBuilder-Body');if(!tmpBody)return;let tmpHtml='';for(let i=0;i<this._Columns.length;i++){let tmpCol=this._Columns[i];let tmpSizeDisabled=!MICRODDL_TYPE_MAP[DATATYPE_TO_SYMBOL[tmpCol.DataType]||'$'].HasSize;tmpHtml+='<tr>';tmpHtml+='<td><input type="text" value="'+(tmpCol.Name||'').replace(/"/g,'&quot;')+'" data-col-index="'+i+'" data-col-field="Name"></td>';tmpHtml+='<td><select data-col-index="'+i+'" data-col-field="DataType" onchange="pict.views[\'Facto-Full-Projections\']._onColumnTypeChange('+i+', this.value)">';for(let tmpSym in MICRODDL_TYPE_MAP){let tmpType=MICRODDL_TYPE_MAP[tmpSym];let tmpSelected=tmpType.DataType===tmpCol.DataType?' selected':'';tmpHtml+='<option value="'+tmpType.DataType+'"'+tmpSelected+'>'+tmpType.Label+'</option>';}tmpHtml+='</select></td>';tmpHtml+='<td><input type="text" class="facto-col-size" value="'+(tmpCol.Size||'').replace(/"/g,'&quot;')+'" data-col-index="'+i+'" data-col-field="Size"'+(tmpSizeDisabled?' disabled':'')+'></td>';tmpHtml+='<td><button class="facto-col-remove-btn" onclick="pict.views[\'Facto-Full-Projections\'].removeColumn('+i+')" title="Remove column">&times;</button></td>';tmpHtml+='</tr>';}tmpBody.innerHTML=tmpHtml;}_onColumnTypeChange(pIndex,pDataType){this._marshalColumnsFromUI();let tmpSymbol=DATATYPE_TO_SYMBOL[pDataType]||'$';let tmpHasSize=MICRODDL_TYPE_MAP[tmpSymbol].HasSize;if(!tmpHasSize){this._Columns[pIndex].Size='';}else if(!this._Columns[pIndex].Size){this._Columns[pIndex].Size=pDataType==='String'?'200':'8,2';}this._Columns[pIndex].DataType=pDataType;this.refreshColumnBuilder();this.updateDDLPreview();}/**
+	 * Read column values from the DOM inputs back into the _Columns array.
+	 */_marshalColumnsFromUI(){let tmpInputs=document.querySelectorAll('#Facto-Proj-ColBuilder-Body input[data-col-field="Name"], #Facto-Proj-ColBuilder-Body input[data-col-field="Size"], #Facto-Proj-ColBuilder-Body select[data-col-field="DataType"]');for(let i=0;i<tmpInputs.length;i++){let tmpInput=tmpInputs[i];let tmpIndex=parseInt(tmpInput.getAttribute('data-col-index'),10);let tmpField=tmpInput.getAttribute('data-col-field');if(tmpIndex>=0&&tmpIndex<this._Columns.length&&tmpField){this._Columns[tmpIndex][tmpField]=tmpInput.value;}}}updateDDLPreview(){let tmpPreview=document.getElementById('Facto-Proj-DDL-Preview');if(tmpPreview){tmpPreview.textContent=this.columnsToMicroDDL();}}columnsToMicroDDL(){let tmpTableName=(this._EditingName||'Untitled').replace(/[^a-zA-Z0-9_]/g,'');let tmpLines=['!'+tmpTableName];for(let i=0;i<this._Columns.length;i++){let tmpCol=this._Columns[i];let tmpSymbol=DATATYPE_TO_SYMBOL[tmpCol.DataType]||'$';let tmpLine=tmpSymbol+(tmpCol.Name||'Column'+i);if(MICRODDL_TYPE_MAP[tmpSymbol].HasSize&&tmpCol.Size){tmpLine+=' '+tmpCol.Size;}tmpLines.push(tmpLine);}return tmpLines.join('\n');}microDDLToColumns(pDDL){let tmpLines=pDDL.split('\n');let tmpColumns=[];for(let i=0;i<tmpLines.length;i++){let tmpLine=tmpLines[i].trim();if(!tmpLine||tmpLine.startsWith('!')||tmpLine.startsWith('//')||tmpLine.startsWith('--')||tmpLine.startsWith('->')){continue;}let tmpSymbol=tmpLine.charAt(0);if(MICRODDL_TYPE_MAP.hasOwnProperty(tmpSymbol)){let tmpRest=tmpLine.substring(1).trim();let tmpParts=tmpRest.split(/\s+/);tmpColumns.push({Name:tmpParts[0]||'',DataType:MICRODDL_TYPE_MAP[tmpSymbol].DataType,Size:tmpParts[1]||''});}}return tmpColumns;}compileDDL(){let tmpTextarea=document.getElementById('Facto-Proj-DDL-Textarea');if(!tmpTextarea)return;let tmpDDL=tmpTextarea.value.trim();if(!tmpDDL){alert('Enter MicroDDL text first.');return;}this.pict.providers.Facto.compileMicroDDL(tmpDDL).then(pResponse=>{let tmpPreview=document.getElementById('Facto-Proj-Schema-Preview');if(tmpPreview){tmpPreview.style.display='block';if(pResponse&&pResponse.Schema){tmpPreview.textContent=JSON.stringify(pResponse.Schema,null,2);}else{tmpPreview.textContent='Error: '+(pResponse&&pResponse.Error?pResponse.Error:'Unknown error');}}// Update columns from compiled schema
+if(pResponse&&pResponse.Schema&&pResponse.Schema.Tables){let tmpTableKeys=Object.keys(pResponse.Schema.Tables);if(tmpTableKeys.length>0){let tmpTable=pResponse.Schema.Tables[tmpTableKeys[0]];this._Columns=[];for(let j=0;j<tmpTable.Columns.length;j++){let tmpCol=tmpTable.Columns[j];this._Columns.push({Name:tmpCol.Column,DataType:tmpCol.DataType||'String',Size:tmpCol.Size||''});}}}});}saveSchema(){if(!this._EditingIDDataset){alert('No projection selected.');return;}// Marshal current state to DDL text
+if(this._EditorMode==='visual'){this._marshalColumnsFromUI();}let tmpDDL;if(this._EditorMode==='ddl'){let tmpTextarea=document.getElementById('Facto-Proj-DDL-Textarea');tmpDDL=tmpTextarea?tmpTextarea.value:'';}else{tmpDDL=this.columnsToMicroDDL();}this.pict.providers.Facto.saveProjectionSchema(this._EditingIDDataset,tmpDDL).then(pResponse=>{if(pResponse&&pResponse.Error){alert('Error saving schema: '+pResponse.Error);return;}// Update the schema version in the projections list
+for(let i=0;i<this._Projections.length;i++){if(this._Projections[i].IDDataset===this._EditingIDDataset){this._Projections[i].SchemaVersion=pResponse.SchemaVersion||0;break;}}alert('Schema saved (v'+(pResponse.SchemaVersion||0)+')');});}// ================================================================
+// Deploy
+// ================================================================
+showDeployDialog(){let tmpDialog=document.getElementById('Facto-Proj-Deploy-Dialog');if(tmpDialog)tmpDialog.classList.add('active');// Populate connection dropdown
+let tmpSelect=document.getElementById('Facto-Proj-Deploy-Connection');if(tmpSelect){let tmpHtml='<option value="">Select a connection...</option>';for(let i=0;i<this._Connections.length;i++){tmpHtml+='<option value="'+this._Connections[i].IDStoreConnection+'">'+(this._Connections[i].Name||'Untitled')+' ('+this._Connections[i].Type+')</option>';}tmpSelect.innerHTML=tmpHtml;}// Default table name
+let tmpTableInput=document.getElementById('Facto-Proj-Deploy-TableName');if(tmpTableInput){tmpTableInput.value=(this._EditingName||'Projection').replace(/[^a-zA-Z0-9_]/g,'_');}// Hide old log
+let tmpLog=document.getElementById('Facto-Proj-Deploy-Log');if(tmpLog)tmpLog.style.display='none';}hideDeployDialog(){let tmpDialog=document.getElementById('Facto-Proj-Deploy-Dialog');if(tmpDialog)tmpDialog.classList.remove('active');}deploySchema(){let tmpSelect=document.getElementById('Facto-Proj-Deploy-Connection');let tmpTableInput=document.getElementById('Facto-Proj-Deploy-TableName');let tmpLog=document.getElementById('Facto-Proj-Deploy-Log');let tmpIDConn=tmpSelect?parseInt(tmpSelect.value,10):0;let tmpTableName=tmpTableInput?tmpTableInput.value.trim():'';if(!tmpIDConn){alert('Select a connection first.');return;}if(!tmpTableName){alert('Enter a table name.');return;}if(tmpLog){tmpLog.style.display='block';tmpLog.textContent='Deploying...';}// Save schema first, then deploy
+if(this._EditorMode==='visual'){this._marshalColumnsFromUI();}let tmpDDL=this._EditorMode==='ddl'?(document.getElementById('Facto-Proj-DDL-Textarea')||{}).value||'':this.columnsToMicroDDL();this.pict.providers.Facto.saveProjectionSchema(this._EditingIDDataset,tmpDDL).then(()=>{this.pict.providers.Facto.deployProjection(this._EditingIDDataset,tmpIDConn,tmpTableName).then(pResponse=>{if(tmpLog){if(pResponse&&pResponse.Log){tmpLog.textContent=pResponse.Log;}else if(pResponse&&pResponse.Error){tmpLog.textContent='ERROR: '+pResponse.Error;}else{tmpLog.textContent='Deployment complete.';}}});});}// ================================================================
+// Connection Management
+// ================================================================
+toggleConnectionForm(){let tmpForm=document.getElementById('Facto-Proj-ConnForm');if(tmpForm){tmpForm.classList.toggle('active');}}refreshConnectionList(){let tmpContainer=document.getElementById('Facto-Proj-ConnList');if(!tmpContainer)return;if(this._Connections.length===0){tmpContainer.innerHTML='<div class="facto-card" style="text-align:center; padding:2em; color:var(--facto-text-tertiary);">No connections configured. Add one to get started.</div>';return;}let tmpHtml='<table class="facto-table"><thead><tr>';tmpHtml+='<th>Name</th><th>Type</th><th>Status</th><th>Actions</th>';tmpHtml+='</tr></thead><tbody>';for(let i=0;i<this._Connections.length;i++){let tmpConn=this._Connections[i];let tmpStatusClass=(tmpConn.Status||'Untested').toLowerCase();tmpHtml+='<tr>';tmpHtml+='<td><strong>'+(tmpConn.Name||'\u2014')+'</strong></td>';tmpHtml+='<td>'+(tmpConn.Type||'\u2014')+'</td>';tmpHtml+='<td><span class="facto-status-badge '+tmpStatusClass+'">'+(tmpConn.Status||'Untested')+'</span></td>';tmpHtml+='<td>';tmpHtml+='<button class="facto-btn facto-btn-primary facto-btn-small" onclick="pict.views[\'Facto-Full-Projections\'].testConnection('+tmpConn.IDStoreConnection+')">Test</button> ';tmpHtml+='<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.views[\'Facto-Full-Projections\'].deleteConnection('+tmpConn.IDStoreConnection+')">Delete</button>';tmpHtml+='</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}addConnection(){let tmpName=(document.getElementById('Facto-Proj-Conn-Name')||{}).value||'';let tmpType=(document.getElementById('Facto-Proj-Conn-Type')||{}).value||'MySQL';let tmpHost=(document.getElementById('Facto-Proj-Conn-Host')||{}).value||'localhost';let tmpPort=parseInt((document.getElementById('Facto-Proj-Conn-Port')||{}).value)||0;let tmpUser=(document.getElementById('Facto-Proj-Conn-User')||{}).value||'';let tmpPassword=(document.getElementById('Facto-Proj-Conn-Password')||{}).value||'';let tmpDatabase=(document.getElementById('Facto-Proj-Conn-Database')||{}).value||'';if(!tmpName){alert('Connection name is required.');return;}let tmpConfig={server:tmpHost,host:tmpHost,port:tmpPort,user:tmpUser,password:tmpPassword,database:tmpDatabase};this.pict.providers.Facto.createStoreConnection({Name:tmpName,Type:tmpType,Config:tmpConfig}).then(pResponse=>{if(pResponse&&pResponse.Error){alert('Error: '+pResponse.Error);return;}// Reload connections
+this.pict.providers.Facto.loadStoreConnections().then(pResult=>{this._Connections=pResult&&pResult.Connections?pResult.Connections:[];this.refreshConnectionList();this.toggleConnectionForm();// Clear form
+let tmpFields=['Name','Host','Port','User','Password','Database'];for(let i=0;i<tmpFields.length;i++){let tmpEl=document.getElementById('Facto-Proj-Conn-'+tmpFields[i]);if(tmpEl)tmpEl.value='';}});});}testConnection(pIDStoreConnection){this.pict.providers.Facto.testStoreConnection(pIDStoreConnection).then(pResponse=>{// Reload connections to get updated status
+this.pict.providers.Facto.loadStoreConnections().then(pResult=>{this._Connections=pResult&&pResult.Connections?pResult.Connections:[];this.refreshConnectionList();if(pResponse&&pResponse.Success){alert('Connection test succeeded!');}else{alert('Connection test failed: '+(pResponse&&pResponse.Error?pResponse.Error:'Unknown error'));}});});}deleteConnection(pIDStoreConnection){if(!confirm('Delete this connection?'))return;this.pict.providers.Facto.deleteStoreConnection(pIDStoreConnection).then(()=>{this.pict.providers.Facto.loadStoreConnections().then(pResult=>{this._Connections=pResult&&pResult.Connections?pResult.Connections:[];this.refreshConnectionList();});});}// ================================================================
+// Mapping Editor
+// ================================================================
+editMappings(pIDDataset,pName){this._EditingIDDataset=pIDDataset;this._EditingName=pName||'';let tmpListWrap=document.getElementById('Facto-Proj-List-Wrap');let tmpEditor=document.getElementById('Facto-Proj-Mapping-Editor');let tmpTitle=document.getElementById('Facto-Proj-Mapping-Title');if(tmpListWrap)tmpListWrap.style.display='none';if(tmpEditor)tmpEditor.classList.add('active');if(tmpTitle)tmpTitle.textContent='Mappings: '+(pName||'Untitled');// Show the mapping list, hide detail
+let tmpMappingListWrap=document.getElementById('Facto-Proj-Mapping-List-Wrap');let tmpMappingDetail=document.getElementById('Facto-Proj-Mapping-Detail');if(tmpMappingListWrap)tmpMappingListWrap.style.display='';if(tmpMappingDetail)tmpMappingDetail.style.display='none';// Load mappings, sources, and stores in parallel
+Promise.all([this.pict.providers.Facto.loadProjectionMappings(pIDDataset),this.pict.providers.Facto.loadSources(),this.pict.providers.Facto.loadProjectionStores(pIDDataset)]).then(pResults=>{this._CurrentMappings=pResults[0]&&pResults[0].Mappings?pResults[0].Mappings:[];this._MappingSources=pResults[1]&&pResults[1].Sources?pResults[1].Sources:[];this._MappingStores=pResults[2]&&pResults[2].Stores?pResults[2].Stores:[];this.refreshMappingList();});}closeMappingEditor(){let tmpListWrap=document.getElementById('Facto-Proj-List-Wrap');let tmpEditor=document.getElementById('Facto-Proj-Mapping-Editor');if(tmpListWrap)tmpListWrap.style.display='';if(tmpEditor)tmpEditor.classList.remove('active');this._SelectedMappingID=0;// Clean up flow view
+if(this._FlowView){this._FlowView=null;}}refreshMappingList(){let tmpContainer=document.getElementById('Facto-Proj-Mapping-List');if(!tmpContainer)return;if(this._CurrentMappings.length===0){tmpContainer.innerHTML='<div class="facto-card" style="text-align:center; padding:1.5em; color:var(--facto-text-tertiary);">No mappings yet. Create one to map source fields to projection columns.</div>';return;}let tmpHtml='<table class="facto-mapping-list-table"><thead><tr>';tmpHtml+='<th>ID</th><th>Name</th><th>Source</th><th>Active</th><th>Actions</th>';tmpHtml+='</tr></thead><tbody>';for(let i=0;i<this._CurrentMappings.length;i++){let tmpMap=this._CurrentMappings[i];let tmpSourceName='\u2014';for(let j=0;j<this._MappingSources.length;j++){if(this._MappingSources[j].IDSource===tmpMap.IDSource){tmpSourceName=this._MappingSources[j].Name||'Source '+tmpMap.IDSource;break;}}tmpHtml+='<tr>';tmpHtml+='<td>'+tmpMap.IDProjectionMapping+'</td>';tmpHtml+='<td><strong>'+(tmpMap.Name||'\u2014')+'</strong></td>';tmpHtml+='<td>'+tmpSourceName+'</td>';tmpHtml+='<td>'+(tmpMap.Active?'\u2713':'\u2717')+'</td>';tmpHtml+='<td>';tmpHtml+='<button class="facto-btn facto-btn-primary facto-btn-small" onclick="pict.views[\'Facto-Full-Projections\'].openMappingDetail('+tmpMap.IDProjectionMapping+')">Edit</button> ';tmpHtml+='<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.views[\'Facto-Full-Projections\'].deleteMapping('+tmpMap.IDProjectionMapping+')">Delete</button>';tmpHtml+='</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}newMapping(){this._SelectedMappingID=0;let tmpMappingListWrap=document.getElementById('Facto-Proj-Mapping-List-Wrap');let tmpMappingDetail=document.getElementById('Facto-Proj-Mapping-Detail');if(tmpMappingListWrap)tmpMappingListWrap.style.display='none';if(tmpMappingDetail)tmpMappingDetail.style.display='';// Reset fields
+let tmpNameInput=document.getElementById('Facto-Proj-Mapping-Name');if(tmpNameInput)tmpNameInput.value='';// Populate source dropdown
+this._populateSourceDropdown();this._populateStoreDropdown();// Clear JSON editor
+let tmpJSONTextarea=document.getElementById('Facto-Proj-Mapping-JSON');if(tmpJSONTextarea){tmpJSONTextarea.value=JSON.stringify({Entity:(this._EditingName||'Record').replace(/[^a-zA-Z0-9_]/g,''),GUIDTemplate:'{~D:Record.IDRecord~}',GUIDName:'GUID',Mappings:{},Solvers:[],ManyfestAddresses:false},null,'\t');}// Clear flow container
+let tmpFlowContainer=document.getElementById('Facto-Proj-Flow-Container');if(tmpFlowContainer)tmpFlowContainer.innerHTML='';this._FlowView=null;// Hide import log
+let tmpImportLog=document.getElementById('Facto-Proj-Import-Log');if(tmpImportLog)tmpImportLog.style.display='none';// Switch to flow mode
+this.switchMapMode('flow');}openMappingDetail(pIDProjectionMapping){this._SelectedMappingID=pIDProjectionMapping;this.pict.providers.Facto.loadProjectionMapping(pIDProjectionMapping).then(pResponse=>{if(!pResponse||!pResponse.Mapping){alert('Mapping not found');return;}let tmpMapping=pResponse.Mapping;let tmpMappingListWrap=document.getElementById('Facto-Proj-Mapping-List-Wrap');let tmpMappingDetail=document.getElementById('Facto-Proj-Mapping-Detail');if(tmpMappingListWrap)tmpMappingListWrap.style.display='none';if(tmpMappingDetail)tmpMappingDetail.style.display='';// Set name
+let tmpNameInput=document.getElementById('Facto-Proj-Mapping-Name');if(tmpNameInput)tmpNameInput.value=tmpMapping.Name||'';// Populate dropdowns
+this._populateSourceDropdown(tmpMapping.IDSource);this._populateStoreDropdown(tmpMapping.IDProjectionStore);// Parse mapping config
+let tmpConfig={};try{tmpConfig=JSON.parse(tmpMapping.MappingConfiguration||'{}');}catch(e){/* ignore */}// Set JSON editor
+let tmpJSONTextarea=document.getElementById('Facto-Proj-Mapping-JSON');if(tmpJSONTextarea){tmpJSONTextarea.value=JSON.stringify(tmpConfig,null,'\t');}// Clear flow container (will be populated when switching to flow mode or on discover)
+let tmpFlowContainer=document.getElementById('Facto-Proj-Flow-Container');if(tmpFlowContainer)tmpFlowContainer.innerHTML='';this._FlowView=null;// Hide import log
+let tmpImportLog=document.getElementById('Facto-Proj-Import-Log');if(tmpImportLog)tmpImportLog.style.display='none';// Switch to flow mode
+this.switchMapMode('flow');});}deleteMapping(pIDProjectionMapping){if(!confirm('Delete this mapping?'))return;this.pict.providers.Facto.deleteProjectionMapping(pIDProjectionMapping).then(()=>{this.pict.providers.Facto.loadProjectionMappings(this._EditingIDDataset).then(pResult=>{this._CurrentMappings=pResult&&pResult.Mappings?pResult.Mappings:[];this.refreshMappingList();});});}switchMapMode(pMode){this._MapEditorMode=pMode;let tmpFlowWrap=document.getElementById('Facto-Proj-Flow-Wrap');let tmpJSONWrap=document.getElementById('Facto-Proj-JSON-Wrap');let tmpFlowTab=document.getElementById('Facto-Proj-MapMode-Flow');let tmpJSONTab=document.getElementById('Facto-Proj-MapMode-JSON');if(pMode==='flow'){if(tmpFlowWrap)tmpFlowWrap.style.display='';if(tmpJSONWrap)tmpJSONWrap.style.display='none';if(tmpFlowTab)tmpFlowTab.classList.add('active');if(tmpJSONTab)tmpJSONTab.classList.remove('active');}else{if(tmpFlowWrap)tmpFlowWrap.style.display='none';if(tmpJSONWrap)tmpJSONWrap.style.display='';if(tmpFlowTab)tmpFlowTab.classList.remove('active');if(tmpJSONTab)tmpJSONTab.classList.add('active');// If there's a flow view, serialize flow → JSON
+if(this._FlowView&&typeof this._FlowView.getFlowData==='function'){let tmpConfig=this.flowToMappingConfig();let tmpJSONTextarea=document.getElementById('Facto-Proj-Mapping-JSON');if(tmpJSONTextarea){tmpJSONTextarea.value=JSON.stringify(tmpConfig,null,'\t');}}}}_populateSourceDropdown(pSelectedIDSource){let tmpSelect=document.getElementById('Facto-Proj-Mapping-Source');if(!tmpSelect)return;let tmpHtml='<option value="0">Select a source...</option>';for(let i=0;i<this._MappingSources.length;i++){let tmpSrc=this._MappingSources[i];let tmpSelected=tmpSrc.IDSource===pSelectedIDSource?' selected':'';tmpHtml+='<option value="'+tmpSrc.IDSource+'"'+tmpSelected+'>'+(tmpSrc.Name||'Source '+tmpSrc.IDSource)+'</option>';}tmpSelect.innerHTML=tmpHtml;}_populateStoreDropdown(pSelectedIDProjectionStore){let tmpSelect=document.getElementById('Facto-Proj-Import-Store');if(!tmpSelect)return;let tmpHtml='<option value="0">Select a store...</option>';for(let i=0;i<this._MappingStores.length;i++){let tmpStore=this._MappingStores[i];let tmpSelected=tmpStore.IDProjectionStore===pSelectedIDProjectionStore?' selected':'';tmpHtml+='<option value="'+tmpStore.IDProjectionStore+'"'+tmpSelected+'>'+(tmpStore.TargetTableName||'Store '+tmpStore.IDProjectionStore)+' ('+tmpStore.Status+')</option>';}tmpSelect.innerHTML=tmpHtml;}discoverSourceFields(){let tmpSourceSelect=document.getElementById('Facto-Proj-Mapping-Source');let tmpIDSource=tmpSourceSelect?parseInt(tmpSourceSelect.value,10):0;if(!tmpIDSource){alert('Select a source first.');return;}this.pict.providers.Facto.discoverFields(this._EditingIDDataset,tmpIDSource,50).then(pResponse=>{if(pResponse&&pResponse.Error){alert('Error: '+pResponse.Error);return;}let tmpHeaders=pResponse&&pResponse.Headers?pResponse.Headers:[];this._DiscoveredFields[tmpIDSource]=tmpHeaders;alert('Discovered '+tmpHeaders.length+' fields from '+(pResponse.SampleSize||0)+' records:\n\n'+tmpHeaders.join(', '));// Rebuild the flow if it exists
+this._rebuildFlowNodes();});}_rebuildFlowNodes(){// Get current source and schema columns
+let tmpSourceSelect=document.getElementById('Facto-Proj-Mapping-Source');let tmpIDSource=tmpSourceSelect?parseInt(tmpSourceSelect.value,10):0;let tmpFields=this._DiscoveredFields[tmpIDSource]||[];// Get schema columns from the projection
+let tmpSchemaColumns=this._getSchemaColumnsForProjection();// Initialize the flow view if needed
+this.initFlowView();if(!this._FlowView)return;// Build source node output ports from discovered fields
+let tmpSourcePorts=[{Name:'IDRecord',Side:'right'}];for(let i=0;i<tmpFields.length;i++){tmpSourcePorts.push({Name:tmpFields[i],Side:'right'});}// Build target node input ports from schema columns
+let tmpTargetPorts=[];for(let i=0;i<tmpSchemaColumns.length;i++){tmpTargetPorts.push({Name:tmpSchemaColumns[i],Side:'left'});}// Clear and rebuild the flow
+let tmpFlowContainer=document.getElementById('Facto-Proj-Flow-Container');if(tmpFlowContainer)tmpFlowContainer.innerHTML='';// Re-initialize
+this._FlowView=null;this.initFlowView();if(this._FlowView){// Add source node on the left
+let tmpSourceNode=this._FlowView.addNode('SRC',50,50,'Source: '+(tmpSourceSelect?tmpSourceSelect.options[tmpSourceSelect.selectedIndex].text:'Source'));if(tmpSourceNode){tmpSourceNode.Ports=[];for(let i=0;i<tmpSourcePorts.length;i++){tmpSourceNode.Ports.push({Hash:'src-port-'+i,Direction:'output',Side:'right',Label:tmpSourcePorts[i].Name});}}// Add target node on the right
+let tmpTargetNode=this._FlowView.addNode('TGT',500,50,'Target: '+(this._EditingName||'Projection'));if(tmpTargetNode){tmpTargetNode.Ports=[];for(let i=0;i<tmpTargetPorts.length;i++){tmpTargetNode.Ports.push({Hash:'tgt-port-'+i,Direction:'input',Side:'left',Label:tmpTargetPorts[i].Name});}}if(typeof this._FlowView.renderFlow==='function'){this._FlowView.renderFlow();}else if(typeof this._FlowView.render==='function'){this._FlowView.render();}}}_getSchemaColumnsForProjection(){// Find the projection dataset to get its schema
+let tmpColumns=[];for(let i=0;i<this._Projections.length;i++){if(this._Projections[i].IDDataset===this._EditingIDDataset){let tmpDDL=this._Projections[i].SchemaDefinition||'';if(tmpDDL){let tmpParsedColumns=this.microDDLToColumns(tmpDDL);for(let j=0;j<tmpParsedColumns.length;j++){tmpColumns.push(tmpParsedColumns[j].Name);}}break;}}return tmpColumns;}initFlowView(){if(this._FlowView)return;let tmpFlowContainer=document.getElementById('Facto-Proj-Flow-Container');if(!tmpFlowContainer)return;try{let libPictSectionFlow=require('pict-section-flow');this._FlowView=this.pict.addView('Facto-Mapping-Flow',{ViewIdentifier:'Facto-Mapping-Flow',DefaultDestinationAddress:'#Facto-Proj-Flow-Container',EnableToolbar:true,EnablePanning:true,EnableZooming:true,EnableNodeDragging:true,EnableConnectionCreation:true},libPictSectionFlow);// Register card types
+let libFlowCardSource=require('./flow-cards/FlowCard-SourceDataset.js');let libFlowCardTarget=require('./flow-cards/FlowCard-ProjectionTarget.js');let tmpSourceCard=this.pict.newServiceProvider('FlowCardSourceDataset',{},libFlowCardSource);let tmpTargetCard=this.pict.newServiceProvider('FlowCardProjectionTarget',{},libFlowCardTarget);tmpSourceCard.registerWithFlowView(this._FlowView);tmpTargetCard.registerWithFlowView(this._FlowView);if(typeof this._FlowView.render==='function'){this._FlowView.render();}}catch(pFlowError){this.log.error('Failed to initialize flow view: '+pFlowError.message);tmpFlowContainer.innerHTML='<div style="padding:2em; text-align:center; color:var(--facto-text-tertiary);">Flow editor could not be loaded. Use JSON Config mode instead.</div>';}}flowToMappingConfig(){let tmpConfig={Entity:(this._EditingName||'Record').replace(/[^a-zA-Z0-9_]/g,''),GUIDTemplate:'{~D:Record.IDRecord~}',GUIDName:'GUID',Mappings:{},Solvers:[],ManyfestAddresses:false};if(!this._FlowView||typeof this._FlowView.getFlowData!=='function'){return tmpConfig;}let tmpFlowData=this._FlowView.getFlowData();if(!tmpFlowData||!tmpFlowData.Connections)return tmpConfig;// Build a port hash→label map from nodes
+let tmpPortMap={};if(tmpFlowData.Nodes){for(let i=0;i<tmpFlowData.Nodes.length;i++){let tmpNode=tmpFlowData.Nodes[i];if(tmpNode.Ports){for(let j=0;j<tmpNode.Ports.length;j++){tmpPortMap[tmpNode.Ports[j].Hash]=tmpNode.Ports[j].Label;}}}}// Each connection: source output port label → source field, target input port label → target column
+for(let i=0;i<tmpFlowData.Connections.length;i++){let tmpConn=tmpFlowData.Connections[i];let tmpSourceField=tmpPortMap[tmpConn.SourcePortHash]||tmpConn.SourcePortHash||'';let tmpTargetColumn=tmpPortMap[tmpConn.TargetPortHash]||tmpConn.TargetPortHash||'';if(tmpTargetColumn&&tmpSourceField){// Check if the connection has custom template data
+let tmpTemplate=tmpConn.Data&&tmpConn.Data.Template?tmpConn.Data.Template:'{~D:Record.'+tmpSourceField+'~}';tmpConfig.Mappings[tmpTargetColumn]=tmpTemplate;}}return tmpConfig;}saveMapping(){let tmpNameInput=document.getElementById('Facto-Proj-Mapping-Name');let tmpSourceSelect=document.getElementById('Facto-Proj-Mapping-Source');let tmpStoreSelect=document.getElementById('Facto-Proj-Import-Store');let tmpName=tmpNameInput?tmpNameInput.value.trim():'';let tmpIDSource=tmpSourceSelect?parseInt(tmpSourceSelect.value,10):0;let tmpIDProjectionStore=tmpStoreSelect?parseInt(tmpStoreSelect.value,10):0;if(!tmpName){alert('Enter a mapping name.');return;}// Get mapping config
+let tmpMappingConfig;if(this._MapEditorMode==='json'){let tmpJSONTextarea=document.getElementById('Facto-Proj-Mapping-JSON');let tmpJSON=tmpJSONTextarea?tmpJSONTextarea.value:'{}';try{tmpMappingConfig=JSON.parse(tmpJSON);}catch(e){alert('Invalid JSON: '+e.message);return;}}else{tmpMappingConfig=this.flowToMappingConfig();}// Get flow diagram state
+let tmpFlowState={};if(this._FlowView&&typeof this._FlowView.getFlowData==='function'){tmpFlowState=this._FlowView.getFlowData();}let tmpData={Name:tmpName,IDSource:tmpIDSource,IDProjectionStore:tmpIDProjectionStore,MappingConfiguration:JSON.stringify(tmpMappingConfig),FlowDiagramState:JSON.stringify(tmpFlowState),Active:1};let tmpPromise;if(this._SelectedMappingID){tmpPromise=this.pict.providers.Facto.updateProjectionMapping(this._SelectedMappingID,tmpData);}else{tmpPromise=this.pict.providers.Facto.createProjectionMapping(this._EditingIDDataset,tmpData);}tmpPromise.then(pResponse=>{if(pResponse&&pResponse.Error){alert('Error: '+pResponse.Error);return;}// Update the selected mapping ID if it was a create
+if(pResponse&&pResponse.Mapping&&pResponse.Mapping.IDProjectionMapping){this._SelectedMappingID=pResponse.Mapping.IDProjectionMapping;}alert('Mapping saved.');// Refresh mapping list
+this.pict.providers.Facto.loadProjectionMappings(this._EditingIDDataset).then(pResult=>{this._CurrentMappings=pResult&&pResult.Mappings?pResult.Mappings:[];});});}executeImport(){let tmpStoreSelect=document.getElementById('Facto-Proj-Import-Store');let tmpBatchInput=document.getElementById('Facto-Proj-Import-Batch');let tmpImportLog=document.getElementById('Facto-Proj-Import-Log');let tmpIDProjectionStore=tmpStoreSelect?parseInt(tmpStoreSelect.value,10):0;let tmpBatchSize=tmpBatchInput?parseInt(tmpBatchInput.value,10):100;if(!this._SelectedMappingID){alert('Save the mapping first before running an import.');return;}if(!tmpIDProjectionStore){alert('Select a target store.');return;}if(tmpImportLog){tmpImportLog.style.display='block';tmpImportLog.textContent='Running import...';}this.pict.providers.Facto.executeImport(this._EditingIDDataset,this._SelectedMappingID,tmpIDProjectionStore,tmpBatchSize).then(pResponse=>{if(tmpImportLog){if(pResponse&&pResponse.Log){tmpImportLog.textContent=pResponse.Log;}else if(pResponse&&pResponse.Error){tmpImportLog.textContent='ERROR: '+pResponse.Error;}else{tmpImportLog.textContent='Import complete: '+JSON.stringify(pResponse,null,2);}}});}// ================================================================
+// Query (preserved from original view)
+// ================================================================
+runQuery(){let tmpDatasetID=parseInt((document.getElementById('Facto-Full-Proj-DatasetID')||{}).value)||0;let tmpType=(document.getElementById('Facto-Full-Proj-Type')||{}).value||'';let tmpParams={};if(tmpDatasetID)tmpParams.IDDataset=tmpDatasetID;if(tmpType)tmpParams.Type=tmpType;this.pict.providers.Facto.queryRecords(tmpParams).then(pResponse=>{this._showResults('Query Results',pResponse);});}runAggregate(){let tmpDatasetID=parseInt((document.getElementById('Facto-Full-Proj-DatasetID')||{}).value)||0;let tmpParams={};if(tmpDatasetID)tmpParams.IDDataset=tmpDatasetID;this.pict.providers.Facto.aggregateRecords(tmpParams).then(pResponse=>{this._showResults('Aggregate Results',pResponse);});}_showResults(pTitle,pData){let tmpContainer=document.getElementById('Facto-Full-Projections-Results');if(!tmpContainer)return;tmpContainer.style.display='block';let tmpRecordCount=pData&&pData.Records?pData.Records.length:pData&&pData.Aggregations?pData.Aggregations.length:0;let tmpHtml='<h3>'+pTitle+' ('+tmpRecordCount+')</h3>';tmpHtml+='<pre>'+JSON.stringify(pData,null,2)+'</pre>';tmpHtml+='<button class="facto-btn facto-btn-secondary" style="margin-top:0.5em;" onclick="document.getElementById(\'Facto-Full-Projections-Results\').style.display=\'none\'">Close</button>';tmpContainer.innerHTML=tmpHtml;}}module.exports=FactoFullProjectionsView;module.exports.default_configuration=_ViewConfiguration;},{"./flow-cards/FlowCard-ProjectionTarget.js":81,"./flow-cards/FlowCard-SourceDataset.js":82,"pict-section-flow":15,"pict-view":64}],75:[function(require,module,exports){const libPictView=require('pict-view');const libPictSectionObjectEditor=require('pict-section-objecteditor');const _ViewConfiguration={ViewIdentifier:"Facto-Full-RecordViewer",DefaultRenderable:"Facto-Full-RecordViewer-Content",DefaultDestinationAddress:"#Facto-Full-Content-Container",AutoRender:false,CSS:/*css*/`
 		.facto-record-viewer-back {
 			display: inline-flex;
 			align-items: center;
@@ -3296,7 +7514,7 @@ tmpHtml+='<div class="facto-record-meta-card">';tmpHtml+='<h3>Schema</h3>';tmpHt
 tmpHtml+='<div class="facto-record-meta-card">';tmpHtml+='<h3>Certainty</h3>';if(pCertainty&&pCertainty.CertaintyIndices&&pCertainty.CertaintyIndices.length>0){for(let i=0;i<pCertainty.CertaintyIndices.length;i++){let tmpCI=pCertainty.CertaintyIndices[i];let tmpPct=Math.round((tmpCI.CertaintyValue||0)*100);let tmpBarColor=tmpPct>=70?'#28a745':tmpPct>=40?'#ffc107':'#dc3545';tmpHtml+=this._metaRow(tmpCI.Dimension||'overall',tmpPct+'%');tmpHtml+='<div class="facto-record-certainty-bar"><div class="facto-record-certainty-fill" style="width:'+tmpPct+'%; background:'+tmpBarColor+';"></div></div>';if(tmpCI.Justification){tmpHtml+='<div style="font-size:0.75em; color:var(--facto-text-tertiary); margin-top:0.15em;">'+this._escapeHtml(tmpCI.Justification)+'</div>';}}}else{tmpHtml+='<div style="color:var(--facto-text-tertiary); font-size:0.85em;">No certainty data</div>';}tmpHtml+='</div>';return tmpHtml;}_metaRow(pLabel,pValue,pIsGuid,pIsHash){let tmpDisplayValue=this._escapeHtml(String(pValue||''));if(pIsGuid&&tmpDisplayValue.length>16){tmpDisplayValue='<span title="'+tmpDisplayValue+'">'+tmpDisplayValue.substring(0,8)+'\u2026'+tmpDisplayValue.substring(tmpDisplayValue.length-4)+'</span>';}let tmpValueClass='facto-record-meta-value';if(pIsHash){tmpValueClass+=' facto-hash-value';}return'<div class="facto-record-meta-row"><span class="facto-record-meta-label">'+this._escapeHtml(pLabel)+'</span><span class="'+tmpValueClass+'">'+tmpDisplayValue+'</span></div>';}_formatDate(pDateStr){if(!pDateStr)return'\u2014';try{// SQLite datetimes (e.g. "2026-03-15 19:07:43") lack a timezone
 // indicator, so new Date() would treat them as local time.
 // Append 'Z' to interpret them as UTC, matching ISO timestamps.
-let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.endsWith('Z')&&!tmpNormalized.match(/[+-]\d{2}:\d{2}$/)){tmpNormalized=tmpNormalized.replace(' ','T')+'Z';}let tmpDate=new Date(tmpNormalized);return tmpDate.toLocaleString();}catch(e){return pDateStr;}}_escapeHtml(pStr){return pStr.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}goBack(){this.pict.PictApplication.navigateTo('/Records');}}module.exports=FactoFullRecordViewerView;module.exports.default_configuration=_ViewConfiguration;},{"pict-section-objecteditor":23,"pict-view":33}],45:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-Records",DefaultRenderable:"Facto-Full-Records-Content",DefaultDestinationAddress:"#Facto-Full-Content-Container",AutoRender:false,CSS:/*css*/`
+let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.endsWith('Z')&&!tmpNormalized.match(/[+-]\d{2}:\d{2}$/)){tmpNormalized=tmpNormalized.replace(' ','T')+'Z';}let tmpDate=new Date(tmpNormalized);return tmpDate.toLocaleString();}catch(e){return pDateStr;}}_escapeHtml(pStr){return pStr.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}goBack(){this.pict.PictApplication.navigateTo('/Records');}}module.exports=FactoFullRecordViewerView;module.exports.default_configuration=_ViewConfiguration;},{"pict-section-objecteditor":54,"pict-view":64}],76:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-Records",DefaultRenderable:"Facto-Full-Records-Content",DefaultDestinationAddress:"#Facto-Full-Content-Container",AutoRender:false,CSS:/*css*/`
 		.facto-records-pager {
 			display: flex;
 			align-items: center;
@@ -3331,7 +7549,7 @@ let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.en
 
 	<div id="Facto-Full-Records-List"></div>
 </div>
-`}],Renderables:[{RenderableHash:"Facto-Full-Records-Content",TemplateHash:"Facto-Full-Records-Template",DestinationAddress:"#Facto-Full-Content-Container",RenderMethod:"replace"}]};class FactoFullRecordsView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent){this.pict.providers.Facto.loadRecords(this.pict.AppData.Facto.RecordPage).then(()=>{this.refreshList();});return super.onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent);}refreshList(){let tmpContainer=document.getElementById('Facto-Full-Records-List');if(!tmpContainer)return;let tmpRecords=this.pict.AppData.Facto.Records;let tmpPageInfo=document.getElementById('Facto-Full-Records-PageInfo');if(tmpPageInfo)tmpPageInfo.textContent='Page '+((this.pict.AppData.Facto.RecordPage||0)+1);if(!tmpRecords||tmpRecords.length===0){tmpContainer.innerHTML='<div class="facto-empty">No records found. Ingest data via Source Research or the Ingest API.</div>';return;}let tmpHtml='<table><thead><tr><th>ID</th><th>Dataset</th><th>Source</th><th>GUID</th><th>Data</th><th></th></tr></thead><tbody>';for(let i=0;i<tmpRecords.length;i++){let tmpRec=tmpRecords[i];let tmpData='';try{tmpData=JSON.stringify(JSON.parse(tmpRec.Content||'{}'));}catch(e){tmpData=tmpRec.Content||'';}tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpRec.IDRecord||'')+'</td>';tmpHtml+='<td>'+(tmpRec.IDDataset||'')+'</td>';tmpHtml+='<td>'+(tmpRec.IDSource||'')+'</td>';tmpHtml+='<td style="font-size:0.8em; color:var(--facto-text-tertiary);">'+(tmpRec.GUIDRecord||'').substring(0,8)+'...</td>';tmpHtml+='<td class="facto-record-data">'+tmpData+'</td>';tmpHtml+='<td><button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.PictApplication.navigateTo(\'/Record/'+tmpRec.IDRecord+'\')">View</button></td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}prevPage(){if(this.pict.AppData.Facto.RecordPage>0){this.pict.AppData.Facto.RecordPage--;this.pict.providers.Facto.loadRecords(this.pict.AppData.Facto.RecordPage).then(()=>{this.refreshList();});}}nextPage(){this.pict.AppData.Facto.RecordPage++;this.pict.providers.Facto.loadRecords(this.pict.AppData.Facto.RecordPage).then(()=>{this.refreshList();});}}module.exports=FactoFullRecordsView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":33}],46:[function(require,module,exports){const libPictView=require('pict-view');const libPictSectionMarkdownEditor=require('pict-section-markdowneditor');const libPictSectionContent=require('pict-section-content');const _ViewConfiguration={ViewIdentifier:"Facto-Full-SourceDetail",DefaultRenderable:"Facto-Full-SourceDetail-Content",DefaultDestinationAddress:"#Facto-Full-Content-Container",AutoRender:false,CSS:/*css*/`
+`}],Renderables:[{RenderableHash:"Facto-Full-Records-Content",TemplateHash:"Facto-Full-Records-Template",DestinationAddress:"#Facto-Full-Content-Container",RenderMethod:"replace"}]};class FactoFullRecordsView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent){this.pict.providers.Facto.loadRecords(this.pict.AppData.Facto.RecordPage).then(()=>{this.refreshList();});return super.onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent);}refreshList(){let tmpContainer=document.getElementById('Facto-Full-Records-List');if(!tmpContainer)return;let tmpRecords=this.pict.AppData.Facto.Records;let tmpPageInfo=document.getElementById('Facto-Full-Records-PageInfo');if(tmpPageInfo)tmpPageInfo.textContent='Page '+((this.pict.AppData.Facto.RecordPage||0)+1);if(!tmpRecords||tmpRecords.length===0){tmpContainer.innerHTML='<div class="facto-empty">No records found. Ingest data via Source Research or the Ingest API.</div>';return;}let tmpHtml='<table><thead><tr><th>ID</th><th>Dataset</th><th>Source</th><th>GUID</th><th>Data</th><th></th></tr></thead><tbody>';for(let i=0;i<tmpRecords.length;i++){let tmpRec=tmpRecords[i];let tmpData='';try{tmpData=JSON.stringify(JSON.parse(tmpRec.Content||'{}'));}catch(e){tmpData=tmpRec.Content||'';}tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpRec.IDRecord||'')+'</td>';tmpHtml+='<td>'+(tmpRec.IDDataset||'')+'</td>';tmpHtml+='<td>'+(tmpRec.IDSource||'')+'</td>';tmpHtml+='<td style="font-size:0.8em; color:var(--facto-text-tertiary);">'+(tmpRec.GUIDRecord||'').substring(0,8)+'...</td>';tmpHtml+='<td class="facto-record-data">'+tmpData+'</td>';tmpHtml+='<td><button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.PictApplication.navigateTo(\'/Record/'+tmpRec.IDRecord+'\')">View</button></td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}prevPage(){if(this.pict.AppData.Facto.RecordPage>0){this.pict.AppData.Facto.RecordPage--;this.pict.providers.Facto.loadRecords(this.pict.AppData.Facto.RecordPage).then(()=>{this.refreshList();});}}nextPage(){this.pict.AppData.Facto.RecordPage++;this.pict.providers.Facto.loadRecords(this.pict.AppData.Facto.RecordPage).then(()=>{this.refreshList();});}}module.exports=FactoFullRecordsView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":64}],77:[function(require,module,exports){const libPictView=require('pict-view');const libPictSectionMarkdownEditor=require('pict-section-markdowneditor');const libPictSectionContent=require('pict-section-content');const _ViewConfiguration={ViewIdentifier:"Facto-Full-SourceDetail",DefaultRenderable:"Facto-Full-SourceDetail-Content",DefaultDestinationAddress:"#Facto-Full-Content-Container",AutoRender:false,CSS:/*css*/`
 		.facto-source-detail-back {
 			display: inline-flex;
 			align-items: center;
@@ -4120,7 +8338,7 @@ let tmpUntitledCount=0;if(this._Documentation){for(let i=0;i<this._Documentation
 if(tmpNameInput)tmpNameInput.value='';// Reload doc list and auto-select the new doc
 let tmpNewID=pResponse.Documentation.IDSourceDocumentation;return tmpProvider.loadSourceDocumentation(this._CurrentIDSource).then(pDocsResponse=>{this._Documentation=pDocsResponse&&pDocsResponse.Documentation?pDocsResponse.Documentation:[];this._renderDocList();this.selectDocument(tmpNewID);});}});}closeDocument(){let tmpEditorWrap=document.getElementById('Facto-SourceDetail-EditorWrap');let tmpContentWrap=document.getElementById('Facto-SourceDetail-ContentWrap');if(tmpEditorWrap)tmpEditorWrap.style.display='none';if(tmpContentWrap)tmpContentWrap.style.display='none';this._CurrentIDDoc=null;this._CurrentDocContent='';// Update URL to remove doc reference
 if(window.history&&window.history.replaceState){window.history.replaceState(null,'','#/Source/'+this._CurrentIDSource);}// Re-render doc list to clear active highlight
-this._renderDocList();}_setEditorStatus(pMessage,pType){let tmpNameEl=document.getElementById('Facto-SourceDetail-DocName');if(tmpNameEl){let tmpOriginal=this._CurrentDocName;tmpNameEl.textContent=tmpOriginal+' \u2014 '+pMessage;setTimeout(()=>{if(tmpNameEl)tmpNameEl.textContent=tmpOriginal;},2000);}}goBack(){this.pict.PictApplication.navigateTo('/SourceResearch');}}module.exports=FactoFullSourceDetailView;module.exports.default_configuration=_ViewConfiguration;},{"pict-section-content":12,"pict-section-markdowneditor":21,"pict-view":33}],47:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-SourceResearch",DefaultRenderable:"Facto-Full-SourceResearch-Content",DefaultDestinationAddress:"#Facto-Full-Content-Container",AutoRender:false,CSS:/*css*/`
+this._renderDocList();}_setEditorStatus(pMessage,pType){let tmpNameEl=document.getElementById('Facto-SourceDetail-DocName');if(tmpNameEl){let tmpOriginal=this._CurrentDocName;tmpNameEl.textContent=tmpOriginal+' \u2014 '+pMessage;setTimeout(()=>{if(tmpNameEl)tmpNameEl.textContent=tmpOriginal;},2000);}}goBack(){this.pict.PictApplication.navigateTo('/SourceResearch');}}module.exports=FactoFullSourceDetailView;module.exports.default_configuration=_ViewConfiguration;},{"pict-section-content":12,"pict-section-markdowneditor":52,"pict-view":64}],78:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-SourceResearch",DefaultRenderable:"Facto-Full-SourceResearch-Content",DefaultDestinationAddress:"#Facto-Full-Content-Container",AutoRender:false,CSS:/*css*/`
 		.facto-research-search {
 			display: flex;
 			gap: 0.75em;
@@ -4171,7 +8389,7 @@ this._renderDocList();}_setEditorStatus(pMessage,pType){let tmpNameEl=document.g
 		</div>
 	</div>
 </div>
-`}],Renderables:[{RenderableHash:"Facto-Full-SourceResearch-Content",TemplateHash:"Facto-Full-SourceResearch-Template",DestinationAddress:"#Facto-Full-Content-Container",RenderMethod:"replace"}]};class FactoFullSourceResearchView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent){this._SourceLinks={};Promise.all([this.pict.providers.Facto.loadCatalogEntries(),this.pict.providers.Facto.loadCatalogSourceLinks()]).then(pResults=>{let tmpLinksResponse=pResults[1];if(tmpLinksResponse&&tmpLinksResponse.Links){this._SourceLinks=tmpLinksResponse.Links;}this.refreshList();});return super.onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent);}setStatus(pMessage,pType){let tmpEl=document.getElementById('Facto-Full-Research-Status');if(!tmpEl)return;tmpEl.className='facto-status facto-status-'+(pType||'info');tmpEl.textContent=pMessage;tmpEl.style.display='block';}refreshList(){let tmpContainer=document.getElementById('Facto-Full-Research-List');if(!tmpContainer)return;let tmpEntries=this.pict.AppData.Facto.CatalogEntries;if(!tmpEntries||tmpEntries.length===0){tmpContainer.innerHTML='<div class="facto-empty">No catalog entries yet. Import a catalog or add sources manually.</div>';return;}let tmpHtml='<table><thead><tr><th>ID</th><th>Agency</th><th>Name</th><th>Type</th><th>Category</th><th>Region</th><th>Verified</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpEntries.length;i++){let tmpEntry=tmpEntries[i];let tmpVerified=tmpEntry.Verified?'<span class="facto-badge facto-badge-success">Yes</span>':'<span class="facto-badge facto-badge-muted">No</span>';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpEntry.IDSourceCatalogEntry||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Agency||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Name||'')+'</td>';tmpHtml+='<td><span class="facto-badge facto-badge-primary">'+(tmpEntry.Type||'')+'</span></td>';tmpHtml+='<td>'+(tmpEntry.Category||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Region||'')+'</td>';tmpHtml+='<td>'+tmpVerified+'</td>';tmpHtml+='<td>';let tmpLinkedSource=this._SourceLinks&&this._SourceLinks[tmpEntry.IDSourceCatalogEntry];if(tmpLinkedSource){tmpHtml+='<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.PictApplication.navigateTo(\'/Source/'+tmpLinkedSource+'\')">View Source &rarr;</button> ';}tmpHtml+='<button class="facto-btn facto-btn-primary facto-btn-small" onclick="pict.views[\'Facto-Full-SourceResearch\'].viewEntry('+tmpEntry.IDSourceCatalogEntry+')">Datasets</button> ';tmpHtml+='<button class="facto-btn facto-btn-danger facto-btn-small" onclick="pict.views[\'Facto-Full-SourceResearch\'].deleteEntry('+tmpEntry.IDSourceCatalogEntry+')">Delete</button>';tmpHtml+='</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}searchCatalog(){let tmpQuery=(document.getElementById('Facto-Full-Research-Search')||{}).value||'';if(!tmpQuery){this.pict.providers.Facto.loadCatalogEntries().then(()=>{this.refreshList();});return;}this.pict.providers.Facto.searchCatalog(tmpQuery).then(pResponse=>{this.pict.AppData.Facto.CatalogEntries=pResponse&&pResponse.Entries?pResponse.Entries:[];this.refreshList();});}deleteEntry(pIDEntry){if(!confirm('Remove this catalog entry?'))return;this.pict.providers.Facto.deleteCatalogEntry(pIDEntry).then(()=>{return this.pict.providers.Facto.loadCatalogEntries();}).then(()=>{this.refreshList();this.setStatus('Entry removed','ok');});}viewEntry(pIDEntry){let tmpDetail=document.getElementById('Facto-Full-Research-Detail');if(!tmpDetail)return;tmpDetail.style.display='block';this.pict.providers.Facto.loadCatalogEntryDatasets(pIDEntry).then(pResponse=>{let tmpDatasets=pResponse&&pResponse.Datasets?pResponse.Datasets:[];let tmpHtml='<h3>Dataset Definitions for Entry #'+pIDEntry+'</h3>';if(tmpDatasets.length===0){tmpHtml+='<div class="facto-empty">No dataset definitions yet.</div>';}else{tmpHtml+='<table><thead><tr><th>ID</th><th>Name</th><th>Format</th><th>Endpoint URL</th><th>Policy</th><th>Status</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpDatasets.length;i++){let tmpDS=tmpDatasets[i];let tmpStatus=tmpDS.Provisioned?'<span class="facto-badge facto-badge-success">Provisioned</span>':'<span class="facto-badge facto-badge-muted">Not provisioned</span>';let tmpAction='';if(tmpDS.Provisioned){tmpAction='<button class="facto-btn facto-btn-primary facto-btn-small" onclick="pict.views[\'Facto-Full-SourceResearch\'].fetchDataset('+tmpDS.IDCatalogDatasetDefinition+', '+pIDEntry+')">Fetch</button>';if(tmpDS.IDSource){tmpAction+=' <button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.PictApplication.navigateTo(\'/Source/'+tmpDS.IDSource+'\')">View Source &rarr;</button>';}}else{tmpAction='<button class="facto-btn facto-btn-success facto-btn-small" onclick="pict.views[\'Facto-Full-SourceResearch\'].provisionDataset('+tmpDS.IDCatalogDatasetDefinition+', '+pIDEntry+')">Provision</button>';}tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpDS.IDCatalogDatasetDefinition||'')+'</td>';tmpHtml+='<td>'+(tmpDS.Name||'')+'</td>';tmpHtml+='<td><span class="facto-badge facto-badge-primary">'+(tmpDS.Format||'')+'</span></td>';tmpHtml+='<td style="max-width:250px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">'+(tmpDS.EndpointURL||'')+'</td>';tmpHtml+='<td>'+(tmpDS.VersionPolicy||'Append')+'</td>';tmpHtml+='<td>'+tmpStatus+'</td>';tmpHtml+='<td>'+tmpAction+'</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';}tmpHtml+='<div style="margin-top:1em;"><button class="facto-btn facto-btn-secondary" onclick="document.getElementById(\'Facto-Full-Research-Detail\').style.display=\'none\'">Close</button></div>';tmpDetail.innerHTML=tmpHtml;});}provisionDataset(pIDCatalogDataset,pIDEntry){this.setStatus('Provisioning...','info');this.pict.providers.Facto.provisionCatalogDataset(pIDCatalogDataset).then(pResponse=>{if(pResponse&&pResponse.Success){let tmpStatusEl=document.getElementById('Facto-Full-Research-Status');if(tmpStatusEl){tmpStatusEl.className='facto-status facto-status-ok';tmpStatusEl.innerHTML='Provisioned! Source: '+(pResponse.Source.Hash||pResponse.Source.Name)+' (#'+pResponse.Source.IDSource+'), Dataset: '+(pResponse.Dataset.Hash||pResponse.Dataset.Name)+' (#'+pResponse.Dataset.IDDataset+') &mdash; <a href="#/Source/'+pResponse.Source.IDSource+'" style="color:var(--facto-brand);text-decoration:underline;cursor:pointer;">View Source \u2192</a>';tmpStatusEl.style.display='block';}this.viewEntry(pIDEntry);}else{this.setStatus('Error: '+(pResponse&&pResponse.Error||'Unknown'),'error');}});}fetchDataset(pIDCatalogDataset,pIDEntry){this.setStatus('Fetching data from endpoint...','info');this.pict.providers.Facto.fetchCatalogDataset(pIDCatalogDataset).then(pResponse=>{if(pResponse&&pResponse.Success){let tmpMsg='Fetched! '+pResponse.Ingested+' records ingested (v'+pResponse.DatasetVersion+', '+pResponse.Format+')';if(pResponse.IsDuplicate)tmpMsg+=' [duplicate content]';this.setStatus(tmpMsg,'ok');this.viewEntry(pIDEntry);}else{this.setStatus('Fetch error: '+(pResponse&&pResponse.Error||'Unknown'),'error');}});}importCatalog(){let tmpTextArea=document.getElementById('Facto-Full-Research-ImportJSON');if(!tmpTextArea||!tmpTextArea.value){this.setStatus('Paste JSON to import','warn');return;}let tmpEntries;try{tmpEntries=JSON.parse(tmpTextArea.value);}catch(pErr){this.setStatus('Invalid JSON: '+pErr.message,'error');return;}this.pict.providers.Facto.importCatalog(tmpEntries).then(pResponse=>{if(pResponse&&pResponse.Success){this.setStatus('Imported '+pResponse.EntriesCreated+' entries with '+pResponse.DatasetsCreated+' datasets','ok');tmpTextArea.value='';return this.pict.providers.Facto.loadCatalogEntries();}else{this.setStatus('Import error: '+(pResponse&&pResponse.Error||'Unknown'),'error');}}).then(()=>{this.refreshList();});}exportCatalog(){this.pict.providers.Facto.exportCatalog().then(pResponse=>{let tmpTextArea=document.getElementById('Facto-Full-Research-ImportJSON');if(tmpTextArea){tmpTextArea.value=JSON.stringify(pResponse&&pResponse.Entries?pResponse.Entries:pResponse,null,2);}this.setStatus('Catalog exported to JSON text area','ok');});}}module.exports=FactoFullSourceResearchView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":33}],48:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-Sources",DefaultRenderable:"Facto-Full-Sources-Content",DefaultDestinationAddress:"#Facto-Full-Content-Container",AutoRender:false,Templates:[{Hash:"Facto-Full-Sources-Template",Template:/*html*/`
+`}],Renderables:[{RenderableHash:"Facto-Full-SourceResearch-Content",TemplateHash:"Facto-Full-SourceResearch-Template",DestinationAddress:"#Facto-Full-Content-Container",RenderMethod:"replace"}]};class FactoFullSourceResearchView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent){this._SourceLinks={};Promise.all([this.pict.providers.Facto.loadCatalogEntries(),this.pict.providers.Facto.loadCatalogSourceLinks()]).then(pResults=>{let tmpLinksResponse=pResults[1];if(tmpLinksResponse&&tmpLinksResponse.Links){this._SourceLinks=tmpLinksResponse.Links;}this.refreshList();});return super.onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent);}setStatus(pMessage,pType){let tmpEl=document.getElementById('Facto-Full-Research-Status');if(!tmpEl)return;tmpEl.className='facto-status facto-status-'+(pType||'info');tmpEl.textContent=pMessage;tmpEl.style.display='block';}refreshList(){let tmpContainer=document.getElementById('Facto-Full-Research-List');if(!tmpContainer)return;let tmpEntries=this.pict.AppData.Facto.CatalogEntries;if(!tmpEntries||tmpEntries.length===0){tmpContainer.innerHTML='<div class="facto-empty">No catalog entries yet. Import a catalog or add sources manually.</div>';return;}let tmpHtml='<table><thead><tr><th>ID</th><th>Agency</th><th>Name</th><th>Type</th><th>Category</th><th>Region</th><th>Verified</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpEntries.length;i++){let tmpEntry=tmpEntries[i];let tmpVerified=tmpEntry.Verified?'<span class="facto-badge facto-badge-success">Yes</span>':'<span class="facto-badge facto-badge-muted">No</span>';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpEntry.IDSourceCatalogEntry||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Agency||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Name||'')+'</td>';tmpHtml+='<td><span class="facto-badge facto-badge-primary">'+(tmpEntry.Type||'')+'</span></td>';tmpHtml+='<td>'+(tmpEntry.Category||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Region||'')+'</td>';tmpHtml+='<td>'+tmpVerified+'</td>';tmpHtml+='<td>';let tmpLinkedSource=this._SourceLinks&&this._SourceLinks[tmpEntry.IDSourceCatalogEntry];if(tmpLinkedSource){tmpHtml+='<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.PictApplication.navigateTo(\'/Source/'+tmpLinkedSource+'\')">View Source &rarr;</button> ';}tmpHtml+='<button class="facto-btn facto-btn-primary facto-btn-small" onclick="pict.views[\'Facto-Full-SourceResearch\'].viewEntry('+tmpEntry.IDSourceCatalogEntry+')">Datasets</button> ';tmpHtml+='<button class="facto-btn facto-btn-danger facto-btn-small" onclick="pict.views[\'Facto-Full-SourceResearch\'].deleteEntry('+tmpEntry.IDSourceCatalogEntry+')">Delete</button>';tmpHtml+='</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}searchCatalog(){let tmpQuery=(document.getElementById('Facto-Full-Research-Search')||{}).value||'';if(!tmpQuery){this.pict.providers.Facto.loadCatalogEntries().then(()=>{this.refreshList();});return;}this.pict.providers.Facto.searchCatalog(tmpQuery).then(pResponse=>{this.pict.AppData.Facto.CatalogEntries=pResponse&&pResponse.Entries?pResponse.Entries:[];this.refreshList();});}deleteEntry(pIDEntry){if(!confirm('Remove this catalog entry?'))return;this.pict.providers.Facto.deleteCatalogEntry(pIDEntry).then(()=>{return this.pict.providers.Facto.loadCatalogEntries();}).then(()=>{this.refreshList();this.setStatus('Entry removed','ok');});}viewEntry(pIDEntry){let tmpDetail=document.getElementById('Facto-Full-Research-Detail');if(!tmpDetail)return;tmpDetail.style.display='block';this.pict.providers.Facto.loadCatalogEntryDatasets(pIDEntry).then(pResponse=>{let tmpDatasets=pResponse&&pResponse.Datasets?pResponse.Datasets:[];let tmpHtml='<h3>Dataset Definitions for Entry #'+pIDEntry+'</h3>';if(tmpDatasets.length===0){tmpHtml+='<div class="facto-empty">No dataset definitions yet.</div>';}else{tmpHtml+='<table><thead><tr><th>ID</th><th>Name</th><th>Format</th><th>Endpoint URL</th><th>Policy</th><th>Status</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpDatasets.length;i++){let tmpDS=tmpDatasets[i];let tmpStatus=tmpDS.Provisioned?'<span class="facto-badge facto-badge-success">Provisioned</span>':'<span class="facto-badge facto-badge-muted">Not provisioned</span>';let tmpAction='';if(tmpDS.Provisioned){tmpAction='<button class="facto-btn facto-btn-primary facto-btn-small" onclick="pict.views[\'Facto-Full-SourceResearch\'].fetchDataset('+tmpDS.IDCatalogDatasetDefinition+', '+pIDEntry+')">Fetch</button>';if(tmpDS.IDSource){tmpAction+=' <button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.PictApplication.navigateTo(\'/Source/'+tmpDS.IDSource+'\')">View Source &rarr;</button>';}}else{tmpAction='<button class="facto-btn facto-btn-success facto-btn-small" onclick="pict.views[\'Facto-Full-SourceResearch\'].provisionDataset('+tmpDS.IDCatalogDatasetDefinition+', '+pIDEntry+')">Provision</button>';}tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpDS.IDCatalogDatasetDefinition||'')+'</td>';tmpHtml+='<td>'+(tmpDS.Name||'')+'</td>';tmpHtml+='<td><span class="facto-badge facto-badge-primary">'+(tmpDS.Format||'')+'</span></td>';tmpHtml+='<td style="max-width:250px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">'+(tmpDS.EndpointURL||'')+'</td>';tmpHtml+='<td>'+(tmpDS.VersionPolicy||'Append')+'</td>';tmpHtml+='<td>'+tmpStatus+'</td>';tmpHtml+='<td>'+tmpAction+'</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';}tmpHtml+='<div style="margin-top:1em;"><button class="facto-btn facto-btn-secondary" onclick="document.getElementById(\'Facto-Full-Research-Detail\').style.display=\'none\'">Close</button></div>';tmpDetail.innerHTML=tmpHtml;});}provisionDataset(pIDCatalogDataset,pIDEntry){this.setStatus('Provisioning...','info');this.pict.providers.Facto.provisionCatalogDataset(pIDCatalogDataset).then(pResponse=>{if(pResponse&&pResponse.Success){let tmpStatusEl=document.getElementById('Facto-Full-Research-Status');if(tmpStatusEl){tmpStatusEl.className='facto-status facto-status-ok';tmpStatusEl.innerHTML='Provisioned! Source: '+(pResponse.Source.Hash||pResponse.Source.Name)+' (#'+pResponse.Source.IDSource+'), Dataset: '+(pResponse.Dataset.Hash||pResponse.Dataset.Name)+' (#'+pResponse.Dataset.IDDataset+') &mdash; <a href="#/Source/'+pResponse.Source.IDSource+'" style="color:var(--facto-brand);text-decoration:underline;cursor:pointer;">View Source \u2192</a>';tmpStatusEl.style.display='block';}this.viewEntry(pIDEntry);}else{this.setStatus('Error: '+(pResponse&&pResponse.Error||'Unknown'),'error');}});}fetchDataset(pIDCatalogDataset,pIDEntry){this.setStatus('Fetching data from endpoint...','info');this.pict.providers.Facto.fetchCatalogDataset(pIDCatalogDataset).then(pResponse=>{if(pResponse&&pResponse.Success){let tmpMsg='Fetched! '+pResponse.Ingested+' records ingested (v'+pResponse.DatasetVersion+', '+pResponse.Format+')';if(pResponse.IsDuplicate)tmpMsg+=' [duplicate content]';this.setStatus(tmpMsg,'ok');this.viewEntry(pIDEntry);}else{this.setStatus('Fetch error: '+(pResponse&&pResponse.Error||'Unknown'),'error');}});}importCatalog(){let tmpTextArea=document.getElementById('Facto-Full-Research-ImportJSON');if(!tmpTextArea||!tmpTextArea.value){this.setStatus('Paste JSON to import','warn');return;}let tmpEntries;try{tmpEntries=JSON.parse(tmpTextArea.value);}catch(pErr){this.setStatus('Invalid JSON: '+pErr.message,'error');return;}this.pict.providers.Facto.importCatalog(tmpEntries).then(pResponse=>{if(pResponse&&pResponse.Success){this.setStatus('Imported '+pResponse.EntriesCreated+' entries with '+pResponse.DatasetsCreated+' datasets','ok');tmpTextArea.value='';return this.pict.providers.Facto.loadCatalogEntries();}else{this.setStatus('Import error: '+(pResponse&&pResponse.Error||'Unknown'),'error');}}).then(()=>{this.refreshList();});}exportCatalog(){this.pict.providers.Facto.exportCatalog().then(pResponse=>{let tmpTextArea=document.getElementById('Facto-Full-Research-ImportJSON');if(tmpTextArea){tmpTextArea.value=JSON.stringify(pResponse&&pResponse.Entries?pResponse.Entries:pResponse,null,2);}this.setStatus('Catalog exported to JSON text area','ok');});}}module.exports=FactoFullSourceResearchView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":64}],79:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-Sources",DefaultRenderable:"Facto-Full-Sources-Content",DefaultDestinationAddress:"#Facto-Full-Content-Container",AutoRender:false,Templates:[{Hash:"Facto-Full-Sources-Template",Template:/*html*/`
 <div class="facto-content">
 	<div class="facto-content-header">
 		<h1>Sources</h1>
@@ -4206,7 +8424,7 @@ this._renderDocList();}_setEditorStatus(pMessage,pType){let tmpNameEl=document.g
 
 	<div id="Facto-Full-Sources-Status" class="facto-status" style="display:none;"></div>
 </div>
-`}],Renderables:[{RenderableHash:"Facto-Full-Sources-Content",TemplateHash:"Facto-Full-Sources-Template",DestinationAddress:"#Facto-Full-Content-Container",RenderMethod:"replace"}]};class FactoFullSourcesView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent){this.pict.providers.Facto.loadSources().then(()=>{this.refreshList();});return super.onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent);}setStatus(pMessage,pType){let tmpEl=document.getElementById('Facto-Full-Sources-Status');if(!tmpEl)return;tmpEl.className='facto-status facto-status-'+(pType||'info');tmpEl.textContent=pMessage;tmpEl.style.display='block';}refreshList(){let tmpContainer=document.getElementById('Facto-Full-Sources-List');if(!tmpContainer)return;let tmpSources=this.pict.AppData.Facto.Sources;if(!tmpSources||tmpSources.length===0){tmpContainer.innerHTML='<div class="facto-empty">No sources yet. Add one below or provision from Source Research.</div>';return;}let tmpHtml='<table><thead><tr><th>ID</th><th>Hash</th><th>Name</th><th>Type</th><th>URL</th><th>Active</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpSources.length;i++){let tmpSource=tmpSources[i];let tmpActive=tmpSource.Active?'<span class="facto-badge facto-badge-success">Active</span>':'<span class="facto-badge facto-badge-muted">Inactive</span>';let tmpToggleBtn=tmpSource.Active?'<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.views[\'Facto-Full-Sources\'].toggleActive('+tmpSource.IDSource+', false)">Deactivate</button>':'<button class="facto-btn facto-btn-success facto-btn-small" onclick="pict.views[\'Facto-Full-Sources\'].toggleActive('+tmpSource.IDSource+', true)">Activate</button>';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpSource.IDSource||'')+'</td>';tmpHtml+='<td><code>'+(tmpSource.Hash||'-')+'</code></td>';tmpHtml+='<td>'+(tmpSource.Name||'')+'</td>';tmpHtml+='<td><span class="facto-badge facto-badge-primary">'+(tmpSource.Type||'')+'</span></td>';tmpHtml+='<td style="max-width:250px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">'+(tmpSource.URL||'')+'</td>';tmpHtml+='<td>'+tmpActive+'</td>';let tmpViewBtn='<button class="facto-btn facto-btn-primary facto-btn-small" onclick="pict.PictApplication.navigateTo(\'/Source/'+tmpSource.IDSource+'\')">View</button>';tmpHtml+='<td>'+tmpViewBtn+' '+tmpToggleBtn+'</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}toggleActive(pIDSource,pActivate){let tmpPromise=pActivate?this.pict.providers.Facto.activateSource(pIDSource):this.pict.providers.Facto.deactivateSource(pIDSource);tmpPromise.then(()=>{return this.pict.providers.Facto.loadSources();}).then(()=>{this.refreshList();this.setStatus(pActivate?'Source activated':'Source deactivated','ok');});}addSource(){let tmpName=(document.getElementById('Facto-Full-Source-Name')||{}).value||'';let tmpType=(document.getElementById('Facto-Full-Source-Type')||{}).value||'';let tmpURL=(document.getElementById('Facto-Full-Source-URL')||{}).value||'';if(!tmpName){this.setStatus('Source name is required','warn');return;}this.pict.providers.Facto.createSource({Name:tmpName,Type:tmpType,URL:tmpURL,Active:1}).then(pResponse=>{if(pResponse&&pResponse.IDSource){this.setStatus('Source created: '+tmpName,'ok');document.getElementById('Facto-Full-Source-Name').value='';document.getElementById('Facto-Full-Source-URL').value='';return this.pict.providers.Facto.loadSources();}else{this.setStatus('Error creating source','error');}}).then(()=>{this.refreshList();});}}module.exports=FactoFullSourcesView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":33}],49:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-TopBar",DefaultRenderable:"Facto-Full-TopBar-Content",DefaultDestinationAddress:"#Facto-Full-TopBar-Container",AutoRender:false,CSS:/*css*/`
+`}],Renderables:[{RenderableHash:"Facto-Full-Sources-Content",TemplateHash:"Facto-Full-Sources-Template",DestinationAddress:"#Facto-Full-Content-Container",RenderMethod:"replace"}]};class FactoFullSourcesView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent){this.pict.providers.Facto.loadSources().then(()=>{this.refreshList();});return super.onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent);}setStatus(pMessage,pType){let tmpEl=document.getElementById('Facto-Full-Sources-Status');if(!tmpEl)return;tmpEl.className='facto-status facto-status-'+(pType||'info');tmpEl.textContent=pMessage;tmpEl.style.display='block';}refreshList(){let tmpContainer=document.getElementById('Facto-Full-Sources-List');if(!tmpContainer)return;let tmpSources=this.pict.AppData.Facto.Sources;if(!tmpSources||tmpSources.length===0){tmpContainer.innerHTML='<div class="facto-empty">No sources yet. Add one below or provision from Source Research.</div>';return;}let tmpHtml='<table><thead><tr><th>ID</th><th>Hash</th><th>Name</th><th>Type</th><th>URL</th><th>Active</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpSources.length;i++){let tmpSource=tmpSources[i];let tmpActive=tmpSource.Active?'<span class="facto-badge facto-badge-success">Active</span>':'<span class="facto-badge facto-badge-muted">Inactive</span>';let tmpToggleBtn=tmpSource.Active?'<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.views[\'Facto-Full-Sources\'].toggleActive('+tmpSource.IDSource+', false)">Deactivate</button>':'<button class="facto-btn facto-btn-success facto-btn-small" onclick="pict.views[\'Facto-Full-Sources\'].toggleActive('+tmpSource.IDSource+', true)">Activate</button>';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpSource.IDSource||'')+'</td>';tmpHtml+='<td><code>'+(tmpSource.Hash||'-')+'</code></td>';tmpHtml+='<td>'+(tmpSource.Name||'')+'</td>';tmpHtml+='<td><span class="facto-badge facto-badge-primary">'+(tmpSource.Type||'')+'</span></td>';tmpHtml+='<td style="max-width:250px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">'+(tmpSource.URL||'')+'</td>';tmpHtml+='<td>'+tmpActive+'</td>';let tmpViewBtn='<button class="facto-btn facto-btn-primary facto-btn-small" onclick="pict.PictApplication.navigateTo(\'/Source/'+tmpSource.IDSource+'\')">View</button>';tmpHtml+='<td>'+tmpViewBtn+' '+tmpToggleBtn+'</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}toggleActive(pIDSource,pActivate){let tmpPromise=pActivate?this.pict.providers.Facto.activateSource(pIDSource):this.pict.providers.Facto.deactivateSource(pIDSource);tmpPromise.then(()=>{return this.pict.providers.Facto.loadSources();}).then(()=>{this.refreshList();this.setStatus(pActivate?'Source activated':'Source deactivated','ok');});}addSource(){let tmpName=(document.getElementById('Facto-Full-Source-Name')||{}).value||'';let tmpType=(document.getElementById('Facto-Full-Source-Type')||{}).value||'';let tmpURL=(document.getElementById('Facto-Full-Source-URL')||{}).value||'';if(!tmpName){this.setStatus('Source name is required','warn');return;}this.pict.providers.Facto.createSource({Name:tmpName,Type:tmpType,URL:tmpURL,Active:1}).then(pResponse=>{if(pResponse&&pResponse.IDSource){this.setStatus('Source created: '+tmpName,'ok');document.getElementById('Facto-Full-Source-Name').value='';document.getElementById('Facto-Full-Source-URL').value='';return this.pict.providers.Facto.loadSources();}else{this.setStatus('Error creating source','error');}}).then(()=>{this.refreshList();});}}module.exports=FactoFullSourcesView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":64}],80:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-TopBar",DefaultRenderable:"Facto-Full-TopBar-Content",DefaultDestinationAddress:"#Facto-Full-TopBar-Container",AutoRender:false,CSS:/*css*/`
 		.facto-topbar {
 			display: flex;
 			align-items: center;
@@ -4410,12 +8628,22 @@ this._renderDocList();}_setEditorStatus(pMessage,pType){let tmpNameEl=document.g
 	</div>
 </div>
 `}],Renderables:[{RenderableHash:"Facto-Full-TopBar-Content",TemplateHash:"Facto-Full-TopBar-Template",DestinationAddress:"#Facto-Full-TopBar-Container",RenderMethod:"replace"}]};class FactoFullTopBarView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);this._themePanelOpen=false;}onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent){this._renderThemeGrid();// Close theme panel on outside click
-document.addEventListener('click',pEvent=>{if(!this._themePanelOpen)return;let tmpWrap=pEvent.target.closest('.facto-settings-wrap');if(!tmpWrap){this._themePanelOpen=false;let tmpPanel=document.getElementById('Facto-Full-Settings-Panel');if(tmpPanel)tmpPanel.style.display='none';}});return super.onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent);}toggleThemePanel(){let tmpPanel=document.getElementById('Facto-Full-Settings-Panel');if(!tmpPanel)return;this._themePanelOpen=!this._themePanelOpen;tmpPanel.style.display=this._themePanelOpen?'block':'none';}selectTheme(pThemeKey){this.pict.PictApplication.applyTheme(pThemeKey);this._renderThemeGrid();this._themePanelOpen=false;let tmpPanel=document.getElementById('Facto-Full-Settings-Panel');if(tmpPanel)tmpPanel.style.display='none';}highlightRoute(pRoute){let tmpNav=document.getElementById('Facto-Full-TopBar-Nav');if(!tmpNav)return;let tmpLinks=tmpNav.querySelectorAll('a[data-route]');for(let i=0;i<tmpLinks.length;i++){if(tmpLinks[i].getAttribute('data-route')===pRoute){tmpLinks[i].classList.add('active');}else{tmpLinks[i].classList.remove('active');}}}_renderThemeGrid(){let tmpGrid=document.getElementById('Facto-Full-Settings-ThemeGrid');if(!tmpGrid)return;let tmpThemes=this.pict.PictApplication.getThemeList();let tmpCurrentTheme=this.pict.AppData.Facto.CurrentTheme||'facto-dark';let tmpHtml='';for(let i=0;i<tmpThemes.length;i++){let tmpTheme=tmpThemes[i];let tmpActiveClass=tmpTheme.Key===tmpCurrentTheme?' active':'';tmpHtml+='<div class="facto-theme-swatch'+tmpActiveClass+'" onclick="pict.views[\'Facto-Full-TopBar\'].selectTheme(\''+tmpTheme.Key+'\')">';tmpHtml+='<div class="facto-theme-swatch-colors">';for(let c=0;c<tmpTheme.Colors.length;c++){tmpHtml+='<div class="facto-theme-swatch-dot" style="background:'+tmpTheme.Colors[c]+';"></div>';}tmpHtml+='</div>';tmpHtml+='<div class="facto-theme-swatch-label">'+tmpTheme.Label+'</div>';tmpHtml+='</div>';}tmpGrid.innerHTML=tmpHtml;}}module.exports=FactoFullTopBarView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":33}],50:[function(require,module,exports){module.exports={"Name":"Retold Facto","Hash":"Facto","MainViewportViewIdentifier":"Facto-Layout","MainViewportDestinationAddress":"#Facto-Application-Container","MainViewportDefaultDataAddress":"AppData.Facto","pict_configuration":{"Product":"Facto"},"AutoRenderMainViewportViewAfterInitialize":false};},{}],51:[function(require,module,exports){const libPictApplication=require('pict-application');const libProvider=require('./providers/Pict-Provider-Facto.js');const libViewLayout=require('./views/PictView-Facto-Layout.js');const libViewSources=require('./views/PictView-Facto-Sources.js');const libViewRecords=require('./views/PictView-Facto-Records.js');const libViewDatasets=require('./views/PictView-Facto-Datasets.js');const libViewIngest=require('./views/PictView-Facto-Ingest.js');const libViewProjections=require('./views/PictView-Facto-Projections.js');const libViewCatalog=require('./views/PictView-Facto-Catalog.js');class FactoApplication extends libPictApplication{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);// Register provider
+document.addEventListener('click',pEvent=>{if(!this._themePanelOpen)return;let tmpWrap=pEvent.target.closest('.facto-settings-wrap');if(!tmpWrap){this._themePanelOpen=false;let tmpPanel=document.getElementById('Facto-Full-Settings-Panel');if(tmpPanel)tmpPanel.style.display='none';}});return super.onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent);}toggleThemePanel(){let tmpPanel=document.getElementById('Facto-Full-Settings-Panel');if(!tmpPanel)return;this._themePanelOpen=!this._themePanelOpen;tmpPanel.style.display=this._themePanelOpen?'block':'none';}selectTheme(pThemeKey){this.pict.PictApplication.applyTheme(pThemeKey);this._renderThemeGrid();this._themePanelOpen=false;let tmpPanel=document.getElementById('Facto-Full-Settings-Panel');if(tmpPanel)tmpPanel.style.display='none';}highlightRoute(pRoute){let tmpNav=document.getElementById('Facto-Full-TopBar-Nav');if(!tmpNav)return;let tmpLinks=tmpNav.querySelectorAll('a[data-route]');for(let i=0;i<tmpLinks.length;i++){if(tmpLinks[i].getAttribute('data-route')===pRoute){tmpLinks[i].classList.add('active');}else{tmpLinks[i].classList.remove('active');}}}_renderThemeGrid(){let tmpGrid=document.getElementById('Facto-Full-Settings-ThemeGrid');if(!tmpGrid)return;let tmpThemes=this.pict.PictApplication.getThemeList();let tmpCurrentTheme=this.pict.AppData.Facto.CurrentTheme||'facto-dark';let tmpHtml='';for(let i=0;i<tmpThemes.length;i++){let tmpTheme=tmpThemes[i];let tmpActiveClass=tmpTheme.Key===tmpCurrentTheme?' active':'';tmpHtml+='<div class="facto-theme-swatch'+tmpActiveClass+'" onclick="pict.views[\'Facto-Full-TopBar\'].selectTheme(\''+tmpTheme.Key+'\')">';tmpHtml+='<div class="facto-theme-swatch-colors">';for(let c=0;c<tmpTheme.Colors.length;c++){tmpHtml+='<div class="facto-theme-swatch-dot" style="background:'+tmpTheme.Colors[c]+';"></div>';}tmpHtml+='</div>';tmpHtml+='<div class="facto-theme-swatch-label">'+tmpTheme.Label+'</div>';tmpHtml+='</div>';}tmpGrid.innerHTML=tmpHtml;}}module.exports=FactoFullTopBarView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":64}],81:[function(require,module,exports){const libPictFlowCard=require('pict-section-flow').PictFlowCard;/**
+ * FlowCard-ProjectionTarget
+ *
+ * Represents the projection target table in the mapping flow.
+ * Input ports are dynamically generated from schema columns.
+ */class FlowCardProjectionTarget extends libPictFlowCard{constructor(pFable,pOptions,pServiceHash){let tmpOptions=Object.assign({},{Title:'Projection Target',Name:'Projection Target',Code:'TGT',Category:'Data Target',Description:'Projection target table with schema columns',TitleBarColor:'#27ae60',Width:200,Height:100,Inputs:[{Name:'ID',Side:'left'}],Outputs:[],ShowTypeLabel:true,PortLabelsOnHover:false,PortLabelsOutside:true},pOptions);super(pFable,tmpOptions,pServiceHash);this.serviceType='FlowCardProjectionTarget';}}module.exports=FlowCardProjectionTarget;module.exports.default_configuration={Title:'Projection Target',Code:'TGT',Category:'Data Target',TitleBarColor:'#27ae60',Width:200,Height:100};},{"pict-section-flow":15}],82:[function(require,module,exports){const libPictFlowCard=require('pict-section-flow').PictFlowCard;/**
+ * FlowCard-SourceDataset
+ *
+ * Represents a source dataset in the projection mapping flow.
+ * Output ports are dynamically generated from discovered fields.
+ */class FlowCardSourceDataset extends libPictFlowCard{constructor(pFable,pOptions,pServiceHash){let tmpOptions=Object.assign({},{Title:'Source Dataset',Name:'Source Dataset',Code:'SRC',Category:'Data Source',Description:'Source dataset with discovered record fields',TitleBarColor:'#2980b9',Width:200,Height:100,Inputs:[],Outputs:[{Name:'IDRecord',Side:'right'}],ShowTypeLabel:true,PortLabelsOnHover:false,PortLabelsOutside:true},pOptions);super(pFable,tmpOptions,pServiceHash);this.serviceType='FlowCardSourceDataset';}}module.exports=FlowCardSourceDataset;module.exports.default_configuration={Title:'Source Dataset',Code:'SRC',Category:'Data Source',TitleBarColor:'#2980b9',Width:200,Height:100};},{"pict-section-flow":15}],83:[function(require,module,exports){module.exports={"Name":"Retold Facto","Hash":"Facto","MainViewportViewIdentifier":"Facto-Layout","MainViewportDestinationAddress":"#Facto-Application-Container","MainViewportDefaultDataAddress":"AppData.Facto","pict_configuration":{"Product":"Facto"},"AutoRenderMainViewportViewAfterInitialize":false};},{}],84:[function(require,module,exports){const libPictApplication=require('pict-application');const libProvider=require('./providers/Pict-Provider-Facto.js');const libViewLayout=require('./views/PictView-Facto-Layout.js');const libViewSources=require('./views/PictView-Facto-Sources.js');const libViewRecords=require('./views/PictView-Facto-Records.js');const libViewDatasets=require('./views/PictView-Facto-Datasets.js');const libViewIngest=require('./views/PictView-Facto-Ingest.js');const libViewProjections=require('./views/PictView-Facto-Projections.js');const libViewCatalog=require('./views/PictView-Facto-Catalog.js');class FactoApplication extends libPictApplication{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);// Register provider
 this.pict.addProvider('Facto',libProvider.default_configuration,libProvider);// Register views
 this.pict.addView('Facto-Layout',libViewLayout.default_configuration,libViewLayout);this.pict.addView('Facto-Sources',libViewSources.default_configuration,libViewSources);this.pict.addView('Facto-Records',libViewRecords.default_configuration,libViewRecords);this.pict.addView('Facto-Datasets',libViewDatasets.default_configuration,libViewDatasets);this.pict.addView('Facto-Ingest',libViewIngest.default_configuration,libViewIngest);this.pict.addView('Facto-Projections',libViewProjections.default_configuration,libViewProjections);this.pict.addView('Facto-Catalog',libViewCatalog.default_configuration,libViewCatalog);}onAfterInitializeAsync(fCallback){// Centralized application state
 this.pict.AppData.Facto={CatalogEntries:[],Sources:[],Datasets:[],Records:[],IngestJobs:[],SelectedSource:null,SelectedDataset:null,RecordPage:0,RecordPageSize:50};// Make pict available for inline onclick handlers
 window.pict=this.pict;// Render layout (which cascades child view renders)
-this.pict.views['Facto-Layout'].render();return fCallback();}}module.exports=FactoApplication;module.exports.default_configuration=require('./Pict-Application-Facto-Configuration.json');},{"./Pict-Application-Facto-Configuration.json":50,"./providers/Pict-Provider-Facto.js":53,"./views/PictView-Facto-Catalog.js":54,"./views/PictView-Facto-Datasets.js":55,"./views/PictView-Facto-Ingest.js":56,"./views/PictView-Facto-Layout.js":57,"./views/PictView-Facto-Projections.js":58,"./views/PictView-Facto-Records.js":59,"./views/PictView-Facto-Sources.js":60,"pict-application":5}],52:[function(require,module,exports){module.exports={FactoApplication:require('./Pict-Application-Facto.js'),FactoFullApplication:require('../pict-app-full/Pict-Application-Facto-Full.js')};if(typeof window!=='undefined'){window.FactoApplication=module.exports.FactoApplication;window.FactoFullApplication=module.exports.FactoFullApplication;}},{"../pict-app-full/Pict-Application-Facto-Full.js":35,"./Pict-Application-Facto.js":51}],53:[function(require,module,exports){const libPictProvider=require('pict-provider');class FactoProvider extends libPictProvider{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}// ================================================================
+this.pict.views['Facto-Layout'].render();return fCallback();}}module.exports=FactoApplication;module.exports.default_configuration=require('./Pict-Application-Facto-Configuration.json');},{"./Pict-Application-Facto-Configuration.json":83,"./providers/Pict-Provider-Facto.js":86,"./views/PictView-Facto-Catalog.js":87,"./views/PictView-Facto-Datasets.js":88,"./views/PictView-Facto-Ingest.js":89,"./views/PictView-Facto-Layout.js":90,"./views/PictView-Facto-Projections.js":91,"./views/PictView-Facto-Records.js":92,"./views/PictView-Facto-Sources.js":93,"pict-application":5}],85:[function(require,module,exports){module.exports={FactoApplication:require('./Pict-Application-Facto.js'),FactoFullApplication:require('../pict-app-full/Pict-Application-Facto-Full.js')};if(typeof window!=='undefined'){window.FactoApplication=module.exports.FactoApplication;window.FactoFullApplication=module.exports.FactoFullApplication;}},{"../pict-app-full/Pict-Application-Facto-Full.js":66,"./Pict-Application-Facto.js":84}],86:[function(require,module,exports){const libPictProvider=require('pict-provider');class FactoProvider extends libPictProvider{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}// ================================================================
 // API Helper
 // ================================================================
 api(pMethod,pPath,pBody){let tmpOpts={method:pMethod,headers:{}};if(pBody){tmpOpts.headers['Content-Type']='application/json';tmpOpts.body=JSON.stringify(pBody);}return fetch(pPath,tmpOpts).then(function(pResponse){return pResponse.text().then(function(pText){let tmpData;try{tmpData=JSON.parse(pText);}catch(pParseError){return{Error:'HTTP '+pResponse.status+' (non-JSON): '+pText.substring(0,200)};}// Translate Restify error format {code, message} to {Error}
@@ -4443,7 +8671,16 @@ loadRecords(pPage){let tmpPageSize=this.pict.AppData.Facto.RecordPageSize;let tm
 loadIngestJobs(){return this.api('GET','/facto/ingest/jobs').then(pResponse=>{this.pict.AppData.Facto.IngestJobs=pResponse&&pResponse.Jobs?pResponse.Jobs:[];});}createIngestJob(pIDSource,pIDDataset,pConfiguration){return this.api('POST','/facto/ingest/job',{IDSource:pIDSource,IDDataset:pIDDataset,Configuration:pConfiguration||{}}).then(pResponse=>{return pResponse;});}startIngestJob(pIDIngestJob){return this.api('PUT',`/facto/ingest/job/${pIDIngestJob}/start`).then(pResponse=>{return pResponse;});}completeIngestJob(pIDIngestJob,pCounters,pStatus){let tmpBody=Object.assign({},pCounters||{});if(pStatus){tmpBody.Status=pStatus;}return this.api('PUT',`/facto/ingest/job/${pIDIngestJob}/complete`,tmpBody).then(pResponse=>{return pResponse;});}loadIngestJobDetails(pIDIngestJob){return this.api('GET',`/facto/ingest/job/${pIDIngestJob}`).then(pResponse=>{return pResponse;});}// ================================================================
 // Projection Operations
 // ================================================================
-loadProjections(){return this.api('GET','/facto/projections').then(pResponse=>{return pResponse;});}loadDatasetsByType(pType){return this.api('GET',`/facto/datasets/by-type/${pType}`).then(pResponse=>{return pResponse;});}queryRecords(pParams){return this.api('POST','/facto/projections/query',pParams).then(pResponse=>{return pResponse;});}aggregateRecords(pParams){return this.api('POST','/facto/projections/aggregate',pParams).then(pResponse=>{return pResponse;});}queryCertainty(pParams){return this.api('POST','/facto/projections/certainty',pParams).then(pResponse=>{return pResponse;});}compareDatasets(pDatasetIDs){return this.api('POST','/facto/projections/compare',{DatasetIDs:pDatasetIDs}).then(pResponse=>{return pResponse;});}loadProjectionSummary(){return this.api('GET','/facto/projections/summary').then(pResponse=>{return pResponse;});}uploadSourceFile(pIDSource,pFilename,pContentType,pBase64Data){return this.api('POST',`/facto/source/${pIDSource}/documentation/upload`,{Filename:pFilename,ContentType:pContentType,Data:pBase64Data});}ingestFileContent(pIDDataset,pIDSource,pContent,pFormat,pType){return this.api('POST','/facto/ingest/file',{IDDataset:pIDDataset||0,IDSource:pIDSource||0,Content:pContent,Format:pFormat||'Auto',Type:pType||'data'}).then(pResponse=>{return pResponse;});}}module.exports=FactoProvider;module.exports.default_configuration={ProviderIdentifier:'Facto',AutoInitialize:true};},{"pict-provider":7}],54:[function(require,module,exports){const libPictView=require('pict-view');class FactoCatalogView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(){// Load catalog entries from API on first render
+loadProjections(){return this.api('GET','/facto/projections').then(pResponse=>{return pResponse;});}loadDatasetsByType(pType){return this.api('GET',`/facto/datasets/by-type/${pType}`).then(pResponse=>{return pResponse;});}queryRecords(pParams){return this.api('POST','/facto/projections/query',pParams).then(pResponse=>{return pResponse;});}aggregateRecords(pParams){return this.api('POST','/facto/projections/aggregate',pParams).then(pResponse=>{return pResponse;});}queryCertainty(pParams){return this.api('POST','/facto/projections/certainty',pParams).then(pResponse=>{return pResponse;});}compareDatasets(pDatasetIDs){return this.api('POST','/facto/projections/compare',{DatasetIDs:pDatasetIDs}).then(pResponse=>{return pResponse;});}loadProjectionSummary(){return this.api('GET','/facto/projections/summary').then(pResponse=>{return pResponse;});}uploadSourceFile(pIDSource,pFilename,pContentType,pBase64Data){return this.api('POST',`/facto/source/${pIDSource}/documentation/upload`,{Filename:pFilename,ContentType:pContentType,Data:pBase64Data});}ingestFileContent(pIDDataset,pIDSource,pContent,pFormat,pType){return this.api('POST','/facto/ingest/file',{IDDataset:pIDDataset||0,IDSource:pIDSource||0,Content:pContent,Format:pFormat||'Auto',Type:pType||'data'}).then(pResponse=>{return pResponse;});}// ================================================================
+// Store Connection Operations
+// ================================================================
+loadStoreConnections(){return this.api('GET','/facto/connections');}createStoreConnection(pData){return this.api('POST','/facto/connection',pData);}updateStoreConnection(pID,pData){return this.api('PUT',`/facto/connection/${pID}`,pData);}deleteStoreConnection(pID){return this.api('DELETE',`/facto/connection/${pID}`);}testStoreConnection(pID){return this.api('POST',`/facto/connection/${pID}/test`);}testAdHocConnection(pType,pConfig){return this.api('POST','/facto/connection/test',{Type:pType,Config:pConfig});}loadAvailableConnectionTypes(){return this.api('GET','/facto/connection/available-types');}// ================================================================
+// Projection Schema Operations
+// ================================================================
+compileMicroDDL(pDDLText){return this.api('POST','/facto/projection/compile',{DDL:pDDLText});}loadProjectionSchema(pIDDataset){return this.api('GET',`/facto/projection/${pIDDataset}/schema`);}saveProjectionSchema(pIDDataset,pSchemaDefinition){return this.api('PUT',`/facto/projection/${pIDDataset}/schema`,{SchemaDefinition:pSchemaDefinition});}loadProjectionStores(pIDDataset){return this.api('GET',`/facto/projection/${pIDDataset}/stores`);}deployProjection(pIDDataset,pIDStoreConnection,pTargetTableName){return this.api('POST',`/facto/projection/${pIDDataset}/deploy`,{IDStoreConnection:pIDStoreConnection,TargetTableName:pTargetTableName});}// ======================================================================
+// Projection Mapping Operations
+// ======================================================================
+loadProjectionMappings(pIDDataset){return this.api('GET',`/facto/projection/${pIDDataset}/mappings`);}loadProjectionMapping(pID){return this.api('GET',`/facto/projection/mapping/${pID}`);}createProjectionMapping(pIDDataset,pData){return this.api('POST',`/facto/projection/${pIDDataset}/mapping`,pData);}updateProjectionMapping(pID,pData){return this.api('PUT',`/facto/projection/mapping/${pID}`,pData);}deleteProjectionMapping(pID){return this.api('DELETE',`/facto/projection/mapping/${pID}`);}discoverFields(pIDDataset,pIDSource,pSampleSize){return this.api('POST',`/facto/projection/${pIDDataset}/discover-fields`,{IDSource:pIDSource,SampleSize:pSampleSize||50});}executeImport(pIDDataset,pIDProjectionMapping,pIDProjectionStore,pBatchSize,pCap){return this.api('POST',`/facto/projection/${pIDDataset}/import`,{IDProjectionMapping:pIDProjectionMapping,IDProjectionStore:pIDProjectionStore,BatchSize:pBatchSize||100,Cap:pCap||0});}}module.exports=FactoProvider;module.exports.default_configuration={ProviderIdentifier:'Facto',AutoInitialize:true};},{"pict-provider":7}],87:[function(require,module,exports){const libPictView=require('pict-view');class FactoCatalogView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(){// Load catalog entries from API on first render
 this.pict.providers.Facto.loadCatalogEntries().then(()=>{this.refreshList();}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-catalog-status','Error loading catalog: '+pError.message,'error');});}refreshList(){let tmpContainer=document.getElementById('facto-catalog-list');if(!tmpContainer)return;let tmpEntries=this.pict.AppData.Facto.CatalogEntries;if(!tmpEntries||tmpEntries.length===0){tmpContainer.innerHTML='<p style="color:#888; font-style:italic;">No catalog entries yet. Add sources to your research catalog.</p>';return;}let tmpHtml='<table><thead><tr><th>ID</th><th>Agency</th><th>Name</th><th>Type</th><th>Category</th><th>Region</th><th>Verified</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpEntries.length;i++){let tmpEntry=tmpEntries[i];let tmpVerified=tmpEntry.Verified?'<span style="color:#28a745;">&#10003;</span>':'<span style="color:#ccc;">&#10007;</span>';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpEntry.IDSourceCatalogEntry||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Agency||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Name||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Type||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Category||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Region||'')+'</td>';tmpHtml+='<td style="text-align:center;">'+tmpVerified+'</td>';tmpHtml+='<td>';tmpHtml+='<button class="primary" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Catalog\'].viewEntry('+tmpEntry.IDSourceCatalogEntry+')">Datasets</button> ';tmpHtml+='<button class="danger" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Catalog\'].deleteEntry('+tmpEntry.IDSourceCatalogEntry+')">Delete</button>';tmpHtml+='</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}searchCatalog(){let tmpQuery=(document.getElementById('facto-catalog-search')||{}).value||'';if(!tmpQuery){// Reload all entries
 this.pict.providers.Facto.loadCatalogEntries().then(()=>{this.refreshList();});return;}this.pict.providers.Facto.searchCatalog(tmpQuery).then(pResponse=>{this.pict.AppData.Facto.CatalogEntries=pResponse&&pResponse.Entries?pResponse.Entries:[];this.refreshList();}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-catalog-status','Search error: '+pError.message,'error');});}addEntry(){let tmpAgency=(document.getElementById('facto-catalog-agency')||{}).value||'';let tmpName=(document.getElementById('facto-catalog-name')||{}).value||'';let tmpType=(document.getElementById('facto-catalog-type')||{}).value||'';let tmpURL=(document.getElementById('facto-catalog-url')||{}).value||'';let tmpProtocol=(document.getElementById('facto-catalog-protocol')||{}).value||'';let tmpCategory=(document.getElementById('facto-catalog-category')||{}).value||'';let tmpRegion=(document.getElementById('facto-catalog-region')||{}).value||'';let tmpUpdateFrequency=(document.getElementById('facto-catalog-frequency')||{}).value||'';let tmpDescription=(document.getElementById('facto-catalog-description')||{}).value||'';if(!tmpAgency&&!tmpName){this.pict.providers.Facto.setStatus('facto-catalog-status','Agency or Name is required','warn');return;}this.pict.providers.Facto.createCatalogEntry({Agency:tmpAgency,Name:tmpName,Type:tmpType,URL:tmpURL,Protocol:tmpProtocol,Category:tmpCategory,Region:tmpRegion,UpdateFrequency:tmpUpdateFrequency,Description:tmpDescription}).then(pResponse=>{if(pResponse&&pResponse.Success){this.pict.providers.Facto.setStatus('facto-catalog-status','Catalog entry created: '+(tmpAgency||tmpName),'ok');// Clear form
 let tmpFields=['agency','name','url','description'];for(let i=0;i<tmpFields.length;i++){let tmpEl=document.getElementById('facto-catalog-'+tmpFields[i]);if(tmpEl)tmpEl.value='';}// Reload list
@@ -4555,7 +8792,7 @@ if(this.pict.views['Facto-Records']){this.pict.providers.Facto.loadRecords().the
 		</div>
 	</div>
 </div>
-`}],Renderables:[{RenderableHash:'Facto-Catalog',TemplateHash:'Facto-Catalog',DestinationAddress:'#Facto-Section-Catalog'}]};},{"pict-view":33}],55:[function(require,module,exports){const libPictView=require('pict-view');class FactoDatasetsView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(){this.pict.providers.Facto.loadDatasets().then(()=>{this.refreshList();}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-datasets-status','Error loading datasets: '+pError.message,'error');});}refreshList(){let tmpContainer=document.getElementById('facto-datasets-list');if(!tmpContainer)return;let tmpDatasets=this.pict.AppData.Facto.Datasets;if(!tmpDatasets||tmpDatasets.length===0){tmpContainer.innerHTML='<p style="color:#888; font-style:italic;">No datasets created yet.</p>';return;}let tmpBadgeClass={Raw:'badge-raw',Compositional:'badge-compositional',Projection:'badge-projection',Derived:'badge-derived'};let tmpHtml='<table><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Description</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpDatasets.length;i++){let tmpDataset=tmpDatasets[i];let tmpBadge=tmpBadgeClass[tmpDataset.Type]||'badge-raw';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpDataset.IDDataset||'')+'</td>';tmpHtml+='<td>'+(tmpDataset.Name||'')+'</td>';tmpHtml+='<td><span class="badge '+tmpBadge+'">'+(tmpDataset.Type||'')+'</span></td>';tmpHtml+='<td style="max-width:300px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">'+(tmpDataset.Description||'')+'</td>';tmpHtml+='<td><button class="secondary" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Datasets\'].viewStats('+tmpDataset.IDDataset+')">Stats</button></td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}viewStats(pIDDataset){this.pict.providers.Facto.loadDatasetStats(pIDDataset).then(pResponse=>{let tmpMsg='Dataset: '+(pResponse.Dataset?pResponse.Dataset.Name:'#'+pIDDataset);tmpMsg+=' | Records: '+(pResponse.RecordCount||0);tmpMsg+=' | Linked Sources: '+(pResponse.SourceCount||0);this.pict.providers.Facto.setStatus('facto-datasets-status',tmpMsg,'info');}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-datasets-status','Error: '+pError.message,'error');});}addDataset(){let tmpName=(document.getElementById('facto-dataset-name')||{}).value||'';let tmpType=(document.getElementById('facto-dataset-type')||{}).value||'Raw';let tmpDescription=(document.getElementById('facto-dataset-desc')||{}).value||'';if(!tmpName){this.pict.providers.Facto.setStatus('facto-datasets-status','Name is required','warn');return;}this.pict.providers.Facto.createDataset({Name:tmpName,Type:tmpType,Description:tmpDescription}).then(pResponse=>{if(pResponse&&pResponse.IDDataset){this.pict.providers.Facto.setStatus('facto-datasets-status','Dataset created: '+pResponse.Name,'ok');if(document.getElementById('facto-dataset-name'))document.getElementById('facto-dataset-name').value='';if(document.getElementById('facto-dataset-desc'))document.getElementById('facto-dataset-desc').value='';return this.pict.providers.Facto.loadDatasets();}else{this.pict.providers.Facto.setStatus('facto-datasets-status','Error creating dataset','error');}}).then(()=>{this.refreshList();}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-datasets-status','Error: '+pError.message,'error');});}}module.exports=FactoDatasetsView;module.exports.default_configuration={ViewIdentifier:'Facto-Datasets',DefaultRenderable:'Facto-Datasets',DefaultDestinationAddress:'#Facto-Section-Datasets',Templates:[{Hash:'Facto-Datasets',Template:/*html*/`
+`}],Renderables:[{RenderableHash:'Facto-Catalog',TemplateHash:'Facto-Catalog',DestinationAddress:'#Facto-Section-Catalog'}]};},{"pict-view":64}],88:[function(require,module,exports){const libPictView=require('pict-view');class FactoDatasetsView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(){this.pict.providers.Facto.loadDatasets().then(()=>{this.refreshList();}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-datasets-status','Error loading datasets: '+pError.message,'error');});}refreshList(){let tmpContainer=document.getElementById('facto-datasets-list');if(!tmpContainer)return;let tmpDatasets=this.pict.AppData.Facto.Datasets;if(!tmpDatasets||tmpDatasets.length===0){tmpContainer.innerHTML='<p style="color:#888; font-style:italic;">No datasets created yet.</p>';return;}let tmpBadgeClass={Raw:'badge-raw',Compositional:'badge-compositional',Projection:'badge-projection',Derived:'badge-derived'};let tmpHtml='<table><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Description</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpDatasets.length;i++){let tmpDataset=tmpDatasets[i];let tmpBadge=tmpBadgeClass[tmpDataset.Type]||'badge-raw';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpDataset.IDDataset||'')+'</td>';tmpHtml+='<td>'+(tmpDataset.Name||'')+'</td>';tmpHtml+='<td><span class="badge '+tmpBadge+'">'+(tmpDataset.Type||'')+'</span></td>';tmpHtml+='<td style="max-width:300px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">'+(tmpDataset.Description||'')+'</td>';tmpHtml+='<td><button class="secondary" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Datasets\'].viewStats('+tmpDataset.IDDataset+')">Stats</button></td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}viewStats(pIDDataset){this.pict.providers.Facto.loadDatasetStats(pIDDataset).then(pResponse=>{let tmpMsg='Dataset: '+(pResponse.Dataset?pResponse.Dataset.Name:'#'+pIDDataset);tmpMsg+=' | Records: '+(pResponse.RecordCount||0);tmpMsg+=' | Linked Sources: '+(pResponse.SourceCount||0);this.pict.providers.Facto.setStatus('facto-datasets-status',tmpMsg,'info');}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-datasets-status','Error: '+pError.message,'error');});}addDataset(){let tmpName=(document.getElementById('facto-dataset-name')||{}).value||'';let tmpType=(document.getElementById('facto-dataset-type')||{}).value||'Raw';let tmpDescription=(document.getElementById('facto-dataset-desc')||{}).value||'';if(!tmpName){this.pict.providers.Facto.setStatus('facto-datasets-status','Name is required','warn');return;}this.pict.providers.Facto.createDataset({Name:tmpName,Type:tmpType,Description:tmpDescription}).then(pResponse=>{if(pResponse&&pResponse.IDDataset){this.pict.providers.Facto.setStatus('facto-datasets-status','Dataset created: '+pResponse.Name,'ok');if(document.getElementById('facto-dataset-name'))document.getElementById('facto-dataset-name').value='';if(document.getElementById('facto-dataset-desc'))document.getElementById('facto-dataset-desc').value='';return this.pict.providers.Facto.loadDatasets();}else{this.pict.providers.Facto.setStatus('facto-datasets-status','Error creating dataset','error');}}).then(()=>{this.refreshList();}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-datasets-status','Error: '+pError.message,'error');});}}module.exports=FactoDatasetsView;module.exports.default_configuration={ViewIdentifier:'Facto-Datasets',DefaultRenderable:'Facto-Datasets',DefaultDestinationAddress:'#Facto-Section-Datasets',Templates:[{Hash:'Facto-Datasets',Template:/*html*/`
 <div class="accordion-row">
 	<div class="accordion-number">2</div>
 	<div class="accordion-card open" id="facto-card-datasets">
@@ -4594,7 +8831,7 @@ if(this.pict.views['Facto-Records']){this.pict.providers.Facto.loadRecords().the
 		</div>
 	</div>
 </div>
-`}],Renderables:[{RenderableHash:'Facto-Datasets',TemplateHash:'Facto-Datasets',DestinationAddress:'#Facto-Section-Datasets'}]};},{"pict-view":33}],56:[function(require,module,exports){const libPictView=require('pict-view');class FactoIngestView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(){this.pict.providers.Facto.loadIngestJobs().then(()=>{this.refreshList();}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-ingest-status','Error loading jobs: '+pError.message,'error');});}refreshList(){let tmpContainer=document.getElementById('facto-ingest-list');if(!tmpContainer)return;let tmpJobs=this.pict.AppData.Facto.IngestJobs;if(!tmpJobs||tmpJobs.length===0){tmpContainer.innerHTML='<p style="color:#888; font-style:italic;">No ingest jobs yet.</p>';return;}let tmpStatusColors={Pending:'#ffc107',Running:'#17a2b8',Completed:'#28a745',Failed:'#dc3545',Cancelled:'#6c757d'};let tmpHtml='<table><thead><tr><th>ID</th><th>Status</th><th>Source</th><th>Dataset</th><th>Processed</th><th>Created</th><th>Errors</th><th>Start</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpJobs.length;i++){let tmpJob=tmpJobs[i];let tmpColor=tmpStatusColors[tmpJob.Status]||'#888';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpJob.IDIngestJob||'')+'</td>';tmpHtml+='<td><span style="color:'+tmpColor+'; font-weight:600;">'+(tmpJob.Status||'')+'</span></td>';tmpHtml+='<td>'+(tmpJob.IDSource||'')+'</td>';tmpHtml+='<td>'+(tmpJob.IDDataset||'')+'</td>';tmpHtml+='<td>'+(tmpJob.RecordsProcessed||0)+'</td>';tmpHtml+='<td>'+(tmpJob.RecordsCreated||0)+'</td>';tmpHtml+='<td>'+(tmpJob.RecordsErrored||0)+'</td>';tmpHtml+='<td>'+(tmpJob.StartDate||'-')+'</td>';tmpHtml+='<td>';if(tmpJob.Status==='Pending'){tmpHtml+='<button class="success" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Ingest\'].startJob('+tmpJob.IDIngestJob+')">Start</button>';}tmpHtml+='<button class="secondary" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Ingest\'].viewLog('+tmpJob.IDIngestJob+')">Log</button>';tmpHtml+='</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}startJob(pIDIngestJob){this.pict.providers.Facto.startIngestJob(pIDIngestJob).then(()=>{this.pict.providers.Facto.setStatus('facto-ingest-status','Job #'+pIDIngestJob+' started','ok');return this.pict.providers.Facto.loadIngestJobs();}).then(()=>{this.refreshList();}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-ingest-status','Error: '+pError.message,'error');});}viewLog(pIDIngestJob){this.pict.providers.Facto.loadIngestJobDetails(pIDIngestJob).then(pResponse=>{if(pResponse&&pResponse.Job){let tmpLog=pResponse.Job.Log||'(empty)';let tmpLogContainer=document.getElementById('facto-ingest-log');if(tmpLogContainer){tmpLogContainer.textContent='Job #'+pIDIngestJob+' Log:\n'+tmpLog;tmpLogContainer.style.display='block';}}}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-ingest-status','Error: '+pError.message,'error');});}ingestPastedContent(){let tmpIDDataset=parseInt((document.getElementById('facto-ingest-paste-dataset')||{}).value,10)||0;let tmpIDSource=parseInt((document.getElementById('facto-ingest-paste-source')||{}).value,10)||0;let tmpFormat=(document.getElementById('facto-ingest-paste-format')||{}).value||'Auto';let tmpType=(document.getElementById('facto-ingest-paste-type')||{}).value||'data';let tmpContent=(document.getElementById('facto-ingest-paste-content')||{}).value||'';if(!tmpContent.trim()){this.pict.providers.Facto.setStatus('facto-ingest-status','Content is required','warn');return;}this.pict.providers.Facto.setStatus('facto-ingest-status','Ingesting...','info');this.pict.providers.Facto.ingestFileContent(tmpIDDataset,tmpIDSource,tmpContent,tmpFormat,tmpType).then(pResponse=>{if(pResponse&&pResponse.Success){this.pict.providers.Facto.setStatus('facto-ingest-status','Ingested '+(pResponse.RecordsCreated||0)+' records','ok');if(document.getElementById('facto-ingest-paste-content')){document.getElementById('facto-ingest-paste-content').value='';}}else{this.pict.providers.Facto.setStatus('facto-ingest-status','Ingest error: '+(pResponse&&pResponse.Error||'Unknown'),'error');}}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-ingest-status','Error: '+pError.message,'error');});}createJob(){let tmpIDSource=parseInt((document.getElementById('facto-ingest-source')||{}).value,10)||0;let tmpIDDataset=parseInt((document.getElementById('facto-ingest-dataset')||{}).value,10)||0;if(!tmpIDSource||!tmpIDDataset){this.pict.providers.Facto.setStatus('facto-ingest-status','Source ID and Dataset ID are required','warn');return;}this.pict.providers.Facto.createIngestJob(tmpIDSource,tmpIDDataset).then(pResponse=>{if(pResponse&&pResponse.Success){this.pict.providers.Facto.setStatus('facto-ingest-status','Ingest job created: #'+pResponse.Job.IDIngestJob,'ok');if(document.getElementById('facto-ingest-source'))document.getElementById('facto-ingest-source').value='';if(document.getElementById('facto-ingest-dataset'))document.getElementById('facto-ingest-dataset').value='';return this.pict.providers.Facto.loadIngestJobs();}else{this.pict.providers.Facto.setStatus('facto-ingest-status','Error creating job','error');}}).then(()=>{this.refreshList();}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-ingest-status','Error: '+pError.message,'error');});}}module.exports=FactoIngestView;module.exports.default_configuration={ViewIdentifier:'Facto-Ingest',DefaultRenderable:'Facto-Ingest',DefaultDestinationAddress:'#Facto-Section-Ingest',Templates:[{Hash:'Facto-Ingest',Template:/*html*/`
+`}],Renderables:[{RenderableHash:'Facto-Datasets',TemplateHash:'Facto-Datasets',DestinationAddress:'#Facto-Section-Datasets'}]};},{"pict-view":64}],89:[function(require,module,exports){const libPictView=require('pict-view');class FactoIngestView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(){this.pict.providers.Facto.loadIngestJobs().then(()=>{this.refreshList();}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-ingest-status','Error loading jobs: '+pError.message,'error');});}refreshList(){let tmpContainer=document.getElementById('facto-ingest-list');if(!tmpContainer)return;let tmpJobs=this.pict.AppData.Facto.IngestJobs;if(!tmpJobs||tmpJobs.length===0){tmpContainer.innerHTML='<p style="color:#888; font-style:italic;">No ingest jobs yet.</p>';return;}let tmpStatusColors={Pending:'#ffc107',Running:'#17a2b8',Completed:'#28a745',Failed:'#dc3545',Cancelled:'#6c757d'};let tmpHtml='<table><thead><tr><th>ID</th><th>Status</th><th>Source</th><th>Dataset</th><th>Processed</th><th>Created</th><th>Errors</th><th>Start</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpJobs.length;i++){let tmpJob=tmpJobs[i];let tmpColor=tmpStatusColors[tmpJob.Status]||'#888';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpJob.IDIngestJob||'')+'</td>';tmpHtml+='<td><span style="color:'+tmpColor+'; font-weight:600;">'+(tmpJob.Status||'')+'</span></td>';tmpHtml+='<td>'+(tmpJob.IDSource||'')+'</td>';tmpHtml+='<td>'+(tmpJob.IDDataset||'')+'</td>';tmpHtml+='<td>'+(tmpJob.RecordsProcessed||0)+'</td>';tmpHtml+='<td>'+(tmpJob.RecordsCreated||0)+'</td>';tmpHtml+='<td>'+(tmpJob.RecordsErrored||0)+'</td>';tmpHtml+='<td>'+(tmpJob.StartDate||'-')+'</td>';tmpHtml+='<td>';if(tmpJob.Status==='Pending'){tmpHtml+='<button class="success" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Ingest\'].startJob('+tmpJob.IDIngestJob+')">Start</button>';}tmpHtml+='<button class="secondary" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Ingest\'].viewLog('+tmpJob.IDIngestJob+')">Log</button>';tmpHtml+='</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}startJob(pIDIngestJob){this.pict.providers.Facto.startIngestJob(pIDIngestJob).then(()=>{this.pict.providers.Facto.setStatus('facto-ingest-status','Job #'+pIDIngestJob+' started','ok');return this.pict.providers.Facto.loadIngestJobs();}).then(()=>{this.refreshList();}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-ingest-status','Error: '+pError.message,'error');});}viewLog(pIDIngestJob){this.pict.providers.Facto.loadIngestJobDetails(pIDIngestJob).then(pResponse=>{if(pResponse&&pResponse.Job){let tmpLog=pResponse.Job.Log||'(empty)';let tmpLogContainer=document.getElementById('facto-ingest-log');if(tmpLogContainer){tmpLogContainer.textContent='Job #'+pIDIngestJob+' Log:\n'+tmpLog;tmpLogContainer.style.display='block';}}}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-ingest-status','Error: '+pError.message,'error');});}ingestPastedContent(){let tmpIDDataset=parseInt((document.getElementById('facto-ingest-paste-dataset')||{}).value,10)||0;let tmpIDSource=parseInt((document.getElementById('facto-ingest-paste-source')||{}).value,10)||0;let tmpFormat=(document.getElementById('facto-ingest-paste-format')||{}).value||'Auto';let tmpType=(document.getElementById('facto-ingest-paste-type')||{}).value||'data';let tmpContent=(document.getElementById('facto-ingest-paste-content')||{}).value||'';if(!tmpContent.trim()){this.pict.providers.Facto.setStatus('facto-ingest-status','Content is required','warn');return;}this.pict.providers.Facto.setStatus('facto-ingest-status','Ingesting...','info');this.pict.providers.Facto.ingestFileContent(tmpIDDataset,tmpIDSource,tmpContent,tmpFormat,tmpType).then(pResponse=>{if(pResponse&&pResponse.Success){this.pict.providers.Facto.setStatus('facto-ingest-status','Ingested '+(pResponse.RecordsCreated||0)+' records','ok');if(document.getElementById('facto-ingest-paste-content')){document.getElementById('facto-ingest-paste-content').value='';}}else{this.pict.providers.Facto.setStatus('facto-ingest-status','Ingest error: '+(pResponse&&pResponse.Error||'Unknown'),'error');}}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-ingest-status','Error: '+pError.message,'error');});}createJob(){let tmpIDSource=parseInt((document.getElementById('facto-ingest-source')||{}).value,10)||0;let tmpIDDataset=parseInt((document.getElementById('facto-ingest-dataset')||{}).value,10)||0;if(!tmpIDSource||!tmpIDDataset){this.pict.providers.Facto.setStatus('facto-ingest-status','Source ID and Dataset ID are required','warn');return;}this.pict.providers.Facto.createIngestJob(tmpIDSource,tmpIDDataset).then(pResponse=>{if(pResponse&&pResponse.Success){this.pict.providers.Facto.setStatus('facto-ingest-status','Ingest job created: #'+pResponse.Job.IDIngestJob,'ok');if(document.getElementById('facto-ingest-source'))document.getElementById('facto-ingest-source').value='';if(document.getElementById('facto-ingest-dataset'))document.getElementById('facto-ingest-dataset').value='';return this.pict.providers.Facto.loadIngestJobs();}else{this.pict.providers.Facto.setStatus('facto-ingest-status','Error creating job','error');}}).then(()=>{this.refreshList();}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-ingest-status','Error: '+pError.message,'error');});}}module.exports=FactoIngestView;module.exports.default_configuration={ViewIdentifier:'Facto-Ingest',DefaultRenderable:'Facto-Ingest',DefaultDestinationAddress:'#Facto-Section-Ingest',Templates:[{Hash:'Facto-Ingest',Template:/*html*/`
 <div class="accordion-row">
 	<div class="accordion-number">4</div>
 	<div class="accordion-card" id="facto-card-ingest">
@@ -4653,7 +8890,7 @@ if(this.pict.views['Facto-Records']){this.pict.providers.Facto.loadRecords().the
 		</div>
 	</div>
 </div>
-`}],Renderables:[{RenderableHash:'Facto-Ingest',TemplateHash:'Facto-Ingest',DestinationAddress:'#Facto-Section-Ingest'}]};},{"pict-view":33}],57:[function(require,module,exports){const libPictView=require('pict-view');class FactoLayoutView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(){// Render all section views into their containers
+`}],Renderables:[{RenderableHash:'Facto-Ingest',TemplateHash:'Facto-Ingest',DestinationAddress:'#Facto-Section-Ingest'}]};},{"pict-view":64}],90:[function(require,module,exports){const libPictView=require('pict-view');class FactoLayoutView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(){// Render all section views into their containers
 this.pict.views['Facto-Catalog'].render();this.pict.views['Facto-Sources'].render();this.pict.views['Facto-Datasets'].render();this.pict.views['Facto-Records'].render();this.pict.views['Facto-Ingest'].render();this.pict.views['Facto-Projections'].render();this.pict.CSSMap.injectCSS();}toggleSection(pSectionId){let tmpCard=document.getElementById(pSectionId);if(!tmpCard)return;tmpCard.classList.toggle('open');}expandAllSections(){let tmpCards=document.querySelectorAll('.accordion-card');for(let i=0;i<tmpCards.length;i++){tmpCards[i].classList.add('open');}}collapseAllSections(){let tmpCards=document.querySelectorAll('.accordion-card');for(let i=0;i<tmpCards.length;i++){tmpCards[i].classList.remove('open');}}}module.exports=FactoLayoutView;module.exports.default_configuration={ViewIdentifier:'Facto-Layout',DefaultRenderable:'Facto-Layout',DefaultDestinationAddress:'#Facto-Application-Container',CSS:/*css*/`
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; color: #333; padding: 20px; }
@@ -4769,7 +9006,7 @@ tr:hover { background: #fafafa; }
 <div id="Facto-Section-Records"></div>
 <div id="Facto-Section-Ingest"></div>
 <div id="Facto-Section-Projections"></div>
-`}],Renderables:[{RenderableHash:'Facto-Layout',TemplateHash:'Facto-Layout',DestinationAddress:'#Facto-Application-Container'}]};},{"pict-view":33}],58:[function(require,module,exports){const libPictView=require('pict-view');class FactoProjectionsView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(){this.loadSummary();}loadSummary(){this.pict.providers.Facto.loadProjectionSummary().then(pResponse=>{let tmpContainer=document.getElementById('facto-projections-summary');if(!tmpContainer||!pResponse)return;let tmpHtml='<table><tbody>';tmpHtml+='<tr><td style="font-weight:600;">Sources</td><td>'+(pResponse.Sources||0)+'</td>';tmpHtml+='<td style="font-weight:600;">Datasets</td><td>'+(pResponse.Datasets||0)+'</td></tr>';tmpHtml+='<tr><td style="font-weight:600;">Records</td><td>'+(pResponse.Records||0)+'</td>';tmpHtml+='<td style="font-weight:600;">Certainty Indices</td><td>'+(pResponse.CertaintyIndices||0)+'</td></tr>';tmpHtml+='<tr><td style="font-weight:600;">Ingest Jobs</td><td>'+(pResponse.IngestJobs||0)+'</td>';tmpHtml+='<td></td><td></td></tr>';if(pResponse.DatasetsByType){tmpHtml+='<tr><td colspan="4" style="padding-top:12px; font-weight:600; border-bottom:2px solid #ddd;">Datasets by Type</td></tr>';tmpHtml+='<tr>';tmpHtml+='<td><span class="badge badge-raw">Raw</span></td><td>'+(pResponse.DatasetsByType.Raw||0)+'</td>';tmpHtml+='<td><span class="badge badge-compositional">Compositional</span></td><td>'+(pResponse.DatasetsByType.Compositional||0)+'</td>';tmpHtml+='</tr><tr>';tmpHtml+='<td><span class="badge badge-projection">Projection</span></td><td>'+(pResponse.DatasetsByType.Projection||0)+'</td>';tmpHtml+='<td><span class="badge badge-derived">Derived</span></td><td>'+(pResponse.DatasetsByType.Derived||0)+'</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-projections-status','Error loading summary: '+pError.message,'error');});}runQuery(){let tmpDatasetIDsRaw=(document.getElementById('facto-proj-dataset-ids')||{}).value||'';let tmpType=(document.getElementById('facto-proj-type')||{}).value||'';let tmpCertaintyThreshold=parseFloat((document.getElementById('facto-proj-certainty')||{}).value)||0;let tmpTimeStart=(document.getElementById('facto-proj-time-start')||{}).value||'';let tmpTimeStop=(document.getElementById('facto-proj-time-stop')||{}).value||'';let tmpDatasetIDs=tmpDatasetIDsRaw.split(',').map(function(s){return parseInt(s.trim(),10);}).filter(function(n){return!isNaN(n)&&n>0;});if(tmpDatasetIDs.length===0){this.pict.providers.Facto.setStatus('facto-projections-status','Enter at least one Dataset ID','warn');return;}let tmpParams={DatasetIDs:tmpDatasetIDs,Begin:0,Cap:100};if(tmpType)tmpParams.Type=tmpType;if(tmpCertaintyThreshold>0)tmpParams.CertaintyThreshold=tmpCertaintyThreshold;if(tmpTimeStart)tmpParams.TimeRangeStart=parseInt(tmpTimeStart,10)||0;if(tmpTimeStop)tmpParams.TimeRangeStop=parseInt(tmpTimeStop,10)||0;this.pict.providers.Facto.setStatus('facto-projections-status','Querying...','info');this.pict.providers.Facto.queryRecords(tmpParams).then(pResponse=>{this.pict.providers.Facto.clearStatus('facto-projections-status');this.refreshResults(pResponse);}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-projections-status','Query error: '+pError.message,'error');});}runCompare(){let tmpDatasetIDsRaw=(document.getElementById('facto-proj-dataset-ids')||{}).value||'';let tmpDatasetIDs=tmpDatasetIDsRaw.split(',').map(function(s){return parseInt(s.trim(),10);}).filter(function(n){return!isNaN(n)&&n>0;});if(tmpDatasetIDs.length===0){this.pict.providers.Facto.setStatus('facto-projections-status','Enter at least one Dataset ID','warn');return;}this.pict.providers.Facto.setStatus('facto-projections-status','Comparing...','info');this.pict.providers.Facto.compareDatasets(tmpDatasetIDs).then(pResponse=>{this.pict.providers.Facto.clearStatus('facto-projections-status');let tmpContainer=document.getElementById('facto-projections-results');if(!tmpContainer||!pResponse||!pResponse.Datasets)return;let tmpHtml='<h4 style="margin:12px 0 8px; font-size:0.95em;">Dataset Comparison</h4>';tmpHtml+='<table><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Records</th><th>Sources</th></tr></thead><tbody>';for(let i=0;i<pResponse.Datasets.length;i++){let tmpDS=pResponse.Datasets[i];let tmpTypeLower=(tmpDS.Type||'').toLowerCase();tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpDS.IDDataset||'')+'</td>';tmpHtml+='<td>'+(tmpDS.Name||'')+'</td>';tmpHtml+='<td><span class="badge badge-'+tmpTypeLower+'">'+(tmpDS.Type||'')+'</span></td>';tmpHtml+='<td>'+(tmpDS.RecordCount||0)+'</td>';tmpHtml+='<td>'+(tmpDS.SourceCount||0)+'</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-projections-status','Compare error: '+pError.message,'error');});}refreshResults(pResponse){let tmpContainer=document.getElementById('facto-projections-results');if(!tmpContainer)return;if(!pResponse||!pResponse.Records||pResponse.Records.length===0){tmpContainer.innerHTML='<p style="color:#888; font-style:italic;">No records match the query.</p>';return;}let tmpHtml='<h4 style="margin:12px 0 8px; font-size:0.95em;">Query Results ('+(pResponse.Count||pResponse.Records.length)+' records)</h4>';tmpHtml+='<table><thead><tr><th>ID</th><th>Dataset</th><th>Source</th><th>Type</th><th>Version</th><th>Ingest Date</th><th>Content</th></tr></thead><tbody>';for(let i=0;i<pResponse.Records.length;i++){let tmpRecord=pResponse.Records[i];let tmpContent=tmpRecord.Content||'';if(tmpContent.length>80)tmpContent=tmpContent.substring(0,80)+'...';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpRecord.IDRecord||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.IDDataset||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.IDSource||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.Type||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.Version||1)+'</td>';tmpHtml+='<td>'+(tmpRecord.IngestDate||'-')+'</td>';tmpHtml+='<td style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">'+tmpContent+'</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}}module.exports=FactoProjectionsView;module.exports.default_configuration={ViewIdentifier:'Facto-Projections',DefaultRenderable:'Facto-Projections',DefaultDestinationAddress:'#Facto-Section-Projections',Templates:[{Hash:'Facto-Projections',Template:/*html*/`
+`}],Renderables:[{RenderableHash:'Facto-Layout',TemplateHash:'Facto-Layout',DestinationAddress:'#Facto-Application-Container'}]};},{"pict-view":64}],91:[function(require,module,exports){const libPictView=require('pict-view');class FactoProjectionsView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(){this.loadSummary();}loadSummary(){this.pict.providers.Facto.loadProjectionSummary().then(pResponse=>{let tmpContainer=document.getElementById('facto-projections-summary');if(!tmpContainer||!pResponse)return;let tmpHtml='<table><tbody>';tmpHtml+='<tr><td style="font-weight:600;">Sources</td><td>'+(pResponse.Sources||0)+'</td>';tmpHtml+='<td style="font-weight:600;">Datasets</td><td>'+(pResponse.Datasets||0)+'</td></tr>';tmpHtml+='<tr><td style="font-weight:600;">Records</td><td>'+(pResponse.Records||0)+'</td>';tmpHtml+='<td style="font-weight:600;">Certainty Indices</td><td>'+(pResponse.CertaintyIndices||0)+'</td></tr>';tmpHtml+='<tr><td style="font-weight:600;">Ingest Jobs</td><td>'+(pResponse.IngestJobs||0)+'</td>';tmpHtml+='<td></td><td></td></tr>';if(pResponse.DatasetsByType){tmpHtml+='<tr><td colspan="4" style="padding-top:12px; font-weight:600; border-bottom:2px solid #ddd;">Datasets by Type</td></tr>';tmpHtml+='<tr>';tmpHtml+='<td><span class="badge badge-raw">Raw</span></td><td>'+(pResponse.DatasetsByType.Raw||0)+'</td>';tmpHtml+='<td><span class="badge badge-compositional">Compositional</span></td><td>'+(pResponse.DatasetsByType.Compositional||0)+'</td>';tmpHtml+='</tr><tr>';tmpHtml+='<td><span class="badge badge-projection">Projection</span></td><td>'+(pResponse.DatasetsByType.Projection||0)+'</td>';tmpHtml+='<td><span class="badge badge-derived">Derived</span></td><td>'+(pResponse.DatasetsByType.Derived||0)+'</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-projections-status','Error loading summary: '+pError.message,'error');});}runQuery(){let tmpDatasetIDsRaw=(document.getElementById('facto-proj-dataset-ids')||{}).value||'';let tmpType=(document.getElementById('facto-proj-type')||{}).value||'';let tmpCertaintyThreshold=parseFloat((document.getElementById('facto-proj-certainty')||{}).value)||0;let tmpTimeStart=(document.getElementById('facto-proj-time-start')||{}).value||'';let tmpTimeStop=(document.getElementById('facto-proj-time-stop')||{}).value||'';let tmpDatasetIDs=tmpDatasetIDsRaw.split(',').map(function(s){return parseInt(s.trim(),10);}).filter(function(n){return!isNaN(n)&&n>0;});if(tmpDatasetIDs.length===0){this.pict.providers.Facto.setStatus('facto-projections-status','Enter at least one Dataset ID','warn');return;}let tmpParams={DatasetIDs:tmpDatasetIDs,Begin:0,Cap:100};if(tmpType)tmpParams.Type=tmpType;if(tmpCertaintyThreshold>0)tmpParams.CertaintyThreshold=tmpCertaintyThreshold;if(tmpTimeStart)tmpParams.TimeRangeStart=parseInt(tmpTimeStart,10)||0;if(tmpTimeStop)tmpParams.TimeRangeStop=parseInt(tmpTimeStop,10)||0;this.pict.providers.Facto.setStatus('facto-projections-status','Querying...','info');this.pict.providers.Facto.queryRecords(tmpParams).then(pResponse=>{this.pict.providers.Facto.clearStatus('facto-projections-status');this.refreshResults(pResponse);}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-projections-status','Query error: '+pError.message,'error');});}runCompare(){let tmpDatasetIDsRaw=(document.getElementById('facto-proj-dataset-ids')||{}).value||'';let tmpDatasetIDs=tmpDatasetIDsRaw.split(',').map(function(s){return parseInt(s.trim(),10);}).filter(function(n){return!isNaN(n)&&n>0;});if(tmpDatasetIDs.length===0){this.pict.providers.Facto.setStatus('facto-projections-status','Enter at least one Dataset ID','warn');return;}this.pict.providers.Facto.setStatus('facto-projections-status','Comparing...','info');this.pict.providers.Facto.compareDatasets(tmpDatasetIDs).then(pResponse=>{this.pict.providers.Facto.clearStatus('facto-projections-status');let tmpContainer=document.getElementById('facto-projections-results');if(!tmpContainer||!pResponse||!pResponse.Datasets)return;let tmpHtml='<h4 style="margin:12px 0 8px; font-size:0.95em;">Dataset Comparison</h4>';tmpHtml+='<table><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Records</th><th>Sources</th></tr></thead><tbody>';for(let i=0;i<pResponse.Datasets.length;i++){let tmpDS=pResponse.Datasets[i];let tmpTypeLower=(tmpDS.Type||'').toLowerCase();tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpDS.IDDataset||'')+'</td>';tmpHtml+='<td>'+(tmpDS.Name||'')+'</td>';tmpHtml+='<td><span class="badge badge-'+tmpTypeLower+'">'+(tmpDS.Type||'')+'</span></td>';tmpHtml+='<td>'+(tmpDS.RecordCount||0)+'</td>';tmpHtml+='<td>'+(tmpDS.SourceCount||0)+'</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-projections-status','Compare error: '+pError.message,'error');});}refreshResults(pResponse){let tmpContainer=document.getElementById('facto-projections-results');if(!tmpContainer)return;if(!pResponse||!pResponse.Records||pResponse.Records.length===0){tmpContainer.innerHTML='<p style="color:#888; font-style:italic;">No records match the query.</p>';return;}let tmpHtml='<h4 style="margin:12px 0 8px; font-size:0.95em;">Query Results ('+(pResponse.Count||pResponse.Records.length)+' records)</h4>';tmpHtml+='<table><thead><tr><th>ID</th><th>Dataset</th><th>Source</th><th>Type</th><th>Version</th><th>Ingest Date</th><th>Content</th></tr></thead><tbody>';for(let i=0;i<pResponse.Records.length;i++){let tmpRecord=pResponse.Records[i];let tmpContent=tmpRecord.Content||'';if(tmpContent.length>80)tmpContent=tmpContent.substring(0,80)+'...';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpRecord.IDRecord||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.IDDataset||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.IDSource||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.Type||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.Version||1)+'</td>';tmpHtml+='<td>'+(tmpRecord.IngestDate||'-')+'</td>';tmpHtml+='<td style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">'+tmpContent+'</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}}module.exports=FactoProjectionsView;module.exports.default_configuration={ViewIdentifier:'Facto-Projections',DefaultRenderable:'Facto-Projections',DefaultDestinationAddress:'#Facto-Section-Projections',Templates:[{Hash:'Facto-Projections',Template:/*html*/`
 <div class="accordion-row">
 	<div class="accordion-number">5</div>
 	<div class="accordion-card" id="facto-card-projections">
@@ -4818,7 +9055,7 @@ tr:hover { background: #fafafa; }
 		</div>
 	</div>
 </div>
-`}],Renderables:[{RenderableHash:'Facto-Projections',TemplateHash:'Facto-Projections',DestinationAddress:'#Facto-Section-Projections'}]};},{"pict-view":33}],59:[function(require,module,exports){const libPictView=require('pict-view');class FactoRecordsView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(){this.pict.providers.Facto.loadRecords(0).then(()=>{this.refreshList();}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-records-status','Error loading records: '+pError.message,'error');});}refreshList(){let tmpContainer=document.getElementById('facto-records-list');if(!tmpContainer)return;let tmpRecords=this.pict.AppData.Facto.Records;if(!tmpRecords||tmpRecords.length===0){tmpContainer.innerHTML='<p style="color:#888; font-style:italic;">No records ingested yet.</p>';return;}let tmpHtml='<table><thead><tr><th>ID</th><th>Type</th><th>Dataset</th><th>Source</th><th>Version</th><th>Ingest Date</th><th>Content Preview</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpRecords.length;i++){let tmpRecord=tmpRecords[i];let tmpPreview=(tmpRecord.Content||'').substring(0,60);if((tmpRecord.Content||'').length>60)tmpPreview+='...';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpRecord.IDRecord||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.Type||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.IDDataset||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.IDSource||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.Version||'1')+'</td>';tmpHtml+='<td>'+(tmpRecord.IngestDate||'')+'</td>';tmpHtml+='<td style="max-width:250px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:monospace; font-size:0.85em;">'+tmpPreview+'</td>';tmpHtml+='<td><button class="secondary" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Records\'].viewCertainty('+tmpRecord.IDRecord+')">Certainty</button></td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';// Pagination controls
+`}],Renderables:[{RenderableHash:'Facto-Projections',TemplateHash:'Facto-Projections',DestinationAddress:'#Facto-Section-Projections'}]};},{"pict-view":64}],92:[function(require,module,exports){const libPictView=require('pict-view');class FactoRecordsView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(){this.pict.providers.Facto.loadRecords(0).then(()=>{this.refreshList();}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-records-status','Error loading records: '+pError.message,'error');});}refreshList(){let tmpContainer=document.getElementById('facto-records-list');if(!tmpContainer)return;let tmpRecords=this.pict.AppData.Facto.Records;if(!tmpRecords||tmpRecords.length===0){tmpContainer.innerHTML='<p style="color:#888; font-style:italic;">No records ingested yet.</p>';return;}let tmpHtml='<table><thead><tr><th>ID</th><th>Type</th><th>Dataset</th><th>Source</th><th>Version</th><th>Ingest Date</th><th>Content Preview</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpRecords.length;i++){let tmpRecord=tmpRecords[i];let tmpPreview=(tmpRecord.Content||'').substring(0,60);if((tmpRecord.Content||'').length>60)tmpPreview+='...';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpRecord.IDRecord||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.Type||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.IDDataset||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.IDSource||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.Version||'1')+'</td>';tmpHtml+='<td>'+(tmpRecord.IngestDate||'')+'</td>';tmpHtml+='<td style="max-width:250px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:monospace; font-size:0.85em;">'+tmpPreview+'</td>';tmpHtml+='<td><button class="secondary" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Records\'].viewCertainty('+tmpRecord.IDRecord+')">Certainty</button></td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';// Pagination controls
 let tmpPage=this.pict.AppData.Facto.RecordPage||0;tmpHtml+='<div style="margin-top:12px; display:flex; gap:8px; align-items:center;">';if(tmpPage>0){tmpHtml+='<button class="secondary" style="padding:4px 12px; font-size:0.85em;" onclick="pict.views[\'Facto-Records\'].changePage('+(tmpPage-1)+')">&#9664; Previous</button>';}tmpHtml+='<span style="color:#888; font-size:0.85em;">Page '+(tmpPage+1)+'</span>';if(tmpRecords.length>=this.pict.AppData.Facto.RecordPageSize){tmpHtml+='<button class="secondary" style="padding:4px 12px; font-size:0.85em;" onclick="pict.views[\'Facto-Records\'].changePage('+(tmpPage+1)+')">Next &#9654;</button>';}tmpHtml+='</div>';tmpContainer.innerHTML=tmpHtml;}changePage(pPage){this.pict.AppData.Facto.RecordPage=pPage;this.pict.providers.Facto.loadRecords(pPage).then(()=>{this.refreshList();}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-records-status','Error: '+pError.message,'error');});}viewCertainty(pIDRecord){this.pict.providers.Facto.loadRecordCertainty(pIDRecord).then(pResponse=>{if(!pResponse||!pResponse.CertaintyIndices||pResponse.CertaintyIndices.length===0){this.pict.providers.Facto.setStatus('facto-records-status','No certainty indices for record #'+pIDRecord,'info');return;}let tmpParts=[];for(let i=0;i<pResponse.CertaintyIndices.length;i++){let tmpCI=pResponse.CertaintyIndices[i];tmpParts.push(tmpCI.Dimension+': '+tmpCI.CertaintyValue);}this.pict.providers.Facto.setStatus('facto-records-status','Record #'+pIDRecord+' certainty: '+tmpParts.join(', '),'info');}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-records-status','Error: '+pError.message,'error');});}}module.exports=FactoRecordsView;module.exports.default_configuration={ViewIdentifier:'Facto-Records',DefaultRenderable:'Facto-Records',DefaultDestinationAddress:'#Facto-Section-Records',Templates:[{Hash:'Facto-Records',Template:/*html*/`
 <div class="accordion-row">
 	<div class="accordion-number">3</div>
@@ -4835,7 +9072,7 @@ let tmpPage=this.pict.AppData.Facto.RecordPage||0;tmpHtml+='<div style="margin-t
 		</div>
 	</div>
 </div>
-`}],Renderables:[{RenderableHash:'Facto-Records',TemplateHash:'Facto-Records',DestinationAddress:'#Facto-Section-Records'}]};},{"pict-view":33}],60:[function(require,module,exports){const libPictView=require('pict-view');class FactoSourcesView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(){// Load sources from API on first render
+`}],Renderables:[{RenderableHash:'Facto-Records',TemplateHash:'Facto-Records',DestinationAddress:'#Facto-Section-Records'}]};},{"pict-view":64}],93:[function(require,module,exports){const libPictView=require('pict-view');class FactoSourcesView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(){// Load sources from API on first render
 this.pict.providers.Facto.loadSources().then(()=>{this.refreshList();}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-sources-status','Error loading sources: '+pError.message,'error');});}refreshList(){let tmpContainer=document.getElementById('facto-sources-list');if(!tmpContainer)return;let tmpSources=this.pict.AppData.Facto.Sources;if(!tmpSources||tmpSources.length===0){tmpContainer.innerHTML='<p style="color:#888; font-style:italic;">No sources registered yet.</p>';return;}let tmpHtml='<table><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>URL</th><th>Active</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpSources.length;i++){let tmpSource=tmpSources[i];let tmpActiveLabel=tmpSource.Active?'<span style="color:#28a745;">Active</span>':'<span style="color:#888;">Inactive</span>';let tmpToggleBtn=tmpSource.Active?'<button class="secondary" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Sources\'].toggleActive('+tmpSource.IDSource+', false)">Deactivate</button>':'<button class="success" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Sources\'].toggleActive('+tmpSource.IDSource+', true)">Activate</button>';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpSource.IDSource||'')+'</td>';tmpHtml+='<td>'+(tmpSource.Name||'')+'</td>';tmpHtml+='<td>'+(tmpSource.Type||'')+'</td>';tmpHtml+='<td style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">'+(tmpSource.URL||'')+'</td>';tmpHtml+='<td>'+tmpActiveLabel+'</td>';tmpHtml+='<td>'+tmpToggleBtn+'</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}toggleActive(pIDSource,pActivate){let tmpPromise=pActivate?this.pict.providers.Facto.activateSource(pIDSource):this.pict.providers.Facto.deactivateSource(pIDSource);tmpPromise.then(()=>{return this.pict.providers.Facto.loadSources();}).then(()=>{this.refreshList();}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-sources-status','Error: '+pError.message,'error');});}addSource(){let tmpName=(document.getElementById('facto-source-name')||{}).value||'';let tmpType=(document.getElementById('facto-source-type')||{}).value||'';let tmpURL=(document.getElementById('facto-source-url')||{}).value||'';let tmpProtocol=(document.getElementById('facto-source-protocol')||{}).value||'';if(!tmpName){this.pict.providers.Facto.setStatus('facto-sources-status','Name is required','warn');return;}this.pict.providers.Facto.createSource({Name:tmpName,Type:tmpType,URL:tmpURL,Protocol:tmpProtocol,Active:1}).then(pResponse=>{if(pResponse&&pResponse.IDSource){this.pict.providers.Facto.setStatus('facto-sources-status','Source created: '+pResponse.Name,'ok');// Clear form
 if(document.getElementById('facto-source-name'))document.getElementById('facto-source-name').value='';if(document.getElementById('facto-source-url'))document.getElementById('facto-source-url').value='';// Reload list
 return this.pict.providers.Facto.loadSources();}else{this.pict.providers.Facto.setStatus('facto-sources-status','Error creating source','error');}}).then(()=>{this.refreshList();}).catch(pError=>{this.pict.providers.Facto.setStatus('facto-sources-status','Error: '+pError.message,'error');});}}module.exports=FactoSourcesView;module.exports.default_configuration={ViewIdentifier:'Facto-Sources',DefaultRenderable:'Facto-Sources',DefaultDestinationAddress:'#Facto-Section-Sources',Templates:[{Hash:'Facto-Sources',Template:/*html*/`
@@ -4892,5 +9129,5 @@ return this.pict.providers.Facto.loadSources();}else{this.pict.providers.Facto.s
 		</div>
 	</div>
 </div>
-`}],Renderables:[{RenderableHash:'Facto-Sources',TemplateHash:'Facto-Sources',DestinationAddress:'#Facto-Section-Sources'}]};},{"pict-view":33}]},{},[52])(52);});
+`}],Renderables:[{RenderableHash:'Facto-Sources',TemplateHash:'Facto-Sources',DestinationAddress:'#Facto-Section-Sources'}]};},{"pict-view":64}]},{},[85])(85);});
 //# sourceMappingURL=retold-facto.js.map

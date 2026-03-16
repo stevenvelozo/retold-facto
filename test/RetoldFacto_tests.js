@@ -352,7 +352,7 @@ suite
 				);
 				test
 				(
-					'The entity list should contain all 10 entities',
+					'The entity list should contain all 13 entities',
 					function()
 					{
 						Expect(_RetoldFacto.entityList).to.be.an('array');
@@ -366,7 +366,10 @@ suite
 						Expect(_RetoldFacto.entityList).to.include('IngestJob');
 						Expect(_RetoldFacto.entityList).to.include('SourceCatalogEntry');
 						Expect(_RetoldFacto.entityList).to.include('CatalogDatasetDefinition');
-						Expect(_RetoldFacto.entityList.length).to.equal(10);
+						Expect(_RetoldFacto.entityList).to.include('StoreConnection');
+						Expect(_RetoldFacto.entityList).to.include('ProjectionStore');
+						Expect(_RetoldFacto.entityList).to.include('ProjectionMapping');
+						Expect(_RetoldFacto.entityList.length).to.equal(13);
 					}
 				);
 				test
