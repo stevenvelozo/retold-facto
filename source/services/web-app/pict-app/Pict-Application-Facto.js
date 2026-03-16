@@ -9,6 +9,7 @@ const libViewDatasets = require('./views/PictView-Facto-Datasets.js');
 const libViewIngest = require('./views/PictView-Facto-Ingest.js');
 const libViewProjections = require('./views/PictView-Facto-Projections.js');
 const libViewCatalog = require('./views/PictView-Facto-Catalog.js');
+const libViewScanner = require('./views/PictView-Facto-Scanner.js');
 
 class FactoApplication extends libPictApplication
 {
@@ -27,6 +28,7 @@ class FactoApplication extends libPictApplication
 		this.pict.addView('Facto-Ingest', libViewIngest.default_configuration, libViewIngest);
 		this.pict.addView('Facto-Projections', libViewProjections.default_configuration, libViewProjections);
 		this.pict.addView('Facto-Catalog', libViewCatalog.default_configuration, libViewCatalog);
+		this.pict.addView('Facto-Scanner', libViewScanner.default_configuration, libViewScanner);
 	}
 
 	onAfterInitializeAsync(fCallback)
@@ -42,7 +44,9 @@ class FactoApplication extends libPictApplication
 			SelectedSource: null,
 			SelectedDataset: null,
 			RecordPage: 0,
-			RecordPageSize: 50
+			RecordPageSize: 50,
+			ScannerPaths: [],
+			ScannerDatasets: []
 		};
 
 		// Make pict available for inline onclick handlers

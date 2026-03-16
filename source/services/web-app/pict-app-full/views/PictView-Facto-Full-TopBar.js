@@ -194,6 +194,7 @@ const _ViewConfiguration =
 	<a class="facto-topbar-brand" onclick="{~P~}.PictApplication.navigateTo('/Home')">Retold Facto</a>
 
 	<div class="facto-topbar-nav" id="Facto-Full-TopBar-Nav">
+		<a data-route="Scanner" onclick="{~P~}.PictApplication.navigateTo('/Scanner')">Scanner</a>
 		<a data-route="SourceResearch" onclick="{~P~}.PictApplication.navigateTo('/SourceResearch')">Source Research</a>
 		<a data-route="IngestJobs" onclick="{~P~}.PictApplication.navigateTo('/IngestJobs')">Ingestion Jobs</a>
 		<a data-route="Sources" onclick="{~P~}.PictApplication.navigateTo('/Sources')">Sources</a>

@@ -168,8 +168,8 @@ class FactoProvider extends libPictProvider
 		return this.api('GET', '/1.0/Sources/0/100').then(
 			(pResponse) =>
 			{
-				this.pict.AppData.Facto.Sources = pResponse || [];
-				return pResponse || [];
+				this.pict.AppData.Facto.Sources = Array.isArray(pResponse) ? pResponse : [];
+				return this.pict.AppData.Facto.Sources;
 			});
 	}
 
@@ -270,7 +270,7 @@ class FactoProvider extends libPictProvider
 		return this.api('GET', '/1.0/Datasets/0/100').then(
 			(pResponse) =>
 			{
-				this.pict.AppData.Facto.Datasets = pResponse || [];
+				this.pict.AppData.Facto.Datasets = Array.isArray(pResponse) ? pResponse : [];
 			});
 	}
 
@@ -334,7 +334,7 @@ class FactoProvider extends libPictProvider
 		return this.api('GET', `/1.0/Records/${tmpBegin}/${tmpPageSize}`).then(
 			(pResponse) =>
 			{
-				this.pict.AppData.Facto.Records = pResponse || [];
+				this.pict.AppData.Facto.Records = Array.isArray(pResponse) ? pResponse : [];
 			});
 	}
 
@@ -534,6 +534,78 @@ class FactoProvider extends libPictProvider
 			{
 				return pResponse;
 			});
+	}
+
+	// ================================================================
+	// Scanner Operations
+	// ================================================================
+
+	loadScannerPaths()
+	{
+		return this.api('GET', '/facto/scanner/paths').then(
+			(pResponse) =>
+			{
+				this.pict.AppData.Facto.ScannerPaths = (pResponse && pResponse.Paths) ? pResponse.Paths : [];
+			});
+	}
+
+	loadScannerDatasets(pFilter)
+	{
+		let tmpQuery = '/facto/scanner/datasets';
+		let tmpParams = [];
+		if (pFilter)
+		{
+			if (pFilter.status) tmpParams.push('status=' + encodeURIComponent(pFilter.status));
+			if (pFilter.search) tmpParams.push('search=' + encodeURIComponent(pFilter.search));
+		}
+		if (tmpParams.length > 0) tmpQuery += '?' + tmpParams.join('&');
+
+		return this.api('GET', tmpQuery).then(
+			(pResponse) =>
+			{
+				this.pict.AppData.Facto.ScannerDatasets = (pResponse && pResponse.Datasets) ? pResponse.Datasets : [];
+			});
+	}
+
+	loadScannerDatasetDetail(pFolderName)
+	{
+		return this.api('GET', '/facto/scanner/dataset/' + encodeURIComponent(pFolderName));
+	}
+
+	addScannerPath(pPath)
+	{
+		return this.api('POST', '/facto/scanner/path', { Path: pPath });
+	}
+
+	removeScannerPath(pPath)
+	{
+		return this.api('DELETE', '/facto/scanner/path', { Path: pPath });
+	}
+
+	rescanPaths(pPath)
+	{
+		let tmpBody = pPath ? { Path: pPath } : {};
+		return this.api('POST', '/facto/scanner/rescan', tmpBody);
+	}
+
+	provisionScannerDataset(pFolderName)
+	{
+		return this.api('POST', '/facto/scanner/dataset/' + encodeURIComponent(pFolderName) + '/provision');
+	}
+
+	ingestScannerDataset(pFolderName, pOptions)
+	{
+		return this.api('POST', '/facto/scanner/dataset/' + encodeURIComponent(pFolderName) + '/ingest', pOptions || {});
+	}
+
+	downloadScannerDataset(pFolderName)
+	{
+		return this.api('POST', '/facto/scanner/dataset/' + encodeURIComponent(pFolderName) + '/download');
+	}
+
+	provisionAllScannerDatasets()
+	{
+		return this.api('POST', '/facto/scanner/provision-all');
 	}
 
 	// ================================================================

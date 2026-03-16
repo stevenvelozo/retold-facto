@@ -1,4 +1,6 @@
+.data
 data
+documentation/source_research/
 package-lock.json
 
 # Test Environment

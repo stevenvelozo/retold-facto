@@ -31,6 +31,7 @@ const libViewProjections = require('./views/PictView-Facto-Full-Projections.js')
 const libViewDashboards = require('./views/PictView-Facto-Full-Dashboards.js');
 const libViewRecordViewer = require('./views/PictView-Facto-Full-RecordViewer.js');
 const libViewSourceDetail = require('./views/PictView-Facto-Full-SourceDetail.js');
+const libViewScanner = require('./views/PictView-Facto-Full-Scanner.js');
 
 class FactoFullApplication extends libPictApplication
 {
@@ -65,6 +66,7 @@ class FactoFullApplication extends libPictApplication
 		this.pict.addView('Facto-Full-Dashboards', libViewDashboards.default_configuration, libViewDashboards);
 		this.pict.addView('Facto-Full-RecordViewer', libViewRecordViewer.default_configuration, libViewRecordViewer);
 		this.pict.addView('Facto-Full-SourceDetail', libViewSourceDetail.default_configuration, libViewSourceDetail);
+		this.pict.addView('Facto-Full-Scanner', libViewScanner.default_configuration, libViewScanner);
 	}
 
 	onAfterInitializeAsync(fCallback)
@@ -90,6 +92,8 @@ class FactoFullApplication extends libPictApplication
 			AvailableConnectionTypes: [],
 			ProjectionMappings: [],
 			DiscoveredFields: {},
+			ScannerPaths: [],
+			ScannerDatasets: [],
 			CurrentTheme: 'turquoise-deluxe',
 			CurrentRoute: ''
 		};

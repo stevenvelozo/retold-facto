@@ -26,7 +26,7 @@ const libRetoldFactoDataLakeService = require('../source/services/Retold-Facto-D
 // ================================================================
 
 const CATALOG_PATH = libPath.join(__dirname, '..', 'documentation', 'datasets', 'download-catalog.json');
-const DEFAULT_DATA_DIR = libPath.join(__dirname, '..', 'data');
+const DEFAULT_DATA_DIR = libPath.join(__dirname, '..', 'dist', 'retold-facto-raw-data');
 
 // ================================================================
 // CLI Argument Parsing

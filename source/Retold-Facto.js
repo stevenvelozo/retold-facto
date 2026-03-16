@@ -25,6 +25,7 @@ const libRetoldFactoProjectionEngine = require('./services/Retold-Facto-Projecti
 const libRetoldFactoCatalogManager = require('./services/Retold-Facto-CatalogManager.js');
 const libRetoldFactoStoreConnectionManager = require('./services/Retold-Facto-StoreConnectionManager.js');
 const libRetoldFactoDataLakeService = require('./services/Retold-Facto-DataLakeService.js');
+const libRetoldFactoSourceFolderScanner = require('./services/Retold-Facto-SourceFolderScanner.js');
 
 const libMeadowIntegration = require('meadow-integration');
 const libTabularTransform = require('meadow-integration/source/services/tabular/Service-TabularTransform.js');
@@ -206,6 +207,8 @@ const defaultFactoSettings = (
 				CatalogManager: true,
 				// Store connection manager API (/facto/connection/*)
 				StoreConnectionManager: true,
+				// Source folder scanner API (/facto/scanner/*)
+				SourceFolderScanner: true,
 				// Web UI
 				WebUI: true
 			},
@@ -213,7 +216,10 @@ const defaultFactoSettings = (
 		Facto:
 			{
 				RoutePrefix: '/facto',
-				DefaultCertaintyValue: 0.5
+				DefaultCertaintyValue: 0.5,
+				ScanPaths: [],
+				AutoProvision: false,
+				AutoIngest: false
 			}
 	});
 
@@ -297,6 +303,12 @@ class RetoldFacto extends libFableServiceProviderBase
 			{
 				CatalogPath: this.options.Facto.CatalogPath || null,
 				DataDir: this.options.Facto.DataDir || null
+			});
+
+		this.fable.serviceManager.addServiceType('RetoldFactoSourceFolderScanner', libRetoldFactoSourceFolderScanner);
+		this.fable.serviceManager.instantiateServiceProvider('RetoldFactoSourceFolderScanner',
+			{
+				RoutePrefix: this.options.Facto.RoutePrefix
 			});
 
 		// Register Meadow Integration services for projection mapping transforms
@@ -518,6 +530,56 @@ class RetoldFacto extends libFableServiceProviderBase
 
 	onAfterInitialize(fCallback)
 	{
+		let tmpScanPaths = this.options.Facto.ScanPaths;
+		if (!Array.isArray(tmpScanPaths) || tmpScanPaths.length === 0)
+		{
+			return fCallback();
+		}
+
+		// Start the server immediately — scan in the background so
+		// slow/large folder trees on external drives don't block startup.
+		this.fable.log.info(`Retold Facto: Scanning ${tmpScanPaths.length} configured path(s) in background...`);
+
+		let tmpFable = this.fable;
+
+		// Use setImmediate so the initializeService chain completes first
+		setImmediate(
+			() =>
+			{
+				let tmpAnticipate = tmpFable.newAnticipate();
+
+				for (let i = 0; i < tmpScanPaths.length; i++)
+				{
+					let tmpPath = tmpScanPaths[i];
+					tmpAnticipate.anticipate(
+						(fStepCallback) =>
+						{
+							tmpFable.RetoldFactoSourceFolderScanner.addScanPath(tmpPath,
+								(pError) =>
+								{
+									if (pError)
+									{
+										tmpFable.log.error(`Error scanning path ${tmpPath}: ${pError}`);
+									}
+									return fStepCallback();
+								});
+						});
+				}
+
+				tmpAnticipate.wait(
+					(pError) =>
+					{
+						if (pError)
+						{
+							tmpFable.log.error(`Error adding scan paths: ${pError}`);
+						}
+						else
+						{
+							tmpFable.log.info(`Retold Facto: Background scan complete.`);
+						}
+					});
+			});
+
 		return fCallback();
 	}
 
@@ -543,7 +605,7 @@ class RetoldFacto extends libFableServiceProviderBase
 			this.fable.log.info(`Retold Facto is initializing...`);
 
 			// Log endpoint configuration
-			let tmpGroupNames = ['MeadowEndpoints', 'SourceManager', 'RecordManager', 'DatasetManager', 'IngestEngine', 'ProjectionEngine', 'CatalogManager', 'StoreConnectionManager', 'WebUI'];
+			let tmpGroupNames = ['MeadowEndpoints', 'SourceManager', 'RecordManager', 'DatasetManager', 'IngestEngine', 'ProjectionEngine', 'CatalogManager', 'StoreConnectionManager', 'SourceFolderScanner', 'WebUI'];
 			let tmpEnabledGroups = [];
 			let tmpDisabledGroups = [];
 			for (let i = 0; i < tmpGroupNames.length; i++)
@@ -639,6 +701,11 @@ class RetoldFacto extends libFableServiceProviderBase
 					if (this.isEndpointGroupEnabled('StoreConnectionManager'))
 					{
 						this.fable.RetoldFactoStoreConnectionManager.connectRoutes(this.fable.OratorServiceServer);
+					}
+
+					if (this.isEndpointGroupEnabled('SourceFolderScanner'))
+					{
+						this.fable.RetoldFactoSourceFolderScanner.connectRoutes(this.fable.OratorServiceServer);
 					}
 
 					return fInitCallback();

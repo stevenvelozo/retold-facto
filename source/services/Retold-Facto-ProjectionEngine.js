@@ -1407,7 +1407,16 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 						}
 
 						let tmpTabularCheck = this.fable.servicesMap.TabularCheck;
-						let tmpStatistics = {};
+						let tmpStatistics = {
+							DataSet: 'FieldDiscovery',
+							FirstRow: null,
+							RowCount: 0,
+							LastRow: null,
+							Headers: [],
+							ColumnCount: 0,
+							ColumnStatistics: {},
+							Records: null
+						};
 
 						let tmpRowCount = 0;
 						for (let i = 0; i < pRecords.length; i++)

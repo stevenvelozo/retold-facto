@@ -30,6 +30,7 @@ let _CLIConfig = null;
 let _CLILogPath = null;
 let _CLIPort = null;
 let _CLIDBPath = null;
+let _CLIScanPaths = null;
 let _CLICommand = 'serve';
 let _CLIArgs = [];
 
@@ -88,6 +89,18 @@ for (let i = 0; i < tmpArgs.length; i++)
 			_CLILogPath = `${process.cwd()}/Facto-Run-${Date.now()}.log`;
 		}
 	}
+	else if (tmpArg === '--scan-path' || tmpArg === '-s')
+	{
+		if (tmpArgs[i + 1])
+		{
+			if (!_CLIScanPaths)
+			{
+				_CLIScanPaths = [];
+			}
+			_CLIScanPaths.push(libPath.resolve(tmpArgs[i + 1]));
+			i++;
+		}
+	}
 	else if (tmpArg === '--help' || tmpArg === '-h')
 	{
 		printHelp();
@@ -124,11 +137,15 @@ Commands:
   source add <name> [options]   Register a new data source
   dataset list                  List all datasets
   dataset add <name> [options]  Create a new dataset
+  scan <folder>                 Scan a folder tree and list discovered datasets
+  scan provision <folder> [name]  Provision one or all discovered datasets
+  scan ingest <folder> [name]     Ingest one or all discovered datasets
 
 Options:
   --config, -c <path>      Path to a JSON config file
   --port, -p <port>        Override the API server port (default: 8386)
   --db, -d <path>          Path to SQLite database file (default: ./data/facto.sqlite)
+  --scan-path, -s <path>   Add a scan path for serve mode (repeatable)
   --log, -l [path]         Write log output to a file
   --help, -h               Show this help
 
@@ -242,6 +259,9 @@ _Fable.MeadowSQLiteProvider.connectAsync(
 			case 'dataset':
 				commandDataset();
 				break;
+			case 'scan':
+				commandScan();
+				break;
 			default:
 				console.error(`Unknown command: ${_CLICommand}`);
 				printHelp();
@@ -254,6 +274,14 @@ _Fable.MeadowSQLiteProvider.connectAsync(
 // ================================================================
 function commandServe()
 {
+	let tmpFactoConfig = {
+		RoutePrefix: '/facto',
+		DefaultCertaintyValue: 0.5,
+		ScanPaths: _CLIScanPaths || [],
+		AutoProvision: false,
+		AutoIngest: false
+	};
+
 	_Fable.serviceManager.addServiceType('RetoldFacto', libRetoldFacto);
 	let tmpFactoService = _Fable.serviceManager.instantiateServiceProvider('RetoldFacto',
 		{
@@ -272,8 +300,11 @@ function commandServe()
 					IngestEngine: true,
 					ProjectionEngine: true,
 					CatalogManager: true,
+					SourceFolderScanner: true,
 					WebUI: true
-				}
+				},
+
+			Facto: tmpFactoConfig
 		});
 
 	tmpFactoService.initializeService(
@@ -629,5 +660,242 @@ function commandDataset()
 				console.error('Usage: retold-facto dataset [list|add]');
 				process.exit(1);
 			}
+		});
+}
+
+// ================================================================
+// Command: scan <folder> | scan provision <folder> [name] | scan ingest <folder> [name]
+// ================================================================
+function commandScan()
+{
+	let tmpSubCommand = _CLIArgs[0];
+	if (!tmpSubCommand)
+	{
+		console.error('Error: Folder path is required for scan command.');
+		console.error('Usage: retold-facto scan <folder>');
+		console.error('       retold-facto scan provision <folder> [dataset-name]');
+		console.error('       retold-facto scan ingest <folder> [dataset-name]');
+		process.exit(1);
+	}
+
+	// Determine if this is a subcommand or a folder path
+	let tmpIsSubCommand = (tmpSubCommand === 'provision' || tmpSubCommand === 'ingest');
+	let tmpScanFolder;
+	let tmpDatasetName;
+
+	if (tmpIsSubCommand)
+	{
+		tmpScanFolder = _CLIArgs[1];
+		tmpDatasetName = _CLIArgs[2];
+		if (!tmpScanFolder)
+		{
+			console.error(`Error: Folder path is required for scan ${tmpSubCommand}.`);
+			process.exit(1);
+		}
+	}
+	else
+	{
+		// First arg is the folder path, treat as a plain scan
+		tmpScanFolder = tmpSubCommand;
+		tmpSubCommand = 'list';
+	}
+
+	tmpScanFolder = libPath.resolve(tmpScanFolder);
+
+	if (!libFs.existsSync(tmpScanFolder))
+	{
+		console.error(`Error: Folder not found: ${tmpScanFolder}`);
+		process.exit(1);
+	}
+
+	// Determine if provision/ingest need the full service (with DB)
+	let tmpNeedsDB = (tmpSubCommand === 'provision' || tmpSubCommand === 'ingest');
+
+	if (tmpNeedsDB)
+	{
+		_Fable.MeadowSQLiteProvider.db.exec(libRetoldFacto.FACTO_SCHEMA_SQL);
+	}
+
+	_Fable.serviceManager.addServiceType('RetoldFacto', libRetoldFacto);
+	let tmpFactoService = _Fable.serviceManager.instantiateServiceProvider('RetoldFacto',
+		{
+			StorageProvider: 'SQLite',
+			AutoStartOrator: false,
+			AutoCreateSchema: tmpNeedsDB,
+
+			FullMeadowSchemaPath: libPath.join(__dirname, '..', 'test', 'model') + '/',
+			FullMeadowSchemaFilename: 'MeadowModel-Extended.json',
+
+			Endpoints:
+				{
+					MeadowEndpoints: tmpNeedsDB,
+					SourceManager: false,
+					RecordManager: false,
+					DatasetManager: false,
+					IngestEngine: tmpNeedsDB,
+					ProjectionEngine: false,
+					CatalogManager: tmpNeedsDB,
+					SourceFolderScanner: false,
+					WebUI: false
+				}
+		});
+
+	tmpFactoService.initializeService(
+		(pInitError) =>
+		{
+			if (pInitError)
+			{
+				console.error(`Initialization error: ${pInitError}`);
+				process.exit(1);
+			}
+
+			let tmpScanner = _Fable.RetoldFactoSourceFolderScanner;
+
+			tmpScanner.addScanPath(tmpScanFolder,
+				(pScanError) =>
+				{
+					if (pScanError)
+					{
+						console.error(`Scan error: ${pScanError}`);
+						process.exit(1);
+					}
+
+					if (tmpSubCommand === 'list')
+					{
+						let tmpDatasets = tmpScanner.getDiscoveredDatasets();
+						if (tmpDatasets.length === 0)
+						{
+							console.log('No datasets discovered.');
+							process.exit(0);
+						}
+
+						console.log(`\nDiscovered ${tmpDatasets.length} dataset(s) in ${tmpScanFolder}\n`);
+						console.log(`  ${'Name'.padEnd(40)} | ${'Status'.padEnd(12)} | ${'Data Files'.padEnd(10)} | Title`);
+						console.log(`  ${''.padEnd(40, '-')}+${''.padEnd(14, '-')}+${''.padEnd(12, '-')}+${''.padEnd(30, '-')}`);
+						for (let i = 0; i < tmpDatasets.length; i++)
+						{
+							let tmpDS = tmpDatasets[i];
+							let tmpName = (tmpDS.FolderName || '').substring(0, 38).padEnd(40);
+							let tmpStatus = (tmpDS.Status || '').padEnd(12);
+							let tmpFiles = String(tmpDS.DataFiles ? tmpDS.DataFiles.length : 0).padEnd(10);
+							let tmpTitle = (tmpDS.Title || '').substring(0, 40);
+							console.log(`  ${tmpName}| ${tmpStatus}| ${tmpFiles}| ${tmpTitle}`);
+						}
+						console.log('');
+						process.exit(0);
+					}
+					else if (tmpSubCommand === 'provision')
+					{
+						if (tmpDatasetName)
+						{
+							// Provision a single dataset
+							let tmpDS = tmpScanner.getDiscoveredDatasetByName(tmpDatasetName);
+							if (!tmpDS)
+							{
+								console.error(`Dataset not found: ${tmpDatasetName}`);
+								process.exit(1);
+							}
+							tmpScanner.provisionDataset(tmpDS.FolderPath,
+								(pProvError) =>
+								{
+									if (pProvError)
+									{
+										console.error(`Provision error: ${pProvError}`);
+										process.exit(1);
+									}
+									console.log(`Provisioned: ${tmpDS.FolderName} (Source #${tmpDS.IDSource}, Dataset #${tmpDS.IDDataset})`);
+									process.exit(0);
+								});
+						}
+						else
+						{
+							// Provision all
+							let tmpAllDatasets = tmpScanner.getDiscoveredDatasets();
+							let tmpCount = 0;
+							let tmpErrors = 0;
+
+							let tmpProvisionNext = () =>
+							{
+								if (tmpCount >= tmpAllDatasets.length)
+								{
+									console.log(`\nProvisioned ${tmpCount - tmpErrors} of ${tmpAllDatasets.length} dataset(s) (${tmpErrors} error(s))`);
+									process.exit(tmpErrors > 0 ? 1 : 0);
+								}
+
+								let tmpDS = tmpAllDatasets[tmpCount];
+								tmpScanner.provisionDataset(tmpDS.FolderPath,
+									(pProvError) =>
+									{
+										if (pProvError)
+										{
+											console.error(`  Error provisioning ${tmpDS.FolderName}: ${pProvError}`);
+											tmpErrors++;
+										}
+										else
+										{
+											console.log(`  Provisioned: ${tmpDS.FolderName}`);
+										}
+										tmpCount++;
+										tmpProvisionNext();
+									});
+							};
+							console.log(`Provisioning ${tmpAllDatasets.length} dataset(s)...`);
+							tmpProvisionNext();
+						}
+					}
+					else if (tmpSubCommand === 'ingest')
+					{
+						if (tmpDatasetName)
+						{
+							// Ingest a single dataset
+							let tmpDS = tmpScanner.getDiscoveredDatasetByName(tmpDatasetName);
+							if (!tmpDS)
+							{
+								console.error(`Dataset not found: ${tmpDatasetName}`);
+								process.exit(1);
+							}
+							// Provision first if needed
+							let tmpDoIngest = () =>
+							{
+								tmpScanner.ingestDataset(tmpDS.FolderPath, {},
+									(pIngestError) =>
+									{
+										if (pIngestError)
+										{
+											console.error(`Ingest error: ${pIngestError}`);
+											process.exit(1);
+										}
+										console.log(`Ingested: ${tmpDS.FolderName}`);
+										process.exit(0);
+									});
+							};
+
+							if (tmpDS.Status === 'Discovered')
+							{
+								tmpScanner.provisionDataset(tmpDS.FolderPath,
+									(pProvError) =>
+									{
+										if (pProvError)
+										{
+											console.error(`Provision error: ${pProvError}`);
+											process.exit(1);
+										}
+										console.log(`  Provisioned: ${tmpDS.FolderName}`);
+										tmpDoIngest();
+									});
+							}
+							else
+							{
+								tmpDoIngest();
+							}
+						}
+						else
+						{
+							console.error('Error: Dataset name is required for scan ingest.');
+							console.error('Usage: retold-facto scan ingest <folder> <dataset-name>');
+							process.exit(1);
+						}
+					}
+				});
 		});
 }

@@ -9,6 +9,10 @@
 			"template": "{~LV:Pict.PictApplication.showView(`Facto-Full-Dashboard`)~}"
 		},
 		{
+			"path": "/Scanner",
+			"template": "{~LV:Pict.PictApplication.showView(`Facto-Full-Scanner`)~}"
+		},
+		{
 			"path": "/SourceResearch",
 			"template": "{~LV:Pict.PictApplication.showView(`Facto-Full-SourceResearch`)~}"
 		},
