@@ -6545,7 +6545,7 @@ this.pict.addProvider('PictRouter',require('./providers/PictRouter-Facto-Configu
 this.pict.addView('Facto-Full-Layout',libViewLayout.default_configuration,libViewLayout);this.pict.addView('Facto-Full-TopBar',libViewTopBar.default_configuration,libViewTopBar);this.pict.addView('Facto-Full-BottomBar',libViewBottomBar.default_configuration,libViewBottomBar);// Content views
 this.pict.addView('Facto-Full-Dashboard',libViewDashboard.default_configuration,libViewDashboard);this.pict.addView('Facto-Full-SourceResearch',libViewSourceResearch.default_configuration,libViewSourceResearch);this.pict.addView('Facto-Full-IngestJobs',libViewIngestJobs.default_configuration,libViewIngestJobs);this.pict.addView('Facto-Full-Sources',libViewSources.default_configuration,libViewSources);this.pict.addView('Facto-Full-Datasets',libViewDatasets.default_configuration,libViewDatasets);this.pict.addView('Facto-Full-Records',libViewRecords.default_configuration,libViewRecords);this.pict.addView('Facto-Full-Projections',libViewProjections.default_configuration,libViewProjections);this.pict.addView('Facto-Full-SchemaEditor',libViewSchemaEditor.default_configuration,libViewSchemaEditor);this.pict.addView('Facto-Full-MappingEditor',libViewMappingEditor.default_configuration,libViewMappingEditor);this.pict.addView('Facto-Full-QueryPanel',libViewQueryPanel.default_configuration,libViewQueryPanel);this.pict.addView('Facto-Full-Dashboards',libViewDashboards.default_configuration,libViewDashboards);this.pict.addView('Facto-Full-RecordViewer',libViewRecordViewer.default_configuration,libViewRecordViewer);this.pict.addView('Facto-Full-SourceDetail',libViewSourceDetail.default_configuration,libViewSourceDetail);this.pict.addView('Facto-Full-SourceEditor',libViewSourceEditor.default_configuration,libViewSourceEditor);this.pict.addView('Facto-Full-Scanner',libViewScanner.default_configuration,libViewScanner);this.pict.addView('Facto-Full-Connections',libViewConnections.default_configuration,libViewConnections);this.pict.addView('Facto-Full-ProjectionDetail',libViewProjectionDetail.default_configuration,libViewProjectionDetail);}onAfterInitializeAsync(fCallback){// Apply saved theme before first render
 this.loadSavedTheme();// Initialize application state
-this.pict.AppData.Facto={CatalogEntries:[],Sources:[],Datasets:[],Records:[],IngestJobs:[],SelectedSource:null,SelectedDataset:null,RecordPage:0,RecordPageSize:50,CurrentRecordContent:{},CurrentDocumentSegments:[],StoreConnections:[],AvailableConnectionTypes:[],ProjectionMappings:[],DiscoveredFields:{},ScannerPaths:[],ScannerDatasets:[],CurrentTheme:'turquoise-deluxe',CurrentRoute:''};// Expose pict globally for inline onclick handlers
+this.pict.AppData.Facto={CatalogEntries:[],Sources:[],Datasets:[],Records:[],IngestJobs:[],SelectedSource:null,SelectedDataset:null,RecordPage:0,RecordPageSize:50,RecordFilterSources:[],RecordFilterDateFrom:'',RecordFilterDateTo:'',CurrentRecordContent:{},CurrentDocumentSegments:[],StoreConnections:[],AvailableConnectionTypes:[],ProjectionMappings:[],DiscoveredFields:{},ScannerPaths:[],ScannerDatasets:[],CurrentTheme:'turquoise-deluxe',CurrentRoute:''};// Expose pict globally for inline onclick handlers
 window.pict=this.pict;// Register all parameterized routes BEFORE rendering the layout,
 // so they are available when resolve() fires after the DOM is ready.
 let tmpSelf=this;this.pict.providers.PictRouter.addRoute('/Record/:IDRecord',pMatch=>{let tmpIDRecord=pMatch&&pMatch.data?pMatch.data.IDRecord:null;if(tmpIDRecord){tmpSelf.showRecordView(tmpIDRecord);}});this.pict.providers.PictRouter.addRoute('/Source/:IDSource',pMatch=>{let tmpIDSource=pMatch&&pMatch.data?pMatch.data.IDSource:null;if(tmpIDSource){tmpSelf.showSourceView(tmpIDSource);}});this.pict.providers.PictRouter.addRoute('/Projection/:IDDataset',pMatch=>{let tmpIDDataset=pMatch&&pMatch.data?pMatch.data.IDDataset:null;if(tmpIDDataset){tmpSelf.showProjectionView(tmpIDDataset);}});this.pict.providers.PictRouter.addRoute('/Source/:IDSource/Doc/:IDDoc',pMatch=>{let tmpIDSource=pMatch&&pMatch.data?pMatch.data.IDSource:null;let tmpIDDoc=pMatch&&pMatch.data?pMatch.data.IDDoc:null;if(tmpIDSource){tmpSelf.showSourceView(tmpIDSource,tmpIDDoc);}});// Render the layout shell — this cascades into TopBar, BottomBar
@@ -6959,7 +6959,7 @@ this.render();let tmpEditor=document.getElementById('Facto-Proj-Mapping-Editor')
 let tmpMappingListWrap=document.getElementById('Facto-Proj-Mapping-List-Wrap');let tmpMappingDetail=document.getElementById('Facto-Proj-Mapping-Detail');if(tmpMappingListWrap)tmpMappingListWrap.style.display='';if(tmpMappingDetail)tmpMappingDetail.style.display='none';// Load mappings, sources, stores, and fresh schema in parallel
 Promise.all([this.pict.providers.Facto.loadProjectionMappings(pIDDataset),this.pict.providers.Facto.loadSources(),this.pict.providers.Facto.loadProjectionStores(pIDDataset),this.pict.providers.Facto.loadProjectionSchema(pIDDataset)]).then(pResults=>{this._CurrentMappings=pResults[0]&&pResults[0].Mappings?pResults[0].Mappings:[];this._MappingSources=Array.isArray(pResults[1])?pResults[1]:[];this._MappingStores=pResults[2]&&pResults[2].Stores?pResults[2].Stores:[];// Store the fresh schema locally for use by flow nodes
 let tmpSchema=pResults[3];if(tmpSchema&&tmpSchema.SchemaDefinition){this._CurrentProjectionSchema=tmpSchema.SchemaDefinition;}this.refreshMappingList();});}closeMappingEditor(){// Clean up flow view
-if(this._FlowView){this._FlowView=null;}this._SelectedMappingID=0;this.pict.views['Facto-Full-ProjectionDetail'].closeMappingEditor();}refreshMappingList(){let tmpContainer=document.getElementById('Facto-Proj-Mapping-List');if(!tmpContainer)return;if(this._CurrentMappings.length===0){tmpContainer.innerHTML='<div class="facto-card" style="text-align:center; padding:1.5em; color:var(--facto-text-tertiary);">No mappings yet. Create one to map source fields to projection columns.</div>';return;}let tmpHtml='<table class="facto-mapping-list-table"><thead><tr>';tmpHtml+='<th>ID</th><th>Name</th><th>Source</th><th>Active</th><th>Actions</th>';tmpHtml+='</tr></thead><tbody>';for(let i=0;i<this._CurrentMappings.length;i++){let tmpMap=this._CurrentMappings[i];let tmpSourceName='\u2014';for(let j=0;j<this._MappingSources.length;j++){if(this._MappingSources[j].IDSource===tmpMap.IDSource){tmpSourceName=this._MappingSources[j].Name||'Source '+tmpMap.IDSource;break;}}tmpHtml+='<tr>';tmpHtml+='<td>'+tmpMap.IDProjectionMapping+'</td>';tmpHtml+='<td><strong>'+(tmpMap.Name||'\u2014')+'</strong></td>';tmpHtml+='<td>'+tmpSourceName+'</td>';tmpHtml+='<td>'+(tmpMap.Active?'\u2713':'\u2717')+'</td>';tmpHtml+='<td>';tmpHtml+='<button class="facto-btn facto-btn-primary facto-btn-small" onclick="pict.views[\'Facto-Full-MappingEditor\'].openMappingDetail('+tmpMap.IDProjectionMapping+')">Edit</button> ';tmpHtml+='<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.views[\'Facto-Full-MappingEditor\'].deleteMapping('+tmpMap.IDProjectionMapping+')">Delete</button>';tmpHtml+='</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}newMapping(){this._SelectedMappingID=0;let tmpMappingListWrap=document.getElementById('Facto-Proj-Mapping-List-Wrap');let tmpMappingDetail=document.getElementById('Facto-Proj-Mapping-Detail');if(tmpMappingListWrap)tmpMappingListWrap.style.display='none';if(tmpMappingDetail)tmpMappingDetail.style.display='';// Reset fields
+if(this._FlowView){this._FlowView=null;}this._SelectedMappingID=0;this.pict.views['Facto-Full-ProjectionDetail'].closeMappingEditor();}refreshMappingList(){let tmpContainer=document.getElementById('Facto-Proj-Mapping-List');if(!tmpContainer)return;if(this._CurrentMappings.length===0){tmpContainer.innerHTML='<div class="facto-card" style="text-align:center; padding:1.5em; color:var(--facto-text-tertiary);">No mappings yet. Create one to map source fields to projection columns.</div>';return;}let tmpHtml='<table class="facto-mapping-list-table"><thead><tr>';tmpHtml+='<th>ID</th><th>Name</th><th>Source</th><th>Active</th><th>Actions</th>';tmpHtml+='</tr></thead><tbody>';for(let i=0;i<this._CurrentMappings.length;i++){let tmpMap=this._CurrentMappings[i];let tmpSourceName='\u2014';for(let j=0;j<this._MappingSources.length;j++){if(this._MappingSources[j].IDSource===tmpMap.IDSource){tmpSourceName=this._MappingSources[j].Name||'Source '+tmpMap.IDSource;break;}}tmpHtml+='<tr>';tmpHtml+='<td>'+tmpMap.IDProjectionMapping+'</td>';tmpHtml+='<td><strong>'+(tmpMap.Name||'\u2014')+'</strong></td>';tmpHtml+='<td>'+tmpSourceName+'</td>';tmpHtml+='<td>'+(tmpMap.Active?'\u2713':'\u2717')+'</td>';tmpHtml+='<td>';tmpHtml+='<button class="facto-btn facto-btn-primary facto-btn-small" onclick="pict.views[\'Facto-Full-MappingEditor\'].openMappingDetail('+tmpMap.IDProjectionMapping+')">Edit</button> ';tmpHtml+='<button class="facto-btn facto-btn-danger facto-btn-small" onclick="pict.views[\'Facto-Full-MappingEditor\'].deleteMapping('+tmpMap.IDProjectionMapping+')">Delete</button>';tmpHtml+='</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}newMapping(){this._SelectedMappingID=0;let tmpMappingListWrap=document.getElementById('Facto-Proj-Mapping-List-Wrap');let tmpMappingDetail=document.getElementById('Facto-Proj-Mapping-Detail');if(tmpMappingListWrap)tmpMappingListWrap.style.display='none';if(tmpMappingDetail)tmpMappingDetail.style.display='';// Reset fields
 let tmpNameInput=document.getElementById('Facto-Proj-Mapping-Name');if(tmpNameInput)tmpNameInput.value='';// Populate source dropdown
 this._populateSourceDropdown();this._populateStoreChecklist();// Clear JSON editor
 let tmpJSONTextarea=document.getElementById('Facto-Proj-Mapping-JSON');if(tmpJSONTextarea){let tmpNewEntityName=(this._EditingName||'Record').replace(/[^a-zA-Z0-9_]/g,'');let tmpNewGUIDCol='GUID'+tmpNewEntityName;let tmpNewIDCol='ID'+tmpNewEntityName;let tmpNewMappings={};tmpNewMappings[tmpNewGUIDCol]='{~D:Record.IDRecord~}';tmpNewMappings[tmpNewIDCol]='{~D:Record.IDRecord~}';tmpJSONTextarea.value=JSON.stringify({Entity:tmpNewEntityName,GUIDTemplate:'{~D:Record.IDRecord~}',GUIDName:tmpNewGUIDCol,Mappings:tmpNewMappings,Solvers:[],ManyfestAddresses:false},null,'\t');}// Clear flow container
@@ -7556,11 +7556,119 @@ let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.en
 			font-size: 0.8em;
 			color: var(--facto-text-secondary);
 		}
+		.facto-filter-bar {
+			border: 1px solid var(--facto-border, #333);
+			border-radius: 6px;
+			padding: 1em;
+			margin-bottom: 1em;
+			background: var(--facto-bg-surface);
+		}
+		.facto-filter-bar h3 {
+			margin: 0 0 0.75em 0;
+			font-size: 0.9em;
+			color: var(--facto-text-secondary);
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+		}
+		.facto-filter-section {
+			margin-bottom: 1em;
+		}
+		.facto-filter-section:last-child {
+			margin-bottom: 0;
+		}
+		.facto-filter-label {
+			display: block;
+			font-size: 0.8em;
+			color: var(--facto-text-secondary);
+			margin-bottom: 0.4em;
+			font-weight: 600;
+		}
+		.facto-source-checkboxes {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.5em 1em;
+			max-height: 120px;
+			overflow-y: auto;
+			padding: 0.25em 0;
+		}
+		.facto-source-checkboxes label {
+			display: flex;
+			align-items: center;
+			gap: 0.35em;
+			font-size: 0.85em;
+			cursor: pointer;
+			white-space: nowrap;
+		}
+		.facto-source-checkboxes input[type="checkbox"] {
+			cursor: pointer;
+		}
+		.facto-source-toggle {
+			font-size: 0.75em;
+			color: var(--facto-link);
+			cursor: pointer;
+			margin-left: 0.5em;
+			text-decoration: underline;
+		}
+		.facto-date-filters {
+			display: flex;
+			align-items: center;
+			gap: 0.75em;
+			flex-wrap: wrap;
+		}
+		.facto-date-filters input[type="text"] {
+			padding: 0.35em 0.5em;
+			font-size: 0.85em;
+			border: 1px solid var(--facto-border);
+			border-radius: 4px;
+			background: var(--facto-bg-input);
+			color: var(--facto-text);
+			width: 160px;
+			margin-bottom: 0;
+		}
+		.facto-date-filters span {
+			font-size: 0.8em;
+			color: var(--facto-text-secondary);
+		}
+		.facto-filter-actions {
+			display: flex;
+			gap: 0.5em;
+			margin-top: 0.75em;
+		}
 	`,Templates:[{Hash:"Facto-Full-Records-Template",Template:/*html*/`
 <div class="facto-content">
 	<div class="facto-content-header">
 		<h1>Records</h1>
 		<p>Browse ingested records across all datasets.</p>
+	</div>
+
+	<div class="facto-filter-bar">
+		<h3>Filters</h3>
+
+		<div class="facto-filter-section">
+			<span class="facto-filter-label">
+				Data Sources
+				<span class="facto-source-toggle" onclick="{~P~}.views['Facto-Full-Records'].toggleAllSources(true)">All</span>
+				<span class="facto-source-toggle" onclick="{~P~}.views['Facto-Full-Records'].toggleAllSources(false)">None</span>
+			</span>
+			<div id="Facto-Full-Records-SourceCheckboxes" class="facto-source-checkboxes">
+				<span style="font-size:0.85em; color:var(--facto-text-secondary);">Loading sources...</span>
+			</div>
+		</div>
+
+		<div class="facto-filter-section">
+			<span class="facto-filter-label">Date Range (Ingest Date)</span>
+			<div class="facto-date-filters">
+				<span>From</span>
+				<input type="text" id="Facto-Full-Records-DateFrom" placeholder="YYYY, YYYY-MM, or YYYY-MM-DD" />
+				<span>To</span>
+				<input type="text" id="Facto-Full-Records-DateTo" placeholder="YYYY, YYYY-MM, or YYYY-MM-DD" />
+			</div>
+		</div>
+
+		<div class="facto-filter-actions">
+			<button class="facto-btn facto-btn-primary facto-btn-small" onclick="{~P~}.views['Facto-Full-Records'].applyFilters()">Apply Filters</button>
+			<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="{~P~}.views['Facto-Full-Records'].clearFilters()">Clear</button>
+		</div>
 	</div>
 
 	<div class="facto-records-pager">
@@ -7571,7 +7679,11 @@ let tmpNormalized=pDateStr;if(typeof tmpNormalized==='string'&&!tmpNormalized.en
 
 	<div id="Facto-Full-Records-List"></div>
 </div>
-`}],Renderables:[{RenderableHash:"Facto-Full-Records-Content",TemplateHash:"Facto-Full-Records-Template",DestinationAddress:"#Facto-Full-Content-Container",RenderMethod:"replace"}]};class FactoFullRecordsView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent){this.pict.providers.Facto.loadRecords(this.pict.AppData.Facto.RecordPage).then(()=>{this.refreshList();});return super.onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent);}refreshList(){let tmpContainer=document.getElementById('Facto-Full-Records-List');if(!tmpContainer)return;let tmpRecords=this.pict.AppData.Facto.Records;let tmpPageInfo=document.getElementById('Facto-Full-Records-PageInfo');if(tmpPageInfo)tmpPageInfo.textContent='Page '+((this.pict.AppData.Facto.RecordPage||0)+1);if(!tmpRecords||tmpRecords.length===0){tmpContainer.innerHTML='<div class="facto-empty">No records found. Ingest data via Source Research or the Ingest API.</div>';return;}let tmpHtml='<table><thead><tr><th>ID</th><th>Dataset</th><th>Source</th><th>GUID</th><th>Data</th><th></th></tr></thead><tbody>';for(let i=0;i<tmpRecords.length;i++){let tmpRec=tmpRecords[i];let tmpData='';try{tmpData=JSON.stringify(JSON.parse(tmpRec.Content||'{}'));}catch(e){tmpData=tmpRec.Content||'';}tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpRec.IDRecord||'')+'</td>';tmpHtml+='<td>'+(tmpRec.IDDataset||'')+'</td>';tmpHtml+='<td>'+(tmpRec.IDSource||'')+'</td>';tmpHtml+='<td style="font-size:0.8em; color:var(--facto-text-tertiary);">'+(tmpRec.GUIDRecord||'').substring(0,8)+'...</td>';tmpHtml+='<td class="facto-record-data">'+tmpData+'</td>';tmpHtml+='<td><button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.PictApplication.navigateTo(\'/Record/'+tmpRec.IDRecord+'\')">View</button></td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}prevPage(){if(this.pict.AppData.Facto.RecordPage>0){this.pict.AppData.Facto.RecordPage--;this.pict.providers.Facto.loadRecords(this.pict.AppData.Facto.RecordPage).then(()=>{this.refreshList();});}}nextPage(){this.pict.AppData.Facto.RecordPage++;this.pict.providers.Facto.loadRecords(this.pict.AppData.Facto.RecordPage).then(()=>{this.refreshList();});}}module.exports=FactoFullRecordsView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":64}],81:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-Scanner",DefaultRenderable:"Facto-Full-Scanner-Content",DefaultDestinationAddress:"#Facto-Full-Content-Container",AutoRender:false,CSS:/*css*/`
+`}],Renderables:[{RenderableHash:"Facto-Full-Records-Content",TemplateHash:"Facto-Full-Records-Template",DestinationAddress:"#Facto-Full-Content-Container",RenderMethod:"replace"}]};class FactoFullRecordsView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent){// Load sources for the multiselect, then load records
+this.pict.providers.Facto.loadSources().then(()=>{this.renderSourceCheckboxes();this.loadCurrentPage();});return super.onAfterRender(pRenderable,pRenderDestinationAddress,pRecord,pContent);}renderSourceCheckboxes(){let tmpContainer=document.getElementById('Facto-Full-Records-SourceCheckboxes');if(!tmpContainer){return;}let tmpSources=this.pict.AppData.Facto.Sources;if(!tmpSources||tmpSources.length===0){tmpContainer.innerHTML='<span style="font-size:0.85em; color:var(--facto-text-secondary);">No sources available.</span>';return;}let tmpSelectedSources=this.pict.AppData.Facto.RecordFilterSources;let tmpHtml='';for(let i=0;i<tmpSources.length;i++){let tmpSource=tmpSources[i];let tmpChecked=tmpSelectedSources.length===0||tmpSelectedSources.indexOf(tmpSource.IDSource)>=0?'':'';let tmpLabel=tmpSource.Name||'Source #'+tmpSource.IDSource;tmpHtml+='<label>';tmpHtml+='<input type="checkbox" class="facto-source-cb" value="'+tmpSource.IDSource+'"'+tmpChecked+' />';tmpHtml+=' '+tmpLabel;tmpHtml+='</label>';}tmpContainer.innerHTML=tmpHtml;}toggleAllSources(pChecked){let tmpCheckboxes=document.querySelectorAll('.facto-source-cb');for(let i=0;i<tmpCheckboxes.length;i++){tmpCheckboxes[i].checked=pChecked;}}readFiltersFromDOM(){// Read selected sources from checkboxes
+let tmpSelectedSources=[];let tmpCheckboxes=document.querySelectorAll('.facto-source-cb:checked');for(let i=0;i<tmpCheckboxes.length;i++){tmpSelectedSources.push(parseInt(tmpCheckboxes[i].value,10));}let tmpDateFrom='';let tmpDateTo='';let tmpDateFromEl=document.getElementById('Facto-Full-Records-DateFrom');let tmpDateToEl=document.getElementById('Facto-Full-Records-DateTo');if(tmpDateFromEl){tmpDateFrom=tmpDateFromEl.value;}if(tmpDateToEl){tmpDateTo=tmpDateToEl.value;}this.pict.AppData.Facto.RecordFilterSources=tmpSelectedSources;this.pict.AppData.Facto.RecordFilterDateFrom=tmpDateFrom;this.pict.AppData.Facto.RecordFilterDateTo=tmpDateTo;}hasActiveFilters(){let tmpData=this.pict.AppData.Facto;return tmpData.RecordFilterSources.length>0||tmpData.RecordFilterDateFrom||tmpData.RecordFilterDateTo;}loadCurrentPage(){let tmpData=this.pict.AppData.Facto;if(this.hasActiveFilters()){this.pict.providers.Facto.loadFilteredRecords(tmpData.RecordPage,tmpData.RecordFilterSources,tmpData.RecordFilterDateFrom,tmpData.RecordFilterDateTo).then(()=>{this.refreshList();});}else{this.pict.providers.Facto.loadRecords(tmpData.RecordPage).then(()=>{this.refreshList();});}}applyFilters(){this.readFiltersFromDOM();this.pict.AppData.Facto.RecordPage=0;this.loadCurrentPage();}clearFilters(){this.pict.AppData.Facto.RecordFilterSources=[];this.pict.AppData.Facto.RecordFilterDateFrom='';this.pict.AppData.Facto.RecordFilterDateTo='';this.pict.AppData.Facto.RecordPage=0;// Clear DOM inputs
+let tmpDateFromEl=document.getElementById('Facto-Full-Records-DateFrom');let tmpDateToEl=document.getElementById('Facto-Full-Records-DateTo');if(tmpDateFromEl){tmpDateFromEl.value='';}if(tmpDateToEl){tmpDateToEl.value='';}// Uncheck all source checkboxes
+let tmpCheckboxes=document.querySelectorAll('.facto-source-cb');for(let i=0;i<tmpCheckboxes.length;i++){tmpCheckboxes[i].checked=false;}this.loadCurrentPage();}refreshList(){let tmpContainer=document.getElementById('Facto-Full-Records-List');if(!tmpContainer)return;let tmpRecords=this.pict.AppData.Facto.Records;let tmpPageInfo=document.getElementById('Facto-Full-Records-PageInfo');if(tmpPageInfo)tmpPageInfo.textContent='Page '+((this.pict.AppData.Facto.RecordPage||0)+1);if(!tmpRecords||tmpRecords.length===0){tmpContainer.innerHTML='<div class="facto-empty">No records found. Ingest data via Source Research or the Ingest API.</div>';return;}let tmpHtml='<table><thead><tr><th>ID</th><th>Dataset</th><th>Source</th><th>GUID</th><th>Data</th><th></th></tr></thead><tbody>';for(let i=0;i<tmpRecords.length;i++){let tmpRec=tmpRecords[i];let tmpData='';try{tmpData=JSON.stringify(JSON.parse(tmpRec.Content||'{}'));}catch(e){tmpData=tmpRec.Content||'';}tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpRec.IDRecord||'')+'</td>';tmpHtml+='<td>'+(tmpRec.IDDataset||'')+'</td>';tmpHtml+='<td>'+(tmpRec.IDSource||'')+'</td>';tmpHtml+='<td style="font-size:0.8em; color:var(--facto-text-tertiary);">'+(tmpRec.GUIDRecord||'').substring(0,8)+'...</td>';tmpHtml+='<td class="facto-record-data">'+tmpData+'</td>';tmpHtml+='<td><button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.PictApplication.navigateTo(\'/Record/'+tmpRec.IDRecord+'\')">View</button></td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}prevPage(){if(this.pict.AppData.Facto.RecordPage>0){this.pict.AppData.Facto.RecordPage--;this.loadCurrentPage();}}nextPage(){this.pict.AppData.Facto.RecordPage++;this.loadCurrentPage();}}module.exports=FactoFullRecordsView;module.exports.default_configuration=_ViewConfiguration;},{"pict-view":64}],81:[function(require,module,exports){const libPictView=require('pict-view');const _ViewConfiguration={ViewIdentifier:"Facto-Full-Scanner",DefaultRenderable:"Facto-Full-Scanner-Content",DefaultDestinationAddress:"#Facto-Full-Content-Container",AutoRender:false,CSS:/*css*/`
 		.facto-scanner-summary {
 			display: flex;
 			gap: 1.5em;
@@ -8868,7 +8980,7 @@ let tmpForm=document.getElementById('Facto-Full-Research-AddForm');if(tmpForm)tm
 		.facto-topbar-brand {
 			font-size: 1.05em;
 			font-weight: 700;
-			color: var(--facto-text-heading);
+			color: var(--facto-topbar-hover);
 			cursor: pointer;
 			margin-right: 2em;
 			white-space: nowrap;
@@ -8876,7 +8988,7 @@ let tmpForm=document.getElementById('Facto-Full-Research-AddForm');if(tmpForm)tm
 		}
 
 		.facto-topbar-brand:hover {
-			color: var(--facto-brand);
+			color: var(--facto-topbar-active);
 		}
 
 		.facto-topbar-nav {
@@ -9169,7 +9281,12 @@ Object.assign(FactoProvider.prototype,require('./facto-api/Facto-API-Catalog.js'
 loadDatasets:function(){return this.api('GET','/1.0/Datasets/0/100').then(pResponse=>{this.pict.AppData.Facto.Datasets=Array.isArray(pResponse)?pResponse:[];});},createDataset:function(pDatasetData){return this.api('POST','/1.0/Dataset',pDatasetData).then(pResponse=>{return pResponse;});},loadDatasetStats:function(pIDDataset){return this.api('GET',`/facto/dataset/${pIDDataset}/stats`).then(pResponse=>{return pResponse;});},loadDatasetSources:function(pIDDataset){return this.api('GET',`/facto/dataset/${pIDDataset}/sources`).then(pResponse=>{return pResponse;});},linkDatasetSource:function(pIDDataset,pIDSource,pReliabilityWeight){return this.api('POST',`/facto/dataset/${pIDDataset}/source`,{IDSource:pIDSource,ReliabilityWeight:pReliabilityWeight||1.0}).then(pResponse=>{return pResponse;});},loadDatasetRecords:function(pIDDataset,pBegin,pCap){return this.api('GET',`/facto/dataset/${pIDDataset}/records/${pBegin||0}/${pCap||50}`).then(pResponse=>{return pResponse;});},// ================================================================
 // Record Operations
 // ================================================================
-loadRecords:function(pPage){let tmpPageSize=this.pict.AppData.Facto.RecordPageSize;let tmpBegin=(pPage||0)*tmpPageSize;return this.api('GET',`/1.0/Records/${tmpBegin}/${tmpPageSize}`).then(pResponse=>{this.pict.AppData.Facto.Records=Array.isArray(pResponse)?pResponse:[];});},ingestRecords:function(pRecords,pIDDataset,pIDSource){return this.api('POST','/facto/record/ingest',{Records:pRecords,IDDataset:pIDDataset,IDSource:pIDSource}).then(pResponse=>{return pResponse;});},loadRecordCertainty:function(pIDRecord){return this.api('GET',`/facto/record/${pIDRecord}/certainty`).then(pResponse=>{return pResponse;});},addRecordCertainty:function(pIDRecord,pCertaintyValue,pDimension,pJustification){return this.api('POST',`/facto/record/${pIDRecord}/certainty`,{CertaintyValue:pCertaintyValue,Dimension:pDimension||'overall',Justification:pJustification||''}).then(pResponse=>{return pResponse;});},loadRecordVersions:function(pIDRecord){return this.api('GET',`/facto/record/${pIDRecord}/versions`).then(pResponse=>{return pResponse;});},// ================================================================
+loadRecords:function(pPage){let tmpPageSize=this.pict.AppData.Facto.RecordPageSize;let tmpBegin=(pPage||0)*tmpPageSize;return this.api('GET',`/1.0/Records/${tmpBegin}/${tmpPageSize}`).then(pResponse=>{this.pict.AppData.Facto.Records=Array.isArray(pResponse)?pResponse:[];});},expandDateFilter:function(pDateStr,pIsEnd){if(!pDateStr||typeof pDateStr!=='string'){return null;}let tmpTrimmed=pDateStr.trim();if(!tmpTrimmed){return null;}// Year only: YYYY
+let tmpYearMatch=tmpTrimmed.match(/^(\d{4})$/);if(tmpYearMatch){return pIsEnd?tmpYearMatch[1]+'-12-31':tmpYearMatch[1]+'-01-01';}// Year-Month: YYYY-MM
+let tmpMonthMatch=tmpTrimmed.match(/^(\d{4})-(\d{1,2})$/);if(tmpMonthMatch){let tmpYear=parseInt(tmpMonthMatch[1],10);let tmpMonth=parseInt(tmpMonthMatch[2],10);if(tmpMonth<1||tmpMonth>12){return null;}let tmpMonthStr=String(tmpMonth).padStart(2,'0');if(pIsEnd){let tmpLastDay=new Date(tmpYear,tmpMonth,0).getDate();return tmpYear+'-'+tmpMonthStr+'-'+String(tmpLastDay).padStart(2,'0');}return tmpYear+'-'+tmpMonthStr+'-01';}// Full date: YYYY-MM-DD
+let tmpDayMatch=tmpTrimmed.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);if(tmpDayMatch){let tmpMonth=parseInt(tmpDayMatch[2],10);let tmpDay=parseInt(tmpDayMatch[3],10);if(tmpMonth<1||tmpMonth>12||tmpDay<1||tmpDay>31){return null;}return tmpDayMatch[1]+'-'+String(tmpMonth).padStart(2,'0')+'-'+String(tmpDay).padStart(2,'0');}return null;},loadFilteredRecords:function(pPage,pSourceIDs,pDateFrom,pDateTo){let tmpPageSize=this.pict.AppData.Facto.RecordPageSize;let tmpBegin=(pPage||0)*tmpPageSize;let tmpFilterParts=[];// Source filter using IN operator
+if(Array.isArray(pSourceIDs)&&pSourceIDs.length>0){tmpFilterParts.push('FBV~IDSource~INN~'+pSourceIDs.join(','));}// Date range filter on IngestDate
+let tmpExpandedFrom=this.expandDateFilter(pDateFrom,false);let tmpExpandedTo=this.expandDateFilter(pDateTo,true);if(tmpExpandedFrom){tmpFilterParts.push('FBV~IngestDate~GE~'+encodeURIComponent(tmpExpandedFrom));}if(tmpExpandedTo){tmpFilterParts.push('FBV~IngestDate~LE~'+encodeURIComponent(tmpExpandedTo));}let tmpURL;if(tmpFilterParts.length>0){tmpURL='/1.0/Records/FilteredTo/'+tmpFilterParts.join('~')+'/'+tmpBegin+'/'+tmpPageSize;}else{tmpURL='/1.0/Records/'+tmpBegin+'/'+tmpPageSize;}return this.api('GET',tmpURL).then(pResponse=>{this.pict.AppData.Facto.Records=Array.isArray(pResponse)?pResponse:[];});},ingestRecords:function(pRecords,pIDDataset,pIDSource){return this.api('POST','/facto/record/ingest',{Records:pRecords,IDDataset:pIDDataset,IDSource:pIDSource}).then(pResponse=>{return pResponse;});},loadRecordCertainty:function(pIDRecord){return this.api('GET',`/facto/record/${pIDRecord}/certainty`).then(pResponse=>{return pResponse;});},addRecordCertainty:function(pIDRecord,pCertaintyValue,pDimension,pJustification){return this.api('POST',`/facto/record/${pIDRecord}/certainty`,{CertaintyValue:pCertaintyValue,Dimension:pDimension||'overall',Justification:pJustification||''}).then(pResponse=>{return pResponse;});},loadRecordVersions:function(pIDRecord){return this.api('GET',`/facto/record/${pIDRecord}/versions`).then(pResponse=>{return pResponse;});},// ================================================================
 // Ingest Job Operations
 // ================================================================
 loadIngestJobs:function(){return this.api('GET','/facto/ingest/jobs').then(pResponse=>{this.pict.AppData.Facto.IngestJobs=pResponse&&pResponse.Jobs?pResponse.Jobs:[];});},createIngestJob:function(pIDSource,pIDDataset,pConfiguration){return this.api('POST','/facto/ingest/job',{IDSource:pIDSource,IDDataset:pIDDataset,Configuration:pConfiguration||{}}).then(pResponse=>{return pResponse;});},startIngestJob:function(pIDIngestJob){return this.api('PUT',`/facto/ingest/job/${pIDIngestJob}/start`).then(pResponse=>{return pResponse;});},completeIngestJob:function(pIDIngestJob,pCounters,pStatus){let tmpBody=Object.assign({},pCounters||{});if(pStatus){tmpBody.Status=pStatus;}return this.api('PUT',`/facto/ingest/job/${pIDIngestJob}/complete`,tmpBody).then(pResponse=>{return pResponse;});},loadIngestJobDetails:function(pIDIngestJob){return this.api('GET',`/facto/ingest/job/${pIDIngestJob}`).then(pResponse=>{return pResponse;});}};},{}],101:[function(require,module,exports){module.exports={// ================================================================

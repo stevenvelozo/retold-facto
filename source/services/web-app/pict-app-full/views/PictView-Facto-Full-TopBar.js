@@ -25,7 +25,7 @@ const _ViewConfiguration =
 		.facto-topbar-brand {
 			font-size: 1.05em;
 			font-weight: 700;
-			color: var(--facto-text-heading);
+			color: var(--facto-topbar-hover);
 			cursor: pointer;
 			margin-right: 2em;
 			white-space: nowrap;
@@ -33,7 +33,7 @@ const _ViewConfiguration =
 		}
 
 		.facto-topbar-brand:hover {
-			color: var(--facto-brand);
+			color: var(--facto-topbar-active);
 		}
 
 		.facto-topbar-nav {

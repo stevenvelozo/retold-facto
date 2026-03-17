@@ -146,6 +146,7 @@ button:disabled {
 .facto-btn-danger, button.danger {
 	background: var(--facto-error);
 	color: #fff;
+	border-color: transparent;
 }
 
 .facto-btn-small {

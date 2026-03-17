@@ -274,7 +274,7 @@ class FactoFullMappingEditorView extends libPictView
 			tmpHtml += '<td>' + (tmpMap.Active ? '\u2713' : '\u2717') + '</td>';
 			tmpHtml += '<td>';
 			tmpHtml += '<button class="facto-btn facto-btn-primary facto-btn-small" onclick="pict.views[\'Facto-Full-MappingEditor\'].openMappingDetail(' + tmpMap.IDProjectionMapping + ')">Edit</button> ';
-			tmpHtml += '<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.views[\'Facto-Full-MappingEditor\'].deleteMapping(' + tmpMap.IDProjectionMapping + ')">Delete</button>';
+			tmpHtml += '<button class="facto-btn facto-btn-danger facto-btn-small" onclick="pict.views[\'Facto-Full-MappingEditor\'].deleteMapping(' + tmpMap.IDProjectionMapping + ')">Delete</button>';
 			tmpHtml += '</td>';
 			tmpHtml += '</tr>';
 		}
