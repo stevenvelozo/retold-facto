@@ -47,7 +47,6 @@ const _ViewConfiguration =
 		<button class="facto-btn facto-btn-primary" onclick="{~P~}.views['Facto-Full-Datasets'].addDataset()">Add Dataset</button>
 	</div>
 
-	<div id="Facto-Full-Datasets-Status" class="facto-status" style="display:none;"></div>
 </div>
 `
 		}
@@ -74,19 +73,16 @@ class FactoFullDatasetsView extends libPictView
 	onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent)
 	{
 		this.pict.providers.Facto.loadDatasets().then(
-			() => { this.refreshList(); });
+			() => { this.refreshList(); }).catch(
+			(pError) =>
+			{
+				this.pict.views['Pict-Section-Modal'].toast('Error loading datasets: ' + pError.message, {type: 'error'});
+			});
 
 		return super.onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent);
 	}
 
-	setStatus(pMessage, pType)
-	{
-		let tmpEl = document.getElementById('Facto-Full-Datasets-Status');
-		if (!tmpEl) return;
-		tmpEl.className = 'facto-status facto-status-' + (pType || 'info');
-		tmpEl.textContent = pMessage;
-		tmpEl.style.display = 'block';
-	}
+
 
 	refreshList()
 	{
@@ -148,13 +144,13 @@ class FactoFullDatasetsView extends libPictView
 
 	addDataset()
 	{
-		let tmpName = (document.getElementById('Facto-Full-Dataset-Name') || {}).value || '';
-		let tmpType = (document.getElementById('Facto-Full-Dataset-Type') || {}).value || '';
-		let tmpDesc = (document.getElementById('Facto-Full-Dataset-Desc') || {}).value || '';
+		let tmpName = this.pict.providers.FactoUI.getVal('Facto-Full-Dataset-Name');
+		let tmpType = this.pict.providers.FactoUI.getVal('Facto-Full-Dataset-Type');
+		let tmpDesc = this.pict.providers.FactoUI.getVal('Facto-Full-Dataset-Desc');
 
 		if (!tmpName)
 		{
-			this.setStatus('Dataset name is required', 'warn');
+			this.pict.views['Pict-Section-Modal'].toast('Dataset name is required', {type: 'warning'});
 			return;
 		}
 
@@ -163,14 +159,14 @@ class FactoFullDatasetsView extends libPictView
 			{
 				if (pResponse && pResponse.IDDataset)
 				{
-					this.setStatus('Dataset created: ' + tmpName, 'ok');
+					this.pict.views['Pict-Section-Modal'].toast('Dataset created: ' + tmpName, {type: 'success'});
 					document.getElementById('Facto-Full-Dataset-Name').value = '';
 					document.getElementById('Facto-Full-Dataset-Desc').value = '';
 					return this.pict.providers.Facto.loadDatasets();
 				}
 				else
 				{
-					this.setStatus('Error creating dataset', 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Error creating dataset', {type: 'error'});
 				}
 			}).then(
 			() => { this.refreshList(); });

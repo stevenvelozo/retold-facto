@@ -21,6 +21,77 @@ const defaultProjectionEngineOptions = (
 
 const VALID_DATASET_TYPES = ['Raw', 'Compositional', 'Projection', 'Derived'];
 
+/**
+ * Merge strategy functions for multi-set projection pipelines.
+ *
+ * Each function receives:
+ *   pNewRecord      – the incoming record from the current step
+ *   pExistingRecord – the record already in the accumulated comprehension (or null)
+ *   pContext         – { NewWeight, ExistingWeight, ConfidenceConfig, ConfidenceTracker }
+ *
+ * Returns: { Action: string, Record: object }
+ */
+const MERGE_STRATEGIES =
+{
+	'WriteAll': function (pNewRecord, pExistingRecord, pContext)
+	{
+		if (!pExistingRecord)
+		{
+			return { Action: 'Created', Record: pNewRecord };
+		}
+		return { Action: 'Merged', Record: Object.assign({}, pExistingRecord, pNewRecord) };
+	},
+
+	'FirstWriteWins': function (pNewRecord, pExistingRecord, pContext)
+	{
+		if (pExistingRecord)
+		{
+			return { Action: 'Skipped_FirstWriteWins', Record: pExistingRecord };
+		}
+		return { Action: 'Created', Record: pNewRecord };
+	},
+
+	'ReliabilityOverwrite': function (pNewRecord, pExistingRecord, pContext)
+	{
+		if (!pExistingRecord)
+		{
+			return { Action: 'Created', Record: pNewRecord };
+		}
+		if (pContext.NewWeight > pContext.ExistingWeight)
+		{
+			return { Action: 'Overwritten_HigherReliability', Record: pNewRecord };
+		}
+		return { Action: 'Skipped_LowerReliability', Record: pExistingRecord };
+	},
+
+	'MergeAndReinforce': function (pNewRecord, pExistingRecord, pContext)
+	{
+		if (!pExistingRecord)
+		{
+			return { Action: 'Created', Record: pNewRecord };
+		}
+		return { Action: 'Merged_Reinforced', Record: Object.assign({}, pExistingRecord, pNewRecord) };
+	},
+
+	'FieldFillOnly': function (pNewRecord, pExistingRecord, pContext)
+	{
+		if (!pExistingRecord)
+		{
+			return { Action: 'Created', Record: pNewRecord };
+		}
+		let tmpResult = Object.assign({}, pExistingRecord);
+		let tmpKeys = Object.keys(pNewRecord);
+		for (let i = 0; i < tmpKeys.length; i++)
+		{
+			if (tmpResult[tmpKeys[i]] === undefined || tmpResult[tmpKeys[i]] === null || tmpResult[tmpKeys[i]] === '')
+			{
+				tmpResult[tmpKeys[i]] = pNewRecord[tmpKeys[i]];
+			}
+		}
+		return { Action: 'Merged_FieldsAdded', Record: tmpResult };
+	}
+};
+
 class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 {
 	constructor(pFable, pOptions, pServiceHash)
@@ -1949,6 +2020,433 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 				return fNext();
 			});
 
+		// ======================================================================
+		// Multi-Set Projection CRUD routes
+		// ======================================================================
+
+		// GET /facto/projection/:IDDataset/multi-set-projections
+		pOratorServiceServer.doGet(`${tmpRoutePrefix}/projection/:IDDataset/multi-set-projections`,
+			(pRequest, pResponse, fNext) =>
+			{
+				if (!this.fable.DAL || !this.fable.DAL.MultiSetProjection)
+				{
+					pResponse.send({ MultiSetProjections: [] });
+					return fNext();
+				}
+
+				let tmpIDDataset = parseInt(pRequest.params.IDDataset, 10);
+
+				let tmpQuery = this.fable.DAL.MultiSetProjection.query.clone()
+					.addFilter('IDDataset', tmpIDDataset)
+					.addFilter('Deleted', 0);
+
+				this.fable.DAL.MultiSetProjection.doReads(tmpQuery,
+					(pError, pQuery, pRecords) =>
+					{
+						if (pError)
+						{
+							pResponse.send({ Error: pError.message || pError, MultiSetProjections: [] });
+							return fNext();
+						}
+						pResponse.send({ Count: pRecords.length, MultiSetProjections: pRecords });
+						return fNext();
+					});
+			});
+
+		// GET /facto/projection/multi-set-projection/:ID
+		pOratorServiceServer.doGet(`${tmpRoutePrefix}/projection/multi-set-projection/:ID`,
+			(pRequest, pResponse, fNext) =>
+			{
+				if (!this.fable.DAL || !this.fable.DAL.MultiSetProjection)
+				{
+					pResponse.send({ Error: 'DAL not initialized' });
+					return fNext();
+				}
+
+				let tmpID = parseInt(pRequest.params.ID, 10);
+
+				let tmpQuery = this.fable.DAL.MultiSetProjection.query.clone()
+					.addFilter('IDMultiSetProjection', tmpID);
+
+				this.fable.DAL.MultiSetProjection.doRead(tmpQuery,
+					(pError, pQuery, pRecord) =>
+					{
+						// Extract record from query chain if needed
+						let tmpRecord = pRecord;
+						if (pRecord && pRecord.result && Array.isArray(pRecord.result.value) && pRecord.result.value.length > 0)
+						{
+							tmpRecord = pRecord.result.value[0];
+						}
+
+						if (pError || !tmpRecord || !tmpRecord.IDMultiSetProjection)
+						{
+							pResponse.send({ Error: 'MultiSetProjection not found' });
+							return fNext();
+						}
+						pResponse.send({ MultiSetProjection: tmpRecord });
+						return fNext();
+					});
+			});
+
+		// POST /facto/projection/:IDDataset/multi-set-projection -- create
+		pOratorServiceServer.doPost(`${tmpRoutePrefix}/projection/:IDDataset/multi-set-projection`,
+			(pRequest, pResponse, fNext) =>
+			{
+				if (!this.fable.DAL || !this.fable.DAL.MultiSetProjection)
+				{
+					pResponse.send({ Error: 'DAL not initialized' });
+					return fNext();
+				}
+
+				let tmpIDDataset = parseInt(pRequest.params.IDDataset, 10);
+				let tmpBody = pRequest.body || {};
+
+				let tmpNewRecord =
+				{
+					IDDataset: tmpIDDataset,
+					IDProjectionStore: parseInt(tmpBody.IDProjectionStore, 10) || 0,
+					Name: tmpBody.Name || 'New Multi-Set Projection',
+					Description: tmpBody.Description || '',
+					PipelineConfiguration: (typeof tmpBody.PipelineConfiguration === 'string')
+						? tmpBody.PipelineConfiguration
+						: JSON.stringify(tmpBody.PipelineConfiguration || { Steps: [], ConfidenceReinforcement: { Enabled: false } }),
+					Active: (tmpBody.Active !== undefined) ? (tmpBody.Active ? 1 : 0) : 1
+				};
+
+				let tmpCreateQuery = this.fable.DAL.MultiSetProjection.query.clone()
+					.setIDUser(0)
+					.addRecord(tmpNewRecord);
+
+				this.fable.DAL.MultiSetProjection.doCreate(tmpCreateQuery,
+					(pError, pQuery, pRecord) =>
+					{
+						if (pError)
+						{
+							this.fable.log.error(`ProjectionEngine error creating MultiSetProjection: ${pError}`);
+							pResponse.send({ Error: pError.message || pError });
+							return fNext();
+						}
+						// Meadow may return the query chain; extract the record from result.value
+						let tmpCreatedRecord = pRecord;
+						if (pRecord && pRecord.result && Array.isArray(pRecord.result.value) && pRecord.result.value.length > 0)
+						{
+							tmpCreatedRecord = pRecord.result.value[0];
+						}
+						pResponse.send({ Success: true, MultiSetProjection: tmpCreatedRecord });
+						return fNext();
+					});
+			});
+
+		// POST /facto/projection/multi-set-projection/:ID/update
+		pOratorServiceServer.doPost(`${tmpRoutePrefix}/projection/multi-set-projection/:ID/update`,
+			(pRequest, pResponse, fNext) =>
+			{
+				if (!this.fable.DAL || !this.fable.DAL.MultiSetProjection)
+				{
+					pResponse.send({ Error: 'DAL not initialized' });
+					return fNext();
+				}
+
+				let tmpID = parseInt(pRequest.params.ID, 10);
+				let tmpBody = pRequest.body || {};
+
+				let tmpReadQuery = this.fable.DAL.MultiSetProjection.query.clone()
+					.addFilter('IDMultiSetProjection', tmpID);
+
+				this.fable.DAL.MultiSetProjection.doRead(tmpReadQuery,
+					(pReadError, pReadQuery, pExisting) =>
+					{
+						// Extract record from query chain if needed
+						let tmpRecord = pExisting;
+						if (pExisting && pExisting.result && Array.isArray(pExisting.result.value) && pExisting.result.value.length > 0)
+						{
+							tmpRecord = pExisting.result.value[0];
+						}
+
+						if (pReadError || !tmpRecord || !tmpRecord.IDMultiSetProjection)
+						{
+							pResponse.send({ Error: 'MultiSetProjection not found' });
+							return fNext();
+						}
+
+						if (tmpBody.Name !== undefined) tmpRecord.Name = tmpBody.Name;
+						if (tmpBody.Description !== undefined) tmpRecord.Description = tmpBody.Description;
+						if (tmpBody.IDProjectionStore !== undefined) tmpRecord.IDProjectionStore = parseInt(tmpBody.IDProjectionStore, 10) || 0;
+						if (tmpBody.Active !== undefined) tmpRecord.Active = tmpBody.Active ? 1 : 0;
+						if (tmpBody.PipelineConfiguration !== undefined)
+						{
+							tmpRecord.PipelineConfiguration = (typeof tmpBody.PipelineConfiguration === 'string')
+								? tmpBody.PipelineConfiguration
+								: JSON.stringify(tmpBody.PipelineConfiguration);
+						}
+
+						let tmpUpdateQuery = this.fable.DAL.MultiSetProjection.query.clone()
+							.setIDUser(0)
+							.addRecord(tmpRecord);
+
+						this.fable.DAL.MultiSetProjection.doUpdate(tmpUpdateQuery,
+							(pUpdateError, pUpdateQuery, pUpdated) =>
+							{
+								if (pUpdateError)
+								{
+									pResponse.send({ Error: pUpdateError.message || pUpdateError });
+									return fNext();
+								}
+								// Meadow may return the query chain; extract the record
+								let tmpUpdatedRecord = pUpdated;
+								if (pUpdated && pUpdated.result && Array.isArray(pUpdated.result.value) && pUpdated.result.value.length > 0)
+								{
+									tmpUpdatedRecord = pUpdated.result.value[0];
+								}
+								pResponse.send({ Success: true, MultiSetProjection: tmpUpdatedRecord });
+								return fNext();
+							});
+					});
+			});
+
+		// DELETE /facto/projection/multi-set-projection/:ID
+		pOratorServiceServer.doDel(`${tmpRoutePrefix}/projection/multi-set-projection/:ID`,
+			(pRequest, pResponse, fNext) =>
+			{
+				if (!this.fable.DAL || !this.fable.DAL.MultiSetProjection)
+				{
+					pResponse.send({ Error: 'DAL not initialized' });
+					return fNext();
+				}
+
+				let tmpID = parseInt(pRequest.params.ID, 10);
+
+				let tmpReadQuery = this.fable.DAL.MultiSetProjection.query.clone()
+					.addFilter('IDMultiSetProjection', tmpID);
+
+				// Use Meadow's built-in delete (soft-delete via the Deleted column)
+				let tmpDeleteQuery = this.fable.DAL.MultiSetProjection.query.clone()
+					.addFilter('IDMultiSetProjection', tmpID);
+
+				this.fable.DAL.MultiSetProjection.doDelete(tmpDeleteQuery,
+					(pDeleteError, pDeleteQuery, pResult) =>
+					{
+						if (pDeleteError)
+						{
+							pResponse.send({ Error: pDeleteError.message || pDeleteError });
+							return fNext();
+						}
+						pResponse.send({ Success: true });
+						return fNext();
+					});
+			});
+
+		// ======================================================================
+		// Multi-Set Import Execution route
+		// ======================================================================
+
+		// POST /facto/projection/:IDDataset/multi-import
+		pOratorServiceServer.doPost(`${tmpRoutePrefix}/projection/:IDDataset/multi-import`,
+			(pRequest, pResponse, fNext) =>
+			{
+				if (!this.fable.DAL || !this.fable.DAL.MultiSetProjection ||
+					!this.fable.DAL.ProjectionMapping || !this.fable.DAL.ProjectionStore ||
+					!this.fable.DAL.StoreConnection || !this.fable.DAL.Record ||
+					!this.fable.DAL.Dataset)
+				{
+					pResponse.send({ Error: 'DAL not initialized' });
+					return fNext();
+				}
+
+				let tmpIDDataset = parseInt(pRequest.params.IDDataset, 10);
+				let tmpBody = pRequest.body || {};
+				let tmpIDMultiSetProjection = parseInt(tmpBody.IDMultiSetProjection, 10);
+				let tmpIDProjectionStore = parseInt(tmpBody.IDProjectionStore, 10);
+				let tmpCap = parseInt(tmpBody.Cap, 10) || 0;
+				let tmpStageComprehension = !!tmpBody.StageComprehension;
+
+				if (!tmpIDMultiSetProjection)
+				{
+					pResponse.send({ Error: 'IDMultiSetProjection is required' });
+					return fNext();
+				}
+
+				let tmpAnticipate = this.fable.newAnticipate();
+				let tmpMultiSetProjection = null;
+				let tmpPipelineConfig = null;
+				let tmpProjectionStore = null;
+				let tmpConnection = null;
+				let tmpDataset = null;
+
+				// Load MultiSetProjection
+				tmpAnticipate.anticipate(
+					(fStepCallback) =>
+					{
+						let tmpQuery = this.fable.DAL.MultiSetProjection.query.clone()
+							.addFilter('IDMultiSetProjection', tmpIDMultiSetProjection);
+
+						this.fable.DAL.MultiSetProjection.doRead(tmpQuery,
+							(pError, pQuery, pRecord) =>
+							{
+								if (pError || !pRecord || !pRecord.IDMultiSetProjection)
+								{
+									return fStepCallback(new Error('MultiSetProjection not found'));
+								}
+								tmpMultiSetProjection = pRecord;
+								try
+								{
+									tmpPipelineConfig = JSON.parse(tmpMultiSetProjection.PipelineConfiguration || '{}');
+								}
+								catch (e)
+								{
+									return fStepCallback(new Error('Invalid PipelineConfiguration JSON'));
+								}
+								// Use the store from the body or fall back to the entity's store
+								if (!tmpIDProjectionStore)
+								{
+									tmpIDProjectionStore = tmpMultiSetProjection.IDProjectionStore;
+								}
+								return fStepCallback();
+							});
+					});
+
+				// Load ProjectionStore (after MultiSetProjection so we have the fallback ID)
+				tmpAnticipate.anticipate(
+					(fStepCallback) =>
+					{
+						if (!tmpIDProjectionStore)
+						{
+							return fStepCallback(new Error('IDProjectionStore is required'));
+						}
+
+						let tmpQuery = this.fable.DAL.ProjectionStore.query.clone()
+							.addFilter('IDProjectionStore', tmpIDProjectionStore);
+
+						this.fable.DAL.ProjectionStore.doRead(tmpQuery,
+							(pError, pQuery, pRecord) =>
+							{
+								if (pError || !pRecord || !pRecord.IDProjectionStore)
+								{
+									return fStepCallback(new Error('ProjectionStore not found'));
+								}
+								tmpProjectionStore = pRecord;
+								return fStepCallback();
+							});
+					});
+
+				// Load Dataset
+				tmpAnticipate.anticipate(
+					(fStepCallback) =>
+					{
+						let tmpQuery = this.fable.DAL.Dataset.query.clone()
+							.addFilter('IDDataset', tmpIDDataset);
+
+						this.fable.DAL.Dataset.doRead(tmpQuery,
+							(pError, pQuery, pRecord) =>
+							{
+								if (pError || !pRecord || !pRecord.IDDataset)
+								{
+									return fStepCallback(new Error('Dataset not found'));
+								}
+								tmpDataset = pRecord;
+								return fStepCallback();
+							});
+					});
+
+				tmpAnticipate.wait(
+					(pError) =>
+					{
+						if (pError)
+						{
+							pResponse.send({ Error: pError.message || pError });
+							return fNext();
+						}
+
+						// Load the StoreConnection
+						let tmpConnQuery = this.fable.DAL.StoreConnection.query.clone()
+							.addFilter('IDStoreConnection', tmpProjectionStore.IDStoreConnection);
+
+						this.fable.DAL.StoreConnection.doRead(tmpConnQuery,
+							(pConnError, pConnQuery, pConnRecord) =>
+							{
+								if (pConnError || !pConnRecord || !pConnRecord.IDStoreConnection)
+								{
+									pResponse.send({ Error: 'StoreConnection not found for this ProjectionStore' });
+									return fNext();
+								}
+								tmpConnection = pConnRecord;
+
+								// Parse schema
+								let tmpParsedSchema = null;
+								try
+								{
+									tmpParsedSchema = this._parseMicroDDL(tmpDataset.SchemaDefinition || '');
+								}
+								catch (e)
+								{
+									pResponse.send({ Error: `Schema parse error: ${e.message}` });
+									return fNext();
+								}
+
+								// Execute the multi-set pipeline
+								this._executeMultiSetImport(
+									{
+										MultiSetProjection: tmpMultiSetProjection,
+										PipelineConfig: tmpPipelineConfig,
+										ProjectionStore: tmpProjectionStore,
+										Connection: tmpConnection,
+										Dataset: tmpDataset,
+										ParsedSchema: tmpParsedSchema,
+										IDDataset: tmpIDDataset,
+										Cap: tmpCap,
+										StageComprehension: tmpStageComprehension
+									},
+									(pImportError, pResult) =>
+									{
+										if (pImportError)
+										{
+											pResponse.send({ Error: pImportError.message || pImportError, Log: (pResult && pResult.Log) || '' });
+											return fNext();
+										}
+										pResponse.send(pResult);
+										return fNext();
+									});
+							});
+					});
+			});
+
+		// ======================================================================
+		// Multi-Set Certainty Log route
+		// ======================================================================
+
+		// GET /facto/projection/multi-set-projection/:ID/certainty-log
+		pOratorServiceServer.doGet(`${tmpRoutePrefix}/projection/multi-set-projection/:ID/certainty-log`,
+			(pRequest, pResponse, fNext) =>
+			{
+				if (!this.fable.DAL || !this.fable.DAL.ProjectionCertaintyLog)
+				{
+					pResponse.send({ CertaintyLog: [] });
+					return fNext();
+				}
+
+				let tmpID = parseInt(pRequest.params.ID, 10);
+				let tmpBegin = parseInt(pRequest.query.Begin, 10) || 0;
+				let tmpCap = parseInt(pRequest.query.Cap, 10) || 200;
+
+				let tmpQuery = this.fable.DAL.ProjectionCertaintyLog.query.clone()
+					.addFilter('IDMultiSetProjection', tmpID)
+					.addFilter('Deleted', 0)
+					.setBegin(tmpBegin)
+					.setCap(tmpCap);
+
+				this.fable.DAL.ProjectionCertaintyLog.doReads(tmpQuery,
+					(pError, pQuery, pRecords) =>
+					{
+						if (pError)
+						{
+							pResponse.send({ Error: pError.message || pError, CertaintyLog: [] });
+							return fNext();
+						}
+						pResponse.send({ Count: pRecords.length, CertaintyLog: pRecords });
+						return fNext();
+					});
+			});
+
 		this.fable.log.info(`ProjectionEngine routes connected at ${tmpRoutePrefix}/projections/*`);
 	}
 
@@ -2450,6 +2948,715 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 						this.fable.log.info('Projection entity warm-up complete.');
 						return fCallback();
 					});
+			});
+	}
+
+	// ======================================================================
+	// Multi-Set Projection Pipeline Execution
+	// ======================================================================
+
+	/**
+	 * Read records from an already-deployed projection store.
+	 *
+	 * Queries the projection entity's DAL and wraps each row as a
+	 * pseudo-source record with JSON Content for TabularTransform.
+	 *
+	 * @param {number} pIDProjectionStore - The ProjectionStore to read from
+	 * @param {number} pCap - Maximum records to read (0 = unlimited)
+	 * @param {function} fCallback - Callback(pError, pRecords)
+	 */
+	_readRecordsFromProjectionStore(pIDProjectionStore, pCap, fCallback)
+	{
+		if (!this.fable.DAL || !this.fable.DAL.ProjectionStore)
+		{
+			return fCallback(new Error('ProjectionStore DAL not initialized'));
+		}
+
+		// Look up the ProjectionStore to find its TargetTableName
+		let tmpQuery = this.fable.DAL.ProjectionStore.query.clone()
+			.addFilter('IDProjectionStore', pIDProjectionStore);
+
+		this.fable.DAL.ProjectionStore.doRead(tmpQuery,
+			(pError, pQuery, pStore) =>
+			{
+				if (pError || !pStore || !pStore.IDProjectionStore)
+				{
+					return fCallback(new Error(`ProjectionStore ${pIDProjectionStore} not found`));
+				}
+
+				let tmpEntityName = pStore.TargetTableName;
+				let tmpEntity = this._ProjectionEntities[tmpEntityName];
+
+				if (!tmpEntity || !tmpEntity.DAL)
+				{
+					return fCallback(new Error(`Projection entity [${tmpEntityName}] is not registered. Deploy the projection first.`));
+				}
+
+				let tmpReadQuery = tmpEntity.DAL.query.clone()
+					.addFilter('Deleted', 0);
+
+				if (pCap > 0)
+				{
+					tmpReadQuery.setCap(pCap);
+				}
+
+				tmpEntity.DAL.doReads(tmpReadQuery,
+					(pReadError, pReadQuery, pRows) =>
+					{
+						if (pReadError)
+						{
+							return fCallback(pReadError);
+						}
+
+						// Wrap each row as a pseudo-record with Content JSON
+						let tmpRecords = [];
+						for (let i = 0; i < pRows.length; i++)
+						{
+							tmpRecords.push(
+							{
+								IDRecord: pRows[i][`ID${tmpEntityName}`] || i,
+								GUIDRecord: pRows[i][`GUID${tmpEntityName}`] || `projstore-${pIDProjectionStore}-${i}`,
+								Content: JSON.stringify(pRows[i])
+							});
+						}
+
+						return fCallback(null, tmpRecords);
+					});
+			});
+	}
+
+	/**
+	 * Execute a single step in a multi-set projection pipeline.
+	 *
+	 * Queries source records (from Records table or a ProjectionStore),
+	 * builds a per-step comprehension via TabularTransform, then applies
+	 * the step's merge strategy against the accumulated comprehension.
+	 *
+	 * @param {object} pStep - The pipeline step configuration
+	 * @param {object} pAccumulatedComprehension - The running comprehension dict { Entity: { GUID: record } }
+	 * @param {object} pReliabilityTracker - { GUID: { Weight, IDProjectionMapping } }
+	 * @param {object} pConfidenceTracker - { GUID: { Value, Confirmations } }
+	 * @param {Array} pCertaintyLogs - Array to push log entries into
+	 * @param {Array} pLog - Text log lines
+	 * @param {object} pConfig - Full pipeline config from _executeMultiSetImport
+	 * @param {function} fCallback - Callback(pError)
+	 */
+	_executeMultiSetStep(pStep, pAccumulatedComprehension, pReliabilityTracker, pConfidenceTracker, pCertaintyLogs, pLog, pConfig, fCallback)
+	{
+		let tmpIDProjectionMapping = parseInt(pStep.IDProjectionMapping, 10);
+		let tmpMergeStrategy = pStep.MergeStrategy || 'WriteAll';
+		let tmpLabel = pStep.Label || `Step-${pStep.Ordinal}`;
+		let tmpInputType = pStep.InputType || 'Records';
+
+		if (!MERGE_STRATEGIES.hasOwnProperty(tmpMergeStrategy))
+		{
+			pLog.push(`[${new Date().toISOString()}] Unknown merge strategy "${tmpMergeStrategy}" in step "${tmpLabel}"; defaulting to WriteAll`);
+			tmpMergeStrategy = 'WriteAll';
+		}
+
+		pLog.push(`[${new Date().toISOString()}] Step "${tmpLabel}": strategy=${tmpMergeStrategy}, input=${tmpInputType}`);
+
+		let tmpAnticipate = this.fable.newAnticipate();
+		let tmpMapping = null;
+		let tmpMappingConfig = null;
+		let tmpSourceRecords = null;
+		let tmpReliabilityWeight = 0;
+
+		// Load the ProjectionMapping
+		if (tmpIDProjectionMapping)
+		{
+			tmpAnticipate.anticipate(
+				(fStepCallback) =>
+				{
+					let tmpQuery = this.fable.DAL.ProjectionMapping.query.clone()
+						.addFilter('IDProjectionMapping', tmpIDProjectionMapping);
+
+					this.fable.DAL.ProjectionMapping.doRead(tmpQuery,
+						(pError, pQuery, pRecord) =>
+						{
+							if (pError || !pRecord || !pRecord.IDProjectionMapping)
+							{
+								pLog.push(`[${new Date().toISOString()}] Warning: Mapping ${tmpIDProjectionMapping} not found for step "${tmpLabel}"`);
+								return fStepCallback();
+							}
+							tmpMapping = pRecord;
+							try
+							{
+								tmpMappingConfig = JSON.parse(tmpMapping.MappingConfiguration || '{}');
+							}
+							catch (e)
+							{
+								pLog.push(`[${new Date().toISOString()}] Warning: Invalid MappingConfiguration in mapping ${tmpIDProjectionMapping}`);
+							}
+							return fStepCallback();
+						});
+				});
+		}
+
+		// Look up ReliabilityWeight for this source
+		tmpAnticipate.anticipate(
+			(fStepCallback) =>
+			{
+				if (!tmpMapping || !this.fable.DAL.DatasetSource)
+				{
+					return fStepCallback();
+				}
+
+				let tmpDSQuery = this.fable.DAL.DatasetSource.query.clone()
+					.addFilter('IDDataset', tmpMapping.IDDataset)
+					.addFilter('IDSource', tmpMapping.IDSource)
+					.addFilter('Deleted', 0)
+					.setCap(1);
+
+				this.fable.DAL.DatasetSource.doReads(tmpDSQuery,
+					(pError, pQuery, pRecords) =>
+					{
+						if (!pError && pRecords && pRecords.length > 0)
+						{
+							tmpReliabilityWeight = parseFloat(pRecords[0].ReliabilityWeight) || 0;
+						}
+						return fStepCallback();
+					});
+			});
+
+		// Load source records
+		tmpAnticipate.anticipate(
+			(fStepCallback) =>
+			{
+				if (tmpInputType === 'ProjectionStore')
+				{
+					let tmpInputStoreID = parseInt(pStep.IDProjectionStore, 10) || 0;
+					if (!tmpInputStoreID)
+					{
+						pLog.push(`[${new Date().toISOString()}] Warning: No IDProjectionStore for ProjectionStore input step "${tmpLabel}"`);
+						tmpSourceRecords = [];
+						return fStepCallback();
+					}
+
+					this._readRecordsFromProjectionStore(tmpInputStoreID, pConfig.Cap,
+						(pError, pRecords) =>
+						{
+							if (pError)
+							{
+								pLog.push(`[${new Date().toISOString()}] Error reading from ProjectionStore ${tmpInputStoreID}: ${pError.message}`);
+								tmpSourceRecords = [];
+							}
+							else
+							{
+								tmpSourceRecords = pRecords;
+							}
+							return fStepCallback();
+						});
+				}
+				else
+				{
+					// Default: query Records by IDSource
+					if (!tmpMapping)
+					{
+						tmpSourceRecords = [];
+						return fStepCallback();
+					}
+
+					let tmpRecordQuery = this.fable.DAL.Record.query.clone()
+						.addFilter('Deleted', 0)
+						.addFilter('IDSource', tmpMapping.IDSource);
+
+					if (pConfig.Cap > 0)
+					{
+						tmpRecordQuery.setCap(pConfig.Cap);
+					}
+
+					this.fable.DAL.Record.doReads(tmpRecordQuery,
+						(pError, pQuery, pRecords) =>
+						{
+							if (pError)
+							{
+								pLog.push(`[${new Date().toISOString()}] Error querying records for step "${tmpLabel}": ${pError.message}`);
+								tmpSourceRecords = [];
+							}
+							else
+							{
+								tmpSourceRecords = pRecords;
+							}
+							return fStepCallback();
+						});
+				}
+			});
+
+		tmpAnticipate.wait(
+			(pError) =>
+			{
+				if (pError)
+				{
+					pLog.push(`[${new Date().toISOString()}] Step "${tmpLabel}" load error: ${pError.message}`);
+					return fCallback();
+				}
+
+				if (!tmpSourceRecords || tmpSourceRecords.length === 0)
+				{
+					pLog.push(`[${new Date().toISOString()}] Step "${tmpLabel}": 0 source records, skipping`);
+					return fCallback();
+				}
+
+				pLog.push(`[${new Date().toISOString()}] Step "${tmpLabel}": ${tmpSourceRecords.length} source records loaded`);
+
+				if (!tmpMappingConfig)
+				{
+					pLog.push(`[${new Date().toISOString()}] Step "${tmpLabel}": No mapping configuration, skipping transform`);
+					return fCallback();
+				}
+
+				// Build per-step comprehension via TabularTransform
+				let tmpTabularTransform = this.fable.services.TabularTransform;
+				let tmpMappingOutcome = tmpTabularTransform.newMappingOutcomeObject();
+				tmpMappingOutcome.ExplicitConfiguration = tmpMappingConfig;
+				tmpMappingOutcome.ImplicitConfiguration = tmpMappingConfig;
+
+				let tmpParseErrorCount = 0;
+
+				for (let i = 0; i < tmpSourceRecords.length; i++)
+				{
+					let tmpRecord = tmpSourceRecords[i];
+					let tmpParsedContent;
+					try
+					{
+						tmpParsedContent = JSON.parse(tmpRecord.Content);
+					}
+					catch (e)
+					{
+						tmpParseErrorCount++;
+						continue;
+					}
+
+					let tmpWrapped = Object.assign({ IDRecord: tmpRecord.IDRecord }, tmpParsedContent);
+
+					try
+					{
+						tmpTabularTransform.transformRecord(tmpWrapped, tmpMappingOutcome);
+					}
+					catch (e)
+					{
+						pLog.push(`[${new Date().toISOString()}] Transform error on record ${tmpRecord.IDRecord}: ${e.message}`);
+					}
+				}
+
+				let tmpEntityName = tmpMappingConfig.Entity || Object.keys(tmpMappingOutcome.Comprehension)[0];
+				if (!tmpEntityName)
+				{
+					pLog.push(`[${new Date().toISOString()}] Step "${tmpLabel}": No entity in comprehension, skipping merge`);
+					return fCallback();
+				}
+
+				let tmpStepComprehension = tmpMappingOutcome.Comprehension[tmpEntityName] || {};
+				let tmpStepGUIDs = Object.keys(tmpStepComprehension);
+
+				pLog.push(`[${new Date().toISOString()}] Step "${tmpLabel}": ${tmpStepGUIDs.length} unique records (${tmpParseErrorCount} parse errors)`);
+
+				// Ensure the entity key exists in the accumulated comprehension
+				if (!pAccumulatedComprehension[tmpEntityName])
+				{
+					pAccumulatedComprehension[tmpEntityName] = {};
+				}
+
+				let tmpConfidenceConfig = (pConfig.PipelineConfig && pConfig.PipelineConfig.ConfidenceReinforcement) || {};
+				let tmpStrategyFn = MERGE_STRATEGIES[tmpMergeStrategy];
+				let tmpCreated = 0;
+				let tmpSkipped = 0;
+				let tmpMerged = 0;
+
+				// Apply merge strategy for each GUID in this step's comprehension
+				for (let i = 0; i < tmpStepGUIDs.length; i++)
+				{
+					let tmpGUID = tmpStepGUIDs[i];
+					let tmpNewRecord = tmpStepComprehension[tmpGUID];
+					let tmpExistingRecord = pAccumulatedComprehension[tmpEntityName][tmpGUID] || null;
+
+					let tmpContext =
+					{
+						NewWeight: tmpReliabilityWeight,
+						ExistingWeight: (pReliabilityTracker[tmpGUID] && pReliabilityTracker[tmpGUID].Weight) || 0,
+						ConfidenceConfig: tmpConfidenceConfig,
+						ConfidenceTracker: pConfidenceTracker
+					};
+
+					let tmpResult = tmpStrategyFn(tmpNewRecord, tmpExistingRecord, tmpContext);
+
+					// Apply the result
+					pAccumulatedComprehension[tmpEntityName][tmpGUID] = tmpResult.Record;
+
+					// Update reliability tracker
+					if (tmpResult.Action === 'Created' || tmpResult.Action === 'Overwritten_HigherReliability' || tmpResult.Action === 'Merged')
+					{
+						pReliabilityTracker[tmpGUID] = { Weight: tmpReliabilityWeight, IDProjectionMapping: tmpIDProjectionMapping };
+					}
+
+					// Update confidence tracker
+					if (tmpConfidenceConfig.Enabled)
+					{
+						if (!pConfidenceTracker[tmpGUID])
+						{
+							pConfidenceTracker[tmpGUID] = { Value: tmpConfidenceConfig.BaseValue || 0.5, Confirmations: 0 };
+						}
+						if (tmpResult.Action === 'Merged_Reinforced' || tmpResult.Action === 'Merged')
+						{
+							pConfidenceTracker[tmpGUID].Confirmations++;
+							let tmpIncrement = tmpConfidenceConfig.IncrementPerConfirmation || 0.1;
+							let tmpMaxValue = tmpConfidenceConfig.MaxValue || 1.0;
+							pConfidenceTracker[tmpGUID].Value = Math.min(
+								pConfidenceTracker[tmpGUID].Value + tmpIncrement,
+								tmpMaxValue);
+						}
+					}
+
+					// Track action
+					if (tmpResult.Action.startsWith('Skipped'))
+					{
+						tmpSkipped++;
+					}
+					else if (tmpResult.Action === 'Created')
+					{
+						tmpCreated++;
+					}
+					else
+					{
+						tmpMerged++;
+					}
+
+					// Record certainty log entry
+					pCertaintyLogs.push(
+					{
+						IDMultiSetProjection: pConfig.MultiSetProjection.IDMultiSetProjection,
+						RecordGUID: tmpGUID,
+						CertaintyValue: (pConfidenceTracker[tmpGUID] && pConfidenceTracker[tmpGUID].Value) || (tmpConfidenceConfig.BaseValue || 0.5),
+						SourceMappingLabel: tmpLabel,
+						IDProjectionMapping: tmpIDProjectionMapping || 0,
+						Action: tmpResult.Action,
+						Details: JSON.stringify({ ReliabilityWeight: tmpReliabilityWeight, StepOrdinal: pStep.Ordinal })
+					});
+				}
+
+				pLog.push(`[${new Date().toISOString()}] Step "${tmpLabel}" complete: ${tmpCreated} created, ${tmpMerged} merged, ${tmpSkipped} skipped`);
+				return fCallback();
+			});
+	}
+
+	/**
+	 * Execute a complete multi-set projection import pipeline.
+	 *
+	 * Processes pipeline steps sequentially, accumulating a comprehension,
+	 * then upserts the final result to the target store.
+	 *
+	 * @param {object} pConfig - Pipeline configuration object
+	 * @param {function} fCallback - Callback(pError, pResult)
+	 */
+	_executeMultiSetImport(pConfig, fCallback)
+	{
+		let tmpAccumulatedComprehension = {};
+		let tmpReliabilityTracker = {};
+		let tmpConfidenceTracker = {};
+		let tmpCertaintyLogs = [];
+		let tmpLog = [];
+
+		let tmpPipelineConfig = pConfig.PipelineConfig || {};
+		let tmpSteps = tmpPipelineConfig.Steps || [];
+
+		// Sort steps by Ordinal
+		tmpSteps.sort(
+			(a, b) =>
+			{
+				return (a.Ordinal || 0) - (b.Ordinal || 0);
+			});
+
+		if (tmpSteps.length === 0)
+		{
+			return fCallback(new Error('Pipeline has no steps'));
+		}
+
+		tmpLog.push(`[${new Date().toISOString()}] Starting multi-set pipeline "${pConfig.MultiSetProjection.Name}" with ${tmpSteps.length} step(s)`);
+
+		// Process steps sequentially
+		let tmpStepAnticipate = this.fable.newAnticipate();
+		let tmpStepResults = [];
+
+		for (let i = 0; i < tmpSteps.length; i++)
+		{
+			let tmpStep = tmpSteps[i];
+
+			tmpStepAnticipate.anticipate(
+				(fStepCallback) =>
+				{
+					let tmpLogLengthBefore = tmpLog.length;
+
+					this._executeMultiSetStep(
+						tmpStep, tmpAccumulatedComprehension,
+						tmpReliabilityTracker, tmpConfidenceTracker,
+						tmpCertaintyLogs, tmpLog, pConfig,
+						(pStepError) =>
+						{
+							tmpStepResults.push(
+							{
+								Label: tmpStep.Label || `Step-${tmpStep.Ordinal}`,
+								MergeStrategy: tmpStep.MergeStrategy || 'WriteAll',
+								Error: pStepError ? pStepError.message : null,
+								LogLines: tmpLog.slice(tmpLogLengthBefore)
+							});
+							return fStepCallback();
+						});
+				});
+		}
+
+		tmpStepAnticipate.wait(
+			(pStepError) =>
+			{
+				if (pStepError)
+				{
+					tmpLog.push(`[${new Date().toISOString()}] Pipeline step error: ${pStepError.message}`);
+				}
+
+				// Count total unique records across all entities
+				let tmpEntityNames = Object.keys(tmpAccumulatedComprehension);
+				let tmpTotalRecords = 0;
+				for (let i = 0; i < tmpEntityNames.length; i++)
+				{
+					tmpTotalRecords += Object.keys(tmpAccumulatedComprehension[tmpEntityNames[i]]).length;
+				}
+
+				tmpLog.push(`[${new Date().toISOString()}] Pipeline comprehension complete: ${tmpTotalRecords} total records across ${tmpEntityNames.length} entity/entities`);
+
+				if (tmpTotalRecords === 0)
+				{
+					tmpLog.push(`[${new Date().toISOString()}] No records to upsert`);
+
+					// Still write certainty logs if any
+					this._writeCertaintyLogs(tmpCertaintyLogs, tmpLog,
+						() =>
+						{
+							return fCallback(null,
+							{
+								Success: true,
+								RecordsTotal: 0,
+								RecordsUpserted: 0,
+								PipelineStepResults: tmpStepResults,
+								Log: tmpLog.join('\n')
+							});
+						});
+					return;
+				}
+
+				// Stage comprehension if requested
+				let tmpStagingFile = false;
+				if (pConfig.StageComprehension)
+				{
+					try
+					{
+						let tmpStagingDir = libPath.join(process.cwd(), 'data', 'staging');
+						if (!libFS.existsSync(tmpStagingDir))
+						{
+							libFS.mkdirSync(tmpStagingDir, { recursive: true });
+						}
+						let tmpTimestamp = new Date().toISOString().replace(/[:.]/g, '-');
+						let tmpFilename = `multi-comprehension-${pConfig.IDDataset}-${pConfig.MultiSetProjection.IDMultiSetProjection}-${tmpTimestamp}.json`;
+						let tmpFilePath = libPath.join(tmpStagingDir, tmpFilename);
+						let tmpStagingData =
+						{
+							IDDataset: pConfig.IDDataset,
+							IDMultiSetProjection: pConfig.MultiSetProjection.IDMultiSetProjection,
+							Timestamp: new Date().toISOString(),
+							TotalRecords: tmpTotalRecords,
+							StepCount: tmpSteps.length,
+							ReliabilityTracker: tmpReliabilityTracker,
+							ConfidenceTracker: tmpConfidenceTracker,
+							Comprehension: tmpAccumulatedComprehension
+						};
+						libFS.writeFileSync(tmpFilePath, JSON.stringify(tmpStagingData, null, '\t'));
+						tmpStagingFile = tmpFilename;
+						tmpLog.push(`[${new Date().toISOString()}] Comprehension staged to: ${tmpFilename}`);
+					}
+					catch (pStagingError)
+					{
+						tmpLog.push(`[${new Date().toISOString()}] Staging error: ${pStagingError.message}`);
+					}
+				}
+
+				// Phase 3: Upsert to target store via IntegrationAdapter
+				let tmpTargetEntityName = pConfig.ProjectionStore.TargetTableName;
+
+				let tmpDoImport = () =>
+				{
+					let tmpPort = this.fable.settings.APIServerPort || 8080;
+					let tmpServerURL = `http://localhost:${tmpPort}/1.0/`;
+
+					let tmpRestClient = this.fable.serviceManager.instantiateServiceProviderWithoutRegistration(
+						'MeadowCloneRestClient',
+						{
+							ServerURL: tmpServerURL
+						});
+
+					let tmpAdapter = this.fable.serviceManager.instantiateServiceProviderWithoutRegistration(
+						'IntegrationAdapter',
+						{
+							Entity: tmpTargetEntityName,
+							Client: tmpRestClient,
+							AdapterSetGUIDMarshalPrefix: `MSET-${pConfig.IDDataset}`,
+							PerformUpserts: true,
+							PerformDeletes: false,
+							SimpleMarshal: true
+						});
+
+					// Feed accumulated comprehension records to the adapter
+					let tmpGUIDField = `GUID${tmpTargetEntityName}`;
+					let tmpEntityComp = tmpAccumulatedComprehension[tmpEntityNames[0]] || {};
+					let tmpRecordGUIDs = Object.keys(tmpEntityComp);
+
+					for (let i = 0; i < tmpRecordGUIDs.length; i++)
+					{
+						let tmpGUID = tmpRecordGUIDs[i];
+						let tmpCompRecord = tmpEntityComp[tmpGUID];
+						if (!tmpCompRecord[tmpGUIDField])
+						{
+							tmpCompRecord[tmpGUIDField] = tmpGUID;
+						}
+						tmpAdapter.addSourceRecord(tmpCompRecord);
+					}
+
+					tmpLog.push(`[${new Date().toISOString()}] Pushing ${tmpRecordGUIDs.length} records via IntegrationAdapter to ${tmpServerURL}${tmpTargetEntityName}/Upsert`);
+
+					tmpAdapter.marshalSourceRecords(
+						(pMarshalError) =>
+						{
+							if (pMarshalError)
+							{
+								tmpLog.push(`[${new Date().toISOString()}] Marshal error: ${pMarshalError.message}`);
+								return fCallback(pMarshalError,
+								{
+									Error: `Marshal error: ${pMarshalError.message}`,
+									PipelineStepResults: tmpStepResults,
+									StagingFile: tmpStagingFile,
+									Log: tmpLog.join('\n')
+								});
+							}
+
+							let tmpMarshaledCount = Object.keys(tmpAdapter._MarshaledRecords).length;
+							tmpLog.push(`[${new Date().toISOString()}] Marshaled ${tmpMarshaledCount} records; pushing to server...`);
+
+							tmpAdapter.pushRecordsToServer(
+								(pPushError) =>
+								{
+									if (pPushError)
+									{
+										tmpLog.push(`[${new Date().toISOString()}] Push error: ${pPushError.message}`);
+									}
+
+									tmpLog.push(`[${new Date().toISOString()}] Multi-set import complete: ${tmpTotalRecords} unique, ${tmpMarshaledCount} upserted`);
+
+									// Write certainty logs
+									this._writeCertaintyLogs(tmpCertaintyLogs, tmpLog,
+										() =>
+										{
+											return fCallback(pPushError ? pPushError : null,
+											{
+												Success: !pPushError,
+												RecordsTotal: tmpTotalRecords,
+												RecordsUpserted: tmpMarshaledCount,
+												PipelineStepResults: tmpStepResults,
+												StagingFile: tmpStagingFile,
+												CertaintyLogCount: tmpCertaintyLogs.length,
+												Log: tmpLog.join('\n')
+											});
+										});
+								});
+						});
+				};
+
+				// Ensure the target entity is registered
+				if (!this._ProjectionEntities[tmpTargetEntityName])
+				{
+					tmpLog.push(`[${new Date().toISOString()}] Registering Meadow entity [${tmpTargetEntityName}] for REST upserts...`);
+
+					let tmpParsedSchema = pConfig.ParsedSchema;
+					if (!tmpParsedSchema || !tmpParsedSchema.Tables || Object.keys(tmpParsedSchema.Tables).length === 0)
+					{
+						tmpLog.push(`[${new Date().toISOString()}] No schema available for entity registration; attempting import anyway`);
+						return tmpDoImport();
+					}
+
+					this._registerProjectionEntity(pConfig.ProjectionStore, pConfig.Connection, tmpParsedSchema, null,
+						(pRegError) =>
+						{
+							if (pRegError)
+							{
+								tmpLog.push(`[${new Date().toISOString()}] Entity registration failed: ${pRegError.message}`);
+								return fCallback(pRegError,
+								{
+									Error: `Entity registration failed: ${pRegError.message}`,
+									PipelineStepResults: tmpStepResults,
+									Log: tmpLog.join('\n')
+								});
+							}
+							tmpLog.push(`[${new Date().toISOString()}] Entity [${tmpTargetEntityName}] registered successfully`);
+							return tmpDoImport();
+						});
+				}
+				else
+				{
+					return tmpDoImport();
+				}
+			});
+	}
+
+	/**
+	 * Write accumulated certainty log entries to the ProjectionCertaintyLog table.
+	 *
+	 * @param {Array} pCertaintyLogs - Array of log entry objects
+	 * @param {Array} pLog - Text log lines
+	 * @param {function} fCallback - Callback()
+	 */
+	_writeCertaintyLogs(pCertaintyLogs, pLog, fCallback)
+	{
+		if (!pCertaintyLogs || pCertaintyLogs.length === 0 ||
+			!this.fable.DAL || !this.fable.DAL.ProjectionCertaintyLog)
+		{
+			return fCallback();
+		}
+
+		pLog.push(`[${new Date().toISOString()}] Writing ${pCertaintyLogs.length} certainty log entries...`);
+
+		let tmpAnticipate = this.fable.newAnticipate();
+		let tmpWritten = 0;
+		let tmpErrored = 0;
+
+		for (let i = 0; i < pCertaintyLogs.length; i++)
+		{
+			let tmpEntry = pCertaintyLogs[i];
+
+			tmpAnticipate.anticipate(
+				(fStepCallback) =>
+				{
+					let tmpCreateQuery = this.fable.DAL.ProjectionCertaintyLog.query.clone()
+						.setIDUser(0)
+						.addRecord(tmpEntry);
+
+					this.fable.DAL.ProjectionCertaintyLog.doCreate(tmpCreateQuery,
+						(pError) =>
+						{
+							if (pError)
+							{
+								tmpErrored++;
+							}
+							else
+							{
+								tmpWritten++;
+							}
+							return fStepCallback();
+						});
+				});
+		}
+
+		tmpAnticipate.wait(
+			() =>
+			{
+				pLog.push(`[${new Date().toISOString()}] Certainty log: ${tmpWritten} written, ${tmpErrored} errored`);
+				return fCallback();
 			});
 	}
 }

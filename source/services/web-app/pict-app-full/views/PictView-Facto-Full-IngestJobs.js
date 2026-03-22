@@ -48,7 +48,11 @@ class FactoFullIngestJobsView extends libPictView
 	onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent)
 	{
 		this.pict.providers.Facto.loadIngestJobs().then(
-			() => { this.refreshList(); });
+			() => { this.refreshList(); }).catch(
+			(pError) =>
+			{
+				this.pict.views['Pict-Section-Modal'].toast('Error loading ingest jobs: ' + pError.message, {type: 'error'});
+			});
 
 		return super.onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent);
 	}

@@ -421,7 +421,7 @@ class FactoFullSchemaEditorView extends libPictView
 		let tmpDDL = tmpTextarea.value.trim();
 		if (!tmpDDL)
 		{
-			this.pict.providers.FactoUI.showToast('Enter MicroDDL text first.', 'warn');
+			this.pict.views['Pict-Section-Modal'].toast('Enter MicroDDL text first.', {type: 'warning'});
 			return;
 		}
 
@@ -469,7 +469,7 @@ class FactoFullSchemaEditorView extends libPictView
 	{
 		if (!this._EditingIDDataset)
 		{
-			this.pict.providers.FactoUI.showToast('No projection selected.', 'warn');
+			this.pict.views['Pict-Section-Modal'].toast('No projection selected.', {type: 'warning'});
 			return;
 		}
 
@@ -495,11 +495,11 @@ class FactoFullSchemaEditorView extends libPictView
 			{
 				if (pResponse && pResponse.Error)
 				{
-					this.pict.providers.FactoUI.showToast('Error saving schema: ' + pResponse.Error, 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Error saving schema: ' + pResponse.Error, {type: 'error'});
 					return;
 				}
 
-				this.pict.providers.FactoUI.showToast('Schema saved (v' + (pResponse.SchemaVersion || 0) + ')', 'success');
+				this.pict.views['Pict-Section-Modal'].toast('Schema saved (v' + (pResponse.SchemaVersion || 0) + ')', {type: 'success'});
 
 				// Notify the detail view about the schema update
 				let tmpDetailView = this.pict.views['Facto-Full-ProjectionDetail'];

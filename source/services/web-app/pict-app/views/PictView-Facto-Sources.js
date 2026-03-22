@@ -17,7 +17,7 @@ class FactoSourcesView extends libPictView
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-sources-status', 'Error loading sources: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error loading sources: ' + pError.message, {type: 'error'});
 			});
 	}
 
@@ -71,20 +71,20 @@ class FactoSourcesView extends libPictView
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-sources-status', 'Error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error: ' + pError.message, {type: 'error'});
 			});
 	}
 
 	addSource()
 	{
-		let tmpName = (document.getElementById('facto-source-name') || {}).value || '';
-		let tmpType = (document.getElementById('facto-source-type') || {}).value || '';
-		let tmpURL = (document.getElementById('facto-source-url') || {}).value || '';
-		let tmpProtocol = (document.getElementById('facto-source-protocol') || {}).value || '';
+		let tmpName = this.pict.providers.FactoUI.getVal('facto-source-name');
+		let tmpType = this.pict.providers.FactoUI.getVal('facto-source-type');
+		let tmpURL = this.pict.providers.FactoUI.getVal('facto-source-url');
+		let tmpProtocol = this.pict.providers.FactoUI.getVal('facto-source-protocol');
 
 		if (!tmpName)
 		{
-			this.pict.providers.Facto.setStatus('facto-sources-status', 'Name is required', 'warn');
+			this.pict.views['Pict-Section-Modal'].toast('Name is required', {type: 'warning'});
 			return;
 		}
 
@@ -100,7 +100,7 @@ class FactoSourcesView extends libPictView
 			{
 				if (pResponse && pResponse.IDSource)
 				{
-					this.pict.providers.Facto.setStatus('facto-sources-status', 'Source created: ' + pResponse.Name, 'ok');
+					this.pict.views['Pict-Section-Modal'].toast('Source created: ' + pResponse.Name, {type: 'success'});
 					// Clear form
 					if (document.getElementById('facto-source-name')) document.getElementById('facto-source-name').value = '';
 					if (document.getElementById('facto-source-url')) document.getElementById('facto-source-url').value = '';
@@ -109,7 +109,7 @@ class FactoSourcesView extends libPictView
 				}
 				else
 				{
-					this.pict.providers.Facto.setStatus('facto-sources-status', 'Error creating source', 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Error creating source', {type: 'error'});
 				}
 			}).then(
 			() =>
@@ -118,7 +118,7 @@ class FactoSourcesView extends libPictView
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-sources-status', 'Error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error: ' + pError.message, {type: 'error'});
 			});
 	}
 }
@@ -184,7 +184,6 @@ module.exports.default_configuration =
 			</div>
 			<button class="primary" onclick="pict.views['Facto-Sources'].addSource()">Add Source</button>
 
-			<div id="facto-sources-status" class="status" style="display:none;"></div>
 		</div>
 	</div>
 </div>

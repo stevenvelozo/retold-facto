@@ -45,22 +45,22 @@ class FactoProjectionsView extends libPictView
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-projections-status', 'Error loading summary: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error loading summary: ' + pError.message, {type: 'error'});
 			});
 	}
 
 	runQuery()
 	{
-		let tmpDatasetIDsRaw = (document.getElementById('facto-proj-dataset-ids') || {}).value || '';
-		let tmpType = (document.getElementById('facto-proj-type') || {}).value || '';
-		let tmpCertaintyThreshold = parseFloat((document.getElementById('facto-proj-certainty') || {}).value) || 0;
-		let tmpTimeStart = (document.getElementById('facto-proj-time-start') || {}).value || '';
-		let tmpTimeStop = (document.getElementById('facto-proj-time-stop') || {}).value || '';
+		let tmpDatasetIDsRaw = this.pict.providers.FactoUI.getVal('facto-proj-dataset-ids');
+		let tmpType = this.pict.providers.FactoUI.getVal('facto-proj-type');
+		let tmpCertaintyThreshold = parseFloat(this.pict.providers.FactoUI.getVal('facto-proj-certainty')) || 0;
+		let tmpTimeStart = this.pict.providers.FactoUI.getVal('facto-proj-time-start');
+		let tmpTimeStop = this.pict.providers.FactoUI.getVal('facto-proj-time-stop');
 
 		let tmpDatasetIDs = tmpDatasetIDsRaw.split(',').map(function(s) { return parseInt(s.trim(), 10); }).filter(function(n) { return !isNaN(n) && n > 0; });
 		if (tmpDatasetIDs.length === 0)
 		{
-			this.pict.providers.Facto.setStatus('facto-projections-status', 'Enter at least one Dataset ID', 'warn');
+			this.pict.views['Pict-Section-Modal'].toast('Enter at least one Dataset ID', {type: 'warning'});
 			return;
 		}
 
@@ -70,38 +70,36 @@ class FactoProjectionsView extends libPictView
 		if (tmpTimeStart) tmpParams.TimeRangeStart = parseInt(tmpTimeStart, 10) || 0;
 		if (tmpTimeStop) tmpParams.TimeRangeStop = parseInt(tmpTimeStop, 10) || 0;
 
-		this.pict.providers.Facto.setStatus('facto-projections-status', 'Querying...', 'info');
+		this.pict.views['Pict-Section-Modal'].toast('Querying...', {type: 'info'});
 
 		this.pict.providers.Facto.queryRecords(tmpParams).then(
 			(pResponse) =>
 			{
-				this.pict.providers.Facto.clearStatus('facto-projections-status');
-				this.refreshResults(pResponse);
+					this.refreshResults(pResponse);
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-projections-status', 'Query error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Query error: ' + pError.message, {type: 'error'});
 			});
 	}
 
 	runCompare()
 	{
-		let tmpDatasetIDsRaw = (document.getElementById('facto-proj-dataset-ids') || {}).value || '';
+		let tmpDatasetIDsRaw = this.pict.providers.FactoUI.getVal('facto-proj-dataset-ids');
 		let tmpDatasetIDs = tmpDatasetIDsRaw.split(',').map(function(s) { return parseInt(s.trim(), 10); }).filter(function(n) { return !isNaN(n) && n > 0; });
 
 		if (tmpDatasetIDs.length === 0)
 		{
-			this.pict.providers.Facto.setStatus('facto-projections-status', 'Enter at least one Dataset ID', 'warn');
+			this.pict.views['Pict-Section-Modal'].toast('Enter at least one Dataset ID', {type: 'warning'});
 			return;
 		}
 
-		this.pict.providers.Facto.setStatus('facto-projections-status', 'Comparing...', 'info');
+		this.pict.views['Pict-Section-Modal'].toast('Comparing...', {type: 'info'});
 
 		this.pict.providers.Facto.compareDatasets(tmpDatasetIDs).then(
 			(pResponse) =>
 			{
-				this.pict.providers.Facto.clearStatus('facto-projections-status');
-				let tmpContainer = document.getElementById('facto-projections-results');
+					let tmpContainer = document.getElementById('facto-projections-results');
 				if (!tmpContainer || !pResponse || !pResponse.Datasets) return;
 
 				let tmpHtml = '<h4 style="margin:12px 0 8px; font-size:0.95em;">Dataset Comparison</h4>';
@@ -123,7 +121,7 @@ class FactoProjectionsView extends libPictView
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-projections-status', 'Compare error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Compare error: ' + pError.message, {type: 'error'});
 			});
 	}
 
@@ -216,7 +214,6 @@ module.exports.default_configuration =
 			<button class="secondary" onclick="pict.views['Facto-Projections'].loadSummary()">Refresh Summary</button>
 
 			<div id="facto-projections-results" style="margin-top:16px;"></div>
-			<div id="facto-projections-status" class="status" style="display:none;"></div>
 		</div>
 	</div>
 </div>

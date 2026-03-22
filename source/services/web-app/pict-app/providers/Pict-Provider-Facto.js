@@ -48,22 +48,7 @@ class FactoProvider extends libPictProvider
 			});
 	}
 
-	setStatus(pElementId, pMessage, pType)
-	{
-		let tmpEl = document.getElementById(pElementId);
-		if (!tmpEl) return;
-		tmpEl.className = 'status ' + (pType || 'info');
-		tmpEl.textContent = pMessage;
-		tmpEl.style.display = 'block';
-	}
 
-	clearStatus(pElementId)
-	{
-		let tmpEl = document.getElementById(pElementId);
-		if (!tmpEl) return;
-		tmpEl.style.display = 'none';
-		tmpEl.textContent = '';
-	}
 }
 
 // Mix in domain-specific API methods

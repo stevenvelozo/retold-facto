@@ -17,7 +17,7 @@ class FactoCatalogView extends libPictView
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-catalog-status', 'Error loading catalog: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error loading catalog: ' + pError.message, {type: 'error'});
 			});
 	}
 
@@ -58,7 +58,7 @@ class FactoCatalogView extends libPictView
 
 	searchCatalog()
 	{
-		let tmpQuery = (document.getElementById('facto-catalog-search') || {}).value || '';
+		let tmpQuery = this.pict.providers.FactoUI.getVal('facto-catalog-search');
 		if (!tmpQuery)
 		{
 			// Reload all entries
@@ -71,32 +71,31 @@ class FactoCatalogView extends libPictView
 		}
 
 		this.pict.providers.Facto.searchCatalog(tmpQuery).then(
-			(pResponse) =>
+			() =>
 			{
-				this.pict.AppData.Facto.CatalogEntries = (pResponse && pResponse.Entries) ? pResponse.Entries : [];
 				this.refreshList();
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-catalog-status', 'Search error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Search error: ' + pError.message, {type: 'error'});
 			});
 	}
 
 	addEntry()
 	{
-		let tmpAgency = (document.getElementById('facto-catalog-agency') || {}).value || '';
-		let tmpName = (document.getElementById('facto-catalog-name') || {}).value || '';
-		let tmpType = (document.getElementById('facto-catalog-type') || {}).value || '';
-		let tmpURL = (document.getElementById('facto-catalog-url') || {}).value || '';
-		let tmpProtocol = (document.getElementById('facto-catalog-protocol') || {}).value || '';
-		let tmpCategory = (document.getElementById('facto-catalog-category') || {}).value || '';
-		let tmpRegion = (document.getElementById('facto-catalog-region') || {}).value || '';
-		let tmpUpdateFrequency = (document.getElementById('facto-catalog-frequency') || {}).value || '';
-		let tmpDescription = (document.getElementById('facto-catalog-description') || {}).value || '';
+		let tmpAgency = this.pict.providers.FactoUI.getVal('facto-catalog-agency');
+		let tmpName = this.pict.providers.FactoUI.getVal('facto-catalog-name');
+		let tmpType = this.pict.providers.FactoUI.getVal('facto-catalog-type');
+		let tmpURL = this.pict.providers.FactoUI.getVal('facto-catalog-url');
+		let tmpProtocol = this.pict.providers.FactoUI.getVal('facto-catalog-protocol');
+		let tmpCategory = this.pict.providers.FactoUI.getVal('facto-catalog-category');
+		let tmpRegion = this.pict.providers.FactoUI.getVal('facto-catalog-region');
+		let tmpUpdateFrequency = this.pict.providers.FactoUI.getVal('facto-catalog-frequency');
+		let tmpDescription = this.pict.providers.FactoUI.getVal('facto-catalog-description');
 
 		if (!tmpAgency && !tmpName)
 		{
-			this.pict.providers.Facto.setStatus('facto-catalog-status', 'Agency or Name is required', 'warn');
+			this.pict.views['Pict-Section-Modal'].toast('Agency or Name is required', {type: 'warning'});
 			return;
 		}
 
@@ -116,7 +115,7 @@ class FactoCatalogView extends libPictView
 			{
 				if (pResponse && pResponse.Success)
 				{
-					this.pict.providers.Facto.setStatus('facto-catalog-status', 'Catalog entry created: ' + (tmpAgency || tmpName), 'ok');
+					this.pict.views['Pict-Section-Modal'].toast('Catalog entry created: ' + (tmpAgency || tmpName), {type: 'success'});
 					// Clear form
 					let tmpFields = ['agency', 'name', 'url', 'description'];
 					for (let i = 0; i < tmpFields.length; i++)
@@ -129,7 +128,7 @@ class FactoCatalogView extends libPictView
 				}
 				else
 				{
-					this.pict.providers.Facto.setStatus('facto-catalog-status', 'Error: ' + ((pResponse && pResponse.Error) || 'Unknown error'), 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Error: ' + ((pResponse && pResponse.Error) || 'Unknown error'), {type: 'error'});
 				}
 			}).then(
 			() =>
@@ -138,13 +137,14 @@ class FactoCatalogView extends libPictView
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-catalog-status', 'Error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error: ' + pError.message, {type: 'error'});
 			});
 	}
 
-	deleteEntry(pIDEntry)
+	async deleteEntry(pIDEntry)
 	{
-		if (!confirm('Remove this catalog entry?')) return;
+		let tmpConfirmed = await this.pict.views['Pict-Section-Modal'].confirm('Remove this catalog entry?', { title: 'Remove Entry', confirmLabel: 'Remove', dangerous: true });
+		if (!tmpConfirmed) return;
 
 		this.pict.providers.Facto.deleteCatalogEntry(pIDEntry).then(
 			() =>
@@ -154,11 +154,11 @@ class FactoCatalogView extends libPictView
 			() =>
 			{
 				this.refreshList();
-				this.pict.providers.Facto.setStatus('facto-catalog-status', 'Entry removed', 'ok');
+				this.pict.views['Pict-Section-Modal'].toast('Entry removed', {type: 'success'});
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-catalog-status', 'Error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error: ' + pError.message, {type: 'error'});
 			});
 	}
 
@@ -234,15 +234,15 @@ class FactoCatalogView extends libPictView
 
 	addDatasetDefinition(pIDEntry)
 	{
-		let tmpName = (document.getElementById('facto-catds-name') || {}).value || '';
-		let tmpFormat = (document.getElementById('facto-catds-format') || {}).value || '';
-		let tmpEndpointURL = (document.getElementById('facto-catds-endpoint') || {}).value || '';
-		let tmpVersionPolicy = (document.getElementById('facto-catds-versionpolicy') || {}).value || 'Append';
-		let tmpDescription = (document.getElementById('facto-catds-description') || {}).value || '';
+		let tmpName = this.pict.providers.FactoUI.getVal('facto-catds-name');
+		let tmpFormat = this.pict.providers.FactoUI.getVal('facto-catds-format');
+		let tmpEndpointURL = this.pict.providers.FactoUI.getVal('facto-catds-endpoint');
+		let tmpVersionPolicy = this.pict.providers.FactoUI.getVal('facto-catds-versionpolicy') || 'Append';
+		let tmpDescription = this.pict.providers.FactoUI.getVal('facto-catds-description');
 
 		if (!tmpName)
 		{
-			this.pict.providers.Facto.setStatus('facto-catalog-status', 'Dataset name is required', 'warn');
+			this.pict.views['Pict-Section-Modal'].toast('Dataset name is required', {type: 'warning'});
 			return;
 		}
 
@@ -258,23 +258,23 @@ class FactoCatalogView extends libPictView
 			{
 				if (pResponse && pResponse.Success)
 				{
-					this.pict.providers.Facto.setStatus('facto-catalog-status', 'Dataset definition added: ' + tmpName, 'ok');
+					this.pict.views['Pict-Section-Modal'].toast('Dataset definition added: ' + tmpName, {type: 'success'});
 					this.viewEntry(pIDEntry);
 				}
 				else
 				{
-					this.pict.providers.Facto.setStatus('facto-catalog-status', 'Error: ' + ((pResponse && pResponse.Error) || 'Unknown error'), 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Error: ' + ((pResponse && pResponse.Error) || 'Unknown error'), {type: 'error'});
 				}
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-catalog-status', 'Error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error: ' + pError.message, {type: 'error'});
 			});
 	}
 
 	provisionDataset(pIDCatalogDataset, pIDEntry)
 	{
-		this.pict.providers.Facto.setStatus('facto-catalog-status', 'Provisioning...', 'info');
+		this.pict.views['Pict-Section-Modal'].toast('Provisioning...', {type: 'info'});
 
 		this.pict.providers.Facto.provisionCatalogDataset(pIDCatalogDataset).then(
 			(pResponse) =>
@@ -282,40 +282,25 @@ class FactoCatalogView extends libPictView
 				if (pResponse && pResponse.Success)
 				{
 					let tmpMsg = 'Provisioned! Source #' + pResponse.Source.IDSource + ', Dataset #' + pResponse.Dataset.IDDataset;
-					this.pict.providers.Facto.setStatus('facto-catalog-status', tmpMsg, 'ok');
+					this.pict.views['Pict-Section-Modal'].toast(tmpMsg, {type: 'success'});
 					this.viewEntry(pIDEntry);
-					// Refresh sources and datasets views if they exist
-					if (this.pict.views['Facto-Sources'])
-					{
-						this.pict.providers.Facto.loadSources().then(
-							() =>
-							{
-								this.pict.views['Facto-Sources'].refreshList();
-							});
-					}
-					if (this.pict.views['Facto-Datasets'])
-					{
-						this.pict.providers.Facto.loadDatasets().then(
-							() =>
-							{
-								this.pict.views['Facto-Datasets'].refreshList();
-							});
-					}
+					// Refresh sibling views via FactoUIProvider coordination
+					this.pict.providers.FactoUI.refreshDataViews(['sources', 'datasets']);
 				}
 				else
 				{
-					this.pict.providers.Facto.setStatus('facto-catalog-status', 'Error: ' + ((pResponse && pResponse.Error) || 'Unknown error'), 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Error: ' + ((pResponse && pResponse.Error) || 'Unknown error'), {type: 'error'});
 				}
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-catalog-status', 'Error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error: ' + pError.message, {type: 'error'});
 			});
 	}
 
 	fetchDataset(pIDCatalogDataset, pIDEntry)
 	{
-		this.pict.providers.Facto.setStatus('facto-catalog-status', 'Fetching data from endpoint...', 'info');
+		this.pict.views['Pict-Section-Modal'].toast('Fetching data from endpoint...', {type: 'info'});
 
 		this.pict.providers.Facto.fetchCatalogDataset(pIDCatalogDataset).then(
 			(pResponse) =>
@@ -327,26 +312,19 @@ class FactoCatalogView extends libPictView
 					{
 						tmpMsg += ' [duplicate content detected]';
 					}
-					this.pict.providers.Facto.setStatus('facto-catalog-status', tmpMsg, 'ok');
+					this.pict.views['Pict-Section-Modal'].toast(tmpMsg, {type: 'success'});
 					this.viewEntry(pIDEntry);
-					// Refresh records view if it exists
-					if (this.pict.views['Facto-Records'])
-					{
-						this.pict.providers.Facto.loadRecords().then(
-							() =>
-							{
-								this.pict.views['Facto-Records'].refreshList();
-							});
-					}
+					// Refresh records view via FactoUIProvider coordination
+					this.pict.providers.FactoUI.refreshDataViews(['records']);
 				}
 				else
 				{
-					this.pict.providers.Facto.setStatus('facto-catalog-status', 'Fetch error: ' + ((pResponse && pResponse.Error) || 'Unknown error'), 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Fetch error: ' + ((pResponse && pResponse.Error) || 'Unknown error'), {type: 'error'});
 				}
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-catalog-status', 'Fetch error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Fetch error: ' + pError.message, {type: 'error'});
 			});
 	}
 
@@ -355,7 +333,7 @@ class FactoCatalogView extends libPictView
 		let tmpTextArea = document.getElementById('facto-catalog-import-json');
 		if (!tmpTextArea || !tmpTextArea.value)
 		{
-			this.pict.providers.Facto.setStatus('facto-catalog-status', 'Paste JSON to import', 'warn');
+			this.pict.views['Pict-Section-Modal'].toast('Paste JSON to import', {type: 'warning'});
 			return;
 		}
 
@@ -366,7 +344,7 @@ class FactoCatalogView extends libPictView
 		}
 		catch (pParseError)
 		{
-			this.pict.providers.Facto.setStatus('facto-catalog-status', 'Invalid JSON: ' + pParseError.message, 'error');
+			this.pict.views['Pict-Section-Modal'].toast('Invalid JSON: ' + pParseError.message, {type: 'error'});
 			return;
 		}
 
@@ -375,7 +353,7 @@ class FactoCatalogView extends libPictView
 			{
 				if (pResponse && pResponse.Success)
 				{
-					this.pict.providers.Facto.setStatus('facto-catalog-status', 'Imported ' + pResponse.EntriesCreated + ' entries with ' + pResponse.DatasetsCreated + ' datasets', 'ok');
+					this.pict.views['Pict-Section-Modal'].toast('Imported ' + pResponse.EntriesCreated + ' entries with ' + pResponse.DatasetsCreated + ' datasets', {type: 'success'});
 					tmpTextArea.value = '';
 					return this.pict.providers.Facto.loadCatalogEntries();
 				}
@@ -387,7 +365,7 @@ class FactoCatalogView extends libPictView
 						try { tmpError = 'Unexpected response: ' + JSON.stringify(pResponse).substring(0, 300); }
 						catch(e) { /* ignore */ }
 					}
-					this.pict.providers.Facto.setStatus('facto-catalog-status', 'Import error: ' + tmpError, 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Import error: ' + tmpError, {type: 'error'});
 				}
 			}).then(
 			() =>
@@ -396,7 +374,7 @@ class FactoCatalogView extends libPictView
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-catalog-status', 'Error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error: ' + pError.message, {type: 'error'});
 			});
 	}
 
@@ -410,11 +388,11 @@ class FactoCatalogView extends libPictView
 				{
 					tmpTextArea.value = JSON.stringify(pResponse && pResponse.Entries ? pResponse.Entries : pResponse, null, 2);
 				}
-				this.pict.providers.Facto.setStatus('facto-catalog-status', 'Catalog exported to JSON text area', 'ok');
+				this.pict.views['Pict-Section-Modal'].toast('Catalog exported to JSON text area', {type: 'success'});
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-catalog-status', 'Error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error: ' + pError.message, {type: 'error'});
 			});
 	}
 }
@@ -531,7 +509,6 @@ module.exports.default_configuration =
 			<button class="primary" onclick="pict.views['Facto-Catalog'].importCatalog()">Import JSON</button>
 			<button class="secondary" onclick="pict.views['Facto-Catalog'].exportCatalog()">Export Catalog</button>
 
-			<div id="facto-catalog-status" class="status" style="display:none;"></div>
 		</div>
 	</div>
 </div>

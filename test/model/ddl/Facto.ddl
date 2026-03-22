@@ -188,3 +188,38 @@ $VersionPolicy 16
 ^Provisioned
 #IDSource
 #IDDataset
+
+!MultiSetProjection
+@IDMultiSetProjection
+%GUIDMultiSetProjection
+&CreateDate
+#CreatingIDUser
+&UpdateDate
+#UpdatingIDUser
+^Deleted
+&DeleteDate
+#DeletingIDUser
+#IDDataset -> IDDataset
+#IDProjectionStore -> IDProjectionStore
+$Name 200
+*Description
+*PipelineConfiguration
+^Active
+
+!ProjectionCertaintyLog
+@IDProjectionCertaintyLog
+%GUIDProjectionCertaintyLog
+&CreateDate
+#CreatingIDUser
+&UpdateDate
+#UpdatingIDUser
+^Deleted
+&DeleteDate
+#DeletingIDUser
+#IDMultiSetProjection -> IDMultiSetProjection
+$RecordGUID 256
+.CertaintyValue 5,4
+$SourceMappingLabel 200
+#IDProjectionMapping -> IDProjectionMapping
+$Action 32
+*Details

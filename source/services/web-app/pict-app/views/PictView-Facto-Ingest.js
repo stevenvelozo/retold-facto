@@ -16,7 +16,7 @@ class FactoIngestView extends libPictView
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-ingest-status', 'Error loading jobs: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error loading jobs: ' + pError.message, {type: 'error'});
 			});
 	}
 
@@ -66,7 +66,7 @@ class FactoIngestView extends libPictView
 		this.pict.providers.Facto.startIngestJob(pIDIngestJob).then(
 			() =>
 			{
-				this.pict.providers.Facto.setStatus('facto-ingest-status', 'Job #' + pIDIngestJob + ' started', 'ok');
+				this.pict.views['Pict-Section-Modal'].toast('Job #' + pIDIngestJob + ' started', {type: 'success'});
 				return this.pict.providers.Facto.loadIngestJobs();
 			}).then(
 			() =>
@@ -75,7 +75,7 @@ class FactoIngestView extends libPictView
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-ingest-status', 'Error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error: ' + pError.message, {type: 'error'});
 			});
 	}
 
@@ -97,33 +97,32 @@ class FactoIngestView extends libPictView
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-ingest-status', 'Error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error: ' + pError.message, {type: 'error'});
 			});
 	}
 
 	ingestPastedContent()
 	{
-		let tmpIDDataset = parseInt((document.getElementById('facto-ingest-paste-dataset') || {}).value, 10) || 0;
-		let tmpIDSource = parseInt((document.getElementById('facto-ingest-paste-source') || {}).value, 10) || 0;
-		let tmpFormat = (document.getElementById('facto-ingest-paste-format') || {}).value || 'Auto';
-		let tmpType = (document.getElementById('facto-ingest-paste-type') || {}).value || 'data';
-		let tmpContent = (document.getElementById('facto-ingest-paste-content') || {}).value || '';
+		let tmpIDDataset = parseInt(this.pict.providers.FactoUI.getVal('facto-ingest-paste-dataset'), 10) || 0;
+		let tmpIDSource = parseInt(this.pict.providers.FactoUI.getVal('facto-ingest-paste-source'), 10) || 0;
+		let tmpFormat = this.pict.providers.FactoUI.getVal('facto-ingest-paste-format') || 'Auto';
+		let tmpType = this.pict.providers.FactoUI.getVal('facto-ingest-paste-type') || 'data';
+		let tmpContent = this.pict.providers.FactoUI.getVal('facto-ingest-paste-content');
 
 		if (!tmpContent.trim())
 		{
-			this.pict.providers.Facto.setStatus('facto-ingest-status', 'Content is required', 'warn');
+			this.pict.views['Pict-Section-Modal'].toast('Content is required', {type: 'warning'});
 			return;
 		}
 
-		this.pict.providers.Facto.setStatus('facto-ingest-status', 'Ingesting...', 'info');
+		this.pict.views['Pict-Section-Modal'].toast('Ingesting...', {type: 'info'});
 
 		this.pict.providers.Facto.ingestFileContent(tmpIDDataset, tmpIDSource, tmpContent, tmpFormat, tmpType).then(
 			(pResponse) =>
 			{
 				if (pResponse && pResponse.Success)
 				{
-					this.pict.providers.Facto.setStatus('facto-ingest-status',
-						'Ingested ' + (pResponse.RecordsCreated || 0) + ' records', 'ok');
+					this.pict.views['Pict-Section-Modal'].toast('Ingested ' + (pResponse.RecordsCreated || 0) + ' records', {type: 'success'});
 					if (document.getElementById('facto-ingest-paste-content'))
 					{
 						document.getElementById('facto-ingest-paste-content').value = '';
@@ -131,24 +130,23 @@ class FactoIngestView extends libPictView
 				}
 				else
 				{
-					this.pict.providers.Facto.setStatus('facto-ingest-status',
-						'Ingest error: ' + ((pResponse && pResponse.Error) || 'Unknown'), 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Ingest error: ' + ((pResponse && pResponse.Error) || 'Unknown'), {type: 'error'});
 				}
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-ingest-status', 'Error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error: ' + pError.message, {type: 'error'});
 			});
 	}
 
 	createJob()
 	{
-		let tmpIDSource = parseInt((document.getElementById('facto-ingest-source') || {}).value, 10) || 0;
-		let tmpIDDataset = parseInt((document.getElementById('facto-ingest-dataset') || {}).value, 10) || 0;
+		let tmpIDSource = parseInt(this.pict.providers.FactoUI.getVal('facto-ingest-source'), 10) || 0;
+		let tmpIDDataset = parseInt(this.pict.providers.FactoUI.getVal('facto-ingest-dataset'), 10) || 0;
 
 		if (!tmpIDSource || !tmpIDDataset)
 		{
-			this.pict.providers.Facto.setStatus('facto-ingest-status', 'Source ID and Dataset ID are required', 'warn');
+			this.pict.views['Pict-Section-Modal'].toast('Source ID and Dataset ID are required', {type: 'warning'});
 			return;
 		}
 
@@ -157,14 +155,14 @@ class FactoIngestView extends libPictView
 			{
 				if (pResponse && pResponse.Success)
 				{
-					this.pict.providers.Facto.setStatus('facto-ingest-status', 'Ingest job created: #' + pResponse.Job.IDIngestJob, 'ok');
+					this.pict.views['Pict-Section-Modal'].toast('Ingest job created: #' + pResponse.Job.IDIngestJob, {type: 'success'});
 					if (document.getElementById('facto-ingest-source')) document.getElementById('facto-ingest-source').value = '';
 					if (document.getElementById('facto-ingest-dataset')) document.getElementById('facto-ingest-dataset').value = '';
 					return this.pict.providers.Facto.loadIngestJobs();
 				}
 				else
 				{
-					this.pict.providers.Facto.setStatus('facto-ingest-status', 'Error creating job', 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Error creating job', {type: 'error'});
 				}
 			}).then(
 			() =>
@@ -173,7 +171,7 @@ class FactoIngestView extends libPictView
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-ingest-status', 'Error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error: ' + pError.message, {type: 'error'});
 			});
 	}
 }
@@ -244,7 +242,6 @@ module.exports.default_configuration =
 			<textarea id="facto-ingest-paste-content" rows="6" style="width:100%; padding:8px 12px; border:1px solid #ccc; border-radius:4px; font-size:0.9em; font-family:monospace; margin-bottom:10px;" placeholder="Paste CSV or JSON data here..."></textarea>
 			<button class="primary" onclick="pict.views['Facto-Ingest'].ingestPastedContent()">Ingest</button>
 
-			<div id="facto-ingest-status" class="status" style="display:none;"></div>
 		</div>
 	</div>
 </div>

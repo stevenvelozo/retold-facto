@@ -1,5 +1,6 @@
 const libPictApplication = require('pict-application');
 
+const libPictSectionModal = require('pict-section-modal');
 const libProvider = require('./providers/Pict-Provider-Facto.js');
 
 const libViewLayout = require('./views/PictView-Facto-Layout.js');
@@ -16,6 +17,9 @@ class FactoApplication extends libPictApplication
 	constructor(pFable, pOptions, pServiceHash)
 	{
 		super(pFable, pOptions, pServiceHash);
+
+		// Register modal/notification service
+		this.pict.addView('Pict-Section-Modal', libPictSectionModal.default_configuration, libPictSectionModal);
 
 		// Register provider
 		this.pict.addProvider('Facto', libProvider.default_configuration, libProvider);

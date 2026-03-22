@@ -140,17 +140,19 @@ class FactoFullConnectionsView extends libPictView
 	{
 		super(pFable, pOptions, pServiceHash);
 
-		this._Connections = [];
 	}
 
 	onAfterRender()
 	{
 		// Load connections from the API
 		this.pict.providers.Facto.loadStoreConnections().then(
-			(pResult) =>
+			() =>
 			{
-				this._Connections = (pResult && pResult.Connections) ? pResult.Connections : [];
 				this.refreshConnectionList();
+			}).catch(
+			(pError) =>
+			{
+				this.pict.views['Pict-Section-Modal'].toast('Error loading connections: ' + pError.message, {type: 'error'});
 			});
 
 		return super.onAfterRender();
@@ -171,7 +173,7 @@ class FactoFullConnectionsView extends libPictView
 
 	updateConnectionFormFields()
 	{
-		let tmpType = (document.getElementById('Facto-Conn-Type') || {}).value || 'MySQL';
+		let tmpType = this.pict.providers.FactoUI.getVal('Facto-Conn-Type');
 		let tmpIsFileBased = (tmpType === 'SQLite' || tmpType === 'RocksDB');
 
 		let tmpFilePathWrap = document.getElementById('Facto-Conn-FilePath-Wrap');
@@ -194,7 +196,7 @@ class FactoFullConnectionsView extends libPictView
 		let tmpContainer = document.getElementById('Facto-Conn-List');
 		if (!tmpContainer) return;
 
-		if (this._Connections.length === 0)
+		if (this.pict.AppData.Facto.StoreConnections.length === 0)
 		{
 			tmpContainer.innerHTML = '<div class="facto-card" style="text-align:center; padding:2em; color:var(--facto-text-tertiary);">No connections configured. Add one to get started.</div>';
 			return;
@@ -204,9 +206,9 @@ class FactoFullConnectionsView extends libPictView
 		tmpHtml += '<th>Name</th><th>Type</th><th>Status</th><th>Actions</th>';
 		tmpHtml += '</tr></thead><tbody>';
 
-		for (let i = 0; i < this._Connections.length; i++)
+		for (let i = 0; i < this.pict.AppData.Facto.StoreConnections.length; i++)
 		{
-			let tmpConn = this._Connections[i];
+			let tmpConn = this.pict.AppData.Facto.StoreConnections[i];
 			let tmpStatusClass = (tmpConn.Status || 'Untested').toLowerCase();
 
 			tmpHtml += '<tr>';
@@ -226,12 +228,12 @@ class FactoFullConnectionsView extends libPictView
 
 	addConnection()
 	{
-		let tmpName = (document.getElementById('Facto-Conn-Name') || {}).value || '';
-		let tmpType = (document.getElementById('Facto-Conn-Type') || {}).value || 'MySQL';
+		let tmpName = this.pict.providers.FactoUI.getVal('Facto-Conn-Name');
+		let tmpType = this.pict.providers.FactoUI.getVal('Facto-Conn-Type');
 
 		if (!tmpName)
 		{
-			this.pict.providers.FactoUI.showToast('Connection name is required.', 'warn');
+			this.pict.views['Pict-Section-Modal'].toast('Connection name is required.', {type: 'warning'});
 			return;
 		}
 
@@ -240,21 +242,21 @@ class FactoFullConnectionsView extends libPictView
 
 		if (tmpIsFileBased)
 		{
-			tmpConfig.SQLiteFilePath = (document.getElementById('Facto-Conn-FilePath') || {}).value || '';
+			tmpConfig.SQLiteFilePath = this.pict.providers.FactoUI.getVal('Facto-Conn-FilePath');
 			if (!tmpConfig.SQLiteFilePath)
 			{
-				this.pict.providers.FactoUI.showToast('File path is required for ' + tmpType + ' connections.', 'warn');
+				this.pict.views['Pict-Section-Modal'].toast('File path is required for ' + tmpType + ' connections.', {type: 'warning'});
 				return;
 			}
 		}
 		else
 		{
-			tmpConfig.host = (document.getElementById('Facto-Conn-Host') || {}).value || 'localhost';
+			tmpConfig.host = this.pict.providers.FactoUI.getVal('Facto-Conn-Host');
 			tmpConfig.server = tmpConfig.host;
-			tmpConfig.port = parseInt((document.getElementById('Facto-Conn-Port') || {}).value) || 0;
-			tmpConfig.user = (document.getElementById('Facto-Conn-User') || {}).value || '';
-			tmpConfig.password = (document.getElementById('Facto-Conn-Password') || {}).value || '';
-			tmpConfig.database = (document.getElementById('Facto-Conn-Database') || {}).value || '';
+			tmpConfig.port = parseInt(this.pict.providers.FactoUI.getVal('Facto-Conn-Port')) || 0;
+			tmpConfig.user = this.pict.providers.FactoUI.getVal('Facto-Conn-User');
+			tmpConfig.password = this.pict.providers.FactoUI.getVal('Facto-Conn-Password');
+			tmpConfig.database = this.pict.providers.FactoUI.getVal('Facto-Conn-Database');
 		}
 
 		this.pict.providers.Facto.createStoreConnection(
@@ -267,7 +269,7 @@ class FactoFullConnectionsView extends libPictView
 			{
 				if (pResponse && pResponse.Error)
 				{
-					this.pict.providers.FactoUI.showToast('Error: ' + pResponse.Error, 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Error: ' + pResponse.Error, {type: 'error'});
 					return;
 				}
 
@@ -275,7 +277,7 @@ class FactoFullConnectionsView extends libPictView
 				this.pict.providers.Facto.loadStoreConnections().then(
 					(pResult) =>
 					{
-						this._Connections = (pResult && pResult.Connections) ? pResult.Connections : [];
+						
 						this.refreshConnectionList();
 						this.toggleConnectionForm();
 
@@ -299,24 +301,25 @@ class FactoFullConnectionsView extends libPictView
 				this.pict.providers.Facto.loadStoreConnections().then(
 					(pResult) =>
 					{
-						this._Connections = (pResult && pResult.Connections) ? pResult.Connections : [];
+						
 						this.refreshConnectionList();
 
 						if (pResponse && pResponse.Success)
 						{
-							this.pict.providers.FactoUI.showToast('Connection test succeeded!', 'success');
+							this.pict.views['Pict-Section-Modal'].toast('Connection test succeeded!', {type: 'success'});
 						}
 						else
 						{
-							this.pict.providers.FactoUI.showToast('Connection test failed: ' + (pResponse && pResponse.Error ? pResponse.Error : 'Unknown error'), 'error');
+							this.pict.views['Pict-Section-Modal'].toast('Connection test failed: ' + (pResponse && pResponse.Error ? pResponse.Error : 'Unknown error'), {type: 'error'});
 						}
 					});
 			});
 	}
 
-	deleteConnection(pIDStoreConnection)
+	async deleteConnection(pIDStoreConnection)
 	{
-		if (!confirm('Delete this connection?')) return;
+		let tmpConfirmed = await this.pict.views['Pict-Section-Modal'].confirm('Delete this connection?', { title: 'Delete Connection', confirmLabel: 'Delete', dangerous: true });
+		if (!tmpConfirmed) return;
 
 		this.pict.providers.Facto.deleteStoreConnection(pIDStoreConnection).then(
 			() =>
@@ -324,7 +327,7 @@ class FactoFullConnectionsView extends libPictView
 				this.pict.providers.Facto.loadStoreConnections().then(
 					(pResult) =>
 					{
-						this._Connections = (pResult && pResult.Connections) ? pResult.Connections : [];
+						
 						this.refreshConnectionList();
 					});
 			});

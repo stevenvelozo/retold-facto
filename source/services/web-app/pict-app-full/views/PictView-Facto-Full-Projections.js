@@ -49,16 +49,19 @@ class FactoFullProjectionsView extends libPictView
 	{
 		super(pFable, pOptions, pServiceHash);
 
-		this._Projections = [];
+		this.pict.AppData.Facto.Projections = [];
 	}
 
 	onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent)
 	{
 		this.pict.providers.Facto.loadProjections().then(
-			(pResult) =>
+			() =>
 			{
-				this._Projections = (pResult && pResult.Projections) ? pResult.Projections : [];
 				this.refreshProjectionList();
+			}).catch(
+			(pError) =>
+			{
+				this.pict.views['Pict-Section-Modal'].toast('Error loading projections: ' + pError.message, {type: 'error'});
 			});
 
 		return super.onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent);
@@ -69,7 +72,7 @@ class FactoFullProjectionsView extends libPictView
 		let tmpContainer = document.getElementById('Facto-Proj-List');
 		if (!tmpContainer) return;
 
-		if (this._Projections.length === 0)
+		if (this.pict.AppData.Facto.Projections.length === 0)
 		{
 			tmpContainer.innerHTML = '<div class="facto-card" style="text-align:center; padding:2em; color:var(--facto-text-tertiary);">No projection datasets yet. Create one to get started.</div>';
 			return;
@@ -79,9 +82,9 @@ class FactoFullProjectionsView extends libPictView
 		tmpHtml += '<th>ID</th><th>Name</th><th>Schema Ver.</th><th>Actions</th>';
 		tmpHtml += '</tr></thead><tbody>';
 
-		for (let i = 0; i < this._Projections.length; i++)
+		for (let i = 0; i < this.pict.AppData.Facto.Projections.length; i++)
 		{
-			let tmpProj = this._Projections[i];
+			let tmpProj = this.pict.AppData.Facto.Projections[i];
 			tmpHtml += '<tr>';
 			tmpHtml += '<td>' + tmpProj.IDDataset + '</td>';
 			tmpHtml += '<td><strong>' + (tmpProj.Name || '\u2014') + '</strong></td>';
@@ -112,7 +115,7 @@ class FactoFullProjectionsView extends libPictView
 			{
 				if (pResponse && pResponse.Error)
 				{
-					this.pict.providers.FactoUI.showToast('Error: ' + pResponse.Error, 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Error: ' + pResponse.Error, {type: 'error'});
 					return;
 				}
 
@@ -127,32 +130,33 @@ class FactoFullProjectionsView extends libPictView
 					this.pict.providers.Facto.loadProjections().then(
 						(pResult) =>
 						{
-							this._Projections = (pResult && pResult.Projections) ? pResult.Projections : [];
+							this.pict.AppData.Facto.Projections = (pResult && pResult.Projections) ? pResult.Projections : [];
 							this.refreshProjectionList();
 						});
 				}
 			});
 	}
 
-	deleteProjection(pIDDataset, pName)
+	async deleteProjection(pIDDataset, pName)
 	{
-		if (!confirm('Delete projection "' + (pName || pIDDataset) + '"? This will remove the dataset and all associated mappings and stores.')) return;
+		let tmpConfirmed = await this.pict.views['Pict-Section-Modal'].confirm('Delete projection "' + (pName || pIDDataset) + '"? This will remove the dataset and all associated mappings and stores.', { title: 'Delete Projection', confirmLabel: 'Delete', dangerous: true });
+		if (!tmpConfirmed) return;
 
 		this.pict.providers.Facto.deleteProjection(pIDDataset).then(
 			(pResponse) =>
 			{
 				if (pResponse && pResponse.Error)
 				{
-					this.pict.providers.FactoUI.showToast('Error deleting projection: ' + pResponse.Error, 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Error deleting projection: ' + pResponse.Error, {type: 'error'});
 					return;
 				}
 
-				this.pict.providers.FactoUI.showToast('Projection deleted.', 'success');
+				this.pict.views['Pict-Section-Modal'].toast('Projection deleted.', {type: 'success'});
 
 				this.pict.providers.Facto.loadProjections().then(
 					(pResult) =>
 					{
-						this._Projections = (pResult && pResult.Projections) ? pResult.Projections : [];
+						this.pict.AppData.Facto.Projections = (pResult && pResult.Projections) ? pResult.Projections : [];
 						this.refreshProjectionList();
 					});
 			});

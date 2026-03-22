@@ -14,6 +14,7 @@ module.exports =
 		return this.api('GET', '/facto/catalog/search?q=' + encodeURIComponent(pQuery)).then(
 			(pResponse) =>
 			{
+				this.pict.AppData.Facto.CatalogEntries = (pResponse && pResponse.Entries) ? pResponse.Entries : [];
 				return pResponse;
 			});
 	},

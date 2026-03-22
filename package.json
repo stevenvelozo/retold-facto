@@ -77,6 +77,7 @@
 		"pict": "^1.0.357",
 		"pict-router": "^1.0.9",
 		"pict-section-flow": "^0.0.9",
+		"pict-section-modal": "file:../../pict/pict-section-modal",
 		"pict-section-markdowneditor": "^1.0.6",
 		"pict-section-objecteditor": "^1.0.1",
 		"stricture": "^4.0.2",

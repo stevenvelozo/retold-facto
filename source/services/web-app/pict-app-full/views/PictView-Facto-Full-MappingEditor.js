@@ -352,7 +352,7 @@ class FactoFullMappingEditorView extends libPictView
 			{
 				if (!pResponse || !pResponse.Mapping)
 				{
-					this.pict.providers.FactoUI.showToast('Mapping not found.', 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Mapping not found.', 'error');
 					return;
 				}
 
@@ -440,9 +440,10 @@ class FactoFullMappingEditorView extends libPictView
 			});
 	}
 
-	deleteMapping(pIDProjectionMapping)
+	async deleteMapping(pIDProjectionMapping)
 	{
-		if (!confirm('Delete this mapping?')) return;
+		let tmpConfirmed = await this.pict.views['Pict-Section-Modal'].confirm('Delete this mapping?', { title: 'Delete Mapping', confirmLabel: 'Delete', dangerous: true });
+		if (!tmpConfirmed) return;
 
 		this.pict.providers.Facto.deleteProjectionMapping(pIDProjectionMapping).then(
 			() =>
@@ -567,7 +568,7 @@ class FactoFullMappingEditorView extends libPictView
 
 		if (!tmpIDSource)
 		{
-			this.pict.providers.FactoUI.showToast('Select a source first.', 'warn');
+			this.pict.views['Pict-Section-Modal'].toast('Select a source first.', {type: 'warning'});
 			return;
 		}
 
@@ -576,14 +577,14 @@ class FactoFullMappingEditorView extends libPictView
 			{
 				if (pResponse && pResponse.Error)
 				{
-					this.pict.providers.FactoUI.showToast('Error: ' + pResponse.Error, 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Error: ' + pResponse.Error, {type: 'error'});
 					return;
 				}
 
 				let tmpHeaders = (pResponse && pResponse.Headers) ? pResponse.Headers : [];
 				this._DiscoveredFields[tmpIDSource] = tmpHeaders;
 
-				this.pict.providers.FactoUI.showToast('Discovered ' + tmpHeaders.length + ' fields from ' + (pResponse.SampleSize || 0) + ' records: ' + tmpHeaders.join(', '), 'success', 6000);
+				this.pict.views['Pict-Section-Modal'].toast('Discovered ' + tmpHeaders.length + ' fields from ' + (pResponse.SampleSize || 0) + ' records: ' + tmpHeaders.join(', '), {type: 'success', duration: 6000});
 
 				// Rebuild the flow if it exists
 				this._rebuildFlowNodes();
@@ -1006,7 +1007,7 @@ class FactoFullMappingEditorView extends libPictView
 
 		if (!tmpName)
 		{
-			this.pict.providers.FactoUI.showToast('Enter a mapping name.', 'warn');
+			this.pict.views['Pict-Section-Modal'].toast('Enter a mapping name.', {type: 'warning'});
 			return;
 		}
 
@@ -1022,7 +1023,7 @@ class FactoFullMappingEditorView extends libPictView
 			}
 			catch (e)
 			{
-				this.pict.providers.FactoUI.showToast('Invalid JSON: ' + e.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Invalid JSON: ' + e.message, {type: 'error'});
 				return;
 			}
 		}
@@ -1066,7 +1067,7 @@ class FactoFullMappingEditorView extends libPictView
 			{
 				if (pResponse && pResponse.Error)
 				{
-					this.pict.providers.FactoUI.showToast('Error: ' + pResponse.Error, 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Error: ' + pResponse.Error, {type: 'error'});
 					return;
 				}
 
@@ -1076,7 +1077,7 @@ class FactoFullMappingEditorView extends libPictView
 					this._SelectedMappingID = pResponse.Mapping.IDProjectionMapping;
 				}
 
-				this.pict.providers.FactoUI.showToast('Mapping saved.', 'success');
+				this.pict.views['Pict-Section-Modal'].toast('Mapping saved.', {type: 'success'});
 
 				// Refresh mapping list
 				this.pict.providers.Facto.loadProjectionMappings(this._EditingIDDataset).then(

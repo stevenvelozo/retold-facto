@@ -151,7 +151,6 @@ const _ViewConfiguration =
 
 	<div id="Facto-Full-Research-List"></div>
 	<div id="Facto-Full-Research-Detail" class="facto-research-detail" style="display:none;"></div>
-	<div id="Facto-Full-Research-Status" class="facto-status" style="display:none;"></div>
 
 	<div class="facto-section" style="margin-top:2em;">
 		<div class="facto-section-title">Import / Export</div>
@@ -200,19 +199,16 @@ class FactoFullSourceResearchView extends libPictView
 					this._SourceLinks = tmpLinksResponse.Links;
 				}
 				this.refreshList();
+			}).catch(
+			(pError) =>
+			{
+				this.pict.views['Pict-Section-Modal'].toast('Error loading catalog: ' + pError.message, {type: 'error'});
 			});
 
 		return super.onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent);
 	}
 
-	setStatus(pMessage, pType)
-	{
-		let tmpEl = document.getElementById('Facto-Full-Research-Status');
-		if (!tmpEl) return;
-		tmpEl.className = 'facto-status facto-status-' + (pType || 'info');
-		tmpEl.textContent = pMessage;
-		tmpEl.style.display = 'block';
-	}
+
 
 	refreshList()
 	{
@@ -265,21 +261,21 @@ class FactoFullSourceResearchView extends libPictView
 	{
 		let tmpData =
 		{
-			Name: (document.getElementById('Facto-Research-Add-Name') || {}).value || '',
-			Agency: (document.getElementById('Facto-Research-Add-Agency') || {}).value || '',
-			Type: (document.getElementById('Facto-Research-Add-Type') || {}).value || '',
-			Category: (document.getElementById('Facto-Research-Add-Category') || {}).value || '',
-			URL: (document.getElementById('Facto-Research-Add-URL') || {}).value || '',
-			Protocol: (document.getElementById('Facto-Research-Add-Protocol') || {}).value || '',
-			Region: (document.getElementById('Facto-Research-Add-Region') || {}).value || '',
-			UpdateFrequency: (document.getElementById('Facto-Research-Add-UpdateFrequency') || {}).value || '',
-			Description: (document.getElementById('Facto-Research-Add-Description') || {}).value || '',
-			Notes: (document.getElementById('Facto-Research-Add-Notes') || {}).value || ''
+			Name: this.pict.providers.FactoUI.getVal('Facto-Research-Add-Name'),
+			Agency: this.pict.providers.FactoUI.getVal('Facto-Research-Add-Agency'),
+			Type: this.pict.providers.FactoUI.getVal('Facto-Research-Add-Type'),
+			Category: this.pict.providers.FactoUI.getVal('Facto-Research-Add-Category'),
+			URL: this.pict.providers.FactoUI.getVal('Facto-Research-Add-URL'),
+			Protocol: this.pict.providers.FactoUI.getVal('Facto-Research-Add-Protocol'),
+			Region: this.pict.providers.FactoUI.getVal('Facto-Research-Add-Region'),
+			UpdateFrequency: this.pict.providers.FactoUI.getVal('Facto-Research-Add-UpdateFrequency'),
+			Description: this.pict.providers.FactoUI.getVal('Facto-Research-Add-Description'),
+			Notes: this.pict.providers.FactoUI.getVal('Facto-Research-Add-Notes')
 		};
 
 		if (!tmpData.Name)
 		{
-			this.pict.providers.FactoUI.showToast('Name is required', 'error');
+			this.pict.views['Pict-Section-Modal'].toast('Name is required', {type: 'error'});
 			return;
 		}
 
@@ -288,11 +284,11 @@ class FactoFullSourceResearchView extends libPictView
 			{
 				if (pResponse && pResponse.Error)
 				{
-					this.pict.providers.FactoUI.showToast('Error: ' + pResponse.Error, 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Error: ' + pResponse.Error, {type: 'error'});
 					return;
 				}
 
-				this.pict.providers.FactoUI.showToast('Catalog entry created', 'ok');
+				this.pict.views['Pict-Section-Modal'].toast('Catalog entry created', {type: 'success'});
 
 				// Clear the form fields
 				let tmpFields = ['Name', 'Agency', 'Type', 'Category', 'URL', 'Protocol', 'Region', 'UpdateFrequency', 'Description', 'Notes'];
@@ -316,7 +312,7 @@ class FactoFullSourceResearchView extends libPictView
 
 	searchCatalog()
 	{
-		let tmpQuery = (document.getElementById('Facto-Full-Research-Search') || {}).value || '';
+		let tmpQuery = this.pict.providers.FactoUI.getVal('Facto-Full-Research-Search');
 		if (!tmpQuery)
 		{
 			this.pict.providers.Facto.loadCatalogEntries().then(
@@ -332,12 +328,13 @@ class FactoFullSourceResearchView extends libPictView
 			});
 	}
 
-	deleteEntry(pIDEntry)
+	async deleteEntry(pIDEntry)
 	{
-		if (!confirm('Remove this catalog entry?')) return;
+		let tmpConfirmed = await this.pict.views['Pict-Section-Modal'].confirm('Remove this catalog entry?', { title: 'Remove Entry', confirmLabel: 'Remove', dangerous: true });
+		if (!tmpConfirmed) return;
 		this.pict.providers.Facto.deleteCatalogEntry(pIDEntry).then(
 			() => { return this.pict.providers.Facto.loadCatalogEntries(); }).then(
-			() => { this.refreshList(); this.setStatus('Entry removed', 'ok'); });
+			() => { this.refreshList(); this.pict.views['Pict-Section-Modal'].toast('Entry removed', {type: 'success'}); });
 	}
 
 	viewEntry(pIDEntry)
@@ -398,7 +395,7 @@ class FactoFullSourceResearchView extends libPictView
 
 	provisionDataset(pIDCatalogDataset, pIDEntry)
 	{
-		this.setStatus('Provisioning...', 'info');
+		this.pict.views['Pict-Section-Modal'].toast('Provisioning...', {type: 'info'});
 		this.pict.providers.Facto.provisionCatalogDataset(pIDCatalogDataset).then(
 			(pResponse) =>
 			{
@@ -415,14 +412,14 @@ class FactoFullSourceResearchView extends libPictView
 				}
 				else
 				{
-					this.setStatus('Error: ' + ((pResponse && pResponse.Error) || 'Unknown'), 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Error: ' + ((pResponse && pResponse.Error) || 'Unknown'), {type: 'error'});
 				}
 			});
 	}
 
 	fetchDataset(pIDCatalogDataset, pIDEntry)
 	{
-		this.setStatus('Fetching data from endpoint...', 'info');
+		this.pict.views['Pict-Section-Modal'].toast('Fetching data from endpoint...', {type: 'info'});
 		this.pict.providers.Facto.fetchCatalogDataset(pIDCatalogDataset).then(
 			(pResponse) =>
 			{
@@ -430,12 +427,12 @@ class FactoFullSourceResearchView extends libPictView
 				{
 					let tmpMsg = 'Fetched! ' + pResponse.Ingested + ' records ingested (v' + pResponse.DatasetVersion + ', ' + pResponse.Format + ')';
 					if (pResponse.IsDuplicate) tmpMsg += ' [duplicate content]';
-					this.setStatus(tmpMsg, 'ok');
+					this.pict.views['Pict-Section-Modal'].toast(tmpMsg, {type: 'success'});
 					this.viewEntry(pIDEntry);
 				}
 				else
 				{
-					this.setStatus('Fetch error: ' + ((pResponse && pResponse.Error) || 'Unknown'), 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Fetch error: ' + ((pResponse && pResponse.Error) || 'Unknown'), {type: 'error'});
 				}
 			});
 	}
@@ -445,26 +442,26 @@ class FactoFullSourceResearchView extends libPictView
 		let tmpTextArea = document.getElementById('Facto-Full-Research-ImportJSON');
 		if (!tmpTextArea || !tmpTextArea.value)
 		{
-			this.setStatus('Paste JSON to import', 'warn');
+			this.pict.views['Pict-Section-Modal'].toast('Paste JSON to import', {type: 'warning'});
 			return;
 		}
 
 		let tmpEntries;
 		try { tmpEntries = JSON.parse(tmpTextArea.value); }
-		catch (pErr) { this.setStatus('Invalid JSON: ' + pErr.message, 'error'); return; }
+		catch (pErr) { this.pict.views['Pict-Section-Modal'].toast('Invalid JSON: ' + pErr.message, {type: 'error'}); return; }
 
 		this.pict.providers.Facto.importCatalog(tmpEntries).then(
 			(pResponse) =>
 			{
 				if (pResponse && pResponse.Success)
 				{
-					this.setStatus('Imported ' + pResponse.EntriesCreated + ' entries with ' + pResponse.DatasetsCreated + ' datasets', 'ok');
+					this.pict.views['Pict-Section-Modal'].toast('Imported ' + pResponse.EntriesCreated + ' entries with ' + pResponse.DatasetsCreated + ' datasets', {type: 'success'});
 					tmpTextArea.value = '';
 					return this.pict.providers.Facto.loadCatalogEntries();
 				}
 				else
 				{
-					this.setStatus('Import error: ' + ((pResponse && pResponse.Error) || 'Unknown'), 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Import error: ' + ((pResponse && pResponse.Error) || 'Unknown'), {type: 'error'});
 				}
 			}).then(
 			() => { this.refreshList(); });
@@ -480,7 +477,7 @@ class FactoFullSourceResearchView extends libPictView
 				{
 					tmpTextArea.value = JSON.stringify(pResponse && pResponse.Entries ? pResponse.Entries : pResponse, null, 2);
 				}
-				this.setStatus('Catalog exported to JSON text area', 'ok');
+				this.pict.views['Pict-Section-Modal'].toast('Catalog exported to JSON text area', {type: 'success'});
 			});
 	}
 }

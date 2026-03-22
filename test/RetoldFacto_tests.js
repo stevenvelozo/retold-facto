@@ -261,6 +261,27 @@ suite
 								IDSource INTEGER DEFAULT 0,
 								IDDataset INTEGER DEFAULT 0
 							);
+							CREATE TABLE IF NOT EXISTS MultiSetProjection (
+								IDMultiSetProjection INTEGER PRIMARY KEY AUTOINCREMENT,
+								GUIDMultiSetProjection TEXT,
+								CreateDate TEXT, CreatingIDUser INTEGER DEFAULT 0,
+								UpdateDate TEXT, UpdatingIDUser INTEGER DEFAULT 0,
+								Deleted INTEGER DEFAULT 0, DeleteDate TEXT, DeletingIDUser INTEGER DEFAULT 0,
+								IDDataset INTEGER DEFAULT 0, IDProjectionStore INTEGER DEFAULT 0,
+								Name TEXT, Description TEXT, PipelineConfiguration TEXT,
+								Active INTEGER DEFAULT 1
+							);
+							CREATE TABLE IF NOT EXISTS ProjectionCertaintyLog (
+								IDProjectionCertaintyLog INTEGER PRIMARY KEY AUTOINCREMENT,
+								GUIDProjectionCertaintyLog TEXT,
+								CreateDate TEXT, CreatingIDUser INTEGER DEFAULT 0,
+								UpdateDate TEXT, UpdatingIDUser INTEGER DEFAULT 0,
+								Deleted INTEGER DEFAULT 0, DeleteDate TEXT, DeletingIDUser INTEGER DEFAULT 0,
+								IDMultiSetProjection INTEGER DEFAULT 0,
+								RecordGUID TEXT, CertaintyValue REAL DEFAULT 0.5,
+								SourceMappingLabel TEXT, IDProjectionMapping INTEGER DEFAULT 0,
+								Action TEXT, Details TEXT
+							);
 							CREATE TABLE IF NOT EXISTS StoreConnection (
 								IDStoreConnection INTEGER PRIMARY KEY AUTOINCREMENT,
 								GUIDStoreConnection TEXT,
@@ -288,7 +309,8 @@ suite
 								Deleted INTEGER DEFAULT 0, DeleteDate TEXT, DeletingIDUser INTEGER DEFAULT 0,
 								IDDataset INTEGER DEFAULT 0, IDSource INTEGER DEFAULT 0,
 								IDProjectionStore INTEGER DEFAULT 0,
-								Name TEXT, Active INTEGER DEFAULT 1,
+								Name TEXT, SchemaVersion INTEGER DEFAULT 0,
+								Active INTEGER DEFAULT 1,
 								MappingConfiguration TEXT,
 								FlowDiagramState TEXT
 							);
@@ -384,7 +406,7 @@ suite
 				);
 				test
 				(
-					'The entity list should contain all 13 entities',
+					'The entity list should contain all 15 entities',
 					function()
 					{
 						Expect(_RetoldFacto.entityList).to.be.an('array');
@@ -401,7 +423,9 @@ suite
 						Expect(_RetoldFacto.entityList).to.include('StoreConnection');
 						Expect(_RetoldFacto.entityList).to.include('ProjectionStore');
 						Expect(_RetoldFacto.entityList).to.include('ProjectionMapping');
-						Expect(_RetoldFacto.entityList.length).to.equal(13);
+						Expect(_RetoldFacto.entityList).to.include('MultiSetProjection');
+						Expect(_RetoldFacto.entityList).to.include('ProjectionCertaintyLog');
+						Expect(_RetoldFacto.entityList.length).to.equal(15);
 					}
 				);
 				test
@@ -3711,6 +3735,617 @@ suite
 								Expect(pError).to.be.null;
 								Expect(pResult.Ingested).to.equal(2);
 								Expect(pResult.Format).to.equal('json');
+								return fDone();
+							});
+					}
+				);
+			}
+		);
+
+		suite
+		(
+			'Multi-Set Projection Pipeline',
+			function()
+			{
+				// Track IDs for test fixtures
+				let _MultiSetSourceA_ID = 0;
+				let _MultiSetSourceB_ID = 0;
+				let _MultiSetDatasetA_ID = 0;
+				let _MultiSetDatasetB_ID = 0;
+				let _MultiSetProjectionDataset_ID = 0;
+				let _MultiSetMappingA_ID = 0;
+				let _MultiSetMappingB_ID = 0;
+				let _MultiSetProjection_ID = 0;
+
+				test
+				(
+					'Set up multi-set test fixtures: sources, datasets, records',
+					function(fDone)
+					{
+						this.timeout(10000);
+
+						let tmpAnticipate = _Fable.newAnticipate();
+
+						// Create Source A (high reliability)
+						tmpAnticipate.anticipate(
+							(fStepCallback) =>
+							{
+								_SuperTest.post('/1.0/Source')
+									.send({ Name: 'Source A - Census', Type: 'API', Active: 1 })
+									.end((pError, pResponse) =>
+									{
+										_MultiSetSourceA_ID = pResponse.body.IDSource;
+										return fStepCallback();
+									});
+							});
+
+						// Create Source B (lower reliability)
+						tmpAnticipate.anticipate(
+							(fStepCallback) =>
+							{
+								_SuperTest.post('/1.0/Source')
+									.send({ Name: 'Source B - Survey', Type: 'API', Active: 1 })
+									.end((pError, pResponse) =>
+									{
+										_MultiSetSourceB_ID = pResponse.body.IDSource;
+										return fStepCallback();
+									});
+							});
+
+						tmpAnticipate.wait(
+							() =>
+							{
+								let tmpAnticipate2 = _Fable.newAnticipate();
+
+								// Create Dataset A
+								tmpAnticipate2.anticipate(
+									(fStepCallback) =>
+									{
+										_SuperTest.post('/1.0/Dataset')
+											.send({ Name: 'Census Data', Type: 'Raw' })
+											.end((pError, pResponse) =>
+											{
+												_MultiSetDatasetA_ID = pResponse.body.IDDataset;
+												return fStepCallback();
+											});
+									});
+
+								// Create Dataset B
+								tmpAnticipate2.anticipate(
+									(fStepCallback) =>
+									{
+										_SuperTest.post('/1.0/Dataset')
+											.send({ Name: 'Survey Data', Type: 'Raw' })
+											.end((pError, pResponse) =>
+											{
+												_MultiSetDatasetB_ID = pResponse.body.IDDataset;
+												return fStepCallback();
+											});
+									});
+
+								// Create Projection Dataset
+								tmpAnticipate2.anticipate(
+									(fStepCallback) =>
+									{
+										_SuperTest.post('/1.0/Dataset')
+											.send({ Name: 'Multi-Set Projection Target', Type: 'Projection' })
+											.end((pError, pResponse) =>
+											{
+												_MultiSetProjectionDataset_ID = pResponse.body.IDDataset;
+												return fStepCallback();
+											});
+									});
+
+								tmpAnticipate2.wait(
+									() =>
+									{
+										let tmpAnticipate3 = _Fable.newAnticipate();
+
+										// Link DatasetSource A with high weight
+										tmpAnticipate3.anticipate(
+											(fStepCallback) =>
+											{
+												_SuperTest.post('/1.0/DatasetSource')
+													.send({ IDDataset: _MultiSetDatasetA_ID, IDSource: _MultiSetSourceA_ID, ReliabilityWeight: 0.9 })
+													.end(() => { return fStepCallback(); });
+											});
+
+										// Link DatasetSource B with lower weight
+										tmpAnticipate3.anticipate(
+											(fStepCallback) =>
+											{
+												_SuperTest.post('/1.0/DatasetSource')
+													.send({ IDDataset: _MultiSetDatasetB_ID, IDSource: _MultiSetSourceB_ID, ReliabilityWeight: 0.4 })
+													.end(() => { return fStepCallback(); });
+											});
+
+										// Ingest records for Source A
+										tmpAnticipate3.anticipate(
+											(fStepCallback) =>
+											{
+												let tmpRecords = [
+													{ GUIDRecord: 'PERSON-001', IDDataset: _MultiSetDatasetA_ID, IDSource: _MultiSetSourceA_ID, Type: 'person', Content: JSON.stringify({ Name: 'Alice', City: 'Portland', Age: 30 }) },
+													{ GUIDRecord: 'PERSON-002', IDDataset: _MultiSetDatasetA_ID, IDSource: _MultiSetSourceA_ID, Type: 'person', Content: JSON.stringify({ Name: 'Bob', City: 'Seattle', Age: 25 }) },
+													{ GUIDRecord: 'PERSON-003', IDDataset: _MultiSetDatasetA_ID, IDSource: _MultiSetSourceA_ID, Type: 'person', Content: JSON.stringify({ Name: 'Charlie', City: 'Denver' }) }
+												];
+												let tmpInner = _Fable.newAnticipate();
+												for (let i = 0; i < tmpRecords.length; i++)
+												{
+													let tmpRec = tmpRecords[i];
+													tmpInner.anticipate(
+														(fInner) =>
+														{
+															_SuperTest.post('/1.0/Record')
+																.send(tmpRec)
+																.end(() => { return fInner(); });
+														});
+												}
+												tmpInner.wait(() => { return fStepCallback(); });
+											});
+
+										// Ingest records for Source B (overlapping GUIDs)
+										tmpAnticipate3.anticipate(
+											(fStepCallback) =>
+											{
+												let tmpRecords = [
+													{ GUIDRecord: 'PERSON-002', IDDataset: _MultiSetDatasetB_ID, IDSource: _MultiSetSourceB_ID, Type: 'person', Content: JSON.stringify({ Name: 'Robert', City: 'Tacoma', Age: 26, Phone: '555-0102' }) },
+													{ GUIDRecord: 'PERSON-003', IDDataset: _MultiSetDatasetB_ID, IDSource: _MultiSetSourceB_ID, Type: 'person', Content: JSON.stringify({ Name: 'Chuck', City: 'Boulder', Age: 35, Phone: '555-0103' }) },
+													{ GUIDRecord: 'PERSON-004', IDDataset: _MultiSetDatasetB_ID, IDSource: _MultiSetSourceB_ID, Type: 'person', Content: JSON.stringify({ Name: 'Diana', City: 'Austin', Age: 28, Phone: '555-0104' }) }
+												];
+												let tmpInner = _Fable.newAnticipate();
+												for (let i = 0; i < tmpRecords.length; i++)
+												{
+													let tmpRec = tmpRecords[i];
+													tmpInner.anticipate(
+														(fInner) =>
+														{
+															_SuperTest.post('/1.0/Record')
+																.send(tmpRec)
+																.end(() => { return fInner(); });
+														});
+												}
+												tmpInner.wait(() => { return fStepCallback(); });
+											});
+
+										tmpAnticipate3.wait(
+											() =>
+											{
+												return fDone();
+											});
+									});
+							});
+					}
+				);
+
+				test
+				(
+					'Create projection mappings for both sources',
+					function(fDone)
+					{
+						this.timeout(5000);
+
+						let tmpMappingConfigA = JSON.stringify(
+						{
+							Entity: 'Person',
+							GUIDTemplate: '{~D:Record.GUIDRecord~}',
+							Mappings:
+							{
+								Name: '{~D:Record.Name~}',
+								City: '{~D:Record.City~}',
+								Age: '{~D:Record.Age~}',
+								Phone: '{~D:Record.Phone~}'
+							}
+						});
+
+						let tmpMappingConfigB = JSON.stringify(
+						{
+							Entity: 'Person',
+							GUIDTemplate: '{~D:Record.GUIDRecord~}',
+							Mappings:
+							{
+								Name: '{~D:Record.Name~}',
+								City: '{~D:Record.City~}',
+								Age: '{~D:Record.Age~}',
+								Phone: '{~D:Record.Phone~}'
+							}
+						});
+
+						let tmpAnticipate = _Fable.newAnticipate();
+
+						tmpAnticipate.anticipate(
+							(fStepCallback) =>
+							{
+								_SuperTest.post(`/facto/projection/${_MultiSetProjectionDataset_ID}/mapping`)
+									.send({
+										IDSource: _MultiSetSourceA_ID,
+										Name: 'Census Mapping',
+										MappingConfiguration: tmpMappingConfigA
+									})
+									.end((pError, pResponse) =>
+									{
+										Expect(pResponse.body.Success).to.equal(true);
+										_MultiSetMappingA_ID = pResponse.body.Mapping.IDProjectionMapping;
+										return fStepCallback();
+									});
+							});
+
+						tmpAnticipate.anticipate(
+							(fStepCallback) =>
+							{
+								_SuperTest.post(`/facto/projection/${_MultiSetProjectionDataset_ID}/mapping`)
+									.send({
+										IDSource: _MultiSetSourceB_ID,
+										Name: 'Survey Mapping',
+										MappingConfiguration: tmpMappingConfigB
+									})
+									.end((pError, pResponse) =>
+									{
+										Expect(pResponse.body.Success).to.equal(true);
+										_MultiSetMappingB_ID = pResponse.body.Mapping.IDProjectionMapping;
+										return fStepCallback();
+									});
+							});
+
+						tmpAnticipate.wait(
+							() =>
+							{
+								return fDone();
+							});
+					}
+				);
+
+				test
+				(
+					'Create a MultiSetProjection with WriteAll strategy',
+					function(fDone)
+					{
+						this.timeout(5000);
+
+						let tmpPipelineConfig =
+						{
+							Steps:
+							[
+								{
+									IDProjectionMapping: 0, // will be set below
+									Ordinal: 0,
+									MergeStrategy: 'WriteAll',
+									Label: 'Census Source',
+									InputType: 'Records'
+								},
+								{
+									IDProjectionMapping: 0,
+									Ordinal: 1,
+									MergeStrategy: 'WriteAll',
+									Label: 'Survey Source',
+									InputType: 'Records'
+								}
+							],
+							ConfidenceReinforcement:
+							{
+								Enabled: false
+							}
+						};
+
+						// Patch in the mapping IDs
+						tmpPipelineConfig.Steps[0].IDProjectionMapping = _MultiSetMappingA_ID;
+						tmpPipelineConfig.Steps[1].IDProjectionMapping = _MultiSetMappingB_ID;
+
+						_SuperTest.post(`/facto/projection/${_MultiSetProjectionDataset_ID}/multi-set-projection`)
+							.send({
+								Name: 'WriteAll Multi-Set Test',
+								Description: 'Tests WriteAll merge with two sources',
+								PipelineConfiguration: tmpPipelineConfig
+							})
+							.end((pError, pResponse) =>
+							{
+								Expect(pResponse.body.Success).to.equal(true);
+								Expect(pResponse.body.MultiSetProjection).to.be.an('object');
+								_MultiSetProjection_ID = pResponse.body.MultiSetProjection.IDMultiSetProjection;
+								return fDone();
+							});
+					}
+				);
+
+				test
+				(
+					'List MultiSetProjections for dataset',
+					function(fDone)
+					{
+						this.timeout(5000);
+
+						_SuperTest.get(`/facto/projection/${_MultiSetProjectionDataset_ID}/multi-set-projections`)
+							.end((pError, pResponse) =>
+							{
+								Expect(pResponse.body.Count).to.be.greaterThan(0);
+								Expect(pResponse.body.MultiSetProjections).to.be.an('array');
+								return fDone();
+							});
+					}
+				);
+
+				test
+				(
+					'Get a single MultiSetProjection',
+					function(fDone)
+					{
+						this.timeout(5000);
+
+						_SuperTest.get(`/facto/projection/multi-set-projection/${_MultiSetProjection_ID}`)
+							.end((pError, pResponse) =>
+							{
+								Expect(pResponse.body.MultiSetProjection).to.be.an('object');
+								Expect(pResponse.body.MultiSetProjection.Name).to.equal('WriteAll Multi-Set Test');
+								return fDone();
+							});
+					}
+				);
+
+				test
+				(
+					'Update a MultiSetProjection',
+					function(fDone)
+					{
+						this.timeout(5000);
+
+						_SuperTest.post(`/facto/projection/multi-set-projection/${_MultiSetProjection_ID}/update`)
+							.send({ Description: 'Updated description for WriteAll test' })
+							.end((pError, pResponse) =>
+							{
+								Expect(pResponse.body.Success).to.equal(true);
+								Expect(pResponse.body.MultiSetProjection.Description).to.equal('Updated description for WriteAll test');
+								return fDone();
+							});
+					}
+				);
+
+				test
+				(
+					'Create and execute FirstWriteWins pipeline',
+					function(fDone)
+					{
+						this.timeout(15000);
+
+						let tmpPipelineConfig =
+						{
+							Steps:
+							[
+								{
+									IDProjectionMapping: _MultiSetMappingA_ID,
+									Ordinal: 0,
+									MergeStrategy: 'WriteAll',
+									Label: 'Census First',
+									InputType: 'Records'
+								},
+								{
+									IDProjectionMapping: _MultiSetMappingB_ID,
+									Ordinal: 1,
+									MergeStrategy: 'FirstWriteWins',
+									Label: 'Survey Second - FirstWriteWins',
+									InputType: 'Records'
+								}
+							],
+							ConfidenceReinforcement: { Enabled: false }
+						};
+
+						_SuperTest.post(`/facto/projection/${_MultiSetProjectionDataset_ID}/multi-set-projection`)
+							.send({
+								Name: 'FirstWriteWins Test',
+								PipelineConfiguration: tmpPipelineConfig
+							})
+							.end((pError, pResponse) =>
+							{
+								Expect(pResponse.body.Success).to.equal(true);
+								let tmpFWW_ID = pResponse.body.MultiSetProjection.IDMultiSetProjection;
+
+								// We cannot fully execute the multi-import without a deployed
+								// projection store, but we can verify the pipeline loads
+								// and the merge logic is applied by checking the response.
+								// For now, test the CRUD path succeeded.
+								Expect(tmpFWW_ID).to.be.greaterThan(0);
+
+								// Verify the pipeline config roundtrips correctly
+								_SuperTest.get(`/facto/projection/multi-set-projection/${tmpFWW_ID}`)
+									.end((pError2, pResponse2) =>
+									{
+										let tmpStored = pResponse2.body.MultiSetProjection;
+										let tmpConfig = JSON.parse(tmpStored.PipelineConfiguration);
+										Expect(tmpConfig.Steps).to.have.length(2);
+										Expect(tmpConfig.Steps[1].MergeStrategy).to.equal('FirstWriteWins');
+										return fDone();
+									});
+							});
+					}
+				);
+
+				test
+				(
+					'Create MergeAndReinforce pipeline with confidence tracking',
+					function(fDone)
+					{
+						this.timeout(5000);
+
+						let tmpPipelineConfig =
+						{
+							Steps:
+							[
+								{
+									IDProjectionMapping: _MultiSetMappingA_ID,
+									Ordinal: 0,
+									MergeStrategy: 'WriteAll',
+									Label: 'Census Base',
+									InputType: 'Records'
+								},
+								{
+									IDProjectionMapping: _MultiSetMappingB_ID,
+									Ordinal: 1,
+									MergeStrategy: 'MergeAndReinforce',
+									Label: 'Survey Reinforcement',
+									InputType: 'Records'
+								}
+							],
+							ConfidenceReinforcement:
+							{
+								Enabled: true,
+								Dimension: 'multi-source',
+								BaseValue: 0.5,
+								IncrementPerConfirmation: 0.15,
+								MaxValue: 1.0
+							}
+						};
+
+						_SuperTest.post(`/facto/projection/${_MultiSetProjectionDataset_ID}/multi-set-projection`)
+							.send({
+								Name: 'MergeAndReinforce Test',
+								PipelineConfiguration: tmpPipelineConfig
+							})
+							.end((pError, pResponse) =>
+							{
+								Expect(pResponse.body.Success).to.equal(true);
+								let tmpConfig = JSON.parse(pResponse.body.MultiSetProjection.PipelineConfiguration);
+								Expect(tmpConfig.ConfidenceReinforcement.Enabled).to.equal(true);
+								Expect(tmpConfig.ConfidenceReinforcement.IncrementPerConfirmation).to.equal(0.15);
+								return fDone();
+							});
+					}
+				);
+
+				test
+				(
+					'Create ReliabilityOverwrite pipeline',
+					function(fDone)
+					{
+						this.timeout(5000);
+
+						let tmpPipelineConfig =
+						{
+							Steps:
+							[
+								{
+									IDProjectionMapping: _MultiSetMappingB_ID,
+									Ordinal: 0,
+									MergeStrategy: 'WriteAll',
+									Label: 'Survey First (low reliability)',
+									InputType: 'Records'
+								},
+								{
+									IDProjectionMapping: _MultiSetMappingA_ID,
+									Ordinal: 1,
+									MergeStrategy: 'ReliabilityOverwrite',
+									Label: 'Census Override (high reliability)',
+									InputType: 'Records'
+								}
+							],
+							ConfidenceReinforcement: { Enabled: false }
+						};
+
+						_SuperTest.post(`/facto/projection/${_MultiSetProjectionDataset_ID}/multi-set-projection`)
+							.send({
+								Name: 'ReliabilityOverwrite Test',
+								PipelineConfiguration: tmpPipelineConfig
+							})
+							.end((pError, pResponse) =>
+							{
+								Expect(pResponse.body.Success).to.equal(true);
+								let tmpConfig = JSON.parse(pResponse.body.MultiSetProjection.PipelineConfiguration);
+								Expect(tmpConfig.Steps[1].MergeStrategy).to.equal('ReliabilityOverwrite');
+								return fDone();
+							});
+					}
+				);
+
+				test
+				(
+					'Create FieldFillOnly pipeline',
+					function(fDone)
+					{
+						this.timeout(5000);
+
+						let tmpPipelineConfig =
+						{
+							Steps:
+							[
+								{
+									IDProjectionMapping: _MultiSetMappingA_ID,
+									Ordinal: 0,
+									MergeStrategy: 'WriteAll',
+									Label: 'Census Base (some fields missing)',
+									InputType: 'Records'
+								},
+								{
+									IDProjectionMapping: _MultiSetMappingB_ID,
+									Ordinal: 1,
+									MergeStrategy: 'FieldFillOnly',
+									Label: 'Survey Fill (adds Phone field)',
+									InputType: 'Records'
+								}
+							],
+							ConfidenceReinforcement: { Enabled: false }
+						};
+
+						_SuperTest.post(`/facto/projection/${_MultiSetProjectionDataset_ID}/multi-set-projection`)
+							.send({
+								Name: 'FieldFillOnly Test',
+								PipelineConfiguration: tmpPipelineConfig
+							})
+							.end((pError, pResponse) =>
+							{
+								Expect(pResponse.body.Success).to.equal(true);
+								let tmpConfig = JSON.parse(pResponse.body.MultiSetProjection.PipelineConfiguration);
+								Expect(tmpConfig.Steps[1].MergeStrategy).to.equal('FieldFillOnly');
+								return fDone();
+							});
+					}
+				);
+
+				test
+				(
+					'Soft-delete a MultiSetProjection',
+					function(fDone)
+					{
+						this.timeout(5000);
+
+						// Create one to delete
+						_SuperTest.post(`/facto/projection/${_MultiSetProjectionDataset_ID}/multi-set-projection`)
+							.send({
+								Name: 'To Be Deleted',
+								PipelineConfiguration: { Steps: [] }
+							})
+							.end((pError, pResponse) =>
+							{
+								Expect(pResponse.body.Success).to.equal(true);
+								let tmpDeleteID = pResponse.body.MultiSetProjection.IDMultiSetProjection;
+
+								_SuperTest.del(`/facto/projection/multi-set-projection/${tmpDeleteID}`)
+									.end((pError2, pResponse2) =>
+									{
+										Expect(pResponse2.body.Success).to.equal(true);
+
+										// Verify it's soft-deleted (doesn't appear in list)
+										_SuperTest.get(`/facto/projection/${_MultiSetProjectionDataset_ID}/multi-set-projections`)
+											.end((pError3, pResponse3) =>
+											{
+												let tmpFound = pResponse3.body.MultiSetProjections.filter(
+													(pRec) => { return pRec.IDMultiSetProjection === tmpDeleteID; });
+												Expect(tmpFound.length).to.equal(0);
+												return fDone();
+											});
+									});
+							});
+					}
+				);
+
+				test
+				(
+					'Query certainty log (empty for unexecuted pipeline)',
+					function(fDone)
+					{
+						this.timeout(5000);
+
+						_SuperTest.get(`/facto/projection/multi-set-projection/${_MultiSetProjection_ID}/certainty-log`)
+							.end((pError, pResponse) =>
+							{
+								Expect(pResponse.body.CertaintyLog).to.be.an('array');
+								Expect(pResponse.body.Count).to.equal(0);
 								return fDone();
 							});
 					}

@@ -27,7 +27,7 @@ class FactoScannerView extends libPictView
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-scanner-status', 'Error loading scanner state: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error loading scanner state: ' + pError.message, {type: 'error'});
 			});
 	}
 
@@ -139,11 +139,17 @@ class FactoScannerView extends libPictView
 			tmpHtml += '<td>' + tmpDataInfo + '</td>';
 			tmpHtml += '<td><span class="badge ' + tmpStatusClass + '">' + tmpDS.Status + '</span></td>';
 			tmpHtml += '<td>';
+			let tmpEscFolder = this.escapeAttr(tmpDS.FolderName);
+			tmpHtml += '<div class="facto-row-actions" id="facto-row-actions-' + tmpEscFolder + '">';
+			tmpHtml += '<button class="facto-row-actions-trigger" onclick="pict.views[\'Facto-Scanner\'].toggleRowMenu(event, \'' + tmpEscFolder + '\')" title="Actions">&#8942;</button>';
+			tmpHtml += '<div class="facto-row-actions-menu">';
+			tmpHtml += '<button onclick="pict.views[\'Facto-Scanner\'].viewDetail(\'' + tmpEscFolder + '\'); pict.views[\'Facto-Scanner\'].closeRowMenus();">Detail</button>';
 			if (tmpDS.Status === 'Discovered')
 			{
-				tmpHtml += '<button class="success" style="padding:3px 8px; font-size:0.78em;" onclick="pict.views[\'Facto-Scanner\'].provisionOne(\'' + this.escapeAttr(tmpDS.FolderName) + '\')">Provision</button> ';
+				tmpHtml += '<button class="facto-action-success" onclick="pict.views[\'Facto-Scanner\'].provisionOne(\'' + tmpEscFolder + '\'); pict.views[\'Facto-Scanner\'].closeRowMenus();">Provision</button>';
 			}
-			tmpHtml += '<button class="primary" style="padding:3px 8px; font-size:0.78em;" onclick="pict.views[\'Facto-Scanner\'].viewDetail(\'' + this.escapeAttr(tmpDS.FolderName) + '\')">Detail</button>';
+			tmpHtml += '</div>';
+			tmpHtml += '</div>';
 			tmpHtml += '</td>';
 			tmpHtml += '</tr>';
 		}
@@ -192,71 +198,71 @@ class FactoScannerView extends libPictView
 
 		if (!tmpPath)
 		{
-			this.pict.providers.Facto.setStatus('facto-scanner-status', 'Enter a folder path to scan', 'warn');
+			this.pict.views['Pict-Section-Modal'].toast('Enter a folder path to scan', {type: 'warning'});
 			return;
 		}
 
-		this.pict.providers.Facto.setStatus('facto-scanner-status', 'Scanning ' + tmpPath + '...', 'info');
+		this.pict.views['Pict-Section-Modal'].toast('Scanning ' + tmpPath + '...', {type: 'info'});
 
 		this.pict.providers.Facto.addScannerPath(tmpPath).then(
 			(pResponse) =>
 			{
 				if (pResponse && pResponse.Error)
 				{
-					this.pict.providers.Facto.setStatus('facto-scanner-status', 'Error: ' + pResponse.Error, 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Error: ' + pResponse.Error, {type: 'error'});
 					return;
 				}
 				let tmpResult = pResponse.ScanResult || {};
-				this.pict.providers.Facto.setStatus('facto-scanner-status',
-					'Scanned! Found ' + (tmpResult.DatasetsFound || 0) + ' dataset(s) in ' + (tmpResult.FoldersScanned || 0) + ' folder(s)', 'ok');
+				this.pict.views['Pict-Section-Modal'].toast('Scanned! Found ' + (tmpResult.DatasetsFound || 0) + ' dataset(s) in ' + (tmpResult.FoldersScanned || 0) + ' folder(s)', {type: 'success'});
 				if (tmpPathInput) tmpPathInput.value = '';
 				this.loadScannerState();
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-scanner-status', 'Error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error: ' + pError.message, {type: 'error'});
 			});
 	}
 
-	removePath(pPath)
+	async removePath(pPath)
 	{
-		if (!confirm('Remove scan path and its discovered datasets?\n\n' + pPath)) return;
+		let tmpConfirmed = await this.pict.views['Pict-Section-Modal'].confirm('Remove scan path and its discovered datasets?\n\n' + pPath, { title: 'Remove Path', confirmLabel: 'Remove', dangerous: true });
+		if (!tmpConfirmed) return;
 
 		this.pict.providers.Facto.removeScannerPath(pPath).then(
 			(pResponse) =>
 			{
 				if (pResponse && pResponse.Error)
 				{
-					this.pict.providers.Facto.setStatus('facto-scanner-status', 'Error: ' + pResponse.Error, 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Error: ' + pResponse.Error, {type: 'error'});
 					return;
 				}
-				this.pict.providers.Facto.setStatus('facto-scanner-status', 'Path removed', 'ok');
+				this.pict.views['Pict-Section-Modal'].toast('Path removed', {type: 'success'});
 				this.loadScannerState();
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-scanner-status', 'Error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error: ' + pError.message, {type: 'error'});
 			});
 	}
 
 	rescanAll()
 	{
-		this.pict.providers.Facto.setStatus('facto-scanner-status', 'Re-scanning all paths...', 'info');
+		this.pict.views['Pict-Section-Modal'].toast('Re-scanning all paths...', {type: 'info'});
 
 		this.pict.providers.Facto.rescanPaths().then(
 			(pResponse) =>
 			{
 				if (pResponse && pResponse.Error)
 				{
-					this.pict.providers.Facto.setStatus('facto-scanner-status', 'Error: ' + pResponse.Error, 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Error: ' + pResponse.Error, {type: 'error'});
 					return;
 				}
-				this.pict.providers.Facto.setStatus('facto-scanner-status', 'Re-scan complete', 'ok');
+				this.pict.views['Pict-Section-Modal'].toast('Re-scan complete', {type: 'success'});
 				this.loadScannerState();
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-scanner-status', 'Error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error: ' + pError.message, {type: 'error'});
 			});
 	}
 
@@ -287,64 +293,64 @@ class FactoScannerView extends libPictView
 
 	provisionOne(pFolderName)
 	{
-		this.pict.providers.Facto.setStatus('facto-scanner-status', 'Provisioning ' + pFolderName + '...', 'info');
+		this.pict.views['Pict-Section-Modal'].toast('Provisioning ' + pFolderName + '...', {type: 'info'});
 
 		this.pict.providers.Facto.provisionScannerDataset(pFolderName).then(
 			(pResponse) =>
 			{
 				if (pResponse && pResponse.Error)
 				{
-					this.pict.providers.Facto.setStatus('facto-scanner-status', 'Error: ' + pResponse.Error, 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Error: ' + pResponse.Error, {type: 'error'});
 					return;
 				}
-				this.pict.providers.Facto.setStatus('facto-scanner-status',
-					'Provisioned ' + pFolderName + ' (Source #' + (pResponse.Source ? pResponse.Source.IDSource : '?') + ', Dataset #' + (pResponse.Dataset ? pResponse.Dataset.IDDataset : '?') + ')', 'ok');
+				this.pict.views['Pict-Section-Modal'].toast('Provisioned ' + pFolderName + ' (Source #' + (pResponse.Source ? pResponse.Source.IDSource : '?') + ', Dataset #' + (pResponse.Dataset ? pResponse.Dataset.IDDataset : '?') + ')', {type: 'success'});
 				this.loadScannerState();
 				// Refresh sources/datasets views
-				this.refreshRelatedViews();
+				this.pict.providers.FactoUI.refreshDataViews(['sources', 'datasets']);
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-scanner-status', 'Error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error: ' + pError.message, {type: 'error'});
 			});
 	}
 
-	provisionSelected()
+	async provisionSelected()
 	{
 		let tmpSelected = this.getSelectedFolderNames();
 		if (tmpSelected.length === 0)
 		{
-			this.pict.providers.Facto.setStatus('facto-scanner-status', 'Select datasets to provision using the checkboxes', 'warn');
+			this.pict.views['Pict-Section-Modal'].toast('Select datasets to provision using the checkboxes', {type: 'warning'});
 			return;
 		}
 
-		if (!confirm('Provision ' + tmpSelected.length + ' selected dataset(s)?')) return;
+		let tmpConfirmed = await this.pict.views['Pict-Section-Modal'].confirm('Provision ' + tmpSelected.length + ' selected dataset(s)?', { title: 'Provision Selected', confirmLabel: 'Provision' });
+		if (!tmpConfirmed) return;
 
 		this.provisionBatch(tmpSelected, 0, 0, 0);
 	}
 
-	provisionAll()
+	async provisionAll()
 	{
-		if (!confirm('Provision ALL discovered datasets?')) return;
+		let tmpConfirmed = await this.pict.views['Pict-Section-Modal'].confirm('Provision ALL discovered datasets?', { title: 'Provision All', confirmLabel: 'Provision All', dangerous: true });
+		if (!tmpConfirmed) return;
 
-		this.pict.providers.Facto.setStatus('facto-scanner-status', 'Provisioning all datasets...', 'info');
+		this.pict.views['Pict-Section-Modal'].toast('Provisioning all datasets...', {type: 'info'});
 
 		this.pict.providers.Facto.provisionAllScannerDatasets().then(
 			(pResponse) =>
 			{
 				if (pResponse && pResponse.Error)
 				{
-					this.pict.providers.Facto.setStatus('facto-scanner-status', 'Error: ' + pResponse.Error, 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Error: ' + pResponse.Error, {type: 'error'});
 					return;
 				}
-				this.pict.providers.Facto.setStatus('facto-scanner-status',
-					'Provisioned ' + pResponse.Provisioned + ' of ' + pResponse.Total + ' (' + pResponse.Errors + ' error(s))', 'ok');
+				this.pict.views['Pict-Section-Modal'].toast('Provisioned ' + pResponse.Provisioned + ' of ' + pResponse.Total + ' (' + pResponse.Errors + ' error(s))', {type: 'success'});
 				this.loadScannerState();
-				this.refreshRelatedViews();
+				this.pict.providers.FactoUI.refreshDataViews(['sources', 'datasets']);
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-scanner-status', 'Error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error: ' + pError.message, {type: 'error'});
 			});
 	}
 
@@ -352,16 +358,14 @@ class FactoScannerView extends libPictView
 	{
 		if (pIndex >= pFolderNames.length)
 		{
-			this.pict.providers.Facto.setStatus('facto-scanner-status',
-				'Provisioned ' + pSuccessCount + ' of ' + pFolderNames.length + ' (' + pErrorCount + ' error(s))', 'ok');
+			this.pict.views['Pict-Section-Modal'].toast('Provisioned ' + pSuccessCount + ' of ' + pFolderNames.length + ' (' + pErrorCount + ' error(s))', {type: 'success'});
 			this.loadScannerState();
-			this.refreshRelatedViews();
+			this.pict.providers.FactoUI.refreshDataViews(['sources', 'datasets']);
 			return;
 		}
 
 		let tmpName = pFolderNames[pIndex];
-		this.pict.providers.Facto.setStatus('facto-scanner-status',
-			'Provisioning ' + (pIndex + 1) + '/' + pFolderNames.length + ': ' + tmpName + '...', 'info');
+		this.pict.views['Pict-Section-Modal'].toast('Provisioning ' + (pIndex + 1) + '/' + pFolderNames.length + ': ' + tmpName + '...', {type: 'info'});
 
 		this.pict.providers.Facto.provisionScannerDataset(tmpName).then(
 			(pResponse) =>
@@ -379,6 +383,39 @@ class FactoScannerView extends libPictView
 			{
 				this.provisionBatch(pFolderNames, pIndex + 1, pSuccessCount, pErrorCount + 1);
 			});
+	}
+
+	toggleRowMenu(pEvent, pFolderName)
+	{
+		pEvent.stopPropagation();
+		let tmpEl = document.getElementById('facto-row-actions-' + pFolderName);
+		if (!tmpEl) return;
+
+		let tmpWasOpen = tmpEl.classList.contains('open');
+		this.closeRowMenus();
+
+		if (!tmpWasOpen)
+		{
+			tmpEl.classList.add('open');
+			let tmpCloseHandler = (pCloseEvent) =>
+			{
+				if (!tmpEl.contains(pCloseEvent.target))
+				{
+					tmpEl.classList.remove('open');
+					document.removeEventListener('click', tmpCloseHandler);
+				}
+			};
+			setTimeout(() => { document.addEventListener('click', tmpCloseHandler); }, 0);
+		}
+	}
+
+	closeRowMenus()
+	{
+		let tmpOpenMenus = document.querySelectorAll('.facto-row-actions.open');
+		for (let i = 0; i < tmpOpenMenus.length; i++)
+		{
+			tmpOpenMenus[i].classList.remove('open');
+		}
 	}
 
 	viewDetail(pFolderName)
@@ -500,25 +537,7 @@ class FactoScannerView extends libPictView
 		return (pBytes / Math.pow(1024, tmpIndex)).toFixed(1) + ' ' + tmpUnits[tmpIndex];
 	}
 
-	refreshRelatedViews()
-	{
-		if (this.pict.views['Facto-Sources'])
-		{
-			this.pict.providers.Facto.loadSources().then(
-				() =>
-				{
-					this.pict.views['Facto-Sources'].refreshList();
-				});
-		}
-		if (this.pict.views['Facto-Datasets'])
-		{
-			this.pict.providers.Facto.loadDatasets().then(
-				() =>
-				{
-					this.pict.views['Facto-Datasets'].refreshList();
-				});
-		}
-	}
+
 }
 
 module.exports = FactoScannerView;
@@ -588,8 +607,6 @@ module.exports.default_configuration =
 
 			<!-- Detail panel -->
 			<div id="facto-scanner-detail" style="margin-top:12px;"></div>
-
-			<div id="facto-scanner-status" class="status" style="display:none;"></div>
 		</div>
 	</div>
 </div>

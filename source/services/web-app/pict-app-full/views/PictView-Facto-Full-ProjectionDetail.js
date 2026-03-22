@@ -606,12 +606,12 @@ class FactoFullProjectionDetailView extends libPictView
 
 		if (!tmpIDConn)
 		{
-			this.pict.providers.FactoUI.showToast('Select a connection first.', 'warn');
+			this.pict.views['Pict-Section-Modal'].toast('Select a connection first.', {type: 'warning'});
 			return;
 		}
 		if (!tmpTableName)
 		{
-			this.pict.providers.FactoUI.showToast('Enter a table name.', 'warn');
+			this.pict.views['Pict-Section-Modal'].toast('Enter a table name.', {type: 'warning'});
 			return;
 		}
 
@@ -633,7 +633,7 @@ class FactoFullProjectionDetailView extends libPictView
 					else if (pResponse && pResponse.Error)
 					{
 						tmpLog.textContent = 'ERROR: ' + pResponse.Error;
-						this.pict.providers.FactoUI.showToast('Deploy failed: ' + pResponse.Error, 'error');
+						this.pict.views['Pict-Section-Modal'].toast('Deploy failed: ' + pResponse.Error, {type: 'error'});
 						return;
 					}
 					else
@@ -642,7 +642,7 @@ class FactoFullProjectionDetailView extends libPictView
 					}
 				}
 
-				this.pict.providers.FactoUI.showToast('Store deployed successfully.', 'success');
+				this.pict.views['Pict-Section-Modal'].toast('Store deployed successfully.', {type: 'success'});
 
 				// Refresh stores list
 				this.pict.providers.Facto.loadProjectionStores(this._CurrentIDDataset).then(
@@ -655,9 +655,10 @@ class FactoFullProjectionDetailView extends libPictView
 			});
 	}
 
-	redeployStore(pIDProjectionStore, pIDStoreConnection, pTableName)
+	async redeployStore(pIDProjectionStore, pIDStoreConnection, pTableName)
 	{
-		if (!confirm('Redeploy schema to "' + pTableName + '"? This will update the table structure.')) return;
+		let tmpConfirmed = await this.pict.views['Pict-Section-Modal'].confirm('Redeploy schema to "' + pTableName + '"? This will update the table structure.', { title: 'Redeploy Schema', confirmLabel: 'Redeploy', dangerous: true });
+		if (!tmpConfirmed) return;
 
 		let tmpLog = document.getElementById('Facto-ProjectionDetail-Deploy-Log');
 		let tmpDeployDiv = document.getElementById('Facto-ProjectionDetail-Deploy');
@@ -680,7 +681,7 @@ class FactoFullProjectionDetailView extends libPictView
 					else if (pResponse && pResponse.Error)
 					{
 						tmpLog.textContent = 'ERROR: ' + pResponse.Error;
-						this.pict.providers.FactoUI.showToast('Redeploy failed: ' + pResponse.Error, 'error');
+						this.pict.views['Pict-Section-Modal'].toast('Redeploy failed: ' + pResponse.Error, {type: 'error'});
 						return;
 					}
 					else
@@ -689,7 +690,7 @@ class FactoFullProjectionDetailView extends libPictView
 					}
 				}
 
-				this.pict.providers.FactoUI.showToast('Store redeployed successfully.', 'success');
+				this.pict.views['Pict-Section-Modal'].toast('Store redeployed successfully.', {type: 'success'});
 
 				// Refresh stores list
 				this.pict.providers.Facto.loadProjectionStores(this._CurrentIDDataset).then(
@@ -829,12 +830,12 @@ class FactoFullProjectionDetailView extends libPictView
 
 		if (!tmpIDMapping)
 		{
-			this.pict.providers.FactoUI.showToast('Select a mapping first.', 'warn');
+			this.pict.views['Pict-Section-Modal'].toast('Select a mapping first.', {type: 'warning'});
 			return;
 		}
 		if (!tmpIDStore)
 		{
-			this.pict.providers.FactoUI.showToast('Select a target store first.', 'warn');
+			this.pict.views['Pict-Section-Modal'].toast('Select a target store first.', {type: 'warning'});
 			return;
 		}
 
@@ -860,7 +861,7 @@ class FactoFullProjectionDetailView extends libPictView
 					else if (pResponse && pResponse.Error)
 					{
 						tmpLog.textContent = 'ERROR: ' + pResponse.Error;
-						this.pict.providers.FactoUI.showToast('Import failed: ' + pResponse.Error, 'error');
+						this.pict.views['Pict-Section-Modal'].toast('Import failed: ' + pResponse.Error, {type: 'error'});
 						return;
 					}
 					else
@@ -871,11 +872,11 @@ class FactoFullProjectionDetailView extends libPictView
 
 				if (pResponse && pResponse.Success)
 				{
-					this.pict.providers.FactoUI.showToast('Import complete: ' + (pResponse.RecordsCreated || 0) + ' records created.', 'success');
+					this.pict.views['Pict-Section-Modal'].toast('Import complete: ' + (pResponse.RecordsCreated || 0) + ' records created.', {type: 'success'});
 				}
 				else if (pResponse && pResponse.RecordsErrored > 0)
 				{
-					this.pict.providers.FactoUI.showToast('Import completed with ' + pResponse.RecordsErrored + ' errors.', 'warn');
+					this.pict.views['Pict-Section-Modal'].toast('Import completed with ' + pResponse.RecordsErrored + ' errors.', {type: 'warning'});
 				}
 
 				// Show staging download link if a file was generated
@@ -892,7 +893,7 @@ class FactoFullProjectionDetailView extends libPictView
 					tmpLog.style.display = 'block';
 					tmpLog.textContent = 'ERROR: ' + (pError.message || pError);
 				}
-				this.pict.providers.FactoUI.showToast('Import failed.', 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Import failed.', {type: 'error'});
 			});
 	}
 
@@ -1023,21 +1024,22 @@ class FactoFullProjectionDetailView extends libPictView
 	// Actions
 	// ================================================================
 
-	deleteProjection()
+	async deleteProjection()
 	{
 		let tmpName = this._ProjectionData ? this._ProjectionData.Name : this._CurrentIDDataset;
-		if (!confirm('Delete projection "' + tmpName + '"? This will remove the dataset and all associated mappings and stores.')) return;
+		let tmpConfirmed = await this.pict.views['Pict-Section-Modal'].confirm('Delete projection "' + tmpName + '"? This will remove the dataset and all associated mappings and stores.', { title: 'Delete Projection', confirmLabel: 'Delete', dangerous: true });
+		if (!tmpConfirmed) return;
 
 		this.pict.providers.Facto.deleteProjection(this._CurrentIDDataset).then(
 			(pResponse) =>
 			{
 				if (pResponse && pResponse.Error)
 				{
-					this.pict.providers.FactoUI.showToast('Error deleting projection: ' + pResponse.Error, 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Error deleting projection: ' + pResponse.Error, {type: 'error'});
 					return;
 				}
 
-				this.pict.providers.FactoUI.showToast('Projection deleted.', 'success');
+				this.pict.views['Pict-Section-Modal'].toast('Projection deleted.', {type: 'success'});
 				this.pict.PictApplication.navigateTo('/Projections');
 			});
 	}

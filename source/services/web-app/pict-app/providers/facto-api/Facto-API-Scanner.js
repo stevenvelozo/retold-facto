@@ -66,5 +66,15 @@ module.exports =
 	provisionAllScannerDatasets: function()
 	{
 		return this.api('POST', '/facto/scanner/provision-all');
+	},
+
+	loadIngestionPlan: function(pFolderName)
+	{
+		return this.api('GET', '/facto/scanner/dataset/' + encodeURIComponent(pFolderName) + '/ingestion-plan');
+	},
+
+	saveIngestionPlan: function(pFolderName, pPlan)
+	{
+		return this.api('PUT', '/facto/scanner/dataset/' + encodeURIComponent(pFolderName) + '/ingestion-plan', pPlan);
 	}
 };

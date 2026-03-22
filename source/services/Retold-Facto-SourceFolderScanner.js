@@ -332,7 +332,13 @@ class RetoldFactoSourceFolderScanner extends libFableServiceProviderBase
 			return { Format: 'text', Compressed: tmpCompressed };
 		}
 
-		return { Format: 'unknown', Compressed: tmpCompressed || tmpLower.endsWith('.zip') || tmpLower.endsWith('.gz') };
+		// If we stripped a compression extension but found no data format, it's an archive
+		if (tmpCompressed)
+		{
+			return { Format: 'archive', Compressed: true };
+		}
+
+		return { Format: 'unknown', Compressed: false };
 	}
 
 	/**
@@ -364,7 +370,7 @@ class RetoldFactoSourceFolderScanner extends libFableServiceProviderBase
 					let tmpFullPath = libPath.join(pDir, tmpEntry.name);
 					let tmpRelPath = pRelPrefix ? `${pRelPrefix}/${tmpEntry.name}` : tmpEntry.name;
 
-					if (tmpEntry.name === '_manifest.json' || tmpEntry.name === '.git' || tmpEntry.name === '.DS_Store')
+					if (tmpEntry.name === '_manifest.json' || tmpEntry.name === '_ingestion.json' || tmpEntry.name === '.git' || tmpEntry.name === '.DS_Store')
 					{
 						continue;
 					}
@@ -984,15 +990,505 @@ class RetoldFactoSourceFolderScanner extends libFableServiceProviderBase
 			return tmpIngestable[0]; // Already sorted by size desc
 		}
 
-		// Fall back to the largest file overall
-		return pDataFiles[0];
+		// Fall back to the largest non-archive file
+		let tmpNonArchive = pDataFiles.filter(
+			(pFile) =>
+			{
+				return pFile.Format !== 'archive';
+			});
+
+		return tmpNonArchive.length > 0 ? tmpNonArchive[0] : null;
+	}
+
+	// ================================================================
+	// Ingestion Plan
+	// ================================================================
+
+	/**
+	 * Read an existing _ingestion.json from a dataset's data directory.
+	 *
+	 * @param {string} pDataDir - Path to the dataset's data/ directory
+	 * @returns {object|null} The parsed plan, or null if not found
+	 */
+	readIngestionPlan(pDataDir)
+	{
+		let tmpPlanPath = libPath.join(pDataDir, '_ingestion.json');
+
+		if (!libFs.existsSync(tmpPlanPath))
+		{
+			return null;
+		}
+
+		try
+		{
+			let tmpContent = libFs.readFileSync(tmpPlanPath, 'utf8');
+			return JSON.parse(tmpContent);
+		}
+		catch (pError)
+		{
+			this.log.warn(`Failed to read ingestion plan: ${pError.message}`);
+			return null;
+		}
+	}
+
+	/**
+	 * Write an ingestion plan to a dataset's data directory.
+	 *
+	 * @param {string} pDataDir - Path to the dataset's data/ directory
+	 * @param {object} pPlan - The plan object to write
+	 */
+	writeIngestionPlan(pDataDir, pPlan)
+	{
+		let tmpPlanPath = libPath.join(pDataDir, '_ingestion.json');
+
+		try
+		{
+			libFs.writeFileSync(tmpPlanPath, JSON.stringify(pPlan, null, '\t'), 'utf8');
+		}
+		catch (pError)
+		{
+			this.log.error(`Failed to write ingestion plan: ${pError.message}`);
+		}
+	}
+
+	/**
+	 * Derive a record type name from a data file path.
+	 * Strips directory prefixes and file extensions.
+	 * e.g., "core/People.csv" → "People", "ml-32m/ratings.csv" → "ratings"
+	 *
+	 * @param {string} pFileName - Relative file path
+	 * @returns {string} The derived record type
+	 */
+	deriveRecordType(pFileName)
+	{
+		let tmpBase = libPath.basename(pFileName);
+
+		// Strip all extensions (including compound ones like .csv.gz)
+		let tmpName = tmpBase;
+		while (libPath.extname(tmpName))
+		{
+			tmpName = tmpName.slice(0, tmpName.length - libPath.extname(tmpName).length);
+		}
+
+		return tmpName;
+	}
+
+	/**
+	 * Parse the README Schema section for per-file sub-headings.
+	 * Returns a map of lowercase filename → { primaryKey, fields }.
+	 *
+	 * @param {string} pSchemaText - The raw Schema section text
+	 * @returns {object} Map of filename → schema info
+	 */
+	parseSchemaForFiles(pSchemaText)
+	{
+		if (!pSchemaText)
+		{
+			return {};
+		}
+
+		let tmpResult = {};
+		let tmpLines = pSchemaText.split('\n');
+		let tmpCurrentFile = null;
+		let tmpCurrentFields = [];
+
+		for (let i = 0; i < tmpLines.length; i++)
+		{
+			let tmpLine = tmpLines[i].trim();
+
+			// Look for ### or #### headings that name files or tables
+			let tmpHeadingMatch = tmpLine.match(/^#{3,4}\s+(.+)/);
+			if (tmpHeadingMatch)
+			{
+				// Save previous file entry
+				if (tmpCurrentFile)
+				{
+					tmpResult[tmpCurrentFile] = { fields: tmpCurrentFields };
+				}
+
+				// Extract the file/table name from the heading
+				let tmpHeading = tmpHeadingMatch[1].trim();
+
+				// Strip markdown formatting (bold, code) and common suffixes
+				tmpHeading = tmpHeading.replace(/[*`]/g, '').trim();
+
+				// Try to extract just a filename or table name
+				// Common patterns: "ratings.csv", "People (player biographical data)"
+				let tmpNameMatch = tmpHeading.match(/^(\S+\.(?:csv|tsv|json|txt|xml))/i);
+				if (tmpNameMatch)
+				{
+					tmpCurrentFile = tmpNameMatch[1].toLowerCase();
+				}
+				else
+				{
+					// Use the first word as a table name
+					let tmpFirstWord = tmpHeading.split(/[\s(]/)[0];
+					if (tmpFirstWord.length > 1)
+					{
+						tmpCurrentFile = tmpFirstWord.toLowerCase();
+					}
+					else
+					{
+						tmpCurrentFile = null;
+					}
+				}
+
+				tmpCurrentFields = [];
+				continue;
+			}
+
+			// Look for table rows with field definitions: | `fieldName` | type | description |
+			if (tmpCurrentFile && tmpLine.startsWith('|') && !tmpLine.match(/^\|[\s-]+\|/))
+			{
+				let tmpCells = tmpLine.split('|').map((pC) => pC.trim()).filter((pC) => pC.length > 0);
+				if (tmpCells.length >= 2)
+				{
+					let tmpFieldName = tmpCells[0].replace(/`/g, '').trim();
+					if (tmpFieldName.toLowerCase() !== 'field' && tmpFieldName.toLowerCase() !== 'table')
+					{
+						tmpCurrentFields.push(tmpFieldName);
+					}
+				}
+			}
+		}
+
+		// Save last file entry
+		if (tmpCurrentFile)
+		{
+			tmpResult[tmpCurrentFile] = { fields: tmpCurrentFields };
+		}
+
+		return tmpResult;
+	}
+
+	/**
+	 * Parse the README IngestionNotes section for primary key, foreign key,
+	 * and load-order hints.
+	 *
+	 * @param {string} pIngestionText - The raw Ingestion Notes text
+	 * @returns {object} { primaryKeys: {table: key}, foreignKeys: {table: [keys]}, loadOrder: [names] }
+	 */
+	parseIngestionNotes(pIngestionText)
+	{
+		let tmpResult = { primaryKeys: {}, foreignKeys: {}, loadOrder: [] };
+
+		if (!pIngestionText)
+		{
+			return tmpResult;
+		}
+
+		let tmpLines = pIngestionText.split('\n');
+
+		for (let i = 0; i < tmpLines.length; i++)
+		{
+			let tmpLine = tmpLines[i].trim();
+
+			// Look for primary key mentions: "Primary key: fieldName for TableName"
+			// or "playerID for People" patterns or "`movieId` for movies.csv"
+			let tmpPKMatch = tmpLine.match(/[Pp]rimary\s+key[s]?[:\s]+`?(\w+)`?\s+(?:for|in)\s+(\w[\w.]*)/);
+			if (tmpPKMatch)
+			{
+				let tmpKey = tmpPKMatch[1];
+				let tmpTable = tmpPKMatch[2].toLowerCase().replace(/\.csv$|\.tsv$|\.json$/, '');
+				tmpResult.primaryKeys[tmpTable] = tmpKey;
+			}
+
+			// Also look for composite key patterns:
+			// "composite `userId`, `movieId`, `timestamp` for ratings.csv"
+			let tmpCompositeMatch = tmpLine.match(/composite\s+([^f]+)\s+for\s+(\w[\w.]*)/i);
+			if (tmpCompositeMatch)
+			{
+				let tmpKeys = tmpCompositeMatch[1].match(/`(\w+)`/g);
+				let tmpTable = tmpCompositeMatch[2].toLowerCase().replace(/\.csv$|\.tsv$|\.json$/, '');
+				if (tmpKeys)
+				{
+					tmpResult.primaryKeys[tmpTable] = tmpKeys.map((pK) => pK.replace(/`/g, '')).join(', ');
+				}
+			}
+
+			// Look for foreign key mentions: "foreignKey links/references TableName"
+			let tmpFKMatch = tmpLine.match(/`(\w+)`\s+(?:links?|references?|joins?)\s+(?:\w+\s+)?(?:to\s+)?(\w[\w.]*)/i);
+			if (tmpFKMatch)
+			{
+				let tmpKey = tmpFKMatch[1];
+				let tmpRefTable = tmpFKMatch[2].toLowerCase().replace(/\.csv$|\.tsv$|\.json$/, '');
+				if (!tmpResult.foreignKeys[tmpRefTable])
+				{
+					tmpResult.foreignKeys[tmpRefTable] = [];
+				}
+				tmpResult.foreignKeys[tmpRefTable].push(tmpKey);
+			}
+
+			// Look for load-order mentions: "Load X first ... then Y"
+			let tmpLoadOrderMatch = tmpLine.match(/[Ll]oad\s+(\w[\w.]*)\s+first/);
+			if (tmpLoadOrderMatch)
+			{
+				let tmpFirst = tmpLoadOrderMatch[1].toLowerCase().replace(/\.csv$|\.tsv$|\.json$/, '');
+				if (tmpResult.loadOrder.indexOf(tmpFirst) < 0)
+				{
+					tmpResult.loadOrder.push(tmpFirst);
+				}
+			}
+		}
+
+		return tmpResult;
+	}
+
+	/**
+	 * Generate an ingestion plan for a dataset.
+	 * If a plan already exists on disk, returns it.
+	 * Otherwise, auto-generates from file list and README metadata.
+	 *
+	 * @param {string} pFolderName - The dataset folder name
+	 * @param {function} fCallback - Callback(pError, pPlan)
+	 */
+	generateIngestionPlan(pFolderName, fCallback)
+	{
+		let tmpDataset = this.getDiscoveredDatasetByName(pFolderName);
+
+		if (!tmpDataset)
+		{
+			return fCallback(new Error(`Dataset not found: ${pFolderName}`));
+		}
+
+		let tmpDataDir = libPath.join(tmpDataset.FolderPath, 'data');
+
+		// Check for existing plan
+		let tmpExistingPlan = this.readIngestionPlan(tmpDataDir);
+		if (tmpExistingPlan)
+		{
+			return fCallback(null, tmpExistingPlan);
+		}
+
+		let tmpSelf = this;
+
+		// Resolve data files
+		this.resolveDataFiles(tmpDataset.FolderPath,
+			(pError, pFiles) =>
+			{
+				if (pError)
+				{
+					return fCallback(pError);
+				}
+
+				if (!pFiles || pFiles.length === 0)
+				{
+					return fCallback(null,
+						{
+							version: 1,
+							generatedAt: new Date().toISOString(),
+							modifiedAt: null,
+							autoGenerated: true,
+							files: []
+						});
+				}
+
+				// Build base plan entries from file list
+				let tmpIngestableFormats = { csv: true, tsv: true, json: true, text: true, xml: true, excel: true };
+				let tmpPlanFiles = [];
+
+				for (let i = 0; i < pFiles.length; i++)
+				{
+					let tmpFile = pFiles[i];
+					let tmpInclude = !!tmpIngestableFormats[tmpFile.Format];
+					let tmpRecordType = tmpSelf.deriveRecordType(tmpFile.FileName);
+					let tmpDelimiter = '';
+
+					if (tmpFile.Format === 'csv')
+					{
+						tmpDelimiter = ',';
+					}
+					else if (tmpFile.Format === 'tsv')
+					{
+						tmpDelimiter = '\t';
+					}
+
+					tmpPlanFiles.push(
+						{
+							fileName: tmpFile.FileName,
+							include: tmpInclude,
+							format: tmpFile.Format,
+							delimiter: tmpDelimiter,
+							recordType: tmpRecordType,
+							order: i + 1,
+							primaryKey: '',
+							foreignKeys: [],
+							notes: ''
+						});
+				}
+
+				// Enrich from README if available
+				try
+				{
+					let tmpReadmePath = libPath.join(tmpDataset.FolderPath, 'README.md');
+					if (libFs.existsSync(tmpReadmePath))
+					{
+						let tmpReadmeContent = libFs.readFileSync(tmpReadmePath, 'utf8');
+						let tmpReadme = tmpSelf.parseReadme(tmpReadmeContent);
+
+						// Parse schema for per-file metadata
+						let tmpSchemaFiles = tmpSelf.parseSchemaForFiles(tmpReadme.Schema);
+
+						// Parse ingestion notes for keys and load order
+						let tmpIngestionHints = tmpSelf.parseIngestionNotes(tmpReadme.IngestionNotes);
+
+						// Match schema info to plan entries
+						for (let i = 0; i < tmpPlanFiles.length; i++)
+						{
+							let tmpEntry = tmpPlanFiles[i];
+							let tmpLowerType = tmpEntry.recordType.toLowerCase();
+							let tmpLowerFileName = tmpEntry.fileName.toLowerCase();
+							let tmpBaseFileName = libPath.basename(tmpLowerFileName);
+
+							// Try to match by recordType or full filename
+							let tmpSchemaMatch = tmpSchemaFiles[tmpLowerType]
+								|| tmpSchemaFiles[tmpBaseFileName]
+								|| tmpSchemaFiles[tmpBaseFileName.replace(/\.\w+$/, '')];
+
+							if (tmpSchemaMatch)
+							{
+								// Schema info found — no direct mapping to primaryKey here,
+								// but confirms this is a recognized file
+							}
+
+							// Match primary key from ingestion notes
+							if (tmpIngestionHints.primaryKeys[tmpLowerType])
+							{
+								tmpEntry.primaryKey = tmpIngestionHints.primaryKeys[tmpLowerType];
+							}
+
+							// Match foreign keys
+							if (tmpIngestionHints.foreignKeys[tmpLowerType])
+							{
+								tmpEntry.foreignKeys = tmpIngestionHints.foreignKeys[tmpLowerType];
+							}
+						}
+
+						// Apply load order if available
+						if (tmpIngestionHints.loadOrder.length > 0)
+						{
+							let tmpOrderMap = {};
+							for (let i = 0; i < tmpIngestionHints.loadOrder.length; i++)
+							{
+								tmpOrderMap[tmpIngestionHints.loadOrder[i]] = i + 1;
+							}
+
+							// Reorder: items in loadOrder get low order numbers, others follow
+							let tmpNextOrder = tmpIngestionHints.loadOrder.length + 1;
+							for (let i = 0; i < tmpPlanFiles.length; i++)
+							{
+								let tmpLowerType = tmpPlanFiles[i].recordType.toLowerCase();
+								if (tmpOrderMap[tmpLowerType] !== undefined)
+								{
+									tmpPlanFiles[i].order = tmpOrderMap[tmpLowerType];
+								}
+								else
+								{
+									tmpPlanFiles[i].order = tmpNextOrder++;
+								}
+							}
+						}
+
+						// Override delimiter from README DataFormat if all files share a format
+						if (tmpReadme.DataFormat && tmpReadme.DataFormat.Delimiter)
+						{
+							for (let i = 0; i < tmpPlanFiles.length; i++)
+							{
+								if (tmpPlanFiles[i].format === 'csv' || tmpPlanFiles[i].format === 'tsv' || tmpPlanFiles[i].format === 'text')
+								{
+									tmpPlanFiles[i].delimiter = tmpReadme.DataFormat.Delimiter;
+								}
+							}
+						}
+					}
+				}
+				catch (pEnrichError)
+				{
+					tmpSelf.log.warn(`Ingestion plan enrichment failed for ${pFolderName}: ${pEnrichError.message}`);
+				}
+
+				// Sort by order
+				tmpPlanFiles.sort((a, b) => a.order - b.order);
+
+				let tmpPlan = {
+					version: 1,
+					generatedAt: new Date().toISOString(),
+					modifiedAt: null,
+					autoGenerated: true,
+					files: tmpPlanFiles
+				};
+
+				// Write the plan to disk
+				if (libFs.existsSync(tmpDataDir))
+				{
+					tmpSelf.writeIngestionPlan(tmpDataDir, tmpPlan);
+				}
+
+				return fCallback(null, tmpPlan);
+			});
+	}
+
+	/**
+	 * Ingest a single data file with decompression support.
+	 *
+	 * @param {object} pFile - Data file object from resolveDataFiles
+	 * @param {object} pDataset - The discovered dataset
+	 * @param {object} pOptions - Ingestion options { format, delimiter, type }
+	 * @param {function} fCallback - Callback(pError, pResult)
+	 */
+	ingestSingleFile(pFile, pDataset, pOptions, fCallback)
+	{
+		let tmpSelf = this;
+		let tmpFilePath = pFile.FullPath;
+
+		this.fable.log.info(`SourceFolderScanner: ingesting ${pFile.FileName} from ${pDataset.FolderName}`);
+
+		// Handle compressed .gz files
+		if (pFile.Compressed && tmpFilePath.endsWith('.gz') && !tmpFilePath.endsWith('.tar.gz'))
+		{
+			let tmpDecompressedPath = tmpFilePath.slice(0, -3);
+
+			let tmpInput = libFs.createReadStream(tmpFilePath);
+			let tmpGunzip = libZlib.createGunzip();
+			let tmpOutput = libFs.createWriteStream(tmpDecompressedPath);
+
+			tmpInput.pipe(tmpGunzip).pipe(tmpOutput);
+
+			tmpOutput.on('finish',
+				() =>
+				{
+					tmpSelf.fable.RetoldFactoIngestEngine.ingestFile(
+						tmpDecompressedPath,
+						pDataset.IDDataset,
+						pDataset.IDSource,
+						pOptions,
+						fCallback);
+				});
+
+			tmpOutput.on('error', (pErr) => fCallback(pErr));
+			tmpGunzip.on('error', (pErr) => fCallback(pErr));
+		}
+		else if (!pFile.Compressed || pFile.Format !== 'archive')
+		{
+			this.fable.RetoldFactoIngestEngine.ingestFile(
+				tmpFilePath,
+				pDataset.IDDataset,
+				pDataset.IDSource,
+				pOptions,
+				fCallback);
+		}
+		else
+		{
+			return fCallback(new Error(`Cannot directly ingest archive file ${pFile.FileName}. Extract first.`));
+		}
 	}
 
 	/**
 	 * Ingest a dataset's data files into the facto database.
+	 * Supports both single-file (legacy) and multi-file plan-based ingestion.
 	 *
 	 * @param {string} pFolderName - The dataset folder name
-	 * @param {object} pOptions - { fileName, format }
+	 * @param {object} pOptions - { fileName, format, useIngestionPlan }
 	 * @param {function} fCallback - Callback(pError, pResult)
 	 */
 	ingestDataset(pFolderName, pOptions, fCallback)
@@ -1029,8 +1525,19 @@ class RetoldFactoSourceFolderScanner extends libFableServiceProviderBase
 		}
 
 		let tmpOptions = pOptions || {};
+		let tmpSelf = this;
 
-		// Select the file to ingest
+		// Check if we should use the ingestion plan
+		let tmpDataDir = libPath.join(tmpDataset.FolderPath, 'data');
+		let tmpExistingPlan = this.readIngestionPlan(tmpDataDir);
+		let tmpUsePlan = tmpOptions.useIngestionPlan || (tmpExistingPlan && !tmpOptions.fileName);
+
+		if (tmpUsePlan)
+		{
+			return this.ingestFromPlan(pFolderName, tmpExistingPlan, fCallback);
+		}
+
+		// Legacy single-file ingestion path
 		let tmpFile = null;
 		if (tmpOptions.fileName)
 		{
@@ -1046,68 +1553,159 @@ class RetoldFactoSourceFolderScanner extends libFableServiceProviderBase
 			return fCallback(new Error(`No suitable data file found in ${pFolderName}`));
 		}
 
+		this.ingestSingleFile(tmpFile, tmpDataset, tmpOptions,
+			(pIngestError, pResult) =>
+			{
+				if (!pIngestError)
+				{
+					tmpDataset.Status = 'Ingested';
+					tmpDataset.IngestedAt = new Date().toISOString();
+				}
+				return fCallback(pIngestError, pResult);
+			});
+	}
+
+	/**
+	 * Ingest multiple files from a dataset using its ingestion plan.
+	 *
+	 * @param {string} pFolderName - The dataset folder name
+	 * @param {object|null} pPlan - Existing plan, or null to auto-generate
+	 * @param {function} fCallback - Callback(pError, pResult)
+	 */
+	ingestFromPlan(pFolderName, pPlan, fCallback)
+	{
 		let tmpSelf = this;
-		let tmpFilePath = tmpFile.FullPath;
+		let tmpDataset = this.getDiscoveredDatasetByName(pFolderName);
 
-		this.fable.log.info(`SourceFolderScanner: ingesting ${tmpFile.FileName} from ${pFolderName}`);
-
-		// Handle compressed files
-		if (tmpFile.Compressed && tmpFilePath.endsWith('.gz') && !tmpFilePath.endsWith('.tar.gz'))
+		if (!tmpDataset)
 		{
-			// Decompress .gz to temp file, then ingest
-			let tmpDecompressedPath = tmpFilePath.slice(0, -3); // Remove .gz
-
-			let tmpInput = libFs.createReadStream(tmpFilePath);
-			let tmpGunzip = libZlib.createGunzip();
-			let tmpOutput = libFs.createWriteStream(tmpDecompressedPath);
-
-			tmpInput.pipe(tmpGunzip).pipe(tmpOutput);
-
-			tmpOutput.on('finish',
-				() =>
-				{
-					tmpSelf.fable.RetoldFactoIngestEngine.ingestFile(
-						tmpDecompressedPath,
-						tmpDataset.IDDataset,
-						tmpDataset.IDSource,
-						tmpOptions,
-						(pIngestError, pResult) =>
-						{
-							// Update status
-							if (!pIngestError)
-							{
-								tmpDataset.Status = 'Ingested';
-								tmpDataset.IngestedAt = new Date().toISOString();
-							}
-							return fCallback(pIngestError, pResult);
-						});
-				});
-
-			tmpOutput.on('error', (pErr) => fCallback(pErr));
-			tmpGunzip.on('error', (pErr) => fCallback(pErr));
+			return fCallback(new Error(`Dataset not found: ${pFolderName}`));
 		}
-		else if (!tmpFile.Compressed || tmpFile.Format !== 'archive')
+
+		let tmpExecutePlan = (pPlanToUse) =>
 		{
-			// Direct ingest of uncompressed file
-			this.fable.RetoldFactoIngestEngine.ingestFile(
-				tmpFilePath,
-				tmpDataset.IDDataset,
-				tmpDataset.IDSource,
-				tmpOptions,
-				(pIngestError, pResult) =>
+			// Filter to included files and sort by order
+			let tmpIncluded = (pPlanToUse.files || [])
+				.filter((pEntry) => pEntry.include)
+				.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+			if (tmpIncluded.length === 0)
+			{
+				return fCallback(new Error(`Ingestion plan for ${pFolderName} has no included files.`));
+			}
+
+			tmpSelf.fable.log.info(`SourceFolderScanner: ingesting ${tmpIncluded.length} files from plan for ${pFolderName}`);
+
+			let tmpAnticipate = tmpSelf.fable.newAnticipate();
+			let tmpFileResults = [];
+			let tmpFilesIngested = 0;
+			let tmpFilesErrored = 0;
+			let tmpTotalRecords = 0;
+
+			for (let i = 0; i < tmpIncluded.length; i++)
+			{
+				let tmpPlanEntry = tmpIncluded[i];
+
+				tmpAnticipate.anticipate(
+					(fStep) =>
+					{
+						// Find the matching data file
+						let tmpFile = tmpDataset.DataFiles.find(
+							(pF) => pF.FileName === tmpPlanEntry.fileName);
+
+						if (!tmpFile)
+						{
+							tmpSelf.fable.log.warn(`  Skipping ${tmpPlanEntry.fileName}: file not found`);
+							tmpFilesErrored++;
+							tmpFileResults.push(
+								{
+									fileName: tmpPlanEntry.fileName,
+									recordType: tmpPlanEntry.recordType,
+									recordsIngested: 0,
+									error: 'File not found'
+								});
+							return fStep();
+						}
+
+						let tmpFileOptions = {
+							format: tmpPlanEntry.format,
+							type: tmpPlanEntry.recordType
+						};
+						if (tmpPlanEntry.delimiter)
+						{
+							tmpFileOptions.delimiter = tmpPlanEntry.delimiter;
+						}
+
+						tmpSelf.fable.log.info(`  [${tmpFilesIngested + tmpFilesErrored + 1}/${tmpIncluded.length}] ${tmpPlanEntry.fileName} as "${tmpPlanEntry.recordType}"`);
+
+						tmpSelf.ingestSingleFile(tmpFile, tmpDataset, tmpFileOptions,
+							(pIngestError, pResult) =>
+							{
+								if (pIngestError)
+								{
+									tmpFilesErrored++;
+									tmpFileResults.push(
+										{
+											fileName: tmpPlanEntry.fileName,
+											recordType: tmpPlanEntry.recordType,
+											recordsIngested: 0,
+											error: pIngestError.message
+										});
+								}
+								else
+								{
+									tmpFilesIngested++;
+									let tmpCount = (pResult && pResult.Ingested) ? pResult.Ingested : 0;
+									tmpTotalRecords += tmpCount;
+									tmpFileResults.push(
+										{
+											fileName: tmpPlanEntry.fileName,
+											recordType: tmpPlanEntry.recordType,
+											recordsIngested: tmpCount,
+											error: null
+										});
+								}
+								return fStep();
+							});
+					});
+			}
+
+			tmpAnticipate.wait(
+				(pError) =>
 				{
-					if (!pIngestError)
+					if (tmpFilesIngested > 0)
 					{
 						tmpDataset.Status = 'Ingested';
 						tmpDataset.IngestedAt = new Date().toISOString();
 					}
-					return fCallback(pIngestError, pResult);
+
+					return fCallback(null,
+						{
+							Success: tmpFilesIngested > 0,
+							FolderName: pFolderName,
+							FilesIngested: tmpFilesIngested,
+							FilesErrored: tmpFilesErrored,
+							TotalRecords: tmpTotalRecords,
+							FileResults: tmpFileResults
+						});
 				});
-		}
-		else
+		};
+
+		// Use provided plan or generate one
+		if (pPlan)
 		{
-			return fCallback(new Error(`Cannot directly ingest archive file ${tmpFile.FileName}. Extract first.`));
+			return tmpExecutePlan(pPlan);
 		}
+
+		this.generateIngestionPlan(pFolderName,
+			(pGenError, pGeneratedPlan) =>
+			{
+				if (pGenError)
+				{
+					return fCallback(pGenError);
+				}
+				return tmpExecutePlan(pGeneratedPlan);
+			});
 	}
 
 	// ================================================================
@@ -1407,6 +2005,54 @@ class RetoldFactoSourceFolderScanner extends libFableServiceProviderBase
 						pResponse.send(pResult);
 						return fNext();
 					});
+			});
+
+		// GET /facto/scanner/dataset/:FolderName/ingestion-plan — get or generate ingestion plan
+		pOratorServiceServer.doGet(`${tmpRoutePrefix}/scanner/dataset/:FolderName/ingestion-plan`,
+			(pRequest, pResponse, fNext) =>
+			{
+				tmpSelf.generateIngestionPlan(pRequest.params.FolderName,
+					(pError, pPlan) =>
+					{
+						if (pError)
+						{
+							pResponse.send({ Error: pError.message });
+							return fNext();
+						}
+						pResponse.send(pPlan);
+						return fNext();
+					});
+			});
+
+		// PUT /facto/scanner/dataset/:FolderName/ingestion-plan — save edited ingestion plan
+		pOratorServiceServer.doPut(`${tmpRoutePrefix}/scanner/dataset/:FolderName/ingestion-plan`,
+			(pRequest, pResponse, fNext) =>
+			{
+				let tmpDataset = tmpSelf.getDiscoveredDatasetByName(pRequest.params.FolderName);
+
+				if (!tmpDataset)
+				{
+					pResponse.send({ Error: `Dataset not found: ${pRequest.params.FolderName}` });
+					return fNext();
+				}
+
+				let tmpPlan = pRequest.body;
+
+				if (!tmpPlan || !Array.isArray(tmpPlan.files))
+				{
+					pResponse.send({ Error: 'Invalid plan: files array is required' });
+					return fNext();
+				}
+
+				// Mark as user-modified
+				tmpPlan.autoGenerated = false;
+				tmpPlan.modifiedAt = new Date().toISOString();
+
+				let tmpDataDir = libPath.join(tmpDataset.FolderPath, 'data');
+				tmpSelf.writeIngestionPlan(tmpDataDir, tmpPlan);
+
+				pResponse.send({ Success: true, Plan: tmpPlan });
+				return fNext();
 			});
 
 		// POST /facto/scanner/dataset/:FolderName/ingest — ingest a dataset

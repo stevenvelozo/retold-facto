@@ -16,7 +16,7 @@ class FactoRecordsView extends libPictView
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-records-status', 'Error loading records: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error loading records: ' + pError.message, {type: 'error'});
 			});
 	}
 
@@ -78,7 +78,7 @@ class FactoRecordsView extends libPictView
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-records-status', 'Error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error: ' + pError.message, {type: 'error'});
 			});
 	}
 
@@ -89,7 +89,7 @@ class FactoRecordsView extends libPictView
 			{
 				if (!pResponse || !pResponse.CertaintyIndices || pResponse.CertaintyIndices.length === 0)
 				{
-					this.pict.providers.Facto.setStatus('facto-records-status', 'No certainty indices for record #' + pIDRecord, 'info');
+					this.pict.views['Pict-Section-Modal'].toast('No certainty indices for record #' + pIDRecord, {type: 'info'});
 					return;
 				}
 				let tmpParts = [];
@@ -98,11 +98,11 @@ class FactoRecordsView extends libPictView
 					let tmpCI = pResponse.CertaintyIndices[i];
 					tmpParts.push(tmpCI.Dimension + ': ' + tmpCI.CertaintyValue);
 				}
-				this.pict.providers.Facto.setStatus('facto-records-status', 'Record #' + pIDRecord + ' certainty: ' + tmpParts.join(', '), 'info');
+				this.pict.views['Pict-Section-Modal'].toast('Record #' + pIDRecord + ' certainty: ' + tmpParts.join(', '), {type: 'info'});
 			}).catch(
 			(pError) =>
 			{
-				this.pict.providers.Facto.setStatus('facto-records-status', 'Error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error: ' + pError.message, {type: 'error'});
 			});
 	}
 }
@@ -130,7 +130,6 @@ module.exports.default_configuration =
 		<div class="accordion-body">
 			<p style="margin-bottom:12px; color:#666; font-size:0.9em;">Individual data records with versioning, certainty indices, and temporal metadata.</p>
 			<div id="facto-records-list"></div>
-			<div id="facto-records-status" class="status" style="display:none;"></div>
 		</div>
 	</div>
 </div>

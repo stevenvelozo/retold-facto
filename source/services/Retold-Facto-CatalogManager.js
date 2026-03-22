@@ -27,29 +27,6 @@ class RetoldFactoCatalogManager extends libFableServiceProviderBase
 	}
 
 	/**
-	 * Generate a human-readable hash (slug) from a name string.
-	 *
-	 * Converts "US Census Bureau" → "US-Census-Bureau",
-	 * "ISO 3166 Countries" → "ISO-3166-Countries", etc.
-	 *
-	 * @param {string} pInput - The name to convert
-	 * @returns {string} A clean kebab-case slug
-	 */
-	generateHash(pInput)
-	{
-		if (!pInput || typeof pInput !== 'string')
-		{
-			return '';
-		}
-		return pInput
-			.replace(/[^a-zA-Z0-9\s\-_]/g, '')
-			.replace(/\s+/g, '-')
-			.replace(/-+/g, '-')
-			.replace(/^-|-$/g, '')
-			.substring(0, 128);
-	}
-
-	/**
 	 * Find a Source by name, or create one if it doesn't exist.
 	 *
 	 * @param {string} pName - Source name to find or create
@@ -79,7 +56,7 @@ class RetoldFactoCatalogManager extends libFableServiceProviderBase
 				let tmpSourceData = Object.assign(
 					{
 						Name: pName,
-						Hash: this.generateHash(pName),
+						Hash: this.fable.RetoldFacto.generateHash(pName),
 						Active: 1
 					}, pDefaults || {});
 
@@ -128,7 +105,7 @@ class RetoldFactoCatalogManager extends libFableServiceProviderBase
 				let tmpDatasetData = Object.assign(
 					{
 						Name: pName,
-						Hash: this.generateHash(pName),
+						Hash: this.fable.RetoldFacto.generateHash(pName),
 						Type: 'Raw'
 					}, pDefaults || {});
 

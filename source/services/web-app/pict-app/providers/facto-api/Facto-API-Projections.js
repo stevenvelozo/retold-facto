@@ -9,6 +9,7 @@ module.exports =
 		return this.api('GET', '/facto/projections').then(
 			(pResponse) =>
 			{
+				this.pict.AppData.Facto.Projections = (pResponse && pResponse.Projections) ? pResponse.Projections : [];
 				return pResponse;
 			});
 	},

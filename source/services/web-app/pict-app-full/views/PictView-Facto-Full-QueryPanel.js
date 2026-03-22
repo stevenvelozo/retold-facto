@@ -72,8 +72,8 @@ class FactoFullQueryPanelView extends libPictView
 
 	runQuery()
 	{
-		let tmpDatasetID = parseInt((document.getElementById('Facto-Full-Proj-DatasetID') || {}).value) || 0;
-		let tmpType = (document.getElementById('Facto-Full-Proj-Type') || {}).value || '';
+		let tmpDatasetID = parseInt(this.pict.providers.FactoUI.getVal('Facto-Full-Proj-DatasetID')) || 0;
+		let tmpType = this.pict.providers.FactoUI.getVal('Facto-Full-Proj-Type');
 
 		let tmpParams = {};
 		if (tmpDatasetID) tmpParams.IDDataset = tmpDatasetID;
@@ -88,7 +88,7 @@ class FactoFullQueryPanelView extends libPictView
 
 	runAggregate()
 	{
-		let tmpDatasetID = parseInt((document.getElementById('Facto-Full-Proj-DatasetID') || {}).value) || 0;
+		let tmpDatasetID = parseInt(this.pict.providers.FactoUI.getVal('Facto-Full-Proj-DatasetID')) || 0;
 
 		let tmpParams = {};
 		if (tmpDatasetID) tmpParams.IDDataset = tmpDatasetID;

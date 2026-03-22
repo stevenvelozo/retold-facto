@@ -6275,6 +6275,157 @@
                 }
             },
             "Authorization": {}
+        },
+        "MultiSetProjection": {
+            "TableName": "MultiSetProjection",
+            "Domain": "Default",
+            "Columns": [
+                { "Column": "IDMultiSetProjection", "DataType": "ID" },
+                { "Column": "GUIDMultiSetProjection", "DataType": "GUID", "Size": "36" },
+                { "Column": "CreateDate", "DataType": "DateTime" },
+                { "Column": "CreatingIDUser", "DataType": "Numeric", "Size": "int" },
+                { "Column": "UpdateDate", "DataType": "DateTime" },
+                { "Column": "UpdatingIDUser", "DataType": "Numeric", "Size": "int" },
+                { "Column": "Deleted", "DataType": "Boolean" },
+                { "Column": "DeleteDate", "DataType": "DateTime" },
+                { "Column": "DeletingIDUser", "DataType": "Numeric", "Size": "int" },
+                { "Column": "IDDataset", "DataType": "Numeric", "Size": "int", "Join": "IDDataset" },
+                { "Column": "IDProjectionStore", "DataType": "Numeric", "Size": "int", "Join": "IDProjectionStore" },
+                { "Column": "Name", "DataType": "String", "Size": "200" },
+                { "Column": "Description", "DataType": "Text" },
+                { "Column": "PipelineConfiguration", "DataType": "Text" },
+                { "Column": "Active", "DataType": "Boolean" }
+            ],
+            "Description": "",
+            "MeadowSchema": {
+                "Scope": "MultiSetProjection",
+                "DefaultIdentifier": "IDMultiSetProjection",
+                "Domain": "Default",
+                "Schema": [
+                    { "Column": "IDMultiSetProjection", "Type": "AutoIdentity", "Size": "Default" },
+                    { "Column": "GUIDMultiSetProjection", "Type": "AutoGUID", "Size": "36" },
+                    { "Column": "CreateDate", "Type": "CreateDate", "Size": "Default" },
+                    { "Column": "CreatingIDUser", "Type": "CreateIDUser", "Size": "int" },
+                    { "Column": "UpdateDate", "Type": "UpdateDate", "Size": "Default" },
+                    { "Column": "UpdatingIDUser", "Type": "UpdateIDUser", "Size": "int" },
+                    { "Column": "Deleted", "Type": "Deleted", "Size": "Default" },
+                    { "Column": "DeleteDate", "Type": "DeleteDate", "Size": "Default" },
+                    { "Column": "DeletingIDUser", "Type": "DeleteIDUser", "Size": "int" },
+                    { "Column": "IDDataset", "Type": "Numeric", "Size": "int" },
+                    { "Column": "IDProjectionStore", "Type": "Numeric", "Size": "int" },
+                    { "Column": "Name", "Type": "String", "Size": "200" },
+                    { "Column": "Description", "Type": "String", "Size": "Default" },
+                    { "Column": "PipelineConfiguration", "Type": "String", "Size": "Default" },
+                    { "Column": "Active", "Type": "Deleted", "Size": "Default" }
+                ],
+                "DefaultObject": {},
+                "JsonSchema": {
+                    "title": "MultiSetProjection",
+                    "type": "object",
+                    "properties": {
+                        "MultiSetProjection": {
+                            "type": "object",
+                            "properties": {
+                                "IDMultiSetProjection": { "type": "integer", "size": "Default" },
+                                "GUIDMultiSetProjection": { "type": "string", "size": "36" },
+                                "CreateDate": { "type": "string", "size": "Default" },
+                                "CreatingIDUser": { "type": "integer", "size": "int" },
+                                "UpdateDate": { "type": "string", "size": "Default" },
+                                "UpdatingIDUser": { "type": "integer", "size": "int" },
+                                "Deleted": { "type": "boolean", "size": "Default" },
+                                "DeleteDate": { "type": "string", "size": "Default" },
+                                "DeletingIDUser": { "type": "integer", "size": "int" },
+                                "IDDataset": { "type": "integer", "size": "int" },
+                                "IDProjectionStore": { "type": "integer", "size": "int" },
+                                "Name": { "type": "string", "size": "200" },
+                                "Description": { "type": "string", "size": "Default" },
+                                "PipelineConfiguration": { "type": "string", "size": "Default" },
+                                "Active": { "type": "boolean", "size": "Default" }
+                            },
+                            "required": [ "IDMultiSetProjection" ]
+                        }
+                    },
+                    "Authorization": {}
+                }
+            },
+            "Authorization": {}
+        },
+        "ProjectionCertaintyLog": {
+            "TableName": "ProjectionCertaintyLog",
+            "Domain": "Default",
+            "Columns": [
+                { "Column": "IDProjectionCertaintyLog", "DataType": "ID" },
+                { "Column": "GUIDProjectionCertaintyLog", "DataType": "GUID", "Size": "36" },
+                { "Column": "CreateDate", "DataType": "DateTime" },
+                { "Column": "CreatingIDUser", "DataType": "Numeric", "Size": "int" },
+                { "Column": "UpdateDate", "DataType": "DateTime" },
+                { "Column": "UpdatingIDUser", "DataType": "Numeric", "Size": "int" },
+                { "Column": "Deleted", "DataType": "Boolean" },
+                { "Column": "DeleteDate", "DataType": "DateTime" },
+                { "Column": "DeletingIDUser", "DataType": "Numeric", "Size": "int" },
+                { "Column": "IDMultiSetProjection", "DataType": "Numeric", "Size": "int", "Join": "IDMultiSetProjection" },
+                { "Column": "RecordGUID", "DataType": "String", "Size": "256" },
+                { "Column": "CertaintyValue", "DataType": "Decimal", "Size": "5,4" },
+                { "Column": "SourceMappingLabel", "DataType": "String", "Size": "200" },
+                { "Column": "IDProjectionMapping", "DataType": "Numeric", "Size": "int", "Join": "IDProjectionMapping" },
+                { "Column": "Action", "DataType": "String", "Size": "32" },
+                { "Column": "Details", "DataType": "Text" }
+            ],
+            "Description": "",
+            "MeadowSchema": {
+                "Scope": "ProjectionCertaintyLog",
+                "DefaultIdentifier": "IDProjectionCertaintyLog",
+                "Domain": "Default",
+                "Schema": [
+                    { "Column": "IDProjectionCertaintyLog", "Type": "AutoIdentity", "Size": "Default" },
+                    { "Column": "GUIDProjectionCertaintyLog", "Type": "AutoGUID", "Size": "36" },
+                    { "Column": "CreateDate", "Type": "CreateDate", "Size": "Default" },
+                    { "Column": "CreatingIDUser", "Type": "CreateIDUser", "Size": "int" },
+                    { "Column": "UpdateDate", "Type": "UpdateDate", "Size": "Default" },
+                    { "Column": "UpdatingIDUser", "Type": "UpdateIDUser", "Size": "int" },
+                    { "Column": "Deleted", "Type": "Deleted", "Size": "Default" },
+                    { "Column": "DeleteDate", "Type": "DeleteDate", "Size": "Default" },
+                    { "Column": "DeletingIDUser", "Type": "DeleteIDUser", "Size": "int" },
+                    { "Column": "IDMultiSetProjection", "Type": "Numeric", "Size": "int" },
+                    { "Column": "RecordGUID", "Type": "String", "Size": "256" },
+                    { "Column": "CertaintyValue", "Type": "Numeric", "Size": "5,4" },
+                    { "Column": "SourceMappingLabel", "Type": "String", "Size": "200" },
+                    { "Column": "IDProjectionMapping", "Type": "Numeric", "Size": "int" },
+                    { "Column": "Action", "Type": "String", "Size": "32" },
+                    { "Column": "Details", "Type": "String", "Size": "Default" }
+                ],
+                "DefaultObject": {},
+                "JsonSchema": {
+                    "title": "ProjectionCertaintyLog",
+                    "type": "object",
+                    "properties": {
+                        "ProjectionCertaintyLog": {
+                            "type": "object",
+                            "properties": {
+                                "IDProjectionCertaintyLog": { "type": "integer", "size": "Default" },
+                                "GUIDProjectionCertaintyLog": { "type": "string", "size": "36" },
+                                "CreateDate": { "type": "string", "size": "Default" },
+                                "CreatingIDUser": { "type": "integer", "size": "int" },
+                                "UpdateDate": { "type": "string", "size": "Default" },
+                                "UpdatingIDUser": { "type": "integer", "size": "int" },
+                                "Deleted": { "type": "boolean", "size": "Default" },
+                                "DeleteDate": { "type": "string", "size": "Default" },
+                                "DeletingIDUser": { "type": "integer", "size": "int" },
+                                "IDMultiSetProjection": { "type": "integer", "size": "int" },
+                                "RecordGUID": { "type": "string", "size": "256" },
+                                "CertaintyValue": { "type": "number", "size": "5,4" },
+                                "SourceMappingLabel": { "type": "string", "size": "200" },
+                                "IDProjectionMapping": { "type": "integer", "size": "int" },
+                                "Action": { "type": "string", "size": "32" },
+                                "Details": { "type": "string", "size": "Default" }
+                            },
+                            "required": [ "IDProjectionCertaintyLog" ]
+                        }
+                    },
+                    "Authorization": {}
+                }
+            },
+            "Authorization": {}
         }
     },
     "TablesSequence": [
@@ -6287,7 +6438,9 @@
         "CertaintyIndex",
         "IngestJob",
         "SourceCatalogEntry",
-        "CatalogDatasetDefinition"
+        "CatalogDatasetDefinition",
+        "MultiSetProjection",
+        "ProjectionCertaintyLog"
     ],
     "Authorization": {
         "Source": {

@@ -2,7 +2,12 @@ module.exports =
 {
 	loadStoreConnections: function()
 	{
-		return this.api('GET', '/facto/connections');
+		return this.api('GET', '/facto/connections').then(
+			(pResult) =>
+			{
+				this.pict.AppData.Facto.StoreConnections = (pResult && pResult.Connections) ? pResult.Connections : [];
+				return pResult;
+			});
 	},
 
 	createStoreConnection: function(pData)

@@ -137,6 +137,27 @@ CREATE TABLE IF NOT EXISTS CatalogDatasetDefinition (
 	Provisioned INTEGER DEFAULT 0,
 	IDSource INTEGER DEFAULT 0, IDDataset INTEGER DEFAULT 0
 );
+CREATE TABLE IF NOT EXISTS MultiSetProjection (
+	IDMultiSetProjection INTEGER PRIMARY KEY AUTOINCREMENT,
+	GUIDMultiSetProjection TEXT,
+	CreateDate TEXT, CreatingIDUser INTEGER DEFAULT 0,
+	UpdateDate TEXT, UpdatingIDUser INTEGER DEFAULT 0,
+	Deleted INTEGER DEFAULT 0, DeleteDate TEXT, DeletingIDUser INTEGER DEFAULT 0,
+	IDDataset INTEGER DEFAULT 0, IDProjectionStore INTEGER DEFAULT 0,
+	Name TEXT, Description TEXT, PipelineConfiguration TEXT,
+	Active INTEGER DEFAULT 1
+);
+CREATE TABLE IF NOT EXISTS ProjectionCertaintyLog (
+	IDProjectionCertaintyLog INTEGER PRIMARY KEY AUTOINCREMENT,
+	GUIDProjectionCertaintyLog TEXT,
+	CreateDate TEXT, CreatingIDUser INTEGER DEFAULT 0,
+	UpdateDate TEXT, UpdatingIDUser INTEGER DEFAULT 0,
+	Deleted INTEGER DEFAULT 0, DeleteDate TEXT, DeletingIDUser INTEGER DEFAULT 0,
+	IDMultiSetProjection INTEGER DEFAULT 0,
+	RecordGUID TEXT, CertaintyValue REAL DEFAULT 0.5,
+	SourceMappingLabel TEXT, IDProjectionMapping INTEGER DEFAULT 0,
+	Action TEXT, Details TEXT
+);
 CREATE TABLE IF NOT EXISTS StoreConnection (
 	IDStoreConnection INTEGER PRIMARY KEY AUTOINCREMENT,
 	GUIDStoreConnection TEXT,
@@ -516,6 +537,34 @@ class RetoldFacto extends libFableServiceProviderBase
 		}
 
 		return fCallback();
+	}
+
+	/**
+	 * Generate a human-readable hash (slug) from a name string.
+	 *
+	 * Converts "US Census Bureau" → "US-Census-Bureau",
+	 * "ISO 3166 Countries" → "ISO-3166-Countries", etc.
+	 *
+	 * All managers should call this method so hash generation stays consistent
+	 * across the service.  Collision handling (e.g. appending numeric suffixes
+	 * when two distinct names produce the same slug) may be added here in the
+	 * future.
+	 *
+	 * @param {string} pInput - The name to convert
+	 * @returns {string} A clean kebab-case slug, max 128 characters
+	 */
+	generateHash(pInput)
+	{
+		if (!pInput || typeof pInput !== 'string')
+		{
+			return '';
+		}
+		return pInput
+			.replace(/[^a-zA-Z0-9\s\-_]/g, '')
+			.replace(/\s+/g, '-')
+			.replace(/-+/g, '-')
+			.replace(/^-|-$/g, '')
+			.substring(0, 128);
 	}
 
 	onBeforeInitialize(fCallback)

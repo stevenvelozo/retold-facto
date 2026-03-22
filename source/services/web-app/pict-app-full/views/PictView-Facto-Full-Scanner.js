@@ -86,9 +86,6 @@ const _ViewConfiguration =
 		<p>Point the scanner at folder trees containing dataset research (README.md + data/). Discovered datasets can be provisioned into the database individually or in bulk.</p>
 	</div>
 
-	<!-- Status (above everything so it's always visible) -->
-	<div id="Facto-Full-Scanner-Status" class="facto-status" style="display:none;"></div>
-
 	<!-- Summary bar -->
 	<div class="facto-scanner-summary" id="Facto-Full-Scanner-Summary">
 		<span style="color:var(--facto-text-secondary);">No datasets loaded</span>
@@ -149,15 +146,7 @@ class FactoFullScannerView extends libPictView
 		return super.onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent);
 	}
 
-	setStatus(pMessage, pType)
-	{
-		let tmpEl = document.getElementById('Facto-Full-Scanner-Status');
-		if (!tmpEl) return;
-		tmpEl.className = 'facto-status facto-status-' + (pType || 'info');
-		tmpEl.textContent = pMessage;
-		tmpEl.style.display = 'block';
-		tmpEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-	}
+
 
 	loadScannerState()
 	{
@@ -173,7 +162,7 @@ class FactoFullScannerView extends libPictView
 			}).catch(
 			(pError) =>
 			{
-				this.setStatus('Error loading scanner state: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error loading scanner state: ' + pError.message, {type: 'error'});
 			});
 	}
 
@@ -284,15 +273,20 @@ class FactoFullScannerView extends libPictView
 			tmpHtml += '<td>' + tmpDataInfo + '</td>';
 			tmpHtml += '<td>' + tmpStatusBadge + '</td>';
 			tmpHtml += '<td>';
-			if (tmpDS.Status === 'Discovered')
-			{
-				tmpHtml += '<button class="facto-btn facto-btn-success facto-btn-small" onclick="pict.views[\'Facto-Full-Scanner\'].provisionOne(\'' + tmpEscFolder + '\')">Provision</button> ';
-			}
+			tmpHtml += '<div class="facto-row-actions" id="facto-row-actions-' + tmpEscFolder + '">';
+			tmpHtml += '<button class="facto-row-actions-trigger" onclick="pict.views[\'Facto-Full-Scanner\'].toggleRowMenu(event, \'' + tmpEscFolder + '\')" title="Actions">&#8942;</button>';
+			tmpHtml += '<div class="facto-row-actions-menu">';
+			tmpHtml += '<button onclick="pict.views[\'Facto-Full-Scanner\'].viewDetail(\'' + tmpEscFolder + '\'); pict.views[\'Facto-Full-Scanner\'].closeRowMenus();">Detail</button>';
 			if ((tmpDS.Status === 'Provisioned' || tmpDS.Status === 'Discovered') && tmpDS.HasData)
 			{
-				tmpHtml += '<button class="facto-btn facto-btn-primary facto-btn-small" onclick="pict.views[\'Facto-Full-Scanner\'].ingestOne(\'' + tmpEscFolder + '\')">Ingest</button> ';
+				tmpHtml += '<button class="facto-action-primary" onclick="pict.views[\'Facto-Full-Scanner\'].ingestOne(\'' + tmpEscFolder + '\'); pict.views[\'Facto-Full-Scanner\'].closeRowMenus();">Ingest</button>';
 			}
-			tmpHtml += '<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.views[\'Facto-Full-Scanner\'].viewDetail(\'' + tmpEscFolder + '\')">Detail</button>';
+			if (tmpDS.Status === 'Discovered')
+			{
+				tmpHtml += '<button class="facto-action-success" onclick="pict.views[\'Facto-Full-Scanner\'].provisionOne(\'' + tmpEscFolder + '\'); pict.views[\'Facto-Full-Scanner\'].closeRowMenus();">Provision</button>';
+			}
+			tmpHtml += '</div>';
+			tmpHtml += '</div>';
 			tmpHtml += '</td>';
 			tmpHtml += '</tr>';
 		}
@@ -353,70 +347,71 @@ class FactoFullScannerView extends libPictView
 
 		if (!tmpPath)
 		{
-			this.setStatus('Enter a folder path to scan', 'warn');
+			this.pict.views['Pict-Section-Modal'].toast('Enter a folder path to scan', {type: 'warning'});
 			return;
 		}
 
-		this.setStatus('Scanning ' + tmpPath + '...', 'info');
+		this.pict.views['Pict-Section-Modal'].toast('Scanning ' + tmpPath + '...', {type: 'info'});
 
 		this.pict.providers.Facto.addScannerPath(tmpPath).then(
 			(pResponse) =>
 			{
 				if (pResponse && pResponse.Error)
 				{
-					this.setStatus('Error: ' + pResponse.Error, 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Error: ' + pResponse.Error, {type: 'error'});
 					return;
 				}
 				let tmpResult = pResponse.ScanResult || {};
-				this.setStatus('Scanned! Found ' + (tmpResult.DatasetsFound || 0) + ' dataset(s) in ' + (tmpResult.FoldersScanned || 0) + ' folder(s)', 'ok');
+				this.pict.views['Pict-Section-Modal'].toast('Scanned! Found ' + (tmpResult.DatasetsFound || 0) + ' dataset(s) in ' + (tmpResult.FoldersScanned || 0) + ' folder(s)', {type: 'success'});
 				if (tmpPathInput) tmpPathInput.value = '';
 				this.loadScannerState();
 			}).catch(
 			(pError) =>
 			{
-				this.setStatus('Error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error: ' + pError.message, {type: 'error'});
 			});
 	}
 
-	removePath(pPath)
+	async removePath(pPath)
 	{
-		if (!confirm('Remove scan path and its discovered datasets?\n\n' + pPath)) return;
+		let tmpConfirmed = await this.pict.views['Pict-Section-Modal'].confirm('Remove scan path and its discovered datasets?\n\n' + pPath, { title: 'Remove Path', confirmLabel: 'Remove', dangerous: true });
+		if (!tmpConfirmed) return;
 
 		this.pict.providers.Facto.removeScannerPath(pPath).then(
 			(pResponse) =>
 			{
 				if (pResponse && pResponse.Error)
 				{
-					this.setStatus('Error: ' + pResponse.Error, 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Error: ' + pResponse.Error, {type: 'error'});
 					return;
 				}
-				this.setStatus('Path removed', 'ok');
+				this.pict.views['Pict-Section-Modal'].toast('Path removed', {type: 'success'});
 				this.loadScannerState();
 			}).catch(
 			(pError) =>
 			{
-				this.setStatus('Error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error: ' + pError.message, {type: 'error'});
 			});
 	}
 
 	rescanAll()
 	{
-		this.setStatus('Re-scanning all paths...', 'info');
+		this.pict.views['Pict-Section-Modal'].toast('Re-scanning all paths...', {type: 'info'});
 
 		this.pict.providers.Facto.rescanPaths().then(
 			(pResponse) =>
 			{
 				if (pResponse && pResponse.Error)
 				{
-					this.setStatus('Error: ' + pResponse.Error, 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Error: ' + pResponse.Error, {type: 'error'});
 					return;
 				}
-				this.setStatus('Re-scan complete', 'ok');
+				this.pict.views['Pict-Section-Modal'].toast('Re-scan complete', {type: 'success'});
 				this.loadScannerState();
 			}).catch(
 			(pError) =>
 			{
-				this.setStatus('Error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error: ' + pError.message, {type: 'error'});
 			});
 	}
 
@@ -447,36 +442,36 @@ class FactoFullScannerView extends libPictView
 
 	provisionOne(pFolderName)
 	{
-		this.setStatus('Provisioning ' + pFolderName + '...', 'info');
+		this.pict.views['Pict-Section-Modal'].toast('Provisioning ' + pFolderName + '...', {type: 'info'});
 
 		this.pict.providers.Facto.provisionScannerDataset(pFolderName).then(
 			(pResponse) =>
 			{
 				if (pResponse && pResponse.Error)
 				{
-					this.setStatus('Error: ' + pResponse.Error, 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Error: ' + pResponse.Error, {type: 'error'});
 					return;
 				}
-				this.setStatus(
-					'Provisioned ' + pFolderName + ' (Source #' + (pResponse.Source ? pResponse.Source.IDSource : '?') + ', Dataset #' + (pResponse.Dataset ? pResponse.Dataset.IDDataset : '?') + ')', 'ok');
+				this.pict.views['Pict-Section-Modal'].toast(
+					'Provisioned ' + pFolderName + ' (Source #' + (pResponse.Source ? pResponse.Source.IDSource : '?') + ', Dataset #' + (pResponse.Dataset ? pResponse.Dataset.IDDataset : '?') + ')', {type: 'success'});
 				this.loadScannerState();
 			}).catch(
 			(pError) =>
 			{
-				this.setStatus('Error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error: ' + pError.message, {type: 'error'});
 			});
 	}
 
 	ingestOne(pFolderName)
 	{
-		this.setStatus('Ingesting ' + pFolderName + '...', 'info');
+		this.pict.views['Pict-Section-Modal'].toast('Ingesting ' + pFolderName + '...', {type: 'info'});
 
 		this.pict.providers.Facto.ingestScannerDataset(pFolderName).then(
 			(pResponse) =>
 			{
 				if (pResponse && pResponse.Error)
 				{
-					this.setStatus('Ingest error: ' + pResponse.Error, 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Ingest error: ' + pResponse.Error, {type: 'error'});
 					return;
 				}
 				let tmpMsg = 'Ingested ' + pFolderName;
@@ -488,50 +483,52 @@ class FactoFullScannerView extends libPictView
 				{
 					tmpMsg += ' from ' + pResponse.File;
 				}
-				this.setStatus(tmpMsg, 'ok');
+				this.pict.views['Pict-Section-Modal'].toast(tmpMsg, {type: 'success'});
 				this.loadScannerState();
 			}).catch(
 			(pError) =>
 			{
-				this.setStatus('Ingest error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Ingest error: ' + pError.message, {type: 'error'});
 			});
 	}
 
-	provisionSelected()
+	async provisionSelected()
 	{
 		let tmpSelected = this.getSelectedFolderNames();
 		if (tmpSelected.length === 0)
 		{
-			this.setStatus('Select datasets to provision using the checkboxes', 'warn');
+			this.pict.views['Pict-Section-Modal'].toast('Select datasets to provision using the checkboxes', {type: 'warning'});
 			return;
 		}
 
-		if (!confirm('Provision ' + tmpSelected.length + ' selected dataset(s)?')) return;
+		let tmpConfirmed = await this.pict.views['Pict-Section-Modal'].confirm('Provision ' + tmpSelected.length + ' selected dataset(s)?', { title: 'Provision Selected', confirmLabel: 'Provision' });
+		if (!tmpConfirmed) return;
 
 		this.provisionBatch(tmpSelected, 0, 0, 0);
 	}
 
-	provisionAll()
+	async provisionAll()
 	{
-		if (!confirm('Provision ALL discovered datasets?')) return;
+		let tmpConfirmed = await this.pict.views['Pict-Section-Modal'].confirm('Provision ALL discovered datasets?', { title: 'Provision All', confirmLabel: 'Provision All', dangerous: true });
+		if (!tmpConfirmed) return;
 
-		this.setStatus('Provisioning all datasets...', 'info');
+		this.pict.views['Pict-Section-Modal'].toast('Provisioning all datasets...', {type: 'info'});
 
 		this.pict.providers.Facto.provisionAllScannerDatasets().then(
 			(pResponse) =>
 			{
 				if (pResponse && pResponse.Error)
 				{
-					this.setStatus('Error: ' + pResponse.Error, 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Error: ' + pResponse.Error, {type: 'error'});
 					return;
 				}
-				this.setStatus(
-					'Provisioned ' + pResponse.Provisioned + ' of ' + pResponse.Total + ' (' + pResponse.Errors + ' error(s))', 'ok');
+				this.pict.views['Pict-Section-Modal'].toast(
+					'Provisioned ' + pResponse.Provisioned + ' of ' + pResponse.Total + ' (' + pResponse.Errors + ' error(s))', {type: 'success'});
 				this.loadScannerState();
 			}).catch(
 			(pError) =>
 			{
-				this.setStatus('Error: ' + pError.message, 'error');
+				this.pict.views['Pict-Section-Modal'].toast('Error: ' + pError.message, {type: 'error'});
 			});
 	}
 
@@ -539,14 +536,14 @@ class FactoFullScannerView extends libPictView
 	{
 		if (pIndex >= pFolderNames.length)
 		{
-			this.setStatus(
-				'Provisioned ' + pSuccessCount + ' of ' + pFolderNames.length + ' (' + pErrorCount + ' error(s))', 'ok');
+			this.pict.views['Pict-Section-Modal'].toast(
+				'Provisioned ' + pSuccessCount + ' of ' + pFolderNames.length + ' (' + pErrorCount + ' error(s))', {type: 'success'});
 			this.loadScannerState();
 			return;
 		}
 
 		let tmpName = pFolderNames[pIndex];
-		this.setStatus('Provisioning ' + (pIndex + 1) + '/' + pFolderNames.length + ': ' + tmpName + '...', 'info');
+		this.pict.views['Pict-Section-Modal'].toast('Provisioning ' + (pIndex + 1) + '/' + pFolderNames.length + ': ' + tmpName + '...', {type: 'info'});
 
 		this.pict.providers.Facto.provisionScannerDataset(tmpName).then(
 			(pResponse) =>
@@ -565,6 +562,294 @@ class FactoFullScannerView extends libPictView
 				this.provisionBatch(pFolderNames, pIndex + 1, pSuccessCount, pErrorCount + 1);
 			});
 	}
+
+	// ================================================================
+	// Ingestion Plan
+	// ================================================================
+
+	loadIngestionPlan(pFolderName)
+	{
+		let tmpContainer = document.getElementById('facto-scanner-plan-' + pFolderName);
+		if (!tmpContainer) return;
+
+		tmpContainer.innerHTML = '<span style="color:var(--facto-text-secondary);">Loading ingestion plan...</span>';
+
+		this.pict.providers.Facto.loadIngestionPlan(pFolderName).then(
+			(pPlan) =>
+			{
+				if (pPlan && pPlan.Error)
+				{
+					tmpContainer.innerHTML = '<div class="facto-status facto-status-error" style="margin:0;">' + pPlan.Error + '</div>';
+					return;
+				}
+
+				this.renderIngestionPlan(pFolderName, pPlan);
+			}).catch(
+			(pError) =>
+			{
+				tmpContainer.innerHTML = '<div class="facto-status facto-status-error" style="margin:0;">Error: ' + pError.message + '</div>';
+			});
+	}
+
+	renderIngestionPlan(pFolderName, pPlan)
+	{
+		let tmpContainer = document.getElementById('facto-scanner-plan-' + pFolderName);
+		if (!tmpContainer) return;
+
+		let tmpFiles = pPlan.files || [];
+		let tmpEscFolder = this.escapeAttr(pFolderName);
+
+		let tmpHtml = '';
+
+		// Plan metadata
+		tmpHtml += '<div style="font-size:0.85em; color:var(--facto-text-secondary); margin-bottom:0.75em;">';
+		if (pPlan.autoGenerated)
+		{
+			tmpHtml += 'Auto-generated ' + new Date(pPlan.generatedAt).toLocaleString();
+		}
+		else
+		{
+			tmpHtml += 'Modified ' + new Date(pPlan.modifiedAt).toLocaleString();
+		}
+		tmpHtml += ' &mdash; ' + tmpFiles.filter((pF) => pF.include).length + ' of ' + tmpFiles.length + ' file(s) included';
+		tmpHtml += '</div>';
+
+		if (tmpFiles.length === 0)
+		{
+			tmpHtml += '<div class="facto-empty">No data files found for plan generation.</div>';
+			tmpContainer.innerHTML = tmpHtml;
+			return;
+		}
+
+		// Plan table
+		tmpHtml += '<table style="font-size:0.9em;"><thead><tr>';
+		tmpHtml += '<th>Include</th><th>File</th><th>Record Type</th><th>Format</th><th>Order</th><th>Primary Key</th><th>Notes</th>';
+		tmpHtml += '</tr></thead><tbody>';
+
+		for (let i = 0; i < tmpFiles.length; i++)
+		{
+			let tmpFile = tmpFiles[i];
+			let tmpRowStyle = tmpFile.include ? '' : ' style="opacity:0.5;"';
+			tmpHtml += '<tr' + tmpRowStyle + '>';
+
+			// Include checkbox
+			tmpHtml += '<td><input type="checkbox" class="facto-plan-include" data-index="' + i + '"' + (tmpFile.include ? ' checked' : '') + '></td>';
+
+			// File name (read-only)
+			tmpHtml += '<td style="font-family:\'SF Mono\', Consolas, monospace; font-size:0.85em;">' + this.escapeHtml(tmpFile.fileName) + '</td>';
+
+			// Record type (editable)
+			tmpHtml += '<td><input type="text" class="facto-plan-recordtype" data-index="' + i + '" value="' + this.escapeHtml(tmpFile.recordType || '') + '" style="width:120px; font-size:0.9em; padding:2px 4px; margin:0;"></td>';
+
+			// Format (read-only)
+			tmpHtml += '<td><span class="facto-badge facto-badge-primary">' + (tmpFile.format || '') + '</span></td>';
+
+			// Order (editable)
+			tmpHtml += '<td><input type="number" class="facto-plan-order" data-index="' + i + '" value="' + (tmpFile.order || i + 1) + '" style="width:50px; font-size:0.9em; padding:2px 4px; margin:0;" min="1"></td>';
+
+			// Primary key (read-only display)
+			tmpHtml += '<td style="font-size:0.85em; color:var(--facto-text-secondary);">' + this.escapeHtml(tmpFile.primaryKey || '') + '</td>';
+
+			// Notes (editable)
+			tmpHtml += '<td><input type="text" class="facto-plan-notes" data-index="' + i + '" value="' + this.escapeHtml(tmpFile.notes || '') + '" style="width:150px; font-size:0.85em; padding:2px 4px; margin:0;" placeholder="optional"></td>';
+
+			tmpHtml += '</tr>';
+		}
+
+		tmpHtml += '</tbody></table>';
+
+		// Action buttons
+		tmpHtml += '<div style="margin-top:0.75em;">';
+		tmpHtml += '<button class="facto-btn facto-btn-success facto-btn-small" onclick="pict.views[\'Facto-Full-Scanner\'].saveIngestionPlan(\'' + tmpEscFolder + '\')">Save Plan</button> ';
+		tmpHtml += '<button class="facto-btn facto-btn-primary facto-btn-small" onclick="pict.views[\'Facto-Full-Scanner\'].ingestFromPlan(\'' + tmpEscFolder + '\')">Ingest from Plan</button>';
+		tmpHtml += '</div>';
+
+		tmpContainer.innerHTML = tmpHtml;
+
+		// Store the plan for later reference
+		this._currentPlan = pPlan;
+		this._currentPlanFolder = pFolderName;
+	}
+
+	collectPlanFromDOM(pFolderName)
+	{
+		if (!this._currentPlan || this._currentPlanFolder !== pFolderName)
+		{
+			return null;
+		}
+
+		let tmpPlan = JSON.parse(JSON.stringify(this._currentPlan));
+
+		for (let i = 0; i < tmpPlan.files.length; i++)
+		{
+			let tmpIncludeEl = document.querySelector('.facto-plan-include[data-index="' + i + '"]');
+			let tmpRecordTypeEl = document.querySelector('.facto-plan-recordtype[data-index="' + i + '"]');
+			let tmpOrderEl = document.querySelector('.facto-plan-order[data-index="' + i + '"]');
+			let tmpNotesEl = document.querySelector('.facto-plan-notes[data-index="' + i + '"]');
+
+			if (tmpIncludeEl) tmpPlan.files[i].include = tmpIncludeEl.checked;
+			if (tmpRecordTypeEl) tmpPlan.files[i].recordType = tmpRecordTypeEl.value;
+			if (tmpOrderEl) tmpPlan.files[i].order = parseInt(tmpOrderEl.value, 10) || (i + 1);
+			if (tmpNotesEl) tmpPlan.files[i].notes = tmpNotesEl.value;
+		}
+
+		return tmpPlan;
+	}
+
+	saveIngestionPlan(pFolderName)
+	{
+		let tmpPlan = this.collectPlanFromDOM(pFolderName);
+		if (!tmpPlan)
+		{
+			this.pict.views['Pict-Section-Modal'].toast('No plan loaded to save', {type: 'warning'});
+			return;
+		}
+
+		this.pict.views['Pict-Section-Modal'].toast('Saving ingestion plan...', {type: 'info'});
+
+		this.pict.providers.Facto.saveIngestionPlan(pFolderName, tmpPlan).then(
+			(pResponse) =>
+			{
+				if (pResponse && pResponse.Error)
+				{
+					this.pict.views['Pict-Section-Modal'].toast('Save error: ' + pResponse.Error, {type: 'error'});
+					return;
+				}
+				this.pict.views['Pict-Section-Modal'].toast('Ingestion plan saved for ' + pFolderName, {type: 'success'});
+				if (pResponse.Plan)
+				{
+					this._currentPlan = pResponse.Plan;
+					this.renderIngestionPlan(pFolderName, pResponse.Plan);
+				}
+			}).catch(
+			(pError) =>
+			{
+				this.pict.views['Pict-Section-Modal'].toast('Save error: ' + pError.message, {type: 'error'});
+			});
+	}
+
+	async ingestFromPlan(pFolderName)
+	{
+		// If we have a plan loaded in the DOM, save it first
+		let tmpPlan = this.collectPlanFromDOM(pFolderName);
+		if (tmpPlan)
+		{
+			let tmpIncluded = tmpPlan.files.filter((pF) => pF.include);
+			let tmpConfirmed = await this.pict.views['Pict-Section-Modal'].confirm('Ingest ' + tmpIncluded.length + ' file(s) from the ingestion plan for ' + pFolderName + '?', { title: 'Ingest from Plan', confirmLabel: 'Ingest' });
+			if (!tmpConfirmed)
+			{
+				return;
+			}
+
+			// Save changes first, then ingest
+			this.pict.views['Pict-Section-Modal'].toast('Saving plan and starting ingestion...', {type: 'info'});
+
+			this.pict.providers.Facto.saveIngestionPlan(pFolderName, tmpPlan).then(
+				() =>
+				{
+					return this.pict.providers.Facto.ingestScannerDataset(pFolderName, { useIngestionPlan: true });
+				}).then(
+				(pResponse) =>
+				{
+					if (pResponse && pResponse.Error)
+					{
+						this.pict.views['Pict-Section-Modal'].toast('Ingest error: ' + pResponse.Error, {type: 'error'});
+						return;
+					}
+					let tmpMsg = 'Ingested ' + (pResponse.FilesIngested || 0) + ' file(s), '
+						+ (pResponse.TotalRecords || 0) + ' records';
+					if (pResponse.FilesErrored > 0)
+					{
+						tmpMsg += ' (' + pResponse.FilesErrored + ' error(s))';
+					}
+					this.pict.views['Pict-Section-Modal'].toast(tmpMsg, {type: 'success'});
+					this.loadScannerState();
+				}).catch(
+				(pError) =>
+				{
+					this.pict.views['Pict-Section-Modal'].toast('Ingest error: ' + pError.message, {type: 'error'});
+				});
+		}
+		else
+		{
+			// No plan loaded — ingest with auto-generated plan
+			let tmpConfirmed2 = await this.pict.views['Pict-Section-Modal'].confirm('Ingest ' + pFolderName + ' using its ingestion plan?', { title: 'Ingest from Plan', confirmLabel: 'Ingest' });
+			if (!tmpConfirmed2)
+			{
+				return;
+			}
+
+			this.pict.views['Pict-Section-Modal'].toast('Ingesting from plan...', {type: 'info'});
+
+			this.pict.providers.Facto.ingestScannerDataset(pFolderName, { useIngestionPlan: true }).then(
+				(pResponse) =>
+				{
+					if (pResponse && pResponse.Error)
+					{
+						this.pict.views['Pict-Section-Modal'].toast('Ingest error: ' + pResponse.Error, {type: 'error'});
+						return;
+					}
+					let tmpMsg = 'Ingested ' + (pResponse.FilesIngested || 0) + ' file(s), '
+						+ (pResponse.TotalRecords || 0) + ' records';
+					if (pResponse.FilesErrored > 0)
+					{
+						tmpMsg += ' (' + pResponse.FilesErrored + ' error(s))';
+					}
+					this.pict.views['Pict-Section-Modal'].toast(tmpMsg, {type: 'success'});
+					this.loadScannerState();
+				}).catch(
+				(pError) =>
+				{
+					this.pict.views['Pict-Section-Modal'].toast('Ingest error: ' + pError.message, {type: 'error'});
+				});
+		}
+	}
+
+	// ================================================================
+	// Row Actions Menu
+	// ================================================================
+
+	toggleRowMenu(pEvent, pFolderName)
+	{
+		pEvent.stopPropagation();
+		let tmpEl = document.getElementById('facto-row-actions-' + pFolderName);
+		if (!tmpEl) return;
+
+		let tmpWasOpen = tmpEl.classList.contains('open');
+
+		// Close all open menus first
+		this.closeRowMenus();
+
+		if (!tmpWasOpen)
+		{
+			tmpEl.classList.add('open');
+
+			// Close on outside click
+			let tmpCloseHandler = (pCloseEvent) =>
+			{
+				if (!tmpEl.contains(pCloseEvent.target))
+				{
+					tmpEl.classList.remove('open');
+					document.removeEventListener('click', tmpCloseHandler);
+				}
+			};
+			// Defer so the current click doesn't immediately close it
+			setTimeout(() => { document.addEventListener('click', tmpCloseHandler); }, 0);
+		}
+	}
+
+	closeRowMenus()
+	{
+		let tmpOpenMenus = document.querySelectorAll('.facto-row-actions.open');
+		for (let i = 0; i < tmpOpenMenus.length; i++)
+		{
+			tmpOpenMenus[i].classList.remove('open');
+		}
+	}
+
+	// ================================================================
+	// Detail Panel
+	// ================================================================
 
 	viewDetail(pFolderName)
 	{
@@ -671,6 +956,18 @@ class FactoFullScannerView extends libPictView
 					tmpHtml += '</div>';
 				}
 
+				// Ingestion Plan
+				if (pDS.HasData && pDS.DataFiles && pDS.DataFiles.length > 0)
+				{
+					tmpHtml += '<div style="margin-bottom:1em; padding-top:1em; border-top:1px solid var(--facto-border-subtle, #eee);">';
+					tmpHtml += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5em;">';
+					tmpHtml += '<strong>Ingestion Plan</strong>';
+					tmpHtml += '<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.views[\'Facto-Full-Scanner\'].loadIngestionPlan(\'' + this.escapeAttr(pFolderName) + '\')">View / Generate Plan</button>';
+					tmpHtml += '</div>';
+					tmpHtml += '<div id="facto-scanner-plan-' + this.escapeAttr(pFolderName) + '"></div>';
+					tmpHtml += '</div>';
+				}
+
 				// Errors
 				if (pDS.Errors && pDS.Errors.length > 0)
 				{
@@ -691,7 +988,8 @@ class FactoFullScannerView extends libPictView
 				}
 				if (pDS.HasData)
 				{
-					tmpHtml += '<button class="facto-btn facto-btn-primary" onclick="pict.views[\'Facto-Full-Scanner\'].ingestOne(\'' + this.escapeAttr(pFolderName) + '\')">Ingest Data</button> ';
+					tmpHtml += '<button class="facto-btn facto-btn-primary" onclick="pict.views[\'Facto-Full-Scanner\'].ingestOne(\'' + this.escapeAttr(pFolderName) + '\')">Ingest Single</button> ';
+					tmpHtml += '<button class="facto-btn facto-btn-primary" onclick="pict.views[\'Facto-Full-Scanner\'].ingestFromPlan(\'' + this.escapeAttr(pFolderName) + '\')">Ingest from Plan</button> ';
 				}
 				if (pDS.IDSource)
 				{

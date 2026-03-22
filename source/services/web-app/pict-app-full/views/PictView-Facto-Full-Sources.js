@@ -46,7 +46,6 @@ const _ViewConfiguration =
 		<button class="facto-btn facto-btn-primary" onclick="{~P~}.views['Facto-Full-Sources'].addSource()">Add Source</button>
 	</div>
 
-	<div id="Facto-Full-Sources-Status" class="facto-status" style="display:none;"></div>
 </div>
 `
 		}
@@ -73,19 +72,16 @@ class FactoFullSourcesView extends libPictView
 	onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent)
 	{
 		this.pict.providers.Facto.loadSources().then(
-			() => { this.refreshList(); });
+			() => { this.refreshList(); }).catch(
+			(pError) =>
+			{
+				this.pict.views['Pict-Section-Modal'].toast('Error loading sources: ' + pError.message, {type: 'error'});
+			});
 
 		return super.onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent);
 	}
 
-	setStatus(pMessage, pType)
-	{
-		let tmpEl = document.getElementById('Facto-Full-Sources-Status');
-		if (!tmpEl) return;
-		tmpEl.className = 'facto-status facto-status-' + (pType || 'info');
-		tmpEl.textContent = pMessage;
-		tmpEl.style.display = 'block';
-	}
+
 
 	refreshList()
 	{
@@ -130,18 +126,18 @@ class FactoFullSourcesView extends libPictView
 
 		tmpPromise.then(
 			() => { return this.pict.providers.Facto.loadSources(); }).then(
-			() => { this.refreshList(); this.setStatus(pActivate ? 'Source activated' : 'Source deactivated', 'ok'); });
+			() => { this.refreshList(); this.pict.views['Pict-Section-Modal'].toast(pActivate ? 'Source activated' : 'Source deactivated', {type: 'success'}); });
 	}
 
 	addSource()
 	{
-		let tmpName = (document.getElementById('Facto-Full-Source-Name') || {}).value || '';
-		let tmpType = (document.getElementById('Facto-Full-Source-Type') || {}).value || '';
-		let tmpURL = (document.getElementById('Facto-Full-Source-URL') || {}).value || '';
+		let tmpName = this.pict.providers.FactoUI.getVal('Facto-Full-Source-Name');
+		let tmpType = this.pict.providers.FactoUI.getVal('Facto-Full-Source-Type');
+		let tmpURL = this.pict.providers.FactoUI.getVal('Facto-Full-Source-URL');
 
 		if (!tmpName)
 		{
-			this.setStatus('Source name is required', 'warn');
+			this.pict.views['Pict-Section-Modal'].toast('Source name is required', {type: 'warning'});
 			return;
 		}
 
@@ -150,14 +146,14 @@ class FactoFullSourcesView extends libPictView
 			{
 				if (pResponse && pResponse.IDSource)
 				{
-					this.setStatus('Source created: ' + tmpName, 'ok');
+					this.pict.views['Pict-Section-Modal'].toast('Source created: ' + tmpName, {type: 'success'});
 					document.getElementById('Facto-Full-Source-Name').value = '';
 					document.getElementById('Facto-Full-Source-URL').value = '';
 					return this.pict.providers.Facto.loadSources();
 				}
 				else
 				{
-					this.setStatus('Error creating source', 'error');
+					this.pict.views['Pict-Section-Modal'].toast('Error creating source', {type: 'error'});
 				}
 			}).then(
 			() => { this.refreshList(); });

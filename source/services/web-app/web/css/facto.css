@@ -389,6 +389,88 @@ tbody tr:hover {
 }
 
 /* ================================================================
+   Row Actions Dropdown (hover hamburger menu)
+   ================================================================ */
+
+.facto-row-actions {
+	position: relative;
+	display: inline-block;
+}
+
+.facto-row-actions-trigger {
+	display: none;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	padding: 0;
+	border: 1px solid var(--facto-border);
+	border-radius: 6px;
+	background: var(--facto-bg-surface);
+	color: var(--facto-text-secondary);
+	cursor: pointer;
+	font-size: 1em;
+	line-height: 1;
+	transition: background 0.15s, border-color 0.15s;
+}
+
+.facto-row-actions-trigger:hover {
+	background: var(--facto-bg-hover);
+	border-color: var(--facto-text-secondary);
+}
+
+tr:hover .facto-row-actions-trigger {
+	display: inline-flex;
+}
+
+.facto-row-actions-menu {
+	display: none;
+	position: absolute;
+	right: 0;
+	top: 100%;
+	z-index: 100;
+	min-width: 140px;
+	margin-top: 2px;
+	padding: 4px 0;
+	background: var(--facto-bg-surface);
+	border: 1px solid var(--facto-border);
+	border-radius: 6px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.facto-row-actions.open .facto-row-actions-menu {
+	display: block;
+}
+
+.facto-row-actions-menu button {
+	display: block;
+	width: 100%;
+	padding: 6px 12px;
+	border: none;
+	border-radius: 0;
+	background: transparent;
+	color: var(--facto-text);
+	font-size: 0.82em;
+	font-weight: 500;
+	text-align: left;
+	cursor: pointer;
+	transition: background 0.1s;
+}
+
+.facto-row-actions-menu button:hover {
+	background: var(--facto-bg-hover);
+	opacity: 1;
+}
+
+.facto-row-actions-menu button.facto-action-success {
+	color: var(--facto-success);
+}
+
+.facto-row-actions-menu button.facto-action-primary {
+	color: var(--facto-brand);
+}
+
+/* ================================================================
    Responsive
    ================================================================ */
 

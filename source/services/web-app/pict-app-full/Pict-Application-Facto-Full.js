@@ -1,5 +1,6 @@
 const libPictApplication = require('pict-application');
 const libPictRouter = require('pict-router');
+const libPictSectionModal = require('pict-section-modal');
 
 const THEME_LIST =
 [
@@ -50,6 +51,9 @@ class FactoFullApplication extends libPictApplication
 		// calls resolve() explicitly after the DOM is ready.
 		this.pict.settings.RouterSkipRouteResolveOnAdd = true;
 
+		// Register modal/notification service
+		this.pict.addView('Pict-Section-Modal', libPictSectionModal.default_configuration, libPictSectionModal);
+
 		// Register providers
 		this.pict.addProvider('Facto', libProvider.default_configuration, libProvider);
 		this.pict.addProvider('FactoUI', libUIProvider.default_configuration, libUIProvider);
@@ -96,6 +100,7 @@ class FactoFullApplication extends libPictApplication
 			Datasets: [],
 			Records: [],
 			IngestJobs: [],
+			Projections: [],
 			SelectedSource: null,
 			SelectedDataset: null,
 			RecordPage: 0,
