@@ -8,6 +8,7 @@
  * @author Steven Velozo <steven@velozo.com>
  */
 const libFableServiceProviderBase = require('fable-serviceproviderbase');
+const libMeadowIntegration = require('meadow-integration');
 const libCrypto = require('crypto');
 const libFs = require('fs');
 const libPath = require('path');
@@ -30,6 +31,8 @@ class RetoldFactoIngestEngine extends libFableServiceProviderBase
 		super(pFable, tmpOptions, pServiceHash);
 
 		this.serviceType = 'RetoldFactoIngestEngine';
+
+		this.fable.addAndInstantiateServiceTypeIfNotExists('MeadowIntegrationFileParser', libMeadowIntegration.FileParser);
 	}
 
 	/**
@@ -280,10 +283,25 @@ class RetoldFactoIngestEngine extends libFableServiceProviderBase
 	}
 
 	/**
+	 * Navigate a nested object using a dot-separated path with optional
+	 * array index notation (e.g. "Results.series[0].data").
+	 * Delegates to MeadowIntegrationFileParserJSON.
+	 *
+	 * @param {object} pObject - The object to navigate
+	 * @param {string} pPath - Dot-separated path, segments may include [n]
+	 * @returns {*} The resolved value, or null if the path is invalid
+	 */
+	_resolveDataPath(pObject, pPath)
+	{
+		return this.fable.MeadowIntegrationFileParserJSON._resolveDataPath(pObject, pPath);
+	}
+
+	/**
 	 * Parse a CSV string into an array of objects.
+	 * Delegates to MeadowIntegrationFileParser.
 	 *
 	 * @param {string} pCSVContent - Raw CSV text
-	 * @param {object} [pOptions] - Options: delimiter, columns (boolean), stripCommentLines (boolean)
+	 * @param {object} [pOptions] - Options: delimiter, stripCommentLines (boolean)
 	 * @param {function} fCallback - Callback(pError, pRecords)
 	 */
 	parseCSV(pCSVContent, pOptions, fCallback)
@@ -294,37 +312,22 @@ class RetoldFactoIngestEngine extends libFableServiceProviderBase
 			pOptions = {};
 		}
 
-		let tmpContent = pCSVContent;
-
-		// Strip comment lines (e.g. USGS RDB format uses # prefix for metadata)
+		let tmpParseOptions = { format: 'csv' };
+		if (pOptions && pOptions.delimiter)
+		{
+			tmpParseOptions.delimiter = pOptions.delimiter;
+		}
 		if (pOptions && pOptions.stripCommentLines)
 		{
-			tmpContent = tmpContent.split('\n')
-				.filter((pLine) => !pLine.startsWith('#'))
-				.join('\n');
+			tmpParseOptions.commentPrefix = '#';
 		}
 
-		let tmpParseOptions = {
-			columns: (pOptions && pOptions.columns !== undefined) ? pOptions.columns : true,
-			skip_empty_lines: true,
-			trim: true,
-			delimiter: (pOptions && pOptions.delimiter) ? pOptions.delimiter : ','
-		};
-
-		try
-		{
-			let libCSVParseSync = require('csv-parse/sync');
-			let tmpRecords = libCSVParseSync.parse(tmpContent, tmpParseOptions);
-			return fCallback(null, tmpRecords);
-		}
-		catch (pError)
-		{
-			return fCallback(pError);
-		}
+		return this.fable.MeadowIntegrationFileParser.parseContent(pCSVContent, tmpParseOptions, fCallback);
 	}
 
 	/**
 	 * Parse an XML string into an array of objects.
+	 * Delegates to MeadowIntegrationFileParser.
 	 *
 	 * @param {string} pXMLContent - Raw XML text
 	 * @param {object} [pOptions] - Options: recordPath (dot-separated path to records array)
@@ -338,96 +341,13 @@ class RetoldFactoIngestEngine extends libFableServiceProviderBase
 			pOptions = {};
 		}
 
-		try
-		{
-			let { XMLParser } = require('fast-xml-parser');
-			let tmpParser = new XMLParser(
-				{
-					ignoreAttributes: false,
-					attributeNamePrefix: '@_'
-				});
-			let tmpParsed = tmpParser.parse(pXMLContent);
-
-			let tmpRecords = null;
-
-			// If recordPath is given, navigate to it
-			if (pOptions && pOptions.recordPath)
-			{
-				let tmpParts = pOptions.recordPath.split('.');
-				let tmpCurrent = tmpParsed;
-				for (let i = 0; i < tmpParts.length; i++)
-				{
-					if (tmpCurrent && typeof tmpCurrent === 'object' && tmpParts[i] in tmpCurrent)
-					{
-						tmpCurrent = tmpCurrent[tmpParts[i]];
-					}
-					else
-					{
-						return fCallback(new Error(`recordPath '${pOptions.recordPath}' not found in XML`));
-					}
-				}
-				tmpRecords = Array.isArray(tmpCurrent) ? tmpCurrent : [tmpCurrent];
-			}
-			else
-			{
-				// Smart extraction: walk tree looking for first array-valued key
-				tmpRecords = this._extractXMLRecords(tmpParsed);
-			}
-
-			if (!tmpRecords)
-			{
-				// Wrap the entire parsed result as a single record
-				tmpRecords = [tmpParsed];
-			}
-
-			return fCallback(null, tmpRecords);
-		}
-		catch (pError)
-		{
-			return fCallback(pError);
-		}
-	}
-
-	/**
-	 * Walk an XML-parsed object looking for the first array of records.
-	 * @private
-	 */
-	_extractXMLRecords(pObject)
-	{
-		if (!pObject || typeof pObject !== 'object')
-		{
-			return null;
-		}
-
-		let tmpKeys = Object.keys(pObject);
-		for (let i = 0; i < tmpKeys.length; i++)
-		{
-			let tmpValue = pObject[tmpKeys[i]];
-			if (Array.isArray(tmpValue) && tmpValue.length > 0 && typeof tmpValue[0] === 'object')
-			{
-				return tmpValue;
-			}
-		}
-
-		// Recurse one level deeper
-		for (let i = 0; i < tmpKeys.length; i++)
-		{
-			let tmpValue = pObject[tmpKeys[i]];
-			if (typeof tmpValue === 'object' && !Array.isArray(tmpValue))
-			{
-				let tmpResult = this._extractXMLRecords(tmpValue);
-				if (tmpResult)
-				{
-					return tmpResult;
-				}
-			}
-		}
-
-		return null;
+		let tmpParseOptions = Object.assign({ format: 'xml' }, pOptions);
+		return this.fable.MeadowIntegrationFileParser.parseContent(pXMLContent, tmpParseOptions, fCallback);
 	}
 
 	/**
 	 * Parse an Excel buffer into an array of objects.
+	 * Delegates to MeadowIntegrationFileParser.
 	 *
 	 * @param {Buffer} pExcelBuffer - Excel file data as a Buffer
 	 * @param {object} [pOptions] - Options: sheet (sheet name or index)
@@ -441,44 +361,25 @@ class RetoldFactoIngestEngine extends libFableServiceProviderBase
 			pOptions = {};
 		}
 
-		try
+		let tmpParseOptions = { format: 'xlsx' };
+		if (pOptions && pOptions.sheet !== undefined)
 		{
-			let libXLSX = require('xlsx');
-			let tmpWorkbook = libXLSX.read(pExcelBuffer, { type: 'buffer' });
-
-			let tmpSheetName;
-			if (pOptions && pOptions.sheet !== undefined)
+			if (typeof pOptions.sheet === 'number')
 			{
-				if (typeof pOptions.sheet === 'number')
-				{
-					tmpSheetName = tmpWorkbook.SheetNames[pOptions.sheet];
-				}
-				else
-				{
-					tmpSheetName = pOptions.sheet;
-				}
+				tmpParseOptions.sheetIndex = pOptions.sheet;
 			}
 			else
 			{
-				tmpSheetName = tmpWorkbook.SheetNames[0];
+				tmpParseOptions.sheetName = pOptions.sheet;
 			}
-
-			if (!tmpSheetName || !tmpWorkbook.Sheets[tmpSheetName])
-			{
-				return fCallback(new Error(`Sheet '${tmpSheetName}' not found in workbook`));
-			}
-
-			let tmpRecords = libXLSX.utils.sheet_to_json(tmpWorkbook.Sheets[tmpSheetName]);
-			return fCallback(null, tmpRecords);
 		}
-		catch (pError)
-		{
-			return fCallback(pError);
-		}
+
+		return this.fable.MeadowIntegrationFileParser.parseContent(pExcelBuffer, tmpParseOptions, fCallback);
 	}
 
 	/**
 	 * Parse fixed-width text into an array of objects.
+	 * Delegates to MeadowIntegrationFileParser.
 	 *
 	 * @param {string} pContent - Fixed-width text content
 	 * @param {object} pOptions - Required: columns (array of {name, start, width}), optional: skipLines
@@ -492,101 +393,13 @@ class RetoldFactoIngestEngine extends libFableServiceProviderBase
 			pOptions = {};
 		}
 
-		if (!pOptions || !pOptions.columns || !Array.isArray(pOptions.columns) || pOptions.columns.length === 0)
-		{
-			return fCallback(new Error('parseFixedWidth requires pOptions.columns array of {name, start, width}'));
-		}
-
-		try
-		{
-			let tmpLines = pContent.split('\n');
-			let tmpSkipLines = (pOptions.skipLines) ? parseInt(pOptions.skipLines, 10) : 0;
-			let tmpRecords = [];
-
-			for (let i = tmpSkipLines; i < tmpLines.length; i++)
-			{
-				let tmpLine = tmpLines[i];
-				// Skip blank lines
-				if (!tmpLine || tmpLine.trim().length === 0)
-				{
-					continue;
-				}
-
-				let tmpRecord = {};
-				for (let j = 0; j < pOptions.columns.length; j++)
-				{
-					let tmpCol = pOptions.columns[j];
-					// start is 1-based
-					let tmpStartIdx = (tmpCol.start - 1);
-					let tmpValue = tmpLine.substring(tmpStartIdx, tmpStartIdx + tmpCol.width).trim();
-					tmpRecord[tmpCol.name] = tmpValue;
-				}
-				tmpRecords.push(tmpRecord);
-			}
-
-			return fCallback(null, tmpRecords);
-		}
-		catch (pError)
-		{
-			return fCallback(pError);
-		}
-	}
-
-	/**
-	 * Navigate a nested object using a dot-separated path with optional
-	 * array index notation (e.g. "Results.series[0].data").
-	 *
-	 * @param {object} pObject - The object to navigate
-	 * @param {string} pPath - Dot-separated path, segments may include [n]
-	 * @returns {*} The resolved value, or null if the path is invalid
-	 * @private
-	 */
-	_resolveDataPath(pObject, pPath)
-	{
-		if (!pPath || typeof pPath !== 'string')
-		{
-			return pObject;
-		}
-
-		let tmpSegments = pPath.split('.');
-		let tmpCurrent = pObject;
-
-		for (let i = 0; i < tmpSegments.length; i++)
-		{
-			if (tmpCurrent === null || tmpCurrent === undefined || typeof tmpCurrent !== 'object')
-			{
-				return null;
-			}
-
-			let tmpSegment = tmpSegments[i];
-			// Check for array index notation: name[index]
-			let tmpMatch = tmpSegment.match(/^([^\[]+)\[(\d+)\]$/);
-			if (tmpMatch)
-			{
-				let tmpKey = tmpMatch[1];
-				let tmpIndex = parseInt(tmpMatch[2], 10);
-				if (!(tmpKey in tmpCurrent) || !Array.isArray(tmpCurrent[tmpKey]))
-				{
-					return null;
-				}
-				tmpCurrent = tmpCurrent[tmpKey][tmpIndex];
-			}
-			else
-			{
-				if (!(tmpSegment in tmpCurrent))
-				{
-					return null;
-				}
-				tmpCurrent = tmpCurrent[tmpSegment];
-			}
-		}
-
-		return tmpCurrent;
+		let tmpParseOptions = Object.assign({ format: 'fixedwidth' }, pOptions);
+		return this.fable.MeadowIntegrationFileParser.parseContent(pContent, tmpParseOptions, fCallback);
 	}
 
 	/**
 	 * Parse a JSON string into an array of objects.
-	 * Handles both arrays and single objects.
+	 * Delegates to MeadowIntegrationFileParser.
 	 *
 	 * @param {string} pJSONContent - Raw JSON text
 	 * @param {object} [pOptions] - Options: dataPath (dot-separated path to records array)
@@ -600,60 +413,13 @@ class RetoldFactoIngestEngine extends libFableServiceProviderBase
 			pOptions = {};
 		}
 
-		try
+		let tmpParseOptions = { format: 'json' };
+		if (pOptions && pOptions.dataPath)
 		{
-			let tmpParsed = JSON.parse(pJSONContent);
-
-			// If a dataPath is specified, navigate to it first
-			if (pOptions && pOptions.dataPath)
-			{
-				let tmpResolved = this._resolveDataPath(tmpParsed, pOptions.dataPath);
-				if (tmpResolved === null || tmpResolved === undefined)
-				{
-					return fCallback(new Error(`dataPath '${pOptions.dataPath}' not found in JSON`));
-				}
-				if (Array.isArray(tmpResolved))
-				{
-					return fCallback(null, tmpResolved);
-				}
-				if (typeof tmpResolved === 'object')
-				{
-					return fCallback(null, [tmpResolved]);
-				}
-				return fCallback(new Error(`dataPath '${pOptions.dataPath}' resolved to a non-object value`));
-			}
-
-			if (Array.isArray(tmpParsed))
-			{
-				return fCallback(null, tmpParsed);
-			}
-			else if (typeof tmpParsed === 'object' && tmpParsed !== null)
-			{
-				// If it has a data/records/rows key, extract that
-				if (Array.isArray(tmpParsed.data))
-				{
-					return fCallback(null, tmpParsed.data);
-				}
-				if (Array.isArray(tmpParsed.records))
-				{
-					return fCallback(null, tmpParsed.records);
-				}
-				if (Array.isArray(tmpParsed.rows))
-				{
-					return fCallback(null, tmpParsed.rows);
-				}
-				// Single object -- wrap in array
-				return fCallback(null, [tmpParsed]);
-			}
-			else
-			{
-				return fCallback(new Error('JSON content is not an object or array'));
-			}
+			tmpParseOptions.rootPath = pOptions.dataPath;
 		}
-		catch (pError)
-		{
-			return fCallback(pError);
-		}
+
+		return this.fable.MeadowIntegrationFileParser.parseContent(pJSONContent, tmpParseOptions, fCallback);
 	}
 
 	/**
@@ -935,22 +701,29 @@ class RetoldFactoIngestEngine extends libFableServiceProviderBase
 				});
 		};
 
+		let tmpParserOptions = { format: tmpFormat };
+
 		if (tmpFormat === 'csv')
 		{
-			this.parseCSV(tmpContentString, { delimiter: tmpDelimiter, stripCommentLines: tmpStripComments }, tmpParseCallback);
+			tmpParserOptions.delimiter = tmpDelimiter;
+			if (tmpStripComments) tmpParserOptions.commentPrefix = '#';
+			this.fable.MeadowIntegrationFileParser.parseContent(tmpContentString, tmpParserOptions, tmpParseCallback);
 		}
 		else if (tmpFormat === 'json')
 		{
-			this.parseJSON(tmpContentString, { dataPath: tmpDataPath }, tmpParseCallback);
+			if (tmpDataPath) tmpParserOptions.rootPath = tmpDataPath;
+			this.fable.MeadowIntegrationFileParser.parseContent(tmpContentString, tmpParserOptions, tmpParseCallback);
 		}
 		else if (tmpFormat === 'xml')
 		{
-			this.parseXML(tmpContentString, { recordPath: tmpRecordPath }, tmpParseCallback);
+			if (tmpRecordPath) tmpParserOptions.recordPath = tmpRecordPath;
+			this.fable.MeadowIntegrationFileParser.parseContent(tmpContentString, tmpParserOptions, tmpParseCallback);
 		}
 		else if (tmpFormat === 'excel')
 		{
+			tmpParserOptions.format = 'xlsx';
 			let tmpBuffer = Buffer.isBuffer(pContent) ? pContent : Buffer.from(pContent, 'base64');
-			this.parseExcel(tmpBuffer, {}, tmpParseCallback);
+			this.fable.MeadowIntegrationFileParser.parseContent(tmpBuffer, tmpParserOptions, tmpParseCallback);
 		}
 		else if (tmpFormat === 'fixed-width' || tmpFormat === 'other')
 		{
@@ -958,7 +731,9 @@ class RetoldFactoIngestEngine extends libFableServiceProviderBase
 			{
 				return fCallback(new Error('Columns specification required for fixed-width format'));
 			}
-			this.parseFixedWidth(tmpContentString, { columns: tmpColumns }, tmpParseCallback);
+			tmpParserOptions.format = 'fixedwidth';
+			tmpParserOptions.columns = tmpColumns;
+			this.fable.MeadowIntegrationFileParser.parseContent(tmpContentString, tmpParserOptions, tmpParseCallback);
 		}
 		else
 		{
@@ -1207,25 +982,39 @@ class RetoldFactoIngestEngine extends libFableServiceProviderBase
 				});
 		};
 
+		let tmpParserOptions = { format: tmpFormat };
+
 		if (tmpFormat === 'csv')
 		{
-			this.parseCSV(tmpContent, { delimiter: tmpDelimiter, stripCommentLines: tmpStripComments }, tmpParseCallback);
+			tmpParserOptions.delimiter = tmpDelimiter;
+			if (tmpStripComments) tmpParserOptions.commentPrefix = '#';
+			this.fable.MeadowIntegrationFileParser.parseContent(tmpContent, tmpParserOptions, tmpParseCallback);
 		}
 		else if (tmpFormat === 'json')
 		{
-			this.parseJSON(tmpContent, tmpParseCallback);
+			this.fable.MeadowIntegrationFileParser.parseContent(tmpContent, tmpParserOptions, tmpParseCallback);
 		}
 		else if (tmpFormat === 'xml')
 		{
-			this.parseXML(tmpContent, pOptions || {}, tmpParseCallback);
+			if (pOptions && pOptions.recordPath) tmpParserOptions.recordPath = pOptions.recordPath;
+			this.fable.MeadowIntegrationFileParser.parseContent(tmpContent, tmpParserOptions, tmpParseCallback);
 		}
 		else if (tmpFormat === 'excel')
 		{
-			this.parseExcel(tmpContent, pOptions || {}, tmpParseCallback);
+			tmpParserOptions.format = 'xlsx';
+			if (pOptions && pOptions.sheet !== undefined)
+			{
+				if (typeof pOptions.sheet === 'number') tmpParserOptions.sheetIndex = pOptions.sheet;
+				else tmpParserOptions.sheetName = pOptions.sheet;
+			}
+			this.fable.MeadowIntegrationFileParser.parseContent(tmpContent, tmpParserOptions, tmpParseCallback);
 		}
 		else if (tmpFormat === 'fixed-width')
 		{
-			this.parseFixedWidth(tmpContent, pOptions || {}, tmpParseCallback);
+			tmpParserOptions.format = 'fixedwidth';
+			if (pOptions && pOptions.columns) tmpParserOptions.columns = pOptions.columns;
+			if (pOptions && pOptions.skipLines !== undefined) tmpParserOptions.skipLines = pOptions.skipLines;
+			this.fable.MeadowIntegrationFileParser.parseContent(tmpContent, tmpParserOptions, tmpParseCallback);
 		}
 		else
 		{

@@ -1000,6 +1000,92 @@ class RetoldFactoSourceFolderScanner extends libFableServiceProviderBase
 		return tmpNonArchive.length > 0 ? tmpNonArchive[0] : null;
 	}
 
+	/**
+	 * Extract any archive files found in a dataset's DataFiles list.
+	 * After extraction, re-scans the data directory and updates DataFiles
+	 * on the dataset object so subsequent selection/planning sees the
+	 * extracted contents.
+	 *
+	 * Requires RetoldFactoDataLakeService to be available on fable.
+	 * If it is not, extraction is skipped with a warning.
+	 *
+	 * @param {object} pDataset - The discovered dataset object (mutated in place)
+	 * @param {function} fCallback - Callback(pError, pResult)
+	 */
+	extractArchivesIfNeeded(pDataset, fCallback)
+	{
+		let tmpArchiveFiles = (pDataset.DataFiles || []).filter(
+			(pFile) => pFile.Format === 'archive');
+
+		if (tmpArchiveFiles.length === 0)
+		{
+			return fCallback(null, { ExtractedCount: 0 });
+		}
+
+		if (!this.fable.RetoldFactoDataLakeService)
+		{
+			this.fable.log.warn(`SourceFolderScanner: archives found in ${pDataset.FolderName} but DataLakeService not available — skipping extraction`);
+			return fCallback(null, { ExtractedCount: 0 });
+		}
+
+		let tmpDataLake = this.fable.RetoldFactoDataLakeService;
+		let tmpDataDir = libPath.join(pDataset.FolderPath, 'data');
+		let tmpSelf = this;
+		let tmpExtracted = 0;
+
+		this.fable.log.info(`SourceFolderScanner: extracting ${tmpArchiveFiles.length} archive(s) in ${pDataset.FolderName}`);
+
+		let tmpAnticipate = this.fable.newAnticipate();
+
+		for (let i = 0; i < tmpArchiveFiles.length; i++)
+		{
+			let tmpArchiveFile = tmpArchiveFiles[i];
+
+			tmpAnticipate.anticipate(
+				(fStep) =>
+				{
+					tmpDataLake.extractArchive(tmpArchiveFile.FullPath, tmpDataDir)
+						.then(
+							() =>
+							{
+								tmpExtracted++;
+								tmpSelf.fable.log.info(`SourceFolderScanner: extracted ${tmpArchiveFile.FileName}`);
+								return fStep();
+							})
+						.catch(
+							(pError) =>
+							{
+								tmpSelf.fable.log.error(`SourceFolderScanner: failed to extract ${tmpArchiveFile.FileName}: ${pError.message}`);
+								return fStep();
+							});
+				});
+		}
+
+		tmpAnticipate.wait(
+			(pError) =>
+			{
+				if (tmpExtracted === 0)
+				{
+					return fCallback(null, { ExtractedCount: 0 });
+				}
+
+				// Re-scan so selectBestDataFile / ingestFromPlan see the extracted files
+				tmpSelf.resolveDataFiles(pDataset.FolderPath,
+					(pFileError, pFiles) =>
+					{
+						pDataset.DataFiles = pFiles || [];
+						pDataset.TotalDataSize = 0;
+						for (let i = 0; i < pDataset.DataFiles.length; i++)
+						{
+							pDataset.TotalDataSize += pDataset.DataFiles[i].Size;
+						}
+						pDataset.HasData = pDataset.DataFiles.length > 0;
+
+						return fCallback(null, { ExtractedCount: tmpExtracted });
+					});
+			});
+	}
+
 	// ================================================================
 	// Ingestion Plan
 	// ================================================================
@@ -1526,42 +1612,53 @@ class RetoldFactoSourceFolderScanner extends libFableServiceProviderBase
 
 		let tmpOptions = pOptions || {};
 		let tmpSelf = this;
-
-		// Check if we should use the ingestion plan
 		let tmpDataDir = libPath.join(tmpDataset.FolderPath, 'data');
-		let tmpExistingPlan = this.readIngestionPlan(tmpDataDir);
-		let tmpUsePlan = tmpOptions.useIngestionPlan || (tmpExistingPlan && !tmpOptions.fileName);
 
-		if (tmpUsePlan)
-		{
-			return this.ingestFromPlan(pFolderName, tmpExistingPlan, fCallback);
-		}
-
-		// Legacy single-file ingestion path
-		let tmpFile = null;
-		if (tmpOptions.fileName)
-		{
-			tmpFile = tmpDataset.DataFiles.find((f) => f.FileName === tmpOptions.fileName);
-		}
-		else
-		{
-			tmpFile = this.selectBestDataFile(tmpDataset.DataFiles);
-		}
-
-		if (!tmpFile)
-		{
-			return fCallback(new Error(`No suitable data file found in ${pFolderName}`));
-		}
-
-		this.ingestSingleFile(tmpFile, tmpDataset, tmpOptions,
-			(pIngestError, pResult) =>
+		// Pre-ingest: extract any archive files so selectBestDataFile /
+		// ingestFromPlan see the extracted contents rather than the archives.
+		this.extractArchivesIfNeeded(tmpDataset,
+			(pExtractError) =>
 			{
-				if (!pIngestError)
+				if (pExtractError)
 				{
-					tmpDataset.Status = 'Ingested';
-					tmpDataset.IngestedAt = new Date().toISOString();
+					tmpSelf.fable.log.warn(`SourceFolderScanner: archive extraction error for ${pFolderName}: ${pExtractError.message}`);
 				}
-				return fCallback(pIngestError, pResult);
+
+				// Check if we should use the ingestion plan
+				let tmpExistingPlan = tmpSelf.readIngestionPlan(tmpDataDir);
+				let tmpUsePlan = tmpOptions.useIngestionPlan || (tmpExistingPlan && !tmpOptions.fileName);
+
+				if (tmpUsePlan)
+				{
+					return tmpSelf.ingestFromPlan(pFolderName, tmpExistingPlan, fCallback);
+				}
+
+				// Legacy single-file ingestion path
+				let tmpFile = null;
+				if (tmpOptions.fileName)
+				{
+					tmpFile = tmpDataset.DataFiles.find((f) => f.FileName === tmpOptions.fileName);
+				}
+				else
+				{
+					tmpFile = tmpSelf.selectBestDataFile(tmpDataset.DataFiles);
+				}
+
+				if (!tmpFile)
+				{
+					return fCallback(new Error(`No suitable data file found in ${pFolderName}`));
+				}
+
+				tmpSelf.ingestSingleFile(tmpFile, tmpDataset, tmpOptions,
+					(pIngestError, pResult) =>
+					{
+						if (!pIngestError)
+						{
+							tmpDataset.Status = 'Ingested';
+							tmpDataset.IngestedAt = new Date().toISOString();
+						}
+						return fCallback(pIngestError, pResult);
+					});
 			});
 	}
 
