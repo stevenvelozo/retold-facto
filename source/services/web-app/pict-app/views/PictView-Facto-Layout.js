@@ -10,6 +10,7 @@ class FactoLayoutView extends libPictView
 	onAfterRender()
 	{
 		// Render all section views into their containers
+		if (this.pict.views['Facto-Throughput']) this.pict.views['Facto-Throughput'].render();
 		this.pict.views['Facto-Scanner'].render();
 		this.pict.views['Facto-Catalog'].render();
 		this.pict.views['Facto-Sources'].render();
@@ -168,6 +169,7 @@ tr:hover { background: #fafafa; }
 </div>
 
 <!-- Section containers -->
+<div id="Facto-Section-Throughput"></div>
 <div id="Facto-Section-Scanner"></div>
 <div id="Facto-Section-Catalog"></div>
 <div id="Facto-Section-Sources"></div>

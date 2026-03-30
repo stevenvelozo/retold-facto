@@ -29,6 +29,8 @@ const libRetoldFactoSourceFolderScanner = require('./services/Retold-Facto-Sourc
 
 const libMeadowIntegration = require('meadow-integration');
 const libTabularTransform = require('meadow-integration/source/services/tabular/Service-TabularTransform.js');
+const libCertaintyAccumulator = require('meadow-integration/source/services/certainty/Service-CertaintyAccumulator.js');
+const libThroughputMonitor = require('./services/Retold-Facto-ThroughputMonitor.js');
 
 // Embedded schema SQL for auto-creation when using SQLite
 const FACTO_SCHEMA_SQL = `
@@ -192,6 +194,16 @@ CREATE TABLE IF NOT EXISTS ProjectionMapping (
 	FlowDiagramState TEXT,
 	Active INTEGER DEFAULT 1
 );
+
+CREATE TABLE IF NOT EXISTS ThroughputEvent (
+	IDThroughputEvent INTEGER PRIMARY KEY AUTOINCREMENT,
+	RunLabel TEXT,
+	RunStartTime INTEGER DEFAULT 0,
+	Timestamp INTEGER DEFAULT 0,
+	Stage TEXT,
+	Count INTEGER DEFAULT 0,
+	Dataset TEXT
+);
 `;
 
 const defaultFactoSettings = (
@@ -337,6 +349,10 @@ class RetoldFacto extends libFableServiceProviderBase
 		this.fable.serviceManager.instantiateServiceProvider('TabularCheck');
 		this.fable.serviceManager.addServiceType('TabularTransform', libTabularTransform);
 		this.fable.serviceManager.instantiateServiceProvider('TabularTransform');
+		this.fable.serviceManager.addServiceType('CertaintyAccumulator', libCertaintyAccumulator);
+		this.fable.serviceManager.instantiateServiceProvider('CertaintyAccumulator');
+		this.fable.serviceManager.addServiceType('ThroughputMonitor', libThroughputMonitor);
+		this.fable.serviceManager.instantiateServiceProvider('ThroughputMonitor');
 
 		// Expose DAL on fable for convenience
 		this.fable.DAL = this._DAL;
@@ -756,6 +772,80 @@ class RetoldFacto extends libFableServiceProviderBase
 					{
 						this.fable.RetoldFactoSourceFolderScanner.connectRoutes(this.fable.OratorServiceServer);
 					}
+
+					// Throughput monitoring endpoints
+					let tmpThroughputPrefix = this.options.Facto.RoutePrefix || '/facto';
+					let tmpSS = this.fable.OratorServiceServer;
+
+					tmpSS.get(`${tmpThroughputPrefix}/throughput`,
+						(pRequest, pResponse, fNext) =>
+						{
+							let tmpDuration = parseInt(pRequest.query && pRequest.query.duration, 10) || 60;
+							pResponse.send(this.fable.ThroughputMonitor.getBuckets(tmpDuration));
+							return fNext();
+						});
+
+					tmpSS.get(`${tmpThroughputPrefix}/throughput/totals`,
+						(pRequest, pResponse, fNext) =>
+						{
+							pResponse.send(this.fable.ThroughputMonitor.getTotals());
+							return fNext();
+						});
+
+					tmpSS.post(`${tmpThroughputPrefix}/throughput/event`,
+						(pRequest, pResponse, fNext) =>
+						{
+							let tmpBody = pRequest.body || {};
+							this.fable.ThroughputMonitor.recordEvent(
+								tmpBody.Stage || 'extracted',
+								tmpBody.Count || 0,
+								tmpBody.Dataset || '');
+							pResponse.send({ Success: true });
+							return fNext();
+						});
+
+					tmpSS.post(`${tmpThroughputPrefix}/throughput/run/start`,
+						(pRequest, pResponse, fNext) =>
+						{
+							let tmpBody = pRequest.body || {};
+							this.fable.ThroughputMonitor.startRun(tmpBody.Label || '');
+							pResponse.send({ Success: true });
+							return fNext();
+						});
+
+					tmpSS.post(`${tmpThroughputPrefix}/throughput/run/end`,
+						(pRequest, pResponse, fNext) =>
+						{
+							this.fable.ThroughputMonitor.endRun();
+							pResponse.send({ Success: true });
+							return fNext();
+						});
+
+					// Historical run endpoints
+					tmpSS.get(`${tmpThroughputPrefix}/throughput/runs`,
+						(pRequest, pResponse, fNext) =>
+						{
+							let tmpLimit = parseInt(pRequest.query && pRequest.query.limit, 10) || 20;
+							pResponse.send(this.fable.ThroughputMonitor.getPersistedRuns(tmpLimit));
+							return fNext();
+						});
+
+					tmpSS.get(`${tmpThroughputPrefix}/throughput/run/:label`,
+						(pRequest, pResponse, fNext) =>
+						{
+							let tmpDataset = pRequest.query && pRequest.query.dataset;
+							pResponse.send(this.fable.ThroughputMonitor.getPersistedRunBuckets(
+								pRequest.params.label, tmpDataset || null));
+							return fNext();
+						});
+
+					tmpSS.get(`${tmpThroughputPrefix}/throughput/run/:label/datasets`,
+						(pRequest, pResponse, fNext) =>
+						{
+							pResponse.send(this.fable.ThroughputMonitor.getPersistedRunDatasetBreakdown(
+								pRequest.params.label));
+							return fNext();
+						});
 
 					return fInitCallback();
 				});

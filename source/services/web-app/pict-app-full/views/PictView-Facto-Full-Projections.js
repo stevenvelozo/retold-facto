@@ -49,7 +49,11 @@ class FactoFullProjectionsView extends libPictView
 	{
 		super(pFable, pOptions, pServiceHash);
 
-		this.pict.AppData.Facto.Projections = [];
+		// Defer AppData initialization — Facto state is set up in onAfterInitializeAsync
+		if (this.pict.AppData.Facto)
+		{
+			this.pict.AppData.Facto.Projections = [];
+		}
 	}
 
 	onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent)

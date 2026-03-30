@@ -3053,9 +3053,10 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 	 * @param {Array} pCertaintyLogs - Array to push log entries into
 	 * @param {Array} pLog - Text log lines
 	 * @param {object} pConfig - Full pipeline config from _executeMultiSetImport
+	 * @param {object|null} pCertaintyContext - CertaintyAccumulator context (null if service unavailable)
 	 * @param {function} fCallback - Callback(pError)
 	 */
-	_executeMultiSetStep(pStep, pAccumulatedComprehension, pReliabilityTracker, pConfidenceTracker, pCertaintyLogs, pLog, pConfig, fCallback)
+	_executeMultiSetStep(pStep, pAccumulatedComprehension, pReliabilityTracker, pConfidenceTracker, pCertaintyLogs, pLog, pConfig, pCertaintyContext, fCallback)
 	{
 		let tmpIDProjectionMapping = parseInt(pStep.IDProjectionMapping, 10);
 		let tmpMergeStrategy = pStep.MergeStrategy || 'WriteAll';
@@ -3304,8 +3305,24 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 						pReliabilityTracker[tmpGUID] = { Weight: tmpReliabilityWeight, IDProjectionMapping: tmpIDProjectionMapping };
 					}
 
-					// Update confidence tracker
-					if (tmpConfidenceConfig.Enabled)
+					// Accumulate field-level certainty evidence
+					if (this.fable.CertaintyAccumulator && pCertaintyContext)
+					{
+						this.fable.CertaintyAccumulator.accumulateEvidence(
+							pCertaintyContext, tmpGUID,
+							tmpNewRecord, tmpExistingRecord,
+							tmpResult.Action,
+							{
+								ReliabilityWeight:    tmpReliabilityWeight,
+								DatasetSize:          tmpStepGUIDs.length,
+								RecordCountInDataset: 1,
+								StepLabel:            tmpLabel,
+								StepOrdinal:          pStep.Ordinal,
+							});
+					}
+
+					// Legacy confidence tracker (used when CertaintyAccumulator is not available)
+					if (tmpConfidenceConfig.Enabled && !pCertaintyContext)
 					{
 						if (!pConfidenceTracker[tmpGUID])
 						{
@@ -3337,11 +3354,22 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 					}
 
 					// Record certainty log entry
+					let tmpCertaintyValue = 0.5;
+					if (pCertaintyContext && this.fable.CertaintyAccumulator)
+					{
+						let tmpCert = this.fable.CertaintyAccumulator.computeCertainty(pCertaintyContext, tmpGUID);
+						tmpCertaintyValue = tmpCert.recordComposite;
+					}
+					else if (pConfidenceTracker[tmpGUID])
+					{
+						tmpCertaintyValue = pConfidenceTracker[tmpGUID].Value;
+					}
+
 					pCertaintyLogs.push(
 					{
 						IDMultiSetProjection: pConfig.MultiSetProjection.IDMultiSetProjection,
 						RecordGUID: tmpGUID,
-						CertaintyValue: (pConfidenceTracker[tmpGUID] && pConfidenceTracker[tmpGUID].Value) || (tmpConfidenceConfig.BaseValue || 0.5),
+						CertaintyValue: tmpCertaintyValue,
 						SourceMappingLabel: tmpLabel,
 						IDProjectionMapping: tmpIDProjectionMapping || 0,
 						Action: tmpResult.Action,
@@ -3369,6 +3397,14 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 		let tmpReliabilityTracker = {};
 		let tmpConfidenceTracker = {};
 		let tmpCertaintyLogs = [];
+
+		// Initialize CertaintyAccumulator context if the service is available
+		let tmpCertaintyContext = null;
+		if (this.fable.CertaintyAccumulator)
+		{
+			let tmpCertaintyConfig = (pConfig.PipelineConfig && pConfig.PipelineConfig.CertaintyWeights) || {};
+			tmpCertaintyContext = this.fable.CertaintyAccumulator.newAccumulationContext(tmpCertaintyConfig);
+		}
 		let tmpLog = [];
 
 		let tmpPipelineConfig = pConfig.PipelineConfig || {};
@@ -3404,7 +3440,7 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 					this._executeMultiSetStep(
 						tmpStep, tmpAccumulatedComprehension,
 						tmpReliabilityTracker, tmpConfidenceTracker,
-						tmpCertaintyLogs, tmpLog, pConfig,
+						tmpCertaintyLogs, tmpLog, pConfig, tmpCertaintyContext,
 						(pStepError) =>
 						{
 							tmpStepResults.push(

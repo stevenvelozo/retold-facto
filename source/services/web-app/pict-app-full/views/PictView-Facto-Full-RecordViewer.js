@@ -105,7 +105,7 @@ const _ViewConfiguration =
 			color: var(--facto-text-tertiary, #888);
 		}
 		.facto-record-content-section .pict-oe-value-string {
-			color: #2ee6a8;
+			color: #055d40;
 		}
 		.facto-record-content-section .pict-oe-value-string::before,
 		.facto-record-content-section .pict-oe-value-string::after {

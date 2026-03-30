@@ -203,6 +203,7 @@ const _ViewConfiguration =
 		<a data-route="Projections" onclick="{~P~}.PictApplication.navigateTo('/Projections')">Projections</a>
 		<a data-route="Connections" onclick="{~P~}.PictApplication.navigateTo('/Connections')">Connections</a>
 		<a data-route="Dashboards" onclick="{~P~}.PictApplication.navigateTo('/Dashboards')">Dashboards</a>
+		<a data-route="Throughput" onclick="{~P~}.PictApplication.navigateTo('/Throughput')">Throughput</a>
 	</div>
 
 	<div class="facto-topbar-right">

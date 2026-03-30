@@ -43,6 +43,10 @@
 		{
 			"path": "/Dashboards",
 			"template": "{~LV:Pict.PictApplication.showView(`Facto-Full-Dashboards`)~}"
+		},
+		{
+			"path": "/Throughput",
+			"template": "{~LV:Pict.PictApplication.showView(`Facto-Full-Throughput`)~}"
 		}
 	]
 }

@@ -40,6 +40,7 @@ const libViewSourceEditor = require('./views/PictView-Facto-Full-SourceEditor.js
 const libViewScanner = require('./views/PictView-Facto-Full-Scanner.js');
 const libViewConnections = require('./views/PictView-Facto-Full-Connections.js');
 const libViewProjectionDetail = require('./views/PictView-Facto-Full-ProjectionDetail.js');
+const libViewThroughput = require('./views/PictView-Facto-Full-Throughput.js');
 
 class FactoFullApplication extends libPictApplication
 {
@@ -85,6 +86,7 @@ class FactoFullApplication extends libPictApplication
 		this.pict.addView('Facto-Full-Scanner', libViewScanner.default_configuration, libViewScanner);
 		this.pict.addView('Facto-Full-Connections', libViewConnections.default_configuration, libViewConnections);
 		this.pict.addView('Facto-Full-ProjectionDetail', libViewProjectionDetail.default_configuration, libViewProjectionDetail);
+		this.pict.addView('Facto-Full-Throughput', libViewThroughput.default_configuration, libViewThroughput);
 	}
 
 	onAfterInitializeAsync(fCallback)
