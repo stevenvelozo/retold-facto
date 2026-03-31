@@ -17,6 +17,10 @@
 			"template": "{~LV:Pict.PictApplication.showView(`Facto-Full-SourceResearch`)~}"
 		},
 		{
+			"path": "/SchemaResearch",
+			"template": "{~LV:Pict.PictApplication.showView(`Facto-Full-SchemaResearch`)~}"
+		},
+		{
 			"path": "/IngestJobs",
 			"template": "{~LV:Pict.PictApplication.showView(`Facto-Full-IngestJobs`)~}"
 		},

@@ -41,6 +41,9 @@ const libViewScanner = require('./views/PictView-Facto-Full-Scanner.js');
 const libViewConnections = require('./views/PictView-Facto-Full-Connections.js');
 const libViewProjectionDetail = require('./views/PictView-Facto-Full-ProjectionDetail.js');
 const libViewThroughput = require('./views/PictView-Facto-Full-Throughput.js');
+const libViewSchemaResearch = require('./views/PictView-Facto-Full-SchemaResearch.js');
+const libViewSchemaDetail = require('./views/PictView-Facto-Full-SchemaDetail.js');
+const libViewSchemaDocEditor = require('./views/PictView-Facto-Full-SchemaDocEditor.js');
 
 class FactoFullApplication extends libPictApplication
 {
@@ -87,6 +90,9 @@ class FactoFullApplication extends libPictApplication
 		this.pict.addView('Facto-Full-Connections', libViewConnections.default_configuration, libViewConnections);
 		this.pict.addView('Facto-Full-ProjectionDetail', libViewProjectionDetail.default_configuration, libViewProjectionDetail);
 		this.pict.addView('Facto-Full-Throughput', libViewThroughput.default_configuration, libViewThroughput);
+		this.pict.addView('Facto-Full-SchemaResearch', libViewSchemaResearch.default_configuration, libViewSchemaResearch);
+		this.pict.addView('Facto-Full-SchemaDetail', libViewSchemaDetail.default_configuration, libViewSchemaDetail);
+		this.pict.addView('Facto-Full-SchemaDocEditor', libViewSchemaDocEditor.default_configuration, libViewSchemaDocEditor);
 	}
 
 	onAfterInitializeAsync(fCallback)
@@ -108,6 +114,7 @@ class FactoFullApplication extends libPictApplication
 			RecordPage: 0,
 			RecordPageSize: 50,
 			RecordFilterSources: [],
+			RecordFilterDatasets: [],
 			RecordFilterDateFrom: '',
 			RecordFilterDateTo: '',
 			CurrentRecordContent: {},
@@ -118,6 +125,9 @@ class FactoFullApplication extends libPictApplication
 			DiscoveredFields: {},
 			ScannerPaths: [],
 			ScannerDatasets: [],
+			Schemas: [],
+			SelectedSchema: null,
+			SchemaVersions: [],
 			CurrentTheme: 'turquoise-deluxe',
 			CurrentRoute: ''
 		};
@@ -135,6 +145,29 @@ class FactoFullApplication extends libPictApplication
 				if (tmpIDRecord)
 				{
 					tmpSelf.showRecordView(tmpIDRecord);
+				}
+			});
+
+		this.pict.providers.PictRouter.addRoute('/Records/FilteredTo/:Filter/:Begin/:Cap',
+			(pMatch) =>
+			{
+				let tmpFilter = pMatch && pMatch.data ? pMatch.data.Filter : null;
+				let tmpBegin = pMatch && pMatch.data ? parseInt(pMatch.data.Begin, 10) : 0;
+				let tmpCap = pMatch && pMatch.data ? parseInt(pMatch.data.Cap, 10) : 50;
+				if (tmpFilter)
+				{
+					tmpSelf.showFilteredRecordsView(tmpFilter, tmpBegin, tmpCap);
+				}
+			});
+
+		this.pict.providers.PictRouter.addRoute('/Projection/:EntityName/Record/:IDRecord',
+			(pMatch) =>
+			{
+				let tmpEntityName = pMatch && pMatch.data ? pMatch.data.EntityName : null;
+				let tmpIDRecord = pMatch && pMatch.data ? pMatch.data.IDRecord : null;
+				if (tmpEntityName && tmpIDRecord)
+				{
+					tmpSelf.showProjectionRecordView(tmpEntityName, tmpIDRecord);
 				}
 			});
 
@@ -169,6 +202,27 @@ class FactoFullApplication extends libPictApplication
 				}
 			});
 
+		this.pict.providers.PictRouter.addRoute('/Schema/:IDSchema',
+			(pMatch) =>
+			{
+				let tmpIDSchema = pMatch && pMatch.data ? pMatch.data.IDSchema : null;
+				if (tmpIDSchema)
+				{
+					tmpSelf.showSchemaView(tmpIDSchema);
+				}
+			});
+
+		this.pict.providers.PictRouter.addRoute('/Schema/:IDSchema/Doc/:IDDoc',
+			(pMatch) =>
+			{
+				let tmpIDSchema = pMatch && pMatch.data ? pMatch.data.IDSchema : null;
+				let tmpIDDoc = pMatch && pMatch.data ? pMatch.data.IDDoc : null;
+				if (tmpIDSchema)
+				{
+					tmpSelf.showSchemaView(tmpIDSchema, tmpIDDoc);
+				}
+			});
+
 		// Render the layout shell — this cascades into TopBar, BottomBar
 		this.pict.views['Facto-Full-Layout'].render();
 
@@ -195,6 +249,49 @@ class FactoFullApplication extends libPictApplication
 		this._setActiveNav('Records');
 	}
 
+	showFilteredRecordsView(pFilterString, pBegin, pCap)
+	{
+		let tmpProvider = this.pict.providers.Facto;
+
+		// Parse the FilteredTo string into structured filter objects
+		let tmpFilters = tmpProvider.parseFilteredToString(pFilterString);
+
+		// Extract UI state (source IDs, dataset IDs, dates) from the filters
+		let tmpState = tmpProvider.extractRecordStateFromFilters(tmpFilters);
+
+		// Update AppData with the parsed filter state
+		this.pict.AppData.Facto.RecordFilterSources = tmpState.SourceIDs;
+		this.pict.AppData.Facto.RecordFilterDatasets = tmpState.DatasetIDs;
+		this.pict.AppData.Facto.RecordFilterDateFrom = tmpState.DateFrom;
+		this.pict.AppData.Facto.RecordFilterDateTo = tmpState.DateTo;
+
+		// Set pagination from URL
+		let tmpPageSize = pCap || this.pict.AppData.Facto.RecordPageSize || 50;
+		this.pict.AppData.Facto.RecordPage = Math.floor((pBegin || 0) / tmpPageSize);
+		this.pict.AppData.Facto.RecordPageSize = tmpPageSize;
+
+		// Store the raw filter string so the Records view can use it directly
+		this.pict.AppData.Facto.RecordFilterString = pFilterString;
+
+		// Show the Records view — it will pick up the filter state from AppData
+		let tmpView = this.pict.views['Facto-Full-Records'];
+		if (tmpView)
+		{
+			tmpView.render();
+		}
+		this._setActiveNav('Records');
+	}
+
+	showProjectionRecordView(pEntityName, pIDRecord)
+	{
+		let tmpView = this.pict.views['Facto-Full-RecordViewer'];
+		if (tmpView)
+		{
+			tmpView.loadProjectionRecord(pEntityName, pIDRecord);
+		}
+		this._setActiveNav('Records');
+	}
+
 	showSourceView(pIDSource, pIDDoc)
 	{
 		let tmpView = this.pict.views['Facto-Full-SourceDetail'];
@@ -204,6 +301,16 @@ class FactoFullApplication extends libPictApplication
 		}
 		// Highlight "SourceResearch" in the nav since source detail is a child of Source Research
 		this._setActiveNav('SourceResearch');
+	}
+
+	showSchemaView(pIDSchema, pIDDoc)
+	{
+		let tmpView = this.pict.views['Facto-Full-SchemaDetail'];
+		if (tmpView)
+		{
+			tmpView.loadSchema(pIDSchema, pIDDoc);
+		}
+		this._setActiveNav('SchemaResearch');
 	}
 
 	showProjectionView(pIDDataset)

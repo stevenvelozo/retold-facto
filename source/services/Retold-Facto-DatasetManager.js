@@ -123,6 +123,26 @@ class RetoldFactoDatasetManager extends libFableServiceProviderBase
 				tmpAnticipate.anticipate(
 					(fStep) =>
 					{
+						// For projection datasets, count from the projection entity's
+						// own table (registered in fable.DAL by the ProjectionEngine)
+						// rather than from the Record table.
+						if (tmpResult.Dataset && tmpResult.Dataset.Type === 'Projection' && tmpResult.Dataset.Name && this.fable.DAL[tmpResult.Dataset.Name])
+						{
+							let tmpProjectionDAL = this.fable.DAL[tmpResult.Dataset.Name];
+							let tmpQuery = tmpProjectionDAL.query.clone()
+								.addFilter('Deleted', 0);
+							tmpProjectionDAL.doCount(tmpQuery,
+								(pError, pQuery, pCount) =>
+								{
+									if (!pError)
+									{
+										tmpResult.RecordCount = pCount;
+									}
+									return fStep();
+								});
+							return;
+						}
+
 						if (!this.fable.DAL.Record)
 						{
 							return fStep();

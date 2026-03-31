@@ -26,6 +26,7 @@ const libRetoldFactoCatalogManager = require('./services/Retold-Facto-CatalogMan
 const libRetoldFactoStoreConnectionManager = require('./services/Retold-Facto-StoreConnectionManager.js');
 const libRetoldFactoDataLakeService = require('./services/Retold-Facto-DataLakeService.js');
 const libRetoldFactoSourceFolderScanner = require('./services/Retold-Facto-SourceFolderScanner.js');
+const libRetoldFactoSchemaManager = require('./services/Retold-Facto-SchemaManager.js');
 
 const libMeadowIntegration = require('meadow-integration');
 const libTabularTransform = require('meadow-integration/source/services/tabular/Service-TabularTransform.js');
@@ -60,7 +61,8 @@ CREATE TABLE IF NOT EXISTS Dataset (
 	Deleted INTEGER DEFAULT 0, DeleteDate TEXT, DeletingIDUser INTEGER DEFAULT 0,
 	Name TEXT, Hash TEXT DEFAULT '', Type TEXT, Description TEXT,
 	SchemaHash TEXT, SchemaVersion INTEGER DEFAULT 0, SchemaDefinition TEXT,
-	VersionPolicy TEXT DEFAULT 'Append'
+	VersionPolicy TEXT DEFAULT 'Append',
+	IDSchema INTEGER DEFAULT 0
 );
 CREATE TABLE IF NOT EXISTS DatasetSource (
 	IDDatasetSource INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -195,6 +197,39 @@ CREATE TABLE IF NOT EXISTS ProjectionMapping (
 	Active INTEGER DEFAULT 1
 );
 
+CREATE TABLE IF NOT EXISTS FactoSchema (
+	IDSchema INTEGER PRIMARY KEY AUTOINCREMENT,
+	GUIDSchema TEXT,
+	CreateDate TEXT, CreatingIDUser INTEGER DEFAULT 0,
+	UpdateDate TEXT, UpdatingIDUser INTEGER DEFAULT 0,
+	Deleted INTEGER DEFAULT 0, DeleteDate TEXT, DeletingIDUser INTEGER DEFAULT 0,
+	Name TEXT, Hash TEXT DEFAULT '', Type TEXT DEFAULT 'Record',
+	Description TEXT, Version INTEGER DEFAULT 0,
+	SchemaDefinition TEXT, ManyfestDefinition TEXT,
+	SchemaHash TEXT DEFAULT '', Active INTEGER DEFAULT 1
+);
+CREATE TABLE IF NOT EXISTS SchemaDocumentation (
+	IDSchemaDocumentation INTEGER PRIMARY KEY AUTOINCREMENT,
+	GUIDSchemaDocumentation TEXT,
+	CreateDate TEXT, CreatingIDUser INTEGER DEFAULT 0,
+	UpdateDate TEXT, UpdatingIDUser INTEGER DEFAULT 0,
+	Deleted INTEGER DEFAULT 0, DeleteDate TEXT, DeletingIDUser INTEGER DEFAULT 0,
+	IDSchema INTEGER DEFAULT 0,
+	Name TEXT, DocumentType TEXT DEFAULT 'markdown',
+	MimeType TEXT DEFAULT 'text/markdown',
+	StorageKey TEXT, Description TEXT, Content TEXT
+);
+CREATE TABLE IF NOT EXISTS SchemaVersion (
+	IDSchemaVersion INTEGER PRIMARY KEY AUTOINCREMENT,
+	GUIDSchemaVersion TEXT,
+	CreateDate TEXT, CreatingIDUser INTEGER DEFAULT 0,
+	UpdateDate TEXT, UpdatingIDUser INTEGER DEFAULT 0,
+	Deleted INTEGER DEFAULT 0, DeleteDate TEXT, DeletingIDUser INTEGER DEFAULT 0,
+	IDSchema INTEGER DEFAULT 0,
+	Version INTEGER DEFAULT 0,
+	SchemaDefinition TEXT, ManyfestDefinition TEXT,
+	SchemaHash TEXT DEFAULT '', ChangeDescription TEXT
+);
 CREATE TABLE IF NOT EXISTS ThroughputEvent (
 	IDThroughputEvent INTEGER PRIMARY KEY AUTOINCREMENT,
 	RunLabel TEXT,
@@ -242,6 +277,8 @@ const defaultFactoSettings = (
 				StoreConnectionManager: true,
 				// Source folder scanner API (/facto/scanner/*)
 				SourceFolderScanner: true,
+				// Schema manager API (/facto/schema/*)
+				SchemaManager: true,
 				// Web UI
 				WebUI: true
 			},
@@ -340,6 +377,12 @@ class RetoldFacto extends libFableServiceProviderBase
 
 		this.fable.serviceManager.addServiceType('RetoldFactoSourceFolderScanner', libRetoldFactoSourceFolderScanner);
 		this.fable.serviceManager.instantiateServiceProvider('RetoldFactoSourceFolderScanner',
+			{
+				RoutePrefix: this.options.Facto.RoutePrefix
+			});
+
+		this.fable.serviceManager.addServiceType('RetoldFactoSchemaManager', libRetoldFactoSchemaManager);
+		this.fable.serviceManager.instantiateServiceProvider('RetoldFactoSchemaManager',
 			{
 				RoutePrefix: this.options.Facto.RoutePrefix
 			});
@@ -670,7 +713,7 @@ class RetoldFacto extends libFableServiceProviderBase
 			this.fable.log.info(`Retold Facto is initializing...`);
 
 			// Log endpoint configuration
-			let tmpGroupNames = ['MeadowEndpoints', 'SourceManager', 'RecordManager', 'DatasetManager', 'IngestEngine', 'ProjectionEngine', 'CatalogManager', 'StoreConnectionManager', 'SourceFolderScanner', 'WebUI'];
+			let tmpGroupNames = ['MeadowEndpoints', 'SourceManager', 'RecordManager', 'DatasetManager', 'IngestEngine', 'ProjectionEngine', 'CatalogManager', 'StoreConnectionManager', 'SourceFolderScanner', 'SchemaManager', 'WebUI'];
 			let tmpEnabledGroups = [];
 			let tmpDisabledGroups = [];
 			for (let i = 0; i < tmpGroupNames.length; i++)
@@ -771,6 +814,11 @@ class RetoldFacto extends libFableServiceProviderBase
 					if (this.isEndpointGroupEnabled('SourceFolderScanner'))
 					{
 						this.fable.RetoldFactoSourceFolderScanner.connectRoutes(this.fable.OratorServiceServer);
+					}
+
+					if (this.isEndpointGroupEnabled('SchemaManager'))
+					{
+						this.fable.RetoldFactoSchemaManager.connectRoutes(this.fable.OratorServiceServer);
 					}
 
 					// Throughput monitoring endpoints

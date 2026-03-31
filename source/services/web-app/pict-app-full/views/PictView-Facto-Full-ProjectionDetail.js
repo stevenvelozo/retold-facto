@@ -468,13 +468,57 @@ class FactoFullProjectionDetailView extends libPictView
 			tmpHtml += '<td><span class="facto-status-badge ' + tmpStatusClass + '">' + (tmpStore.Status || 'Unknown') + '</span></td>';
 			tmpHtml += '<td>' + tmpDeployedAt + '</td>';
 			tmpHtml += '<td>';
-			tmpHtml += '<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.views[\'Facto-Full-ProjectionDetail\'].redeployStore(' + tmpStore.IDProjectionStore + ', ' + tmpStore.IDStoreConnection + ', \'' + (tmpStore.TargetTableName || '').replace(/'/g, "\\'") + '\')">Redeploy</button>';
+			tmpHtml += '<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="pict.views[\'Facto-Full-ProjectionDetail\'].redeployStore(' + tmpStore.IDProjectionStore + ', ' + tmpStore.IDStoreConnection + ', \'' + (tmpStore.TargetTableName || '').replace(/'/g, "\\'") + '\')">Redeploy</button> ';
+			tmpHtml += '<button class="facto-btn facto-btn-danger facto-btn-small" onclick="pict.views[\'Facto-Full-ProjectionDetail\'].confirmDeleteStore(' + tmpStore.IDProjectionStore + ', \'' + (tmpStore.TargetTableName || '').replace(/'/g, "\\'") + '\')">Delete</button>';
 			tmpHtml += '</td>';
 			tmpHtml += '</tr>';
 		}
 
 		tmpHtml += '</tbody></table>';
 		tmpContainer.innerHTML = tmpHtml;
+	}
+
+	async confirmDeleteStore(pIDProjectionStore, pTableName)
+	{
+		// First confirmation
+		let tmpConfirmed = await this.pict.views['Pict-Section-Modal'].confirm('Are you sure you want to delete the deployed store "' + pTableName + '"?\n\nThis will DROP the table and permanently destroy all data in it.', { title: 'Delete Store', confirmLabel: 'Delete', dangerous: true });
+		if (!tmpConfirmed)
+		{
+			return;
+		}
+
+		// Second confirmation — require typing the table name
+		let tmpSecondConfirm = await this.pict.views['Pict-Section-Modal'].confirm('This action is IRREVERSIBLE. Are you absolutely sure you want to delete "' + pTableName + '"?', { title: 'Confirm Deletion', confirmLabel: 'Yes, Delete ' + pTableName, dangerous: true });
+		if (!tmpSecondConfirm)
+		{
+			this.pict.views['Pict-Section-Modal'].toast('Deletion cancelled.', {type: 'warning'});
+			return;
+		}
+
+		this.deleteStore(pIDProjectionStore, pTableName);
+	}
+
+	deleteStore(pIDProjectionStore, pTableName)
+	{
+		this.pict.views['Pict-Section-Modal'].toast('Deleting store "' + pTableName + '"...', {type: 'info'});
+
+		this.pict.providers.Facto.deleteProjectionStore(pIDProjectionStore).then(
+			(pResponse) =>
+			{
+				if (pResponse && pResponse.Error)
+				{
+					this.pict.views['Pict-Section-Modal'].toast('Error: ' + pResponse.Error, {type: 'error'});
+					return;
+				}
+
+				this.pict.views['Pict-Section-Modal'].toast('Store "' + pTableName + '" deleted successfully.', {type: 'success'});
+
+				// Remove from local stores list and re-render
+				this._Stores = this._Stores.filter(
+					function(s) { return s.IDProjectionStore !== pIDProjectionStore; });
+				this._renderStoresSection();
+				this._renderImportSection();
+			});
 	}
 
 	// ================================================================
@@ -650,6 +694,7 @@ class FactoFullProjectionDetailView extends libPictView
 					{
 						this._Stores = (pResult && pResult.Stores) ? pResult.Stores : [];
 						this._renderStoresSection();
+						this._renderImportSection();
 						this._renderMetaCards();
 					});
 			});
@@ -698,6 +743,7 @@ class FactoFullProjectionDetailView extends libPictView
 					{
 						this._Stores = (pResult && pResult.Stores) ? pResult.Stores : [];
 						this._renderStoresSection();
+						this._renderImportSection();
 						this._renderMetaCards();
 					});
 			});
@@ -804,16 +850,20 @@ class FactoFullProjectionDetailView extends libPictView
 
 		// Rebuild store dropdown, filtering to target stores if specified
 		let tmpHtml = '';
+		let tmpFilteredHtml = '';
+		let tmpAllHtml = '';
 		for (let i = 0; i < this._Stores.length; i++)
 		{
 			let tmpStore = this._Stores[i];
-			if (tmpTargetStores && tmpTargetStores.indexOf(tmpStore.IDProjectionStore) === -1)
+			let tmpOption = '<option value="' + tmpStore.IDProjectionStore + '">' + this._escapeHtml(tmpStore.TargetTableName || ('Store #' + tmpStore.IDProjectionStore)) + '</option>';
+			tmpAllHtml += tmpOption;
+			if (!tmpTargetStores || tmpTargetStores.indexOf(tmpStore.IDProjectionStore) !== -1)
 			{
-				continue;
+				tmpFilteredHtml += tmpOption;
 			}
-			tmpHtml += '<option value="' + tmpStore.IDProjectionStore + '">' + this._escapeHtml(tmpStore.TargetTableName || ('Store #' + tmpStore.IDProjectionStore)) + '</option>';
 		}
-		tmpStoreSelect.innerHTML = tmpHtml;
+		// If filtering left no matches, show all stores instead
+		tmpStoreSelect.innerHTML = tmpFilteredHtml || tmpAllHtml;
 	}
 
 	runImport()

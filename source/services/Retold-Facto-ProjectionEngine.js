@@ -7,12 +7,14 @@
  * @author Steven Velozo <steven@velozo.com>
  */
 const libFableServiceProviderBase = require('fable-serviceproviderbase');
+const libFable = require('fable');
 const libFoxHound = require('foxhound');
 const libFS = require('fs');
 const libPath = require('path');
 const libMeadow = require('meadow');
 const libMeadowEndpoints = require('meadow-endpoints');
 const libMeadowIntegration = require('meadow-integration');
+const libMeadowConnectionSQLite = require('meadow-connection-sqlite');
 
 const defaultProjectionEngineOptions = (
 	{
@@ -1053,6 +1055,150 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 					});
 			});
 
+		// DELETE /facto/projection/store/:IDProjectionStore -- drop table and remove store
+		pOratorServiceServer.doDel(`${tmpRoutePrefix}/projection/store/:IDProjectionStore`,
+			(pRequest, pResponse, fNext) =>
+			{
+				if (!this.fable.DAL || !this.fable.DAL.ProjectionStore || !this.fable.DAL.StoreConnection)
+				{
+					pResponse.send({ Error: 'DAL not initialized' });
+					return fNext();
+				}
+
+				let tmpIDStore = parseInt(pRequest.params.IDProjectionStore, 10);
+				if (!tmpIDStore)
+				{
+					pResponse.send({ Error: 'IDProjectionStore is required' });
+					return fNext();
+				}
+
+				// Load the ProjectionStore record
+				let tmpStoreQuery = this.fable.DAL.ProjectionStore.query.clone()
+					.addFilter('IDProjectionStore', tmpIDStore)
+					.addFilter('Deleted', 0);
+
+				this.fable.DAL.ProjectionStore.doReads(tmpStoreQuery,
+					(pStoreError, pStoreQuery, pStoreRecords) =>
+					{
+						if (pStoreError || !pStoreRecords || pStoreRecords.length === 0)
+						{
+							pResponse.send({ Error: 'Projection store not found' });
+							return fNext();
+						}
+
+						let tmpStore = pStoreRecords[0];
+						let tmpTableName = tmpStore.TargetTableName;
+						let tmpIDConnection = tmpStore.IDStoreConnection;
+
+						// Load the connection
+						let tmpConnQuery = this.fable.DAL.StoreConnection.query.clone()
+							.addFilter('IDStoreConnection', tmpIDConnection);
+
+						this.fable.DAL.StoreConnection.doRead(tmpConnQuery,
+							(pConnError, pConnQuery, pConnRecord) =>
+							{
+								if (pConnError || !pConnRecord)
+								{
+									pResponse.send({ Error: 'Store connection not found' });
+									return fNext();
+								}
+
+								let tmpConnection = pConnRecord;
+								let tmpConfig = {};
+								try { tmpConfig = JSON.parse(tmpConnection.Configuration || '{}'); }
+								catch (e) { /* ignore parse error */ }
+
+								let tmpLog = [];
+								tmpLog.push(`Deleting deployed store: ${tmpTableName} (ID ${tmpIDStore})`);
+								tmpLog.push(`Connection: ${tmpConnection.Name} (${tmpConnection.Type})`);
+
+								try
+								{
+									// Create a connector to the target database
+									let tmpConnectorModule = null;
+
+									switch (tmpConnection.Type)
+									{
+										case 'Projection_SQL':
+										case 'SQLite':
+											tmpConnectorModule = require('meadow-connection-sqlite');
+											break;
+										default:
+											pResponse.send({ Error: `Unsupported connection type: ${tmpConnection.Type}` });
+											return fNext();
+									}
+
+									let tmpConnector = new tmpConnectorModule(this.fable,
+										{ SQLiteFilePath: tmpConfig.SQLiteFilePath || tmpConfig.FilePath },
+										`Drop-${tmpTableName}-${Date.now()}`);
+
+									tmpConnector.connectAsync(
+										(pConnectError) =>
+										{
+											if (pConnectError)
+											{
+												tmpLog.push(`Error connecting: ${pConnectError.message || pConnectError}`);
+												pResponse.send({ Error: 'Could not connect to target database', Log: tmpLog.join('\n') });
+												return fNext();
+											}
+
+											// Generate and execute DROP TABLE
+											let tmpDropSQL = tmpConnector.generateDropTableStatement(tmpTableName);
+											tmpLog.push(`Executing: ${tmpDropSQL}`);
+
+											try
+											{
+												tmpConnector.db.exec(tmpDropSQL);
+												tmpLog.push(`Table ${tmpTableName} dropped successfully.`);
+											}
+											catch (pDropError)
+											{
+												tmpLog.push(`Warning: DROP TABLE error: ${pDropError.message}`);
+												// Continue with soft-delete even if drop fails
+											}
+
+											// Soft-delete the ProjectionStore record
+											let tmpDeleteQuery = this.fable.DAL.ProjectionStore.query.clone()
+												.addRecord(
+												{
+													IDProjectionStore: tmpIDStore,
+													Deleted: 1,
+													Status: 'Deleted',
+													DeployLog: (tmpStore.DeployLog || '') + '\n---\n' + tmpLog.join('\n')
+												});
+
+											this.fable.DAL.ProjectionStore.doUpdate(tmpDeleteQuery,
+												(pDeleteError) =>
+												{
+													if (pDeleteError)
+													{
+														tmpLog.push(`Error updating store record: ${pDeleteError.message}`);
+													}
+
+													// Unregister the projection entity if cached
+													if (this._ProjectionEntities && this._ProjectionEntities[tmpTableName])
+													{
+														delete this._ProjectionEntities[tmpTableName];
+														tmpLog.push(`Unregistered projection entity: ${tmpTableName}`);
+													}
+
+													tmpLog.push(`Store deletion complete.`);
+													this.fable.log.info(`ProjectionEngine: Deleted store ${tmpTableName} (ID ${tmpIDStore})`);
+													pResponse.send({ Success: true, Log: tmpLog.join('\n') });
+													return fNext();
+												});
+										});
+								}
+								catch (pError)
+								{
+									tmpLog.push(`Error: ${pError.message}`);
+									pResponse.send({ Error: pError.message, Log: tmpLog.join('\n') });
+									return fNext();
+								}
+							});
+					});
+			});
+
 		// ======================================================================
 		// Projection Mapping CRUD routes
 		// ======================================================================
@@ -1416,14 +1562,15 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 					(fStepCallback) =>
 					{
 						let tmpQuery = this.fable.DAL.ProjectionStore.query.clone()
-							.addFilter('IDProjectionStore', tmpIDProjectionStore);
+							.addFilter('IDProjectionStore', tmpIDProjectionStore)
+							.addFilter('Deleted', 0);
 
 						this.fable.DAL.ProjectionStore.doRead(tmpQuery,
 							(pError, pQuery, pRecord) =>
 							{
 								if (pError || !pRecord || !pRecord.IDProjectionStore)
 								{
-									return fStepCallback(new Error('ProjectionStore not found'));
+									return fStepCallback(new Error('ProjectionStore not found (it may have been deleted)'));
 								}
 								tmpProjectionStore = pRecord;
 								return fStepCallback();
@@ -1455,6 +1602,12 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 						if (pError)
 						{
 							pResponse.send({ Error: pError.message || pError });
+							return fNext();
+						}
+
+						if (!tmpProjectionStore)
+						{
+							pResponse.send({ Error: 'ProjectionStore not found (it may have been deleted). Please select a valid store.' });
 							return fNext();
 						}
 
@@ -1544,8 +1697,12 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 												continue;
 											}
 
-											// Pass flat content — Pict's resolveStateFromAddress auto-wraps as rootDataObject.Record = pRecord
-											let tmpWrapped = Object.assign({ IDRecord: tmpRecord.IDRecord }, tmpParsedContent);
+											// Pass flat content — Pict's resolveStateFromAddress wraps this
+											// as rootDataObject.Record = pRecord, so {~D:Record.field~}
+											// resolves to pRecord.field automatically.
+											// Only include GUID (not IDRecord) — IDs are generated by the
+											// target storage layer; GUIDs handle deduplication on upsert.
+											let tmpWrapped = Object.assign({ GUIDRecord: tmpRecord.GUIDRecord }, tmpParsedContent);
 
 											try
 											{
@@ -1641,7 +1798,12 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 													AdapterSetGUIDMarshalPrefix: `PROJ-${tmpIDDataset}`,
 													PerformUpserts: true,
 													PerformDeletes: false,
-													SimpleMarshal: true
+													SimpleMarshal: true,
+													// The bulk upsert URL appends an extra 's' to the entity
+													// name (e.g. Countriess/Upserts) which breaks entities
+													// whose names are already plural.  Use single-record
+													// upserts to avoid the mismatch.
+													RecordThresholdForBulkUpsert: 999999
 												});
 
 											// Feed comprehension records to the adapter
@@ -2256,6 +2418,158 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 	 */
 
 	/**
+	 * Ensure an array of column definitions includes the standard Meadow
+	 * tracking columns (CreateDate, UpdateDate, Deleted, etc.).
+	 * Mutates the array in place.
+	 */
+	_ensureTrackingColumns(pColumns)
+	{
+		let tmpExisting = {};
+		for (let i = 0; i < pColumns.length; i++)
+		{
+			tmpExisting[pColumns[i].Column] = true;
+		}
+
+		let tmpTrackingColumns =
+		[
+			{ Column: 'CreateDate', DataType: 'DateTime' },
+			{ Column: 'CreatingIDUser', DataType: 'Numeric', Size: 'int' },
+			{ Column: 'UpdateDate', DataType: 'DateTime' },
+			{ Column: 'UpdatingIDUser', DataType: 'Numeric', Size: 'int' },
+			{ Column: 'Deleted', DataType: 'Boolean' },
+			{ Column: 'DeleteDate', DataType: 'DateTime' },
+			{ Column: 'DeletingIDUser', DataType: 'Numeric', Size: 'int' }
+		];
+
+		for (let i = 0; i < tmpTrackingColumns.length; i++)
+		{
+			if (!tmpExisting[tmpTrackingColumns[i].Column])
+			{
+				pColumns.push(tmpTrackingColumns[i]);
+			}
+		}
+	}
+
+	/**
+	 * Build a complete Meadow package object from parsed MicroDDL columns,
+	 * following the same pattern Stricture uses to generate Meadow models.
+	 *
+	 * Produces: Scope, DefaultIdentifier, Schema, DefaultObject, JsonSchema
+	 *
+	 * @param {string} pEntityName - The entity/table name (e.g. 'Countries')
+	 * @param {Array} pColumns - Column definitions from _parseMicroDDL()
+	 * @returns {object} Complete Meadow package object
+	 */
+	_buildMeadowPackageObject(pEntityName, pColumns)
+	{
+		// Ensure tracking columns are present
+		this._ensureTrackingColumns(pColumns);
+
+		let tmpPrimaryKey = `ID${pEntityName}`;
+
+		let tmpPackage =
+		{
+			Scope: pEntityName,
+			DefaultIdentifier: tmpPrimaryKey,
+			Schema: [],
+			DefaultObject: {},
+			JsonSchema:
+			{
+				title: pEntityName,
+				type: 'object',
+				properties: {},
+				required: []
+			}
+		};
+
+		for (let i = 0; i < pColumns.length; i++)
+		{
+			let tmpCol = pColumns[i];
+			let tmpColumnName = tmpCol.Column;
+			let tmpColumnSize = tmpCol.Size || 'Default';
+			let tmpSchemaEntry = { Column: tmpColumnName, Size: tmpColumnSize };
+
+			let tmpDataType = tmpCol.DataType || '';
+
+			switch (tmpDataType)
+			{
+				case 'ID':
+					tmpSchemaEntry.Type = 'AutoIdentity';
+					tmpPackage.DefaultObject[tmpColumnName] = 0;
+					tmpPackage.JsonSchema.properties[tmpColumnName] = { type: 'integer', size: tmpColumnSize };
+					tmpPackage.JsonSchema.required.push(tmpColumnName);
+					break;
+				case 'GUID':
+					tmpSchemaEntry.Type = 'AutoGUID';
+					tmpPackage.DefaultObject[tmpColumnName] = '0x0000000000000000';
+					tmpPackage.JsonSchema.properties[tmpColumnName] = { type: 'string', size: tmpColumnSize };
+					break;
+				case 'Numeric':
+					tmpSchemaEntry.Type = 'Integer';
+					tmpPackage.DefaultObject[tmpColumnName] = 0;
+					tmpPackage.JsonSchema.properties[tmpColumnName] = { type: 'integer', size: tmpColumnSize };
+					break;
+				case 'Decimal':
+					tmpSchemaEntry.Type = 'Decimal';
+					tmpPackage.DefaultObject[tmpColumnName] = 0.0;
+					tmpPackage.JsonSchema.properties[tmpColumnName] = { type: 'number', size: tmpColumnSize };
+					break;
+				case 'String':
+				case 'Text':
+					tmpSchemaEntry.Type = 'String';
+					tmpPackage.DefaultObject[tmpColumnName] = '';
+					tmpPackage.JsonSchema.properties[tmpColumnName] = { type: 'string', size: tmpColumnSize };
+					break;
+				case 'DateTime':
+					tmpSchemaEntry.Type = 'DateTime';
+					tmpPackage.DefaultObject[tmpColumnName] = null;
+					tmpPackage.JsonSchema.properties[tmpColumnName] = { type: 'string', size: tmpColumnSize };
+					break;
+				case 'Boolean':
+					tmpSchemaEntry.Type = 'Boolean';
+					tmpPackage.DefaultObject[tmpColumnName] = false;
+					tmpPackage.JsonSchema.properties[tmpColumnName] = { type: 'boolean', size: tmpColumnSize };
+					break;
+				default:
+					tmpSchemaEntry.Type = tmpCol.MeadowType || 'Default';
+					tmpPackage.DefaultObject[tmpColumnName] = '';
+					tmpPackage.JsonSchema.properties[tmpColumnName] = { type: 'string', size: tmpColumnSize };
+					break;
+			}
+
+			// Mark magic change-tracking columns by name
+			switch (tmpColumnName)
+			{
+				case 'CreateDate':
+					tmpSchemaEntry.Type = 'CreateDate';
+					break;
+				case 'CreatingIDUser':
+					tmpSchemaEntry.Type = 'CreateIDUser';
+					break;
+				case 'UpdateDate':
+					tmpSchemaEntry.Type = 'UpdateDate';
+					break;
+				case 'UpdatingIDUser':
+					tmpSchemaEntry.Type = 'UpdateIDUser';
+					break;
+				case 'Deleted':
+					tmpSchemaEntry.Type = 'Deleted';
+					break;
+				case 'DeleteDate':
+					tmpSchemaEntry.Type = 'DeleteDate';
+					break;
+				case 'DeletingIDUser':
+					tmpSchemaEntry.Type = 'DeleteIDUser';
+					break;
+			}
+
+			tmpPackage.Schema.push(tmpSchemaEntry);
+		}
+
+		return tmpPackage;
+	}
+
+	/**
 	 * Build a Meadow-compatible schema array from parsed MicroDDL columns.
 	 *
 	 * FoxHound uses this schema to determine how to handle each column in
@@ -2482,6 +2796,9 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 							let tmpFirstTableKey = Object.keys(tmpParsedSchema.Tables)[0];
 							let tmpTableSchema = tmpParsedSchema.Tables[tmpFirstTableKey];
 							tmpTableSchema.TableName = tmpTableName;
+
+							// Add standard Meadow tracking columns if not present
+							this._ensureTrackingColumns(tmpTableSchema.Columns);
 
 							tmpLog.push(`[${new Date().toISOString()}] Creating table with ${tmpTableSchema.Columns.length} columns...`);
 
@@ -2740,16 +3057,16 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 			return fCallback();
 		}
 
-		// Build a Meadow package object from the parsed schema
+		// Build a complete Meadow package object from the parsed schema,
+		// following the same pattern Stricture uses to generate Meadow models.
 		let tmpFirstTableKey = Object.keys(pParsedSchema.Tables)[0];
 		let tmpColumns = pParsedSchema.Tables[tmpFirstTableKey].Columns;
-		let tmpMeadowSchemaArray = this._buildMeadowSchemaFromColumns(tmpColumns);
+		let tmpPackageObject = this._buildMeadowPackageObject(tmpEntityName, tmpColumns);
 
-		let tmpPackageObject =
-		{
-			Scope: tmpEntityName,
-			Schema: tmpMeadowSchemaArray
-		};
+		// Parse connection configuration for the DB file path
+		let tmpConnectionConfig = {};
+		try { tmpConnectionConfig = JSON.parse(pConnection.Config || '{}'); }
+		catch (e) { /* ignore */ }
 
 		let tmpProviderProperty = this._getProviderPropertyName(pConnection.Type);
 		if (!tmpProviderProperty)
@@ -2757,32 +3074,41 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 			return fCallback(new Error(`Unsupported connection type for entity registration: ${pConnection.Type}`));
 		}
 
+		// Create an isolated Fable instance for this projection entity.
+		// Each projection gets its own Fable+Meadow+Provider stack so the
+		// DB provider points at the correct external database file.
+		let tmpFable = new libFable(
+		{
+			LogLevel: this.fable.settings.LogLevel,
+			Product: `Projection-${tmpEntityName}`,
+			SQLite: { SQLiteFilePath: tmpConnectionConfig.SQLiteFilePath }
+		});
+
 		let tmpFinishRegistration = (pConnectorInstance) =>
 		{
-			// Create a proxy Fable that overrides the provider property
-			let tmpProxyFable = Object.create(this.fable);
-			tmpProxyFable[tmpProviderProperty] = pConnectorInstance;
+			// Register the connector as this Fable's provider
+			tmpFable[tmpProviderProperty] = pConnectorInstance;
 
-			// Create Meadow DAL with the proxy fable
-			let tmpMeadow = libMeadow.new(tmpProxyFable);
+			// Create Meadow DAL on the isolated Fable
+			let tmpMeadow = libMeadow.new(tmpFable);
 			let tmpDAL = tmpMeadow.loadFromPackageObject(tmpPackageObject);
 			tmpDAL.setProvider(pConnection.Type);
 
-			// Create MeadowEndpoints and wire routes
+			// Create MeadowEndpoints and wire to the SHARED OratorServiceServer
 			let tmpEndpoints = libMeadowEndpoints.new(tmpDAL);
 			tmpEndpoints.connectRoutes(this.fable.OratorServiceServer);
 
 			// Store the registration
 			this._ProjectionEntities[tmpEntityName] =
 			{
+				Fable: tmpFable,
 				DAL: tmpDAL,
 				Endpoints: tmpEndpoints,
 				Connector: pConnectorInstance,
-				ProxyFable: tmpProxyFable,
 				IDProjectionStore: pProjectionStore.IDProjectionStore
 			};
 
-			// Also publish to fable DAL/MeadowEndpoints maps
+			// Also publish to main fable DAL/MeadowEndpoints maps
 			if (this.fable.DAL)
 			{
 				this.fable.DAL[tmpEntityName] = tmpDAL;
@@ -2792,7 +3118,7 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 				this.fable.MeadowEndpoints[tmpEntityName] = tmpEndpoints;
 			}
 
-			this.fable.log.info(`Projection entity [${tmpEntityName}] registered (${pConnection.Type} via proxy fable).`);
+			this.fable.log.info(`Projection entity [${tmpEntityName}] registered (${pConnection.Type}, isolated Fable -> ${tmpConnectionConfig.SQLiteFilePath || 'default'}).`);
 			return fCallback();
 		};
 
@@ -2802,11 +3128,7 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 			return tmpFinishRegistration(pConnector);
 		}
 
-		// Create and connect a new connector
-		let tmpConfig = {};
-		try { tmpConfig = JSON.parse(pConnection.Config || '{}'); }
-		catch (e) { /* ignore */ }
-
+		// Create and connect a new connector using dynamic resolution
 		let tmpConnectorModuleName = '';
 		let tmpConnectorModules =
 		[
@@ -2840,7 +3162,7 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 			return fCallback(new Error(`Connector module not installed: ${tmpConnectorModuleName}`));
 		}
 
-		let tmpNewConnector = new tmpConnectorModule(this.fable, tmpConfig, `ProjEntity-${tmpEntityName}-${Date.now()}`);
+		let tmpNewConnector = new tmpConnectorModule(tmpFable, tmpConnectionConfig, `ProjEntity-${tmpEntityName}-${Date.now()}`);
 
 		tmpNewConnector.connectAsync(
 			(pConnectError) =>

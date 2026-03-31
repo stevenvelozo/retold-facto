@@ -58,6 +58,7 @@ Object.assign(FactoProvider.prototype, require('./facto-api/Facto-API-Datasets.j
 Object.assign(FactoProvider.prototype, require('./facto-api/Facto-API-Projections.js'));
 Object.assign(FactoProvider.prototype, require('./facto-api/Facto-API-Scanner.js'));
 Object.assign(FactoProvider.prototype, require('./facto-api/Facto-API-Connections.js'));
+Object.assign(FactoProvider.prototype, require('./facto-api/Facto-API-Schema.js'));
 
 module.exports = FactoProvider;
 

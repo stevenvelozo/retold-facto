@@ -246,6 +246,12 @@
                     "Column": "VersionPolicy",
                     "DataType": "String",
                     "Size": "16"
+                },
+                {
+                    "Column": "IDSchema",
+                    "DataType": "Numeric",
+                    "Size": "int",
+                    "Join": "IDSchema"
                 }
             ],
             "Description": ""
@@ -1101,6 +1107,247 @@
                 {
                     "Column": "Active",
                     "DataType": "Boolean"
+                }
+            ]
+        },
+        "FactoSchema": {
+            "TableName": "FactoSchema",
+            "Domain": "Default",
+            "Columns": [
+                {
+                    "Column": "IDSchema",
+                    "DataType": "ID"
+                },
+                {
+                    "Column": "GUIDSchema",
+                    "DataType": "GUID",
+                    "Size": "36"
+                },
+                {
+                    "Column": "CreateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "CreatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "UpdateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "UpdatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Deleted",
+                    "DataType": "Boolean"
+                },
+                {
+                    "Column": "DeleteDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "DeletingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Name",
+                    "DataType": "String",
+                    "Size": "200"
+                },
+                {
+                    "Column": "Hash",
+                    "DataType": "String",
+                    "Size": "128"
+                },
+                {
+                    "Column": "Type",
+                    "DataType": "String",
+                    "Size": "64"
+                },
+                {
+                    "Column": "Description",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "Version",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "SchemaDefinition",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "ManyfestDefinition",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "SchemaHash",
+                    "DataType": "String",
+                    "Size": "64"
+                },
+                {
+                    "Column": "Active",
+                    "DataType": "Boolean"
+                }
+            ]
+        },
+        "SchemaDocumentation": {
+            "TableName": "SchemaDocumentation",
+            "Domain": "Default",
+            "Columns": [
+                {
+                    "Column": "IDSchemaDocumentation",
+                    "DataType": "ID"
+                },
+                {
+                    "Column": "GUIDSchemaDocumentation",
+                    "DataType": "GUID",
+                    "Size": "36"
+                },
+                {
+                    "Column": "CreateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "CreatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "UpdateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "UpdatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Deleted",
+                    "DataType": "Boolean"
+                },
+                {
+                    "Column": "DeleteDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "DeletingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "IDSchema",
+                    "DataType": "Numeric",
+                    "Size": "int",
+                    "Join": "IDSchema"
+                },
+                {
+                    "Column": "Name",
+                    "DataType": "String",
+                    "Size": "200"
+                },
+                {
+                    "Column": "DocumentType",
+                    "DataType": "String",
+                    "Size": "64"
+                },
+                {
+                    "Column": "MimeType",
+                    "DataType": "String",
+                    "Size": "128"
+                },
+                {
+                    "Column": "StorageKey",
+                    "DataType": "String",
+                    "Size": "256"
+                },
+                {
+                    "Column": "Description",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "Content",
+                    "DataType": "Text"
+                }
+            ]
+        },
+        "SchemaVersion": {
+            "TableName": "SchemaVersion",
+            "Domain": "Default",
+            "Columns": [
+                {
+                    "Column": "IDSchemaVersion",
+                    "DataType": "ID"
+                },
+                {
+                    "Column": "GUIDSchemaVersion",
+                    "DataType": "GUID",
+                    "Size": "36"
+                },
+                {
+                    "Column": "CreateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "CreatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "UpdateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "UpdatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Deleted",
+                    "DataType": "Boolean"
+                },
+                {
+                    "Column": "DeleteDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "DeletingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "IDSchema",
+                    "DataType": "Numeric",
+                    "Size": "int",
+                    "Join": "IDSchema"
+                },
+                {
+                    "Column": "Version",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "SchemaDefinition",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "ManyfestDefinition",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "SchemaHash",
+                    "DataType": "String",
+                    "Size": "64"
+                },
+                {
+                    "Column": "ChangeDescription",
+                    "DataType": "Text"
                 }
             ]
         }

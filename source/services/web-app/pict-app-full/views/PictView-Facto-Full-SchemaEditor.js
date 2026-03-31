@@ -164,7 +164,11 @@ const _ViewConfiguration =
 				</thead>
 				<tbody id="Facto-Proj-ColBuilder-Body"></tbody>
 			</table>
-			<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="{~P~}.views['Facto-Full-SchemaEditor'].addColumn()">+ Add Column</button>
+			<div style="display:flex; gap:0.5em; flex-wrap:wrap; margin-bottom:0.5em;">
+				<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="{~P~}.views['Facto-Full-SchemaEditor'].addColumn()">+ Add Column</button>
+				<button class="facto-btn facto-btn-secondary facto-btn-small" id="Facto-Proj-AuditBtn" onclick="{~P~}.views['Facto-Full-SchemaEditor'].toggleAuditingColumns()">+ Add Auditing</button>
+				<button class="facto-btn facto-btn-secondary facto-btn-small" id="Facto-Proj-SoftDeleteBtn" onclick="{~P~}.views['Facto-Full-SchemaEditor'].toggleSoftDeleteColumns()">+ Add Soft Deletes</button>
+			</div>
 			<div class="facto-section-title" style="margin-top:1em; font-size:0.72em;">Generated MicroDDL</div>
 			<div class="facto-schema-preview" id="Facto-Proj-DDL-Preview"></div>
 		</div>
@@ -332,6 +336,120 @@ class FactoFullSchemaEditorView extends libPictView
 		this.updateDDLPreview();
 	}
 
+	_hasColumn(pName)
+	{
+		for (let i = 0; i < this._Columns.length; i++)
+		{
+			if (this._Columns[i].Name && this._Columns[i].Name.toLowerCase() === pName.toLowerCase())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	_removeColumnByName(pName)
+	{
+		let tmpLower = pName.toLowerCase();
+		this._Columns = this._Columns.filter(
+			function(c) { return !c.Name || c.Name.toLowerCase() !== tmpLower; });
+	}
+
+	_hasAuditingColumns()
+	{
+		return this._hasColumn('CreateDate') || this._hasColumn('UpdateDate');
+	}
+
+	_hasSoftDeleteColumns()
+	{
+		return this._hasColumn('Deleted') || this._hasColumn('DeleteDate');
+	}
+
+	_updateTrackingButtons()
+	{
+		let tmpAuditBtn = document.getElementById('Facto-Proj-AuditBtn');
+		let tmpDeleteBtn = document.getElementById('Facto-Proj-SoftDeleteBtn');
+
+		if (tmpAuditBtn)
+		{
+			if (this._hasAuditingColumns())
+			{
+				tmpAuditBtn.textContent = '\u2715 Remove Auditing';
+			}
+			else
+			{
+				tmpAuditBtn.textContent = '+ Add Auditing';
+			}
+		}
+
+		if (tmpDeleteBtn)
+		{
+			if (this._hasSoftDeleteColumns())
+			{
+				tmpDeleteBtn.textContent = '\u2715 Remove Soft Deletes';
+			}
+			else
+			{
+				tmpDeleteBtn.textContent = '+ Add Soft Deletes';
+			}
+		}
+	}
+
+	toggleAuditingColumns()
+	{
+		this._marshalColumnsFromUI();
+
+		if (this._hasAuditingColumns())
+		{
+			// Remove auditing columns
+			this._removeColumnByName('CreateDate');
+			this._removeColumnByName('CreatingIDUser');
+			this._removeColumnByName('UpdateDate');
+			this._removeColumnByName('UpdatingIDUser');
+		}
+		else
+		{
+			// Add auditing columns
+			if (!this._hasColumn('CreateDate'))
+				this._Columns.push({ Name: 'CreateDate', DataType: 'DateTime', Size: '' });
+			if (!this._hasColumn('CreatingIDUser'))
+				this._Columns.push({ Name: 'CreatingIDUser', DataType: 'Numeric', Size: '' });
+			if (!this._hasColumn('UpdateDate'))
+				this._Columns.push({ Name: 'UpdateDate', DataType: 'DateTime', Size: '' });
+			if (!this._hasColumn('UpdatingIDUser'))
+				this._Columns.push({ Name: 'UpdatingIDUser', DataType: 'Numeric', Size: '' });
+		}
+
+		this.refreshColumnBuilder();
+		this.updateDDLPreview();
+	}
+
+	toggleSoftDeleteColumns()
+	{
+		this._marshalColumnsFromUI();
+
+		if (this._hasSoftDeleteColumns())
+		{
+			// Remove soft delete columns
+			this._removeColumnByName('Deleted');
+			this._removeColumnByName('DeleteDate');
+			this._removeColumnByName('DeletingIDUser');
+		}
+		else
+		{
+			// Add soft delete columns
+			if (!this._hasColumn('Deleted'))
+				this._Columns.push({ Name: 'Deleted', DataType: 'Boolean', Size: '' });
+			if (!this._hasColumn('DeleteDate'))
+				this._Columns.push({ Name: 'DeleteDate', DataType: 'DateTime', Size: '' });
+			if (!this._hasColumn('DeletingIDUser'))
+				this._Columns.push({ Name: 'DeletingIDUser', DataType: 'Numeric', Size: '' });
+		}
+
+		this.refreshColumnBuilder();
+		this.updateDDLPreview();
+	}
+
 	refreshColumnBuilder()
 	{
 		let tmpBody = document.getElementById('Facto-Proj-ColBuilder-Body');
@@ -362,6 +480,7 @@ class FactoFullSchemaEditorView extends libPictView
 		}
 
 		tmpBody.innerHTML = tmpHtml;
+		this._updateTrackingButtons();
 	}
 
 	_onColumnTypeChange(pIndex, pDataType)

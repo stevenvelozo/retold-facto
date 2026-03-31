@@ -132,6 +132,11 @@ module.exports =
 			});
 	},
 
+	deleteProjectionStore: function(pIDProjectionStore)
+	{
+		return this.api('DELETE', `/facto/projection/store/${pIDProjectionStore}`);
+	},
+
 	// ======================================================================
 	// Projection Mapping Operations
 	// ======================================================================

@@ -1132,6 +1132,12 @@
                     "Column": "VersionPolicy",
                     "DataType": "String",
                     "Size": "16"
+                },
+                {
+                    "Column": "IDSchema",
+                    "DataType": "Numeric",
+                    "Size": "int",
+                    "Join": "IDSchema"
                 }
             ],
             "Description": "",
@@ -1224,6 +1230,11 @@
                         "Column": "VersionPolicy",
                         "Type": "String",
                         "Size": "16"
+                    },
+                    {
+                        "Column": "IDSchema",
+                        "Type": "Integer",
+                        "Size": "int"
                     }
                 ],
                 "DefaultObject": {
@@ -1243,7 +1254,8 @@
                     "SchemaHash": "",
                     "SchemaVersion": 0,
                     "SchemaDefinition": "",
-                    "VersionPolicy": ""
+                    "VersionPolicy": "",
+                    "IDSchema": 0
                 },
                 "JsonSchema": {
                     "title": "Dataset",
@@ -1316,6 +1328,10 @@
                         "VersionPolicy": {
                             "type": "string",
                             "size": "16"
+                        },
+                        "IDSchema": {
+                            "type": "integer",
+                            "size": "int"
                         }
                     },
                     "required": [
@@ -1397,6 +1413,12 @@
                                 "Column": "VersionPolicy",
                                 "DataType": "String",
                                 "Size": "16"
+                            },
+                            {
+                                "Column": "IDSchema",
+                                "DataType": "Numeric",
+                                "Size": "int",
+                                "Join": "IDSchema"
                             }
                         ],
                         "Description": "",
@@ -1484,6 +1506,11 @@
                                     "Column": "VersionPolicy",
                                     "Type": "String",
                                     "Size": "16"
+                                },
+                                {
+                                    "Column": "IDSchema",
+                                    "Type": "Integer",
+                                    "Size": "int"
                                 }
                             ],
                             "DefaultObject": {
@@ -1502,7 +1529,8 @@
                                 "SchemaHash": "",
                                 "SchemaVersion": 0,
                                 "SchemaDefinition": "",
-                                "VersionPolicy": ""
+                                "VersionPolicy": "",
+                                "IDSchema": 0
                             },
                             "JsonSchema": {
                                 "title": "Dataset",
@@ -1571,6 +1599,10 @@
                                     "VersionPolicy": {
                                         "type": "string",
                                         "size": "16"
+                                    },
+                                    "IDSchema": {
+                                        "type": "integer",
+                                        "size": "int"
                                     }
                                 },
                                 "required": [
@@ -6426,6 +6458,785 @@
                 }
             },
             "Authorization": {}
+        },
+        "FactoSchema": {
+            "TableName": "FactoSchema",
+            "Domain": "Default",
+            "Columns": [
+                {
+                    "Column": "IDSchema",
+                    "DataType": "ID"
+                },
+                {
+                    "Column": "GUIDSchema",
+                    "DataType": "GUID",
+                    "Size": "36"
+                },
+                {
+                    "Column": "CreateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "CreatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "UpdateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "UpdatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Deleted",
+                    "DataType": "Boolean"
+                },
+                {
+                    "Column": "DeleteDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "DeletingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Name",
+                    "DataType": "String",
+                    "Size": "200"
+                },
+                {
+                    "Column": "Hash",
+                    "DataType": "String",
+                    "Size": "128"
+                },
+                {
+                    "Column": "Type",
+                    "DataType": "String",
+                    "Size": "64"
+                },
+                {
+                    "Column": "Description",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "Version",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "SchemaDefinition",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "ManyfestDefinition",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "SchemaHash",
+                    "DataType": "String",
+                    "Size": "64"
+                },
+                {
+                    "Column": "Active",
+                    "DataType": "Boolean"
+                }
+            ],
+            "Description": "",
+            "MeadowSchema": {
+                "Scope": "FactoSchema",
+                "DefaultIdentifier": "IDSchema",
+                "Domain": "Default",
+                "Schema": [
+                    {
+                        "Column": "IDSchema",
+                        "Type": "AutoIdentity",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "GUIDSchema",
+                        "Type": "AutoGUID",
+                        "Size": "36"
+                    },
+                    {
+                        "Column": "CreateDate",
+                        "Type": "CreateDate",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "CreatingIDUser",
+                        "Type": "CreateIDUser",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "UpdateDate",
+                        "Type": "UpdateDate",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "UpdatingIDUser",
+                        "Type": "UpdateIDUser",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "Deleted",
+                        "Type": "Deleted",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "DeleteDate",
+                        "Type": "DeleteDate",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "DeletingIDUser",
+                        "Type": "DeleteIDUser",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "Name",
+                        "Type": "String",
+                        "Size": "200"
+                    },
+                    {
+                        "Column": "Hash",
+                        "Type": "String",
+                        "Size": "128"
+                    },
+                    {
+                        "Column": "Type",
+                        "Type": "String",
+                        "Size": "64"
+                    },
+                    {
+                        "Column": "Description",
+                        "Type": "Text",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "Version",
+                        "Type": "Numeric",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "SchemaDefinition",
+                        "Type": "Text",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "ManyfestDefinition",
+                        "Type": "Text",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "SchemaHash",
+                        "Type": "String",
+                        "Size": "64"
+                    },
+                    {
+                        "Column": "Active",
+                        "Type": "Boolean",
+                        "Size": "Default"
+                    }
+                ],
+                "DefaultObject": {
+                    "IDSchema": 0,
+                    "GUIDSchema": "0x0000000000000000",
+                    "CreateDate": null,
+                    "CreatingIDUser": 0,
+                    "UpdateDate": null,
+                    "UpdatingIDUser": 0,
+                    "Deleted": false,
+                    "DeleteDate": null,
+                    "DeletingIDUser": 0,
+                    "Name": "",
+                    "Hash": "",
+                    "Type": "",
+                    "Description": "",
+                    "Version": 0,
+                    "SchemaDefinition": "",
+                    "ManyfestDefinition": "",
+                    "SchemaHash": "",
+                    "Active": false
+                },
+                "JsonSchema": {
+                    "title": "FactoSchema",
+                    "type": "object",
+                    "properties": {
+                        "IDSchema": {
+                            "type": "integer",
+                            "size": "Default"
+                        },
+                        "GUIDSchema": {
+                            "type": "string",
+                            "size": "36"
+                        },
+                        "CreateDate": {
+                            "type": "string",
+                            "size": "Default"
+                        },
+                        "CreatingIDUser": {
+                            "type": "integer",
+                            "size": "int"
+                        },
+                        "UpdateDate": {
+                            "type": "string",
+                            "size": "Default"
+                        },
+                        "UpdatingIDUser": {
+                            "type": "integer",
+                            "size": "int"
+                        },
+                        "Deleted": {
+                            "type": "boolean",
+                            "size": "Default"
+                        },
+                        "DeleteDate": {
+                            "type": "string",
+                            "size": "Default"
+                        },
+                        "DeletingIDUser": {
+                            "type": "integer",
+                            "size": "int"
+                        },
+                        "Name": {
+                            "type": "string",
+                            "size": "200"
+                        },
+                        "Hash": {
+                            "type": "string",
+                            "size": "128"
+                        },
+                        "Type": {
+                            "type": "string",
+                            "size": "64"
+                        },
+                        "Description": {
+                            "type": "string",
+                            "size": "Default"
+                        },
+                        "Version": {
+                            "type": "integer",
+                            "size": "int"
+                        },
+                        "SchemaDefinition": {
+                            "type": "string",
+                            "size": "Default"
+                        },
+                        "ManyfestDefinition": {
+                            "type": "string",
+                            "size": "Default"
+                        },
+                        "SchemaHash": {
+                            "type": "string",
+                            "size": "64"
+                        },
+                        "Active": {
+                            "type": "boolean",
+                            "size": "Default"
+                        }
+                    }
+                }
+            }
+        },
+        "SchemaDocumentation": {
+            "TableName": "SchemaDocumentation",
+            "Domain": "Default",
+            "Columns": [
+                {
+                    "Column": "IDSchemaDocumentation",
+                    "DataType": "ID"
+                },
+                {
+                    "Column": "GUIDSchemaDocumentation",
+                    "DataType": "GUID",
+                    "Size": "36"
+                },
+                {
+                    "Column": "CreateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "CreatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "UpdateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "UpdatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Deleted",
+                    "DataType": "Boolean"
+                },
+                {
+                    "Column": "DeleteDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "DeletingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "IDSchema",
+                    "DataType": "Numeric",
+                    "Size": "int",
+                    "Join": "IDSchema"
+                },
+                {
+                    "Column": "Name",
+                    "DataType": "String",
+                    "Size": "200"
+                },
+                {
+                    "Column": "DocumentType",
+                    "DataType": "String",
+                    "Size": "64"
+                },
+                {
+                    "Column": "MimeType",
+                    "DataType": "String",
+                    "Size": "128"
+                },
+                {
+                    "Column": "StorageKey",
+                    "DataType": "String",
+                    "Size": "256"
+                },
+                {
+                    "Column": "Description",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "Content",
+                    "DataType": "Text"
+                }
+            ],
+            "Description": "",
+            "MeadowSchema": {
+                "Scope": "SchemaDocumentation",
+                "DefaultIdentifier": "IDSchemaDocumentation",
+                "Domain": "Default",
+                "Schema": [
+                    {
+                        "Column": "IDSchemaDocumentation",
+                        "Type": "AutoIdentity",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "GUIDSchemaDocumentation",
+                        "Type": "AutoGUID",
+                        "Size": "36"
+                    },
+                    {
+                        "Column": "CreateDate",
+                        "Type": "CreateDate",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "CreatingIDUser",
+                        "Type": "CreateIDUser",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "UpdateDate",
+                        "Type": "UpdateDate",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "UpdatingIDUser",
+                        "Type": "UpdateIDUser",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "Deleted",
+                        "Type": "Deleted",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "DeleteDate",
+                        "Type": "DeleteDate",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "DeletingIDUser",
+                        "Type": "DeleteIDUser",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "IDSchema",
+                        "Type": "Numeric",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "Name",
+                        "Type": "String",
+                        "Size": "200"
+                    },
+                    {
+                        "Column": "DocumentType",
+                        "Type": "String",
+                        "Size": "64"
+                    },
+                    {
+                        "Column": "MimeType",
+                        "Type": "String",
+                        "Size": "128"
+                    },
+                    {
+                        "Column": "StorageKey",
+                        "Type": "String",
+                        "Size": "256"
+                    },
+                    {
+                        "Column": "Description",
+                        "Type": "Text",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "Content",
+                        "Type": "Text",
+                        "Size": "Default"
+                    }
+                ],
+                "DefaultObject": {
+                    "IDSchemaDocumentation": 0,
+                    "GUIDSchemaDocumentation": "0x0000000000000000",
+                    "CreateDate": null,
+                    "CreatingIDUser": 0,
+                    "UpdateDate": null,
+                    "UpdatingIDUser": 0,
+                    "Deleted": false,
+                    "DeleteDate": null,
+                    "DeletingIDUser": 0,
+                    "IDSchema": 0,
+                    "Name": "",
+                    "DocumentType": "",
+                    "MimeType": "",
+                    "StorageKey": "",
+                    "Description": "",
+                    "Content": ""
+                },
+                "JsonSchema": {
+                    "title": "SchemaDocumentation",
+                    "type": "object",
+                    "properties": {
+                        "IDSchemaDocumentation": {
+                            "type": "integer",
+                            "size": "Default"
+                        },
+                        "GUIDSchemaDocumentation": {
+                            "type": "string",
+                            "size": "36"
+                        },
+                        "CreateDate": {
+                            "type": "string",
+                            "size": "Default"
+                        },
+                        "CreatingIDUser": {
+                            "type": "integer",
+                            "size": "int"
+                        },
+                        "UpdateDate": {
+                            "type": "string",
+                            "size": "Default"
+                        },
+                        "UpdatingIDUser": {
+                            "type": "integer",
+                            "size": "int"
+                        },
+                        "Deleted": {
+                            "type": "boolean",
+                            "size": "Default"
+                        },
+                        "DeleteDate": {
+                            "type": "string",
+                            "size": "Default"
+                        },
+                        "DeletingIDUser": {
+                            "type": "integer",
+                            "size": "int"
+                        },
+                        "IDSchema": {
+                            "type": "integer",
+                            "size": "int"
+                        },
+                        "Name": {
+                            "type": "string",
+                            "size": "200"
+                        },
+                        "DocumentType": {
+                            "type": "string",
+                            "size": "64"
+                        },
+                        "MimeType": {
+                            "type": "string",
+                            "size": "128"
+                        },
+                        "StorageKey": {
+                            "type": "string",
+                            "size": "256"
+                        },
+                        "Description": {
+                            "type": "string",
+                            "size": "Default"
+                        },
+                        "Content": {
+                            "type": "string",
+                            "size": "Default"
+                        }
+                    }
+                }
+            }
+        },
+        "SchemaVersion": {
+            "TableName": "SchemaVersion",
+            "Domain": "Default",
+            "Columns": [
+                {
+                    "Column": "IDSchemaVersion",
+                    "DataType": "ID"
+                },
+                {
+                    "Column": "GUIDSchemaVersion",
+                    "DataType": "GUID",
+                    "Size": "36"
+                },
+                {
+                    "Column": "CreateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "CreatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "UpdateDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "UpdatingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "Deleted",
+                    "DataType": "Boolean"
+                },
+                {
+                    "Column": "DeleteDate",
+                    "DataType": "DateTime"
+                },
+                {
+                    "Column": "DeletingIDUser",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "IDSchema",
+                    "DataType": "Numeric",
+                    "Size": "int",
+                    "Join": "IDSchema"
+                },
+                {
+                    "Column": "Version",
+                    "DataType": "Numeric",
+                    "Size": "int"
+                },
+                {
+                    "Column": "SchemaDefinition",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "ManyfestDefinition",
+                    "DataType": "Text"
+                },
+                {
+                    "Column": "SchemaHash",
+                    "DataType": "String",
+                    "Size": "64"
+                },
+                {
+                    "Column": "ChangeDescription",
+                    "DataType": "Text"
+                }
+            ],
+            "Description": "",
+            "MeadowSchema": {
+                "Scope": "SchemaVersion",
+                "DefaultIdentifier": "IDSchemaVersion",
+                "Domain": "Default",
+                "Schema": [
+                    {
+                        "Column": "IDSchemaVersion",
+                        "Type": "AutoIdentity",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "GUIDSchemaVersion",
+                        "Type": "AutoGUID",
+                        "Size": "36"
+                    },
+                    {
+                        "Column": "CreateDate",
+                        "Type": "CreateDate",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "CreatingIDUser",
+                        "Type": "CreateIDUser",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "UpdateDate",
+                        "Type": "UpdateDate",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "UpdatingIDUser",
+                        "Type": "UpdateIDUser",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "Deleted",
+                        "Type": "Deleted",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "DeleteDate",
+                        "Type": "DeleteDate",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "DeletingIDUser",
+                        "Type": "DeleteIDUser",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "IDSchema",
+                        "Type": "Numeric",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "Version",
+                        "Type": "Numeric",
+                        "Size": "int"
+                    },
+                    {
+                        "Column": "SchemaDefinition",
+                        "Type": "Text",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "ManyfestDefinition",
+                        "Type": "Text",
+                        "Size": "Default"
+                    },
+                    {
+                        "Column": "SchemaHash",
+                        "Type": "String",
+                        "Size": "64"
+                    },
+                    {
+                        "Column": "ChangeDescription",
+                        "Type": "Text",
+                        "Size": "Default"
+                    }
+                ],
+                "DefaultObject": {
+                    "IDSchemaVersion": 0,
+                    "GUIDSchemaVersion": "0x0000000000000000",
+                    "CreateDate": null,
+                    "CreatingIDUser": 0,
+                    "UpdateDate": null,
+                    "UpdatingIDUser": 0,
+                    "Deleted": false,
+                    "DeleteDate": null,
+                    "DeletingIDUser": 0,
+                    "IDSchema": 0,
+                    "Version": 0,
+                    "SchemaDefinition": "",
+                    "ManyfestDefinition": "",
+                    "SchemaHash": "",
+                    "ChangeDescription": ""
+                },
+                "JsonSchema": {
+                    "title": "SchemaVersion",
+                    "type": "object",
+                    "properties": {
+                        "IDSchemaVersion": {
+                            "type": "integer",
+                            "size": "Default"
+                        },
+                        "GUIDSchemaVersion": {
+                            "type": "string",
+                            "size": "36"
+                        },
+                        "CreateDate": {
+                            "type": "string",
+                            "size": "Default"
+                        },
+                        "CreatingIDUser": {
+                            "type": "integer",
+                            "size": "int"
+                        },
+                        "UpdateDate": {
+                            "type": "string",
+                            "size": "Default"
+                        },
+                        "UpdatingIDUser": {
+                            "type": "integer",
+                            "size": "int"
+                        },
+                        "Deleted": {
+                            "type": "boolean",
+                            "size": "Default"
+                        },
+                        "DeleteDate": {
+                            "type": "string",
+                            "size": "Default"
+                        },
+                        "DeletingIDUser": {
+                            "type": "integer",
+                            "size": "int"
+                        },
+                        "IDSchema": {
+                            "type": "integer",
+                            "size": "int"
+                        },
+                        "Version": {
+                            "type": "integer",
+                            "size": "int"
+                        },
+                        "SchemaDefinition": {
+                            "type": "string",
+                            "size": "Default"
+                        },
+                        "ManyfestDefinition": {
+                            "type": "string",
+                            "size": "Default"
+                        },
+                        "SchemaHash": {
+                            "type": "string",
+                            "size": "64"
+                        },
+                        "ChangeDescription": {
+                            "type": "string",
+                            "size": "Default"
+                        }
+                    }
+                }
+            }
         }
     },
     "TablesSequence": [
@@ -6440,7 +7251,10 @@
         "SourceCatalogEntry",
         "CatalogDatasetDefinition",
         "MultiSetProjection",
-        "ProjectionCertaintyLog"
+        "ProjectionCertaintyLog",
+        "FactoSchema",
+        "SchemaDocumentation",
+        "SchemaVersion"
     ],
     "Authorization": {
         "Source": {

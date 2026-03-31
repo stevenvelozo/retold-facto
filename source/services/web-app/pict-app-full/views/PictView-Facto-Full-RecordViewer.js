@@ -187,6 +187,7 @@ class FactoFullRecordViewerView extends libPictView
 		super(pFable, pOptions, pServiceHash);
 
 		this._CurrentIDRecord = null;
+		this._CurrentProjectionName = null;
 		this._ObjectEditorView = null;
 	}
 
@@ -209,6 +210,14 @@ class FactoFullRecordViewerView extends libPictView
 	loadRecord(pIDRecord)
 	{
 		this._CurrentIDRecord = pIDRecord;
+		this._CurrentProjectionName = null;
+		this.render();
+	}
+
+	loadProjectionRecord(pEntityName, pIDRecord)
+	{
+		this._CurrentIDRecord = pIDRecord;
+		this._CurrentProjectionName = pEntityName;
 		this.render();
 	}
 
@@ -235,6 +244,12 @@ class FactoFullRecordViewerView extends libPictView
 		let tmpLoadingEl = document.getElementById('Facto-RecordViewer-Loading');
 		let tmpErrorEl = document.getElementById('Facto-RecordViewer-Error');
 		let tmpMetaContainer = document.getElementById('Facto-RecordViewer-MetaContainer');
+
+		// Check if viewing a projection record (set via loadProjectionRecord)
+		if (this._CurrentProjectionName)
+		{
+			return this._fetchAndDisplayProjectionRecord(pIDRecord, this._CurrentProjectionName);
+		}
 
 		// Fetch the record, its source, its dataset, and certainty in parallel
 		let tmpRecord = null;
@@ -535,6 +550,106 @@ class FactoFullRecordViewerView extends libPictView
 	_escapeHtml(pStr)
 	{
 		return pStr.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+	}
+
+	_fetchAndDisplayProjectionRecord(pIDRecord, pProjectionName)
+	{
+		let tmpProvider = this.pict.providers.Facto;
+		let tmpLoadingEl = document.getElementById('Facto-RecordViewer-Loading');
+		let tmpErrorEl = document.getElementById('Facto-RecordViewer-Error');
+		let tmpMetaContainer = document.getElementById('Facto-RecordViewer-MetaContainer');
+
+		tmpProvider.api('GET', '/1.0/' + pProjectionName + '/' + pIDRecord).then(
+			(pRecord) =>
+			{
+				if (!pRecord || pRecord.Error)
+				{
+					if (tmpLoadingEl) tmpLoadingEl.style.display = 'none';
+					if (tmpErrorEl)
+					{
+						tmpErrorEl.textContent = 'Error loading projection record: ' + (pRecord ? pRecord.Error : 'Not found');
+						tmpErrorEl.style.display = 'block';
+					}
+					return;
+				}
+
+				if (tmpLoadingEl) tmpLoadingEl.style.display = 'none';
+				if (tmpMetaContainer) tmpMetaContainer.style.display = 'block';
+
+				// Find the dataset for context
+				let tmpDatasets = this.pict.AppData.Facto.Datasets || [];
+				let tmpDataset = tmpDatasets.find(function(d) { return d.Name === pProjectionName; });
+
+				// Build title
+				let tmpTitleEl = document.getElementById('Facto-RecordViewer-Title');
+				if (tmpTitleEl)
+				{
+					tmpTitleEl.textContent = pProjectionName + ' #' + pIDRecord;
+				}
+
+				// Build metadata cards into the inner Meta div using the same
+				// _metaRow helper and CSS classes as the regular record view
+				let tmpMetaEl = document.getElementById('Facto-RecordViewer-Meta');
+				if (tmpMetaEl)
+				{
+					let tmpHtml = '';
+
+					// Projection Identity card
+					tmpHtml += '<div class="facto-record-meta-card">';
+					tmpHtml += '<h3>Projection Identity</h3>';
+					tmpHtml += this._metaRow('ID', pIDRecord);
+					tmpHtml += this._metaRow('GUID', pRecord['GUID' + pProjectionName] || '\u2014', true);
+					tmpHtml += this._metaRow('Entity', pProjectionName);
+					tmpHtml += this._metaRow('Type', '<span class="facto-badge" style="background:var(--facto-brand-a20); color:var(--facto-brand);">Projection</span>');
+					tmpHtml += '</div>';
+
+					// Dataset card
+					if (tmpDataset)
+					{
+						tmpHtml += '<div class="facto-record-meta-card">';
+						tmpHtml += '<h3>Dataset</h3>';
+						tmpHtml += this._metaRow('Name', tmpDataset.Name || '\u2014');
+						tmpHtml += this._metaRow('Type', tmpDataset.Type || '\u2014');
+						if (tmpDataset.Hash)
+						{
+							tmpHtml += this._metaRow('Hash', tmpDataset.Hash, false, true);
+						}
+						tmpHtml += '</div>';
+					}
+
+					// Timestamps card (if available)
+					if (pRecord.CreateDate || pRecord.UpdateDate)
+					{
+						tmpHtml += '<div class="facto-record-meta-card">';
+						tmpHtml += '<h3>Timestamps</h3>';
+						if (pRecord.CreateDate)
+						{
+							tmpHtml += this._metaRow('Created', this._formatDate(pRecord.CreateDate));
+						}
+						if (pRecord.UpdateDate)
+						{
+							tmpHtml += this._metaRow('Updated', this._formatDate(pRecord.UpdateDate));
+						}
+						tmpHtml += '</div>';
+					}
+
+					tmpMetaEl.innerHTML = tmpHtml;
+				}
+
+				// Display record content — store in AppData and use
+				// the same ObjectEditor as the regular record view
+				let tmpDisplayRecord = Object.assign({}, pRecord);
+				delete tmpDisplayRecord.CreateDate;
+				delete tmpDisplayRecord.UpdateDate;
+				delete tmpDisplayRecord.Deleted;
+				delete tmpDisplayRecord.DeleteDate;
+				delete tmpDisplayRecord.CreatingIDUser;
+				delete tmpDisplayRecord.UpdatingIDUser;
+				delete tmpDisplayRecord.DeletingIDUser;
+
+				this.pict.AppData.Facto.CurrentRecordContent = tmpDisplayRecord;
+				this._renderObjectEditor();
+			});
 	}
 
 	goBack()

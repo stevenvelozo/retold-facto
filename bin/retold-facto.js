@@ -302,6 +302,7 @@ function commandServe()
 					CatalogManager: true,
 					StoreConnectionManager: true,
 					SourceFolderScanner: true,
+					SchemaManager: true,
 					WebUI: true
 				},
 
