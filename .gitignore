@@ -7,6 +7,7 @@ package-lock.json
 debug/testenv
 debug/tmp
 debug/dist
+test/screenshots/
 
 # Quackage takes care of these for me!
 .babelrc
