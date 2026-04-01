@@ -16,7 +16,7 @@
  * @author Steven Velozo <steven@velozo.com>
  */
 const libFable = require('pict');
-const libMeadowConnectionSQLite = require('meadow-connection-sqlite');
+const libMeadowConnectionManager = require('meadow-connection-manager');
 const libRetoldFacto = require('../source/Retold-Facto.js');
 
 const libFs = require('fs');
@@ -228,11 +228,15 @@ if (_DataDir !== ':memory:' && !libFs.existsSync(_DataDir))
 
 let _Fable = new libFable(_Settings);
 
-_Fable.serviceManager.addServiceType('MeadowSQLiteProvider', libMeadowConnectionSQLite);
-_Fable.serviceManager.instantiateServiceProvider('MeadowSQLiteProvider');
+_Fable.serviceManager.addServiceType('MeadowConnectionManager', libMeadowConnectionManager);
+_Fable.serviceManager.instantiateServiceProvider('MeadowConnectionManager');
 
-_Fable.MeadowSQLiteProvider.connectAsync(
-	(pError) =>
+_Fable.MeadowConnectionManager.connect('facto',
+	{
+		Type: 'SQLite',
+		SQLiteFilePath: _Settings.SQLite.SQLiteFilePath
+	},
+	(pError, pConnection) =>
 	{
 		if (pError)
 		{
@@ -240,6 +244,8 @@ _Fable.MeadowSQLiteProvider.connectAsync(
 			process.exit(1);
 		}
 
+		// Bridge: Meadow DAL providers look up fable.MeadowSQLiteProvider
+		_Fable.MeadowSQLiteProvider = pConnection.instance;
 		_Fable.settings.MeadowProvider = 'SQLite';
 
 		switch (_CLICommand)

@@ -14,17 +14,6 @@ const defaultStoreConnectionManagerOptions = (
 		RoutePrefix: '/facto'
 	});
 
-// Connector modules to try-require for the available-types endpoint
-const CONNECTOR_MODULES =
-[
-	{ Type: 'MySQL', Module: 'meadow-connection-mysql' },
-	{ Type: 'PostgreSQL', Module: 'meadow-connection-postgresql' },
-	{ Type: 'MSSQL', Module: 'meadow-connection-mssql' },
-	{ Type: 'SQLite', Module: 'meadow-connection-sqlite' },
-	{ Type: 'Solr', Module: 'meadow-connection-solr' },
-	{ Type: 'RocksDB', Module: 'meadow-connection-rocksdb' }
-];
-
 class RetoldFactoStoreConnectionManager extends libFableServiceProviderBase
 {
 	constructor(pFable, pOptions, pServiceHash)
@@ -401,28 +390,16 @@ class RetoldFactoStoreConnectionManager extends libFableServiceProviderBase
 			(pRequest, pResponse, fNext) =>
 			{
 				let tmpAvailable = [];
+				let tmpProviders = this.fable.MeadowConnectionManager.getAvailableProviders();
+				let tmpTypes = Object.keys(tmpProviders);
 
-				for (let i = 0; i < CONNECTOR_MODULES.length; i++)
+				for (let i = 0; i < tmpTypes.length; i++)
 				{
-					try
+					tmpAvailable.push(
 					{
-						require.resolve(CONNECTOR_MODULES[i].Module);
-						tmpAvailable.push(
-						{
-							Type: CONNECTOR_MODULES[i].Type,
-							Module: CONNECTOR_MODULES[i].Module,
-							Installed: true
-						});
-					}
-					catch (e)
-					{
-						tmpAvailable.push(
-						{
-							Type: CONNECTOR_MODULES[i].Type,
-							Module: CONNECTOR_MODULES[i].Module,
-							Installed: false
-						});
-					}
+						Type: tmpTypes[i],
+						Installed: tmpProviders[tmpTypes[i]]
+					});
 				}
 
 				pResponse.send({ Types: tmpAvailable });
@@ -441,54 +418,21 @@ class RetoldFactoStoreConnectionManager extends libFableServiceProviderBase
 	 */
 	_testConnection(pType, pConfig, fCallback)
 	{
-		let tmpModuleName = '';
+		let tmpTestConfig = Object.assign({}, pConfig, { Type: pType });
 
-		for (let i = 0; i < CONNECTOR_MODULES.length; i++)
-		{
-			if (CONNECTOR_MODULES[i].Type === pType)
+		this.fable.MeadowConnectionManager.testConnection(tmpTestConfig,
+			(pError, pResult) =>
 			{
-				tmpModuleName = CONNECTOR_MODULES[i].Module;
-				break;
-			}
-		}
-
-		if (!tmpModuleName)
-		{
-			return fCallback(new Error(`Unknown connection type: ${pType}`));
-		}
-
-		let tmpConnectorModule;
-		try
-		{
-			tmpConnectorModule = require(tmpModuleName);
-		}
-		catch (pError)
-		{
-			return fCallback(new Error(`Connector module ${tmpModuleName} is not installed: ${pError.message}`));
-		}
-
-		try
-		{
-			// Instantiate the connector with the config
-			let tmpConnector = new tmpConnectorModule(this.fable, pConfig, `TestConnection-${pType}-${Date.now()}`);
-
-			// Try to connect
-			tmpConnector.connectAsync(
-				(pConnectError) =>
+				if (pError)
 				{
-					if (pConnectError)
-					{
-						return fCallback(new Error(`Connection failed: ${pConnectError.message || pConnectError}`));
-					}
-
-					// Connection succeeded
-					return fCallback(null, { Connected: true, Type: pType });
-				});
-		}
-		catch (pError)
-		{
-			return fCallback(new Error(`Failed to instantiate connector: ${pError.message}`));
-		}
+					return fCallback(pError);
+				}
+				if (!pResult.Success)
+				{
+					return fCallback(new Error(pResult.Error || 'Connection test failed'));
+				}
+				return fCallback(null, { Connected: true, Type: pType });
+			});
 	}
 }
 

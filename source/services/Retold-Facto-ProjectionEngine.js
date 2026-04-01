@@ -14,7 +14,6 @@ const libPath = require('path');
 const libMeadow = require('meadow');
 const libMeadowEndpoints = require('meadow-endpoints');
 const libMeadowIntegration = require('meadow-integration');
-const libMeadowConnectionSQLite = require('meadow-connection-sqlite');
 
 const defaultProjectionEngineOptions = (
 	{
@@ -1112,38 +1111,18 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 								tmpLog.push(`Deleting deployed store: ${tmpTableName} (ID ${tmpIDStore})`);
 								tmpLog.push(`Connection: ${tmpConnection.Name} (${tmpConnection.Type})`);
 
-								try
-								{
-									// Create a connector to the target database
-									let tmpConnectorModule = null;
-
-									switch (tmpConnection.Type)
+								this._getOrCreateConnection(tmpConnection,
+									(pConnectError, tmpConnector) =>
 									{
-										case 'Projection_SQL':
-										case 'SQLite':
-											tmpConnectorModule = require('meadow-connection-sqlite');
-											break;
-										default:
-											pResponse.send({ Error: `Unsupported connection type: ${tmpConnection.Type}` });
-											return fNext();
-									}
-
-									let tmpConnector = new tmpConnectorModule(this.fable,
-										{ SQLiteFilePath: tmpConfig.SQLiteFilePath || tmpConfig.FilePath },
-										`Drop-${tmpTableName}-${Date.now()}`);
-
-									tmpConnector.connectAsync(
-										(pConnectError) =>
+										if (pConnectError)
 										{
-											if (pConnectError)
-											{
-												tmpLog.push(`Error connecting: ${pConnectError.message || pConnectError}`);
-												pResponse.send({ Error: 'Could not connect to target database', Log: tmpLog.join('\n') });
-												return fNext();
-											}
+											tmpLog.push(`Error connecting: ${pConnectError.message || pConnectError}`);
+											pResponse.send({ Error: 'Could not connect to target database', Log: tmpLog.join('\n') });
+											return fNext();
+										}
 
-											// Generate and execute DROP TABLE
-											let tmpDropSQL = tmpConnector.generateDropTableStatement(tmpTableName);
+										// Generate and execute DROP TABLE
+										let tmpDropSQL = tmpConnector.generateDropTableStatement(tmpTableName);
 											tmpLog.push(`Executing: ${tmpDropSQL}`);
 
 											try
@@ -1188,13 +1167,6 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 													return fNext();
 												});
 										});
-								}
-								catch (pError)
-								{
-									tmpLog.push(`Error: ${pError.message}`);
-									pResponse.send({ Error: pError.message, Log: tmpLog.join('\n') });
-									return fNext();
-								}
 							});
 					});
 			});
@@ -2730,142 +2702,94 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 					return fCallback(new Error('Schema contains no tables'));
 				}
 
-				let tmpConfig = {};
-				try { tmpConfig = JSON.parse(tmpConnection.Config || '{}'); }
-				catch (e) { /* ignore */ }
-
-				let tmpConnectorModuleName = '';
-				let tmpConnectorModules =
-				[
-					{ Type: 'MySQL', Module: 'meadow-connection-mysql' },
-					{ Type: 'PostgreSQL', Module: 'meadow-connection-postgresql' },
-					{ Type: 'MSSQL', Module: 'meadow-connection-mssql' },
-					{ Type: 'SQLite', Module: 'meadow-connection-sqlite' },
-					{ Type: 'Solr', Module: 'meadow-connection-solr' },
-					{ Type: 'RocksDB', Module: 'meadow-connection-rocksdb' }
-				];
-
-				for (let i = 0; i < tmpConnectorModules.length; i++)
-				{
-					if (tmpConnectorModules[i].Type === tmpConnection.Type)
-					{
-						tmpConnectorModuleName = tmpConnectorModules[i].Module;
-						break;
-					}
-				}
-
-				if (!tmpConnectorModuleName)
-				{
-					return fCallback(new Error(`Unknown connection type: ${tmpConnection.Type}`));
-				}
-
-				let tmpConnectorModule;
-				try
-				{
-					tmpConnectorModule = require(tmpConnectorModuleName);
-				}
-				catch (pRequireError)
-				{
-					return fCallback(new Error(`Connector module not installed: ${tmpConnectorModuleName}`));
-				}
-
 				let tmpLog = [];
 				tmpLog.push(`[${new Date().toISOString()}] Starting deployment to ${tmpConnection.Type} connection "${tmpConnection.Name}"`);
 				tmpLog.push(`[${new Date().toISOString()}] Target table: ${tmpTableName}`);
 
-				try
-				{
-					let tmpConnector = new tmpConnectorModule(this.fable, tmpConfig, `Deploy-${Date.now()}`);
-
-					tmpConnector.connectAsync(
-						(pConnectError) =>
+				this._getOrCreateConnection(tmpConnection,
+					(pConnectError, tmpConnector) =>
+					{
+						if (pConnectError)
 						{
-							if (pConnectError)
-							{
-								tmpLog.push(`[${new Date().toISOString()}] Connection failed: ${pConnectError.message || pConnectError}`);
-								this._saveProjectionStore(pIDDataset, pIDStoreConnection, tmpTableName, 'Failed', tmpLog.join('\n'),
-									() =>
-									{
-										return fCallback(new Error(`Connection failed: ${pConnectError.message}`), { Log: tmpLog.join('\n') });
-									});
-								return;
-							}
-
-							tmpLog.push(`[${new Date().toISOString()}] Connected successfully`);
-
-							let tmpFirstTableKey = Object.keys(tmpParsedSchema.Tables)[0];
-							let tmpTableSchema = tmpParsedSchema.Tables[tmpFirstTableKey];
-							tmpTableSchema.TableName = tmpTableName;
-
-							// Add standard Meadow tracking columns if not present
-							this._ensureTrackingColumns(tmpTableSchema.Columns);
-
-							tmpLog.push(`[${new Date().toISOString()}] Creating table with ${tmpTableSchema.Columns.length} columns...`);
-
-							tmpConnector.createTable(tmpTableSchema,
-								(pCreateError) =>
+							tmpLog.push(`[${new Date().toISOString()}] Connection failed: ${pConnectError.message || pConnectError}`);
+							this._saveProjectionStore(pIDDataset, pIDStoreConnection, tmpTableName, 'Failed', tmpLog.join('\n'),
+								() =>
 								{
-									if (pCreateError)
-									{
-										tmpLog.push(`[${new Date().toISOString()}] Table creation failed: ${pCreateError.message || pCreateError}`);
-										this._saveProjectionStore(pIDDataset, pIDStoreConnection, tmpTableName, 'Failed', tmpLog.join('\n'),
-											() =>
-											{
-												return fCallback(new Error(`Table creation failed: ${pCreateError.message}`), { Log: tmpLog.join('\n') });
-											});
-										return;
-									}
-
-									tmpLog.push(`[${new Date().toISOString()}] Table "${tmpTableName}" created successfully`);
-
-									this._saveProjectionStore(pIDDataset, pIDStoreConnection, tmpTableName, 'Deployed', tmpLog.join('\n'),
-										(pSaveError, pProjectionStore) =>
-										{
-											if (pProjectionStore && pProjectionStore.IDProjectionStore)
-											{
-												this._registerProjectionEntity(pProjectionStore, tmpConnection, tmpParsedSchema, tmpConnector,
-													(pRegError) =>
-													{
-														if (pRegError)
-														{
-															tmpLog.push(`[${new Date().toISOString()}] Entity registration warning: ${pRegError.message}`);
-														}
-														else
-														{
-															tmpLog.push(`[${new Date().toISOString()}] Meadow entity [${tmpTableName}] registered for REST upserts`);
-														}
-														return fCallback(null,
-														{
-															Success: true,
-															TargetTableName: tmpTableName,
-															ConnectionType: tmpConnection.Type,
-															ConnectionName: tmpConnection.Name,
-															Log: tmpLog.join('\n'),
-															ProjectionStore: pProjectionStore
-														});
-													});
-											}
-											else
-											{
-												return fCallback(null,
-												{
-													Success: true,
-													TargetTableName: tmpTableName,
-													ConnectionType: tmpConnection.Type,
-													ConnectionName: tmpConnection.Name,
-													Log: tmpLog.join('\n'),
-													ProjectionStore: pProjectionStore
-												});
-											}
-										});
+									return fCallback(new Error(`Connection failed: ${pConnectError.message}`), { Log: tmpLog.join('\n') });
 								});
-						});
-				}
-				catch (pDeployError)
-				{
-					tmpLog.push(`[${new Date().toISOString()}] Deployment error: ${pDeployError.message}`);
-					return fCallback(new Error(pDeployError.message), { Log: tmpLog.join('\n') });
-				}
+							return;
+						}
+
+						tmpLog.push(`[${new Date().toISOString()}] Connected successfully`);
+
+						let tmpFirstTableKey = Object.keys(tmpParsedSchema.Tables)[0];
+						let tmpTableSchema = tmpParsedSchema.Tables[tmpFirstTableKey];
+						tmpTableSchema.TableName = tmpTableName;
+
+						// Add standard Meadow tracking columns if not present
+						this._ensureTrackingColumns(tmpTableSchema.Columns);
+
+						tmpLog.push(`[${new Date().toISOString()}] Creating table with ${tmpTableSchema.Columns.length} columns...`);
+
+						tmpConnector.createTable(tmpTableSchema,
+							(pCreateError) =>
+							{
+								if (pCreateError)
+								{
+									tmpLog.push(`[${new Date().toISOString()}] Table creation failed: ${pCreateError.message || pCreateError}`);
+									this._saveProjectionStore(pIDDataset, pIDStoreConnection, tmpTableName, 'Failed', tmpLog.join('\n'),
+										() =>
+										{
+											return fCallback(new Error(`Table creation failed: ${pCreateError.message}`), { Log: tmpLog.join('\n') });
+										});
+									return;
+								}
+
+								tmpLog.push(`[${new Date().toISOString()}] Table "${tmpTableName}" created successfully`);
+
+								this._saveProjectionStore(pIDDataset, pIDStoreConnection, tmpTableName, 'Deployed', tmpLog.join('\n'),
+									(pSaveError, pProjectionStore) =>
+									{
+										if (pProjectionStore && pProjectionStore.IDProjectionStore)
+										{
+											this._registerProjectionEntity(pProjectionStore, tmpConnection, tmpParsedSchema, tmpConnector,
+												(pRegError) =>
+												{
+													if (pRegError)
+													{
+														tmpLog.push(`[${new Date().toISOString()}] Entity registration warning: ${pRegError.message}`);
+													}
+													else
+													{
+														tmpLog.push(`[${new Date().toISOString()}] Meadow entity [${tmpTableName}] registered for REST upserts`);
+													}
+													return fCallback(null,
+													{
+														Success: true,
+														TargetTableName: tmpTableName,
+														ConnectionType: tmpConnection.Type,
+														ConnectionName: tmpConnection.Name,
+														Log: tmpLog.join('\n'),
+														ProjectionStore: pProjectionStore
+													});
+												});
+										}
+										else
+										{
+											return fCallback(null,
+											{
+												Success: true,
+												TargetTableName: tmpTableName,
+												ConnectionType: tmpConnection.Type,
+												ConnectionName: tmpConnection.Name,
+												Log: tmpLog.join('\n'),
+												ProjectionStore: pProjectionStore
+											});
+										}
+									});
+							});
+					});
+
 			});
 	}
 
@@ -3019,6 +2943,39 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 	// ======================================================================
 
 	/**
+	 * Get or create a named connection for a StoreConnection record via the connection manager.
+	 *
+	 * @param {object} pStoreConnection - The StoreConnection record (must have IDStoreConnection, Config, Type)
+	 * @param {function} fCallback - Callback(pError, pConnectorInstance)
+	 */
+	_getOrCreateConnection(pStoreConnection, fCallback)
+	{
+		let tmpConnectionName = `store-${pStoreConnection.IDStoreConnection}`;
+
+		let tmpExisting = this.fable.MeadowConnectionManager.getConnection(tmpConnectionName);
+		if (tmpExisting && tmpExisting.instance)
+		{
+			return fCallback(null, tmpExisting.instance);
+		}
+
+		let tmpConfig = {};
+		try { tmpConfig = JSON.parse(pStoreConnection.Config || '{}'); }
+		catch (e) { /* ignore */ }
+
+		let tmpConnConfig = Object.assign({}, tmpConfig, { Type: pStoreConnection.Type });
+
+		this.fable.MeadowConnectionManager.connect(tmpConnectionName, tmpConnConfig,
+			(pError, pConnection) =>
+			{
+				if (pError)
+				{
+					return fCallback(new Error(`Connection failed for "${pStoreConnection.Name}": ${pError.message}`));
+				}
+				return fCallback(null, pConnection.instance);
+			});
+	}
+
+	/**
 	 * Map connection type to the Fable singleton property name used by Meadow providers.
 	 */
 	_getProviderPropertyName(pConnectionType)
@@ -3128,50 +3085,15 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 			return tmpFinishRegistration(pConnector);
 		}
 
-		// Create and connect a new connector using dynamic resolution
-		let tmpConnectorModuleName = '';
-		let tmpConnectorModules =
-		[
-			{ Type: 'MySQL', Module: 'meadow-connection-mysql' },
-			{ Type: 'PostgreSQL', Module: 'meadow-connection-postgresql' },
-			{ Type: 'MSSQL', Module: 'meadow-connection-mssql' },
-			{ Type: 'SQLite', Module: 'meadow-connection-sqlite' }
-		];
-
-		for (let i = 0; i < tmpConnectorModules.length; i++)
-		{
-			if (tmpConnectorModules[i].Type === pConnection.Type)
-			{
-				tmpConnectorModuleName = tmpConnectorModules[i].Module;
-				break;
-			}
-		}
-
-		if (!tmpConnectorModuleName)
-		{
-			return fCallback(new Error(`Unknown connection type: ${pConnection.Type}`));
-		}
-
-		let tmpConnectorModule;
-		try
-		{
-			tmpConnectorModule = require(tmpConnectorModuleName);
-		}
-		catch (pRequireError)
-		{
-			return fCallback(new Error(`Connector module not installed: ${tmpConnectorModuleName}`));
-		}
-
-		let tmpNewConnector = new tmpConnectorModule(tmpFable, tmpConnectionConfig, `ProjEntity-${tmpEntityName}-${Date.now()}`);
-
-		tmpNewConnector.connectAsync(
-			(pConnectError) =>
+		// Get or create a connection via the connection manager
+		this._getOrCreateConnection(pConnection,
+			(pConnectError, tmpConnectorInstance) =>
 			{
 				if (pConnectError)
 				{
 					return fCallback(new Error(`Connection failed for entity [${tmpEntityName}]: ${pConnectError.message}`));
 				}
-				return tmpFinishRegistration(tmpNewConnector);
+				return tmpFinishRegistration(tmpConnectorInstance);
 			});
 	}
 

@@ -11,7 +11,8 @@ var Expect = Chai.expect;
 
 const libFable = require('pict');
 const libSuperTest = require('supertest');
-const libMeadowConnectionSQLite = require('meadow-connection-sqlite');
+const libMeadowConnectionManager = require('meadow-connection-manager');
+const libRetoldFacto = require('../source/Retold-Facto.js');
 const libFs = require('fs');
 const libPath = require('path');
 
@@ -52,273 +53,32 @@ suite
 
 				_Fable = new libFable(tmpSettings);
 
-				// Register the SQLite provider
-				_Fable.serviceManager.addServiceType('MeadowSQLiteProvider', libMeadowConnectionSQLite);
-				_Fable.serviceManager.instantiateServiceProvider('MeadowSQLiteProvider');
+				// Register the connection manager and connect the catalog database
+				_Fable.serviceManager.addServiceType('MeadowConnectionManager', libMeadowConnectionManager);
+				_Fable.serviceManager.instantiateServiceProvider('MeadowConnectionManager');
 
-				_Fable.MeadowSQLiteProvider.connectAsync(
-					(pError) =>
+				_Fable.MeadowConnectionManager.connect('facto',
+					{
+						Type: 'SQLite',
+						SQLiteFilePath: ':memory:'
+					},
+					(pError, pConnection) =>
 					{
 						if (pError)
 						{
 							return fDone(pError);
 						}
 
+						// Bridge: Meadow DAL providers look up fable.MeadowSQLiteProvider
+						_Fable.MeadowSQLiteProvider = pConnection.instance;
+
 						let tmpDB = _Fable.MeadowSQLiteProvider.db;
 
-						// Create all tables for the Facto model
-						tmpDB.exec(`
-							CREATE TABLE IF NOT EXISTS Source (
-								IDSource INTEGER PRIMARY KEY AUTOINCREMENT,
-								GUIDSource TEXT,
-								CreateDate TEXT,
-								CreatingIDUser INTEGER DEFAULT 0,
-								UpdateDate TEXT,
-								UpdatingIDUser INTEGER DEFAULT 0,
-								Deleted INTEGER DEFAULT 0,
-								DeleteDate TEXT,
-								DeletingIDUser INTEGER DEFAULT 0,
-								Name TEXT,
-								Hash TEXT DEFAULT '',
-								Type TEXT,
-								URL TEXT,
-								Protocol TEXT,
-								Description TEXT,
-								Configuration TEXT,
-								Active INTEGER DEFAULT 0
-							);
-							CREATE TABLE IF NOT EXISTS SourceDocumentation (
-								IDSourceDocumentation INTEGER PRIMARY KEY AUTOINCREMENT,
-								GUIDSourceDocumentation TEXT,
-								CreateDate TEXT,
-								CreatingIDUser INTEGER DEFAULT 0,
-								UpdateDate TEXT,
-								UpdatingIDUser INTEGER DEFAULT 0,
-								Deleted INTEGER DEFAULT 0,
-								DeleteDate TEXT,
-								DeletingIDUser INTEGER DEFAULT 0,
-								IDSource INTEGER DEFAULT 0,
-								Name TEXT,
-								DocumentType TEXT,
-								MimeType TEXT,
-								StorageKey TEXT,
-								Description TEXT,
-								Content TEXT
-							);
-							CREATE TABLE IF NOT EXISTS Dataset (
-								IDDataset INTEGER PRIMARY KEY AUTOINCREMENT,
-								GUIDDataset TEXT,
-								CreateDate TEXT,
-								CreatingIDUser INTEGER DEFAULT 0,
-								UpdateDate TEXT,
-								UpdatingIDUser INTEGER DEFAULT 0,
-								Deleted INTEGER DEFAULT 0,
-								DeleteDate TEXT,
-								DeletingIDUser INTEGER DEFAULT 0,
-								Name TEXT,
-								Hash TEXT DEFAULT '',
-								Type TEXT,
-								Description TEXT,
-								SchemaHash TEXT,
-								SchemaVersion INTEGER DEFAULT 0,
-								SchemaDefinition TEXT,
-								VersionPolicy TEXT DEFAULT 'Append'
-							);
-							CREATE TABLE IF NOT EXISTS DatasetSource (
-								IDDatasetSource INTEGER PRIMARY KEY AUTOINCREMENT,
-								GUIDDatasetSource TEXT,
-								CreateDate TEXT,
-								CreatingIDUser INTEGER DEFAULT 0,
-								UpdateDate TEXT,
-								UpdatingIDUser INTEGER DEFAULT 0,
-								Deleted INTEGER DEFAULT 0,
-								DeleteDate TEXT,
-								DeletingIDUser INTEGER DEFAULT 0,
-								IDDataset INTEGER DEFAULT 0,
-								IDSource INTEGER DEFAULT 0,
-								ReliabilityWeight REAL DEFAULT 0
-							);
-							CREATE TABLE IF NOT EXISTS Record (
-								IDRecord INTEGER PRIMARY KEY AUTOINCREMENT,
-								GUIDRecord TEXT,
-								CreateDate TEXT,
-								CreatingIDUser INTEGER DEFAULT 0,
-								UpdateDate TEXT,
-								UpdatingIDUser INTEGER DEFAULT 0,
-								Deleted INTEGER DEFAULT 0,
-								DeleteDate TEXT,
-								DeletingIDUser INTEGER DEFAULT 0,
-								IDDataset INTEGER DEFAULT 0,
-								IDSource INTEGER DEFAULT 0,
-								Type TEXT,
-								SchemaHash TEXT,
-								SchemaVersion INTEGER DEFAULT 0,
-								Version INTEGER DEFAULT 1,
-								IDIngestJob INTEGER DEFAULT 0,
-								IngestDate TEXT,
-								OriginCreateDate TEXT,
-								RepresentedTimeStampStart INTEGER DEFAULT 0,
-								RepresentedTimeStampStop INTEGER DEFAULT 0,
-								RepresentedDuration INTEGER DEFAULT 0,
-								Content TEXT
-							);
-							CREATE TABLE IF NOT EXISTS RecordBinary (
-								IDRecordBinary INTEGER PRIMARY KEY AUTOINCREMENT,
-								GUIDRecordBinary TEXT,
-								CreateDate TEXT,
-								CreatingIDUser INTEGER DEFAULT 0,
-								UpdateDate TEXT,
-								UpdatingIDUser INTEGER DEFAULT 0,
-								Deleted INTEGER DEFAULT 0,
-								DeleteDate TEXT,
-								DeletingIDUser INTEGER DEFAULT 0,
-								IDRecord INTEGER DEFAULT 0,
-								MimeType TEXT,
-								StorageKey TEXT,
-								FileSize INTEGER DEFAULT 0
-							);
-							CREATE TABLE IF NOT EXISTS CertaintyIndex (
-								IDCertaintyIndex INTEGER PRIMARY KEY AUTOINCREMENT,
-								GUIDCertaintyIndex TEXT,
-								CreateDate TEXT,
-								CreatingIDUser INTEGER DEFAULT 0,
-								UpdateDate TEXT,
-								UpdatingIDUser INTEGER DEFAULT 0,
-								Deleted INTEGER DEFAULT 0,
-								DeleteDate TEXT,
-								DeletingIDUser INTEGER DEFAULT 0,
-								IDRecord INTEGER DEFAULT 0,
-								CertaintyValue REAL DEFAULT 0.5,
-								Dimension TEXT,
-								Justification TEXT
-							);
-							CREATE TABLE IF NOT EXISTS IngestJob (
-								IDIngestJob INTEGER PRIMARY KEY AUTOINCREMENT,
-								GUIDIngestJob TEXT,
-								CreateDate TEXT,
-								CreatingIDUser INTEGER DEFAULT 0,
-								UpdateDate TEXT,
-								UpdatingIDUser INTEGER DEFAULT 0,
-								Deleted INTEGER DEFAULT 0,
-								DeleteDate TEXT,
-								DeletingIDUser INTEGER DEFAULT 0,
-								IDSource INTEGER DEFAULT 0,
-								IDDataset INTEGER DEFAULT 0,
-								Status TEXT,
-								StartDate TEXT,
-								EndDate TEXT,
-								RecordsProcessed INTEGER DEFAULT 0,
-								RecordsCreated INTEGER DEFAULT 0,
-								RecordsUpdated INTEGER DEFAULT 0,
-								RecordsErrored INTEGER DEFAULT 0,
-								Configuration TEXT,
-								Log TEXT,
-								DatasetVersion INTEGER DEFAULT 0,
-								ContentSignature TEXT DEFAULT ''
-							);
-							CREATE TABLE IF NOT EXISTS SourceCatalogEntry (
-								IDSourceCatalogEntry INTEGER PRIMARY KEY AUTOINCREMENT,
-								GUIDSourceCatalogEntry TEXT,
-								CreateDate TEXT,
-								CreatingIDUser INTEGER DEFAULT 0,
-								UpdateDate TEXT,
-								UpdatingIDUser INTEGER DEFAULT 0,
-								Deleted INTEGER DEFAULT 0,
-								DeleteDate TEXT,
-								DeletingIDUser INTEGER DEFAULT 0,
-								Agency TEXT,
-								Name TEXT,
-								Type TEXT,
-								URL TEXT,
-								Protocol TEXT,
-								Category TEXT,
-								Region TEXT,
-								UpdateFrequency TEXT,
-								Description TEXT,
-								Notes TEXT,
-								Verified INTEGER DEFAULT 0
-							);
-							CREATE TABLE IF NOT EXISTS CatalogDatasetDefinition (
-								IDCatalogDatasetDefinition INTEGER PRIMARY KEY AUTOINCREMENT,
-								GUIDCatalogDatasetDefinition TEXT,
-								CreateDate TEXT,
-								CreatingIDUser INTEGER DEFAULT 0,
-								UpdateDate TEXT,
-								UpdatingIDUser INTEGER DEFAULT 0,
-								Deleted INTEGER DEFAULT 0,
-								DeleteDate TEXT,
-								DeletingIDUser INTEGER DEFAULT 0,
-								IDSourceCatalogEntry INTEGER DEFAULT 0,
-								Name TEXT,
-								Format TEXT,
-								MimeType TEXT,
-								EndpointURL TEXT,
-								Description TEXT,
-								ParseOptions TEXT,
-								AuthRequirements TEXT,
-								VersionPolicy TEXT DEFAULT 'Append',
-								Provisioned INTEGER DEFAULT 0,
-								IDSource INTEGER DEFAULT 0,
-								IDDataset INTEGER DEFAULT 0
-							);
-							CREATE TABLE IF NOT EXISTS MultiSetProjection (
-								IDMultiSetProjection INTEGER PRIMARY KEY AUTOINCREMENT,
-								GUIDMultiSetProjection TEXT,
-								CreateDate TEXT, CreatingIDUser INTEGER DEFAULT 0,
-								UpdateDate TEXT, UpdatingIDUser INTEGER DEFAULT 0,
-								Deleted INTEGER DEFAULT 0, DeleteDate TEXT, DeletingIDUser INTEGER DEFAULT 0,
-								IDDataset INTEGER DEFAULT 0, IDProjectionStore INTEGER DEFAULT 0,
-								Name TEXT, Description TEXT, PipelineConfiguration TEXT,
-								Active INTEGER DEFAULT 1
-							);
-							CREATE TABLE IF NOT EXISTS ProjectionCertaintyLog (
-								IDProjectionCertaintyLog INTEGER PRIMARY KEY AUTOINCREMENT,
-								GUIDProjectionCertaintyLog TEXT,
-								CreateDate TEXT, CreatingIDUser INTEGER DEFAULT 0,
-								UpdateDate TEXT, UpdatingIDUser INTEGER DEFAULT 0,
-								Deleted INTEGER DEFAULT 0, DeleteDate TEXT, DeletingIDUser INTEGER DEFAULT 0,
-								IDMultiSetProjection INTEGER DEFAULT 0,
-								RecordGUID TEXT, CertaintyValue REAL DEFAULT 0.5,
-								SourceMappingLabel TEXT, IDProjectionMapping INTEGER DEFAULT 0,
-								Action TEXT, Details TEXT
-							);
-							CREATE TABLE IF NOT EXISTS StoreConnection (
-								IDStoreConnection INTEGER PRIMARY KEY AUTOINCREMENT,
-								GUIDStoreConnection TEXT,
-								CreateDate TEXT, CreatingIDUser INTEGER DEFAULT 0,
-								UpdateDate TEXT, UpdatingIDUser INTEGER DEFAULT 0,
-								Deleted INTEGER DEFAULT 0, DeleteDate TEXT, DeletingIDUser INTEGER DEFAULT 0,
-								Name TEXT, Type TEXT, Config TEXT,
-								Status TEXT DEFAULT 'Untested', LastTestedDate TEXT
-							);
-							CREATE TABLE IF NOT EXISTS ProjectionStore (
-								IDProjectionStore INTEGER PRIMARY KEY AUTOINCREMENT,
-								GUIDProjectionStore TEXT,
-								CreateDate TEXT, CreatingIDUser INTEGER DEFAULT 0,
-								UpdateDate TEXT, UpdatingIDUser INTEGER DEFAULT 0,
-								Deleted INTEGER DEFAULT 0, DeleteDate TEXT, DeletingIDUser INTEGER DEFAULT 0,
-								IDDataset INTEGER DEFAULT 0, IDStoreConnection INTEGER DEFAULT 0,
-								TargetTableName TEXT, Status TEXT DEFAULT 'Pending',
-								DeployedAt TEXT, DeployLog TEXT
-							);
-							CREATE TABLE IF NOT EXISTS ProjectionMapping (
-								IDProjectionMapping INTEGER PRIMARY KEY AUTOINCREMENT,
-								GUIDProjectionMapping TEXT,
-								CreateDate TEXT, CreatingIDUser INTEGER DEFAULT 0,
-								UpdateDate TEXT, UpdatingIDUser INTEGER DEFAULT 0,
-								Deleted INTEGER DEFAULT 0, DeleteDate TEXT, DeletingIDUser INTEGER DEFAULT 0,
-								IDDataset INTEGER DEFAULT 0, IDSource INTEGER DEFAULT 0,
-								IDProjectionStore INTEGER DEFAULT 0,
-								Name TEXT, SchemaVersion INTEGER DEFAULT 0,
-								Active INTEGER DEFAULT 1,
-								MappingConfiguration TEXT,
-								FlowDiagramState TEXT
-							);
-						`);
+						// Create all tables using the canonical schema from the module
+						tmpDB.exec(libRetoldFacto.FACTO_SCHEMA_SQL);
 
 						_Fable.settings.MeadowProvider = 'SQLite';
 
-						const libRetoldFacto = require('../source/Retold-Facto.js');
 						_Fable.serviceManager.addServiceType('RetoldFacto', libRetoldFacto);
 						_RetoldFacto = _Fable.serviceManager.instantiateServiceProvider('RetoldFacto',
 							{
@@ -339,6 +99,7 @@ suite
 										ProjectionEngine: true,
 										CatalogManager: true,
 										StoreConnectionManager: true,
+										SchemaManager: true,
 										WebUI: false
 									}
 							});
@@ -425,7 +186,7 @@ suite
 						Expect(_RetoldFacto.entityList).to.include('ProjectionMapping');
 						Expect(_RetoldFacto.entityList).to.include('MultiSetProjection');
 						Expect(_RetoldFacto.entityList).to.include('ProjectionCertaintyLog');
-						Expect(_RetoldFacto.entityList.length).to.equal(15);
+						Expect(_RetoldFacto.entityList.length).to.equal(18);
 					}
 				);
 				test

@@ -379,11 +379,23 @@ class RetoldFactoThroughputMonitor extends libFableServiceProviderBase
 	{
 		let tmpDuration = (pDurationSeconds || 60) * 1000;
 		let tmpNow      = Date.now();
-		let tmpStart    = tmpNow - tmpDuration;
 		let tmpInterval = this._BucketIntervalMs;
 
-		// Compute bucket boundaries
-		let tmpBucketCount = Math.ceil(tmpDuration / tmpInterval);
+		// Determine the right-edge anchor for the window:
+		//   Active run  → anchor to "now" so live events always appear at the right edge.
+		//   No active run → anchor to the last recorded event so bars stay right-aligned
+		//                   and don't float into dead space on the right as time passes.
+		let tmpAnchor = tmpNow;
+		if (!this._ActiveRun && this._Events.length > 0)
+		{
+			tmpAnchor = this._Events[this._Events.length - 1].timestamp;
+		}
+
+		// Align to a clock-boundary so bucket indices are stable across consecutive
+		// polls — the same event always lands in the same bucket, no rebucketing jitter.
+		let tmpAlignedAnchor = Math.floor(tmpAnchor / tmpInterval) * tmpInterval;
+		let tmpBucketCount   = Math.ceil(tmpDuration / tmpInterval);
+		let tmpStart         = tmpAlignedAnchor - (tmpBucketCount - 1) * tmpInterval;
 		let tmpBuckets     = [];
 
 		for (let i = 0; i < tmpBucketCount; i++)
@@ -407,7 +419,7 @@ class RetoldFactoThroughputMonitor extends libFableServiceProviderBase
 				continue;
 			}
 
-			let tmpBucketIndex = Math.floor((tmpEvent.timestamp - tmpStart) / tmpInterval);
+			let tmpBucketIndex = Math.min(Math.floor((tmpEvent.timestamp - tmpStart) / tmpInterval), tmpBuckets.length - 1);
 			if (tmpBucketIndex >= 0 && tmpBucketIndex < tmpBuckets.length)
 			{
 				tmpBuckets[tmpBucketIndex][tmpEvent.stage] += tmpEvent.count;
