@@ -2903,9 +2903,9 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 						.addRecord(tmpExisting);
 
 					this.fable.DAL.ProjectionStore.doUpdate(tmpUpdateQuery,
-						(pUpdateError, pUpdateQuery, pUpdated) =>
+						(pUpdateError, pUpdateQuery, pUpdateReadQuery, pUpdatedRecord) =>
 						{
-							return fCallback(pUpdateError, pUpdated);
+							return fCallback(pUpdateError, pUpdatedRecord);
 						});
 				}
 				else
@@ -2930,9 +2930,9 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 						.addRecord(tmpNewRecord);
 
 					this.fable.DAL.ProjectionStore.doCreate(tmpCreateQuery,
-						(pCreateError, pCreateQuery, pCreated) =>
+						(pCreateError, pCreateQuery, pCreateReadQuery, pCreatedRecord) =>
 						{
-							return fCallback(pCreateError, pCreated);
+							return fCallback(pCreateError, pCreatedRecord);
 						});
 				}
 			});
