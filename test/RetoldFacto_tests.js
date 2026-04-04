@@ -4113,5 +4113,344 @@ suite
 				);
 			}
 		);
+
+		suite
+		(
+			'Projection Deploy and Import Pipeline',
+			function()
+			{
+				this.timeout(10000);
+
+				let _PipelineSourceID = 0;
+				let _PipelineRawDatasetID = 0;
+				let _PipelineProjectionDatasetID = 0;
+				let _PipelineStoreConnectionID = 0;
+				let _PipelineProjectionStoreID = 0;
+				let _PipelineMappingID = 0;
+
+				test
+				(
+					'Create a source for the pipeline test',
+					function(fDone)
+					{
+						_SuperTest
+							.post('/1.0/Source')
+							.send({ Name: 'Pipeline Test Source', Type: 'API', URL: 'https://example.com', Protocol: 'HTTPS', Active: 1 })
+							.expect(200)
+							.end(
+								(pError, pResponse) =>
+								{
+									if (pError) return fDone(pError);
+									_PipelineSourceID = pResponse.body.IDSource;
+									Expect(_PipelineSourceID).to.be.greaterThan(0);
+									return fDone();
+								});
+					}
+				);
+
+				test
+				(
+					'Create a raw dataset and ingest records with JSON content',
+					function(fDone)
+					{
+						_SuperTest
+							.post('/1.0/Dataset')
+							.send({ Name: 'Pipeline Raw Dataset', Type: 'Raw', Description: 'Raw data for pipeline test' })
+							.expect(200)
+							.end(
+								(pError, pResponse) =>
+								{
+									if (pError) return fDone(pError);
+									_PipelineRawDatasetID = pResponse.body.IDDataset;
+									Expect(_PipelineRawDatasetID).to.be.greaterThan(0);
+
+									let tmpJSONContent = JSON.stringify([
+										{ Country: 'USA', Capital: 'Washington' },
+										{ Country: 'Canada', Capital: 'Ottawa' },
+										{ Country: 'Mexico', Capital: 'Mexico City' }
+									]);
+
+									_SuperTest
+										.post('/facto/ingest/file')
+										.send(
+											{
+												IDDataset: _PipelineRawDatasetID,
+												IDSource: _PipelineSourceID,
+												Format: 'json',
+												Type: 'country-data',
+												Content: tmpJSONContent
+											})
+										.expect(200)
+										.end(
+											(pIngestError, pIngestResponse) =>
+											{
+												if (pIngestError) return fDone(pIngestError);
+												Expect(pIngestResponse.body.Ingested).to.equal(3);
+												return fDone();
+											});
+								});
+					}
+				);
+
+				test
+				(
+					'Create a Projection dataset with MicroDDL schema',
+					function(fDone)
+					{
+						let tmpDDL = '! CountryFlat\n@ IDCountryFlat\n% GUIDCountryFlat\n$ CountryName 120\n$ CapitalCity 120';
+
+						_SuperTest
+							.post('/1.0/Dataset')
+							.send(
+								{
+									Name: 'CountryFlat Projection',
+									Type: 'Projection',
+									Description: 'Flat country projection',
+									SchemaDefinition: tmpDDL
+								})
+							.expect(200)
+							.end(
+								(pError, pResponse) =>
+								{
+									if (pError) return fDone(pError);
+									_PipelineProjectionDatasetID = pResponse.body.IDDataset;
+									Expect(_PipelineProjectionDatasetID).to.be.greaterThan(0);
+									return fDone();
+								});
+					}
+				);
+
+				test
+				(
+					'Create a StoreConnection (SQLite :memory:)',
+					function(fDone)
+					{
+						_SuperTest
+							.post('/1.0/StoreConnection')
+							.send({ Name: 'Pipeline SQLite Store', Type: 'SQLite', Config: JSON.stringify({ SQLiteFilePath: ':memory:' }), Status: 'OK' })
+							.expect(200)
+							.end(
+								(pError, pResponse) =>
+								{
+									if (pError) return fDone(pError);
+									_PipelineStoreConnectionID = pResponse.body.IDStoreConnection;
+									Expect(_PipelineStoreConnectionID).to.be.greaterThan(0);
+									return fDone();
+								});
+					}
+				);
+
+				test
+				(
+					'Deploy the projection schema to the store',
+					function(fDone)
+					{
+						_SuperTest
+							.post(`/facto/projection/${_PipelineProjectionDatasetID}/deploy`)
+							.send({ IDStoreConnection: _PipelineStoreConnectionID, TargetTableName: 'CountryFlat' })
+							.expect(200)
+							.end(
+								(pError, pResponse) =>
+								{
+									if (pError) return fDone(pError);
+									Expect(pResponse.body.Success).to.equal(true);
+									// Extract the projection store ID
+									let tmpPS = pResponse.body.ProjectionStore || {};
+									_PipelineProjectionStoreID = tmpPS.IDProjectionStore || 0;
+
+									// If not directly available, query for it
+									if (!_PipelineProjectionStoreID)
+									{
+										_SuperTest
+											.get(`/facto/projection/${_PipelineProjectionDatasetID}/stores`)
+											.expect(200)
+											.end(
+												(pStoreError, pStoreResponse) =>
+												{
+													if (pStoreError) return fDone(pStoreError);
+													Expect(pStoreResponse.body.Stores.length).to.be.greaterThan(0);
+													_PipelineProjectionStoreID = pStoreResponse.body.Stores[0].IDProjectionStore;
+													Expect(_PipelineProjectionStoreID).to.be.greaterThan(0);
+													return fDone();
+												});
+									}
+									else
+									{
+										Expect(_PipelineProjectionStoreID).to.be.greaterThan(0);
+										return fDone();
+									}
+								});
+					}
+				);
+
+				test
+				(
+					'Bug 1: Entity routes should be accessible after deploy (GET /1.0/CountryFlat/Schema)',
+					function(fDone)
+					{
+						// After deploy, _saveProjectionStore should have called
+						// _registerProjectionEntity which registers Meadow entity
+						// routes on the restify server.
+						// Bug: the doCreate/doUpdate callback returned 4 args but
+						// the handler only accepted 3, so registration was skipped
+						// and this endpoint would 404.
+						_SuperTest
+							.get('/1.0/CountryFlat/Schema')
+							.expect(200)
+							.end(
+								(pError, pResponse) =>
+								{
+									if (pError) return fDone(pError);
+									// The schema endpoint should return entity metadata, not a 404
+									Expect(pResponse.body).to.be.an('object');
+									Expect(pResponse.body.title).to.equal('CountryFlat');
+									return fDone();
+								});
+					}
+				);
+
+				test
+				(
+					'Create a mapping with template expressions',
+					function(fDone)
+					{
+						let tmpMappingConfig = JSON.stringify(
+							{
+								Entity: 'CountryFlat',
+								GUIDTemplate: '{~D:Record.Country~}',
+								Mappings:
+								{
+									CountryName: '{~D:Record.Country~}',
+									CapitalCity: '{~D:Record.Capital~}'
+								}
+							});
+
+						_SuperTest
+							.post(`/facto/projection/${_PipelineProjectionDatasetID}/mapping`)
+							.send(
+								{
+									IDSource: _PipelineSourceID,
+									Name: 'Country Mapping',
+									MappingConfiguration: tmpMappingConfig
+								})
+							.expect(200)
+							.end(
+								(pError, pResponse) =>
+								{
+									if (pError) return fDone(pError);
+									Expect(pResponse.body.Success).to.equal(true);
+
+									// The mapping ID may be nested in a Meadow query result
+									let tmpMapping = pResponse.body.Mapping || {};
+									_PipelineMappingID = tmpMapping.IDProjectionMapping || 0;
+
+									// Fall back to querying for the mapping
+									if (!_PipelineMappingID)
+									{
+										_SuperTest
+											.get(`/facto/projection/${_PipelineProjectionDatasetID}/mappings`)
+											.expect(200)
+											.end(
+												(pMapError, pMapResponse) =>
+												{
+													if (pMapError) return fDone(pMapError);
+													Expect(pMapResponse.body.Mappings.length).to.be.greaterThan(0);
+													_PipelineMappingID = pMapResponse.body.Mappings[0].IDProjectionMapping;
+													Expect(_PipelineMappingID).to.be.greaterThan(0);
+													return fDone();
+												});
+									}
+									else
+									{
+										Expect(_PipelineMappingID).to.be.greaterThan(0);
+										return fDone();
+									}
+								});
+					}
+				);
+
+				test
+				(
+					'Execute the import via integrateRecords',
+					function(fDone)
+					{
+						_SuperTest
+							.post(`/facto/projection/${_PipelineProjectionDatasetID}/import`)
+							.send(
+								{
+									IDProjectionMapping: _PipelineMappingID,
+									IDProjectionStore: _PipelineProjectionStoreID,
+									IDSource: _PipelineSourceID
+								})
+							.expect(200)
+							.end(
+								(pError, pResponse) =>
+								{
+									if (pError) return fDone(pError);
+									Expect(pResponse.body.Success, `Import should succeed. Response: ${JSON.stringify(pResponse.body).substring(0, 1000)}`).to.equal(true);
+									Expect(pResponse.body.RecordsProcessed).to.equal(3);
+									Expect(pResponse.body.RecordsTransformed).to.be.greaterThan(0);
+									Expect(pResponse.body.RecordsUpserted).to.be.greaterThan(0);
+									return fDone();
+								});
+					}
+				);
+
+				test
+				(
+					'Bug 2: Projected records should have field values populated (not empty)',
+					function(fDone)
+					{
+						// After import, the projected records in the CountryFlat
+						// table should have CountryName and CapitalCity populated.
+						// Bug: using marshalSourceRecords + pushRecordsToServer
+						// separately bypassed the schema fetch step needed by the
+						// IntegrationAdapter to marshal field values, leaving them
+						// empty. Using integrateRecords fixes this.
+						_SuperTest
+							.get('/1.0/CountryFlats/0/10')
+							.expect(200)
+							.end(
+								(pError, pResponse) =>
+								{
+									if (pError) return fDone(pError);
+									Expect(pResponse.body).to.be.an('array');
+									Expect(pResponse.body.length).to.equal(3);
+
+									// Find the USA record and verify field values
+									let tmpUSA = pResponse.body.find((pRecord) => { return pRecord.CountryName === 'USA'; });
+									Expect(tmpUSA).to.be.an('object');
+									Expect(tmpUSA.CountryName).to.equal('USA');
+									Expect(tmpUSA.CapitalCity).to.equal('Washington');
+
+									// Verify another record
+									let tmpCanada = pResponse.body.find((pRecord) => { return pRecord.CountryName === 'Canada'; });
+									Expect(tmpCanada).to.be.an('object');
+									Expect(tmpCanada.CapitalCity).to.equal('Ottawa');
+
+									return fDone();
+								});
+					}
+				);
+
+				test
+				(
+					'Verify projected record count matches source record count',
+					function(fDone)
+					{
+						_SuperTest
+							.get('/1.0/CountryFlats/Count')
+							.expect(200)
+							.end(
+								(pError, pResponse) =>
+								{
+									if (pError) return fDone(pError);
+									Expect(pResponse.body.Count).to.equal(3);
+									return fDone();
+								});
+					}
+				);
+			}
+		);
 	}
 );

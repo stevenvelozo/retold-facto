@@ -1794,50 +1794,32 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 
 											tmpLog.push(`[${new Date().toISOString()}] Pushing ${tmpRecordGUIDs.length} records via IntegrationAdapter to ${tmpServerURL}${tmpTargetEntityName}/Upsert`);
 
-											// Marshal and push records through the REST API
-											tmpAdapter.marshalSourceRecords(
-												(pMarshalError) =>
+											// Use integrateRecords which fetches the schema first,
+											// then marshals and pushes records in sequence.
+											tmpAdapter.integrateRecords(
+												(pIntegrateError) =>
 												{
-													if (pMarshalError)
+													let tmpMarshaledCount = Object.keys(tmpAdapter._MarshaledRecords).length;
+
+													if (pIntegrateError)
 													{
-														tmpLog.push(`[${new Date().toISOString()}] Marshal error: ${pMarshalError.message}`);
-														pResponse.send(
-														{
-															Error: `Marshal error: ${pMarshalError.message}`,
-															RecordsProcessed: pRecords.length,
-															RecordsTransformed: tmpRecordGUIDs.length,
-															StagingFile: tmpStagingFile,
-															Log: tmpLog.join('\n')
-														});
-														return fNext();
+														tmpLog.push(`[${new Date().toISOString()}] Integration error: ${pIntegrateError.message}`);
 													}
 
-													let tmpMarshaledCount = Object.keys(tmpAdapter._MarshaledRecords).length;
-													tmpLog.push(`[${new Date().toISOString()}] Marshaled ${tmpMarshaledCount} records; pushing to server...`);
+													tmpLog.push(`[${new Date().toISOString()}] Import complete: ${pRecords.length} source records, ${tmpRecordGUIDs.length} unique, ${tmpMarshaledCount} upserted`);
 
-													tmpAdapter.pushRecordsToServer(
-														(pPushError) =>
-														{
-															if (pPushError)
-															{
-																tmpLog.push(`[${new Date().toISOString()}] Push error: ${pPushError.message}`);
-															}
-
-															tmpLog.push(`[${new Date().toISOString()}] Import complete: ${pRecords.length} source records, ${tmpRecordGUIDs.length} unique, ${tmpMarshaledCount} upserted`);
-
-															pResponse.send(
-															{
-																Success: !pPushError,
-																RecordsProcessed: pRecords.length,
-																RecordsTransformed: tmpRecordGUIDs.length,
-																RecordsDeduplicated: tmpMappingOutcome.ParsedRowCount - tmpRecordGUIDs.length,
-																BadRecords: tmpMappingOutcome.BadRecords.length,
-																RecordsUpserted: tmpMarshaledCount,
-																StagingFile: tmpStagingFile,
-																Log: tmpLog.join('\n')
-															});
-															return fNext();
-														});
+													pResponse.send(
+													{
+														Success: !pIntegrateError,
+														RecordsProcessed: pRecords.length,
+														RecordsTransformed: tmpRecordGUIDs.length,
+														RecordsDeduplicated: tmpMappingOutcome.ParsedRowCount - tmpRecordGUIDs.length,
+														BadRecords: tmpMappingOutcome.BadRecords.length,
+														RecordsUpserted: tmpMarshaledCount,
+														StagingFile: tmpStagingFile,
+														Log: tmpLog.join('\n')
+													});
+													return fNext();
 												});
 										};
 
