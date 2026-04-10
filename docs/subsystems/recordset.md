@@ -214,7 +214,7 @@ curl 'http://localhost:8386/1.0/Record?filter=FBV~IDDataset~EQ~1'
 # Only records from the most recent ingest job
 curl 'http://localhost:8386/1.0/Record?filter=FBV~IDIngestJob~EQ~42'
 
-# Records with certainty > 0.8 (requires a join — use /facto/projections/query for this kind of thing)
+# Records with certainty > 0.8 (requires a join -- use /facto/projections/query for this kind of thing)
 ```
 
 ### Updating an Ingest Job's Status
@@ -277,6 +277,6 @@ A workflow can dispatch these in sequence to perform an end-to-end ingest pipeli
 ## Cross-References
 
 - [Projection subsystem](projection.md) -- reads raw records and produces flattened projections
-- [Mapping subsystem](mapping.md) -- the DSL that drives record → projection transformation
+- [Mapping subsystem](mapping.md) -- the DSL that drives record -> projection transformation
 - [Audit subsystem](audit.md) -- how recordset operations are tracked over time
 - [Ultravisor Integration](../ultravisor-integration.md) -- beacon capabilities for remote ingest

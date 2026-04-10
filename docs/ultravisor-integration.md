@@ -91,7 +91,7 @@ Exposes record-level operations against the Facto warehouse. Every action runs a
 | `UpdateIngestJob` | `{ IDIngestJob, Status, RecordsProcessed, RecordsCreated, ... }` | `{ Success }` |
 | `CreateProjectionStore` | `{ IDDataset, IDStoreConnection, TargetTableName }` | `{ IDProjectionStore }` |
 
-`FactoData` is what a workflow uses to build up a warehouse state from the outside. A typical ingest workflow dispatches `CreateSource` → `CreateDataset` → `CreateIngestJob` → N × `CreateRecord` → `UpdateIngestJob(status=Completed)`.
+`FactoData` is what a workflow uses to build up a warehouse state from the outside. A typical ingest workflow dispatches `CreateSource` -> `CreateDataset` -> `CreateIngestJob` -> N × `CreateRecord` -> `UpdateIngestJob(status=Completed)`.
 
 ### 2. `FactoTransform` -- Pure Mapping Execution
 
