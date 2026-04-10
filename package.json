@@ -56,6 +56,7 @@
 	"devDependencies": {
 		"chai": "^6.2.2",
 		"meadow-connection-sqlite": "^1.0.18",
+		"pict-docuserve": "^0.1.5",
 		"puppeteer": "^24.40.0",
 		"quackage": "^1.1.0",
 		"stricture": "^4.0.2",
@@ -81,9 +82,9 @@
 		"pict": "^1.0.361",
 		"pict-router": "^1.0.9",
 		"pict-section-flow": "^0.0.17",
-		"pict-section-modal": "^0.0.1",
 		"pict-section-histogram": "^1.0.0",
 		"pict-section-markdowneditor": "^1.0.7",
+		"pict-section-modal": "^0.0.1",
 		"pict-section-objecteditor": "^1.0.1",
 		"stricture": "^4.0.2",
 		"xlsx": "^0.18.5"

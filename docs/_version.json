@@ -1,0 +1,7 @@
+{
+	"Name": "retold-facto",
+	"Version": "0.1.0",
+	"Description": "Data warehouse and knowledge graph storage for the Retold ecosystem.",
+	"GeneratedAt": "2026-04-10T17:27:53.362Z",
+	"GitCommit": "94d77a9"
+}
