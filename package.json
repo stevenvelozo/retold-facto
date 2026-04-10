@@ -57,7 +57,7 @@
 		"chai": "^6.2.2",
 		"meadow-connection-sqlite": "^1.0.18",
 		"puppeteer": "^24.40.0",
-		"quackage": "^1.0.65",
+		"quackage": "^1.1.0",
 		"stricture": "^4.0.2",
 		"supertest": "^7.2.2"
 	},
