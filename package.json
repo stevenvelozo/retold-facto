@@ -1,6 +1,6 @@
 {
 	"name": "retold-facto",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Data warehouse and knowledge graph storage for the Retold ecosystem.",
 	"main": "source/Retold-Facto.js",
 	"bin": {
@@ -47,6 +47,45 @@
 		"certainty",
 		"ingest"
 	],
+	"retoldBeacon": {
+		"displayName": "Retold Facto",
+		"description": "Data warehouse + knowledge graph storage with ingest / dataset / source CLI subcommands.",
+		"category": "database",
+		"mode": "standalone-service",
+		"bin": "bin/retold-facto.js",
+		"argTemplate": [
+			"serve",
+			"--port",
+			{
+				"fromLabPath": "Port"
+			},
+			"--config",
+			{
+				"fromLabPath": "ConfigPath"
+			}
+		],
+		"healthCheck": {
+			"path": "/"
+		},
+		"defaultPort": 8386,
+		"requiresUltravisor": false,
+		"configTemplate": {
+			"APIServerPort": "{{Port}}",
+			"SQLite": {
+				"SQLiteFilePath": "{{BeaconDir}}/facto.sqlite"
+			}
+		},
+		"configForm": {
+			"Fields": []
+		},
+		"docker": {
+			"image": "retold-facto",
+			"dockerfile": "retold-facto.Dockerfile",
+			"dataMountPath": "/app/data",
+			"configMountPath": "/app/data/config.json",
+			"exposedPort": 8386
+		}
+	},
 	"author": "Steven Velozo <steven@velozo.com> (http://velozo.com/)",
 	"license": "MIT",
 	"bugs": {
@@ -55,36 +94,36 @@
 	"homepage": "https://github.com/stevenvelozo/retold-facto",
 	"devDependencies": {
 		"chai": "^6.2.2",
-		"meadow-connection-sqlite": "^1.0.18",
 		"pict-docuserve": "^0.1.5",
 		"puppeteer": "^24.40.0",
-		"quackage": "^1.1.0",
+		"quackage": "^1.1.2",
 		"stricture": "^4.0.2",
 		"supertest": "^7.2.2"
 	},
 	"dependencies": {
 		"@codemirror/lang-markdown": "^6.5.0",
 		"@codemirror/state": "^6.6.0",
+		"meadow-connection-sqlite": "^1.0.18",
 		"@codemirror/view": "^6.41.0",
-		"bibliograph": "^0.1.4",
+		"bibliograph": "^0.1.5",
 		"codemirror": "^6.0.2",
-		"fable": "^3.1.67",
+		"fable": "^3.1.71",
 		"fable-serviceproviderbase": "^3.0.19",
 		"fast-xml-parser": "^5.5.10",
-		"meadow": "^2.0.33",
-		"meadow-connection-manager": "^1.0.0",
-		"meadow-connection-mysql": "^1.0.14",
-		"meadow-endpoints": "^4.0.14",
-		"meadow-integration": "^1.0.24",
+		"meadow": "^2.0.37",
+		"meadow-connection-manager": "^1.0.2",
+		"meadow-connection-mysql": "^1.0.17",
+		"meadow-endpoints": "^4.0.17",
+		"meadow-integration": "^1.0.35",
 		"orator": "^6.0.4",
 		"orator-serviceserver-restify": "^2.0.10",
 		"orator-static-server": "^2.0.4",
-		"pict": "^1.0.361",
+		"pict": "^1.0.364",
 		"pict-router": "^1.0.9",
 		"pict-section-flow": "^0.0.17",
 		"pict-section-histogram": "^1.0.0",
-		"pict-section-markdowneditor": "^1.0.7",
-		"pict-section-modal": "^0.0.1",
+		"pict-section-markdowneditor": "^1.0.10",
+		"pict-section-modal": "^0.0.5",
 		"pict-section-objecteditor": "^1.0.1",
 		"stricture": "^4.0.2",
 		"xlsx": "^0.18.5"
