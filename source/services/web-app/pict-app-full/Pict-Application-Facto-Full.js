@@ -1,6 +1,7 @@
 const libPictApplication = require('pict-application');
 const libPictRouter = require('pict-router');
 const libPictSectionModal = require('pict-section-modal');
+const libPictSectionConnectionForm = require('pict-section-connection-form');
 
 const THEME_LIST =
 [
@@ -88,6 +89,20 @@ class FactoFullApplication extends libPictApplication
 		this.pict.addView('Facto-Full-SourceEditor', libViewSourceEditor.default_configuration, libViewSourceEditor);
 		this.pict.addView('Facto-Full-Scanner', libViewScanner.default_configuration, libViewScanner);
 		this.pict.addView('Facto-Full-Connections', libViewConnections.default_configuration, libViewConnections);
+
+		// Shared schema-driven connection form.  Renders the type
+		// select + per-provider field block into the slot owned by
+		// the Facto-Full-Connections view.  Schemas come from
+		// /facto/connection/schemas (Retold-Facto-StoreConnectionManager).
+		this.pict.addView('PictSection-ConnectionForm',
+			Object.assign({}, libPictSectionConnectionForm.default_configuration,
+				{
+					ContainerSelector:         '#Facto-Conn-Form-FieldsSlot',
+					DefaultDestinationAddress: '#Facto-Conn-Form-FieldsSlot',
+					SchemasAddress:            'AppData.Facto.ConnectionFormSchemas',
+					ActiveAddress:             'AppData.Facto.ConnectionFormActiveProvider',
+					FieldIDPrefix:             'facto-conn'
+				}), libPictSectionConnectionForm);
 		this.pict.addView('Facto-Full-ProjectionDetail', libViewProjectionDetail.default_configuration, libViewProjectionDetail);
 		this.pict.addView('Facto-Full-Throughput', libViewThroughput.default_configuration, libViewThroughput);
 		this.pict.addView('Facto-Full-SchemaResearch', libViewSchemaResearch.default_configuration, libViewSchemaResearch);

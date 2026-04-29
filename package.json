@@ -1,6 +1,6 @@
 {
 	"name": "retold-facto",
-	"version": "0.1.1",
+	"version": "0.2.0",
 	"description": "Data warehouse and knowledge graph storage for the Retold ecosystem.",
 	"main": "source/Retold-Facto.js",
 	"bin": {
@@ -103,7 +103,7 @@
 	"dependencies": {
 		"@codemirror/lang-markdown": "^6.5.0",
 		"@codemirror/state": "^6.6.0",
-		"meadow-connection-sqlite": "^1.0.18",
+		"meadow-connection-sqlite": "^1.0.19",
 		"@codemirror/view": "^6.41.0",
 		"bibliograph": "^0.1.5",
 		"codemirror": "^6.0.2",
@@ -111,8 +111,8 @@
 		"fable-serviceproviderbase": "^3.0.19",
 		"fast-xml-parser": "^5.5.10",
 		"meadow": "^2.0.37",
-		"meadow-connection-manager": "^1.0.2",
-		"meadow-connection-mysql": "^1.0.17",
+		"meadow-connection-manager": "^1.1.0",
+		"meadow-connection-mysql": "^1.0.18",
 		"meadow-endpoints": "^4.0.17",
 		"meadow-integration": "^1.0.35",
 		"orator": "^6.0.4",
@@ -120,6 +120,7 @@
 		"orator-static-server": "^2.0.4",
 		"pict": "^1.0.364",
 		"pict-router": "^1.0.9",
+		"pict-section-connection-form": "^0.0.1",
 		"pict-section-flow": "^0.0.17",
 		"pict-section-histogram": "^1.0.0",
 		"pict-section-markdowneditor": "^1.0.10",

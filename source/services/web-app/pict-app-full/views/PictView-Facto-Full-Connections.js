@@ -70,49 +70,18 @@ const _ViewConfiguration =
 
 		<div id="Facto-Conn-Form" class="facto-conn-form">
 			<div class="facto-conn-form-grid">
-				<div>
+				<div style="grid-column: span 2;">
 					<label>Connection Name</label>
 					<input type="text" id="Facto-Conn-Name" placeholder="e.g. Production MySQL">
 				</div>
-				<div>
-					<label>Type</label>
-					<select id="Facto-Conn-Type" onchange="{~P~}.views['Facto-Full-Connections'].updateConnectionFormFields()">
-						<option value="MySQL">MySQL</option>
-						<option value="PostgreSQL">PostgreSQL</option>
-						<option value="MSSQL">MSSQL</option>
-						<option value="SQLite">SQLite</option>
-						<option value="Solr">Solr</option>
-						<option value="RocksDB">RocksDB</option>
-					</select>
-				</div>
-				<div id="Facto-Conn-FilePath-Wrap" style="display:none;">
-					<label>File Path</label>
-					<input type="text" id="Facto-Conn-FilePath" placeholder="/path/to/database.sqlite">
-				</div>
-				<div id="Facto-Conn-Host-Wrap">
-					<label>Host</label>
-					<input type="text" id="Facto-Conn-Host" placeholder="localhost">
-				</div>
-				<div id="Facto-Conn-Port-Wrap">
-					<label>Port</label>
-					<input type="number" id="Facto-Conn-Port" placeholder="3306">
-				</div>
-				<div id="Facto-Conn-User-Wrap">
-					<label>User</label>
-					<input type="text" id="Facto-Conn-User" placeholder="root">
-				</div>
-				<div id="Facto-Conn-Password-Wrap">
-					<label>Password</label>
-					<input type="password" id="Facto-Conn-Password" placeholder="password">
-				</div>
-				<div id="Facto-Conn-Database-Wrap">
-					<label>Database</label>
-					<input type="text" id="Facto-Conn-Database" placeholder="my_database">
-				</div>
-				<div class="facto-conn-form-actions">
-					<button class="facto-btn facto-btn-primary facto-btn-small" onclick="{~P~}.views['Facto-Full-Connections'].addConnection()">Save Connection</button>
-					<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="{~P~}.views['Facto-Full-Connections'].toggleConnectionForm()">Cancel</button>
-				</div>
+			</div>
+
+			<!-- pict-section-connection-form renders the type select + per-provider field block here -->
+			<div id="Facto-Conn-Form-FieldsSlot" style="margin-top:0.6em"></div>
+
+			<div class="facto-conn-form-actions" style="margin-top:0.6em">
+				<button class="facto-btn facto-btn-primary facto-btn-small" onclick="{~P~}.views['Facto-Full-Connections'].addConnection()">Save Connection</button>
+				<button class="facto-btn facto-btn-secondary facto-btn-small" onclick="{~P~}.views['Facto-Full-Connections'].toggleConnectionForm()">Cancel</button>
 			</div>
 		</div>
 
@@ -155,6 +124,28 @@ class FactoFullConnectionsView extends libPictView
 				this.pict.views['Pict-Section-Modal'].toast('Error loading connections: ' + pError.message, {type: 'error'});
 			});
 
+		// Fetch the form schemas and hand them to the shared
+		// pict-section-connection-form view (which renders into
+		// #Facto-Conn-Form-FieldsSlot once the user opens the form).
+		this.pict.providers.Facto.api('GET', '/facto/connection/schemas').then(
+			(pData) =>
+			{
+				let tmpSchemas = (pData && Array.isArray(pData.Schemas)) ? pData.Schemas : [];
+				let tmpFormView = this.pict.views['PictSection-ConnectionForm'];
+				if (tmpFormView && typeof(tmpFormView.setSchemas) === 'function')
+				{
+					tmpFormView.setSchemas(tmpSchemas);
+				}
+				this.pict.AppData.Facto.ConnectionFormSchemas = tmpSchemas;
+			}).catch(
+			(pError) =>
+			{
+				if (this.pict.log && this.pict.log.warn)
+				{
+					this.pict.log.warn(`Facto: failed to fetch /facto/connection/schemas: ${pError && pError.message}`);
+				}
+			});
+
 		return super.onAfterRender();
 	}
 
@@ -166,29 +157,14 @@ class FactoFullConnectionsView extends libPictView
 			tmpForm.classList.toggle('active');
 			if (tmpForm.classList.contains('active'))
 			{
-				this.updateConnectionFormFields();
+				// Make sure the schema-driven form renders into the slot
+				// when the user opens the panel.  AutoRender is false on
+				// the shared view so we trigger it here.  Schemas were
+				// fetched earlier by loadAvailableConnectionTypes().
+				let tmpFormView = this.pict.views['PictSection-ConnectionForm'];
+				if (tmpFormView) { tmpFormView.render(); }
 			}
 		}
-	}
-
-	updateConnectionFormFields()
-	{
-		let tmpType = this.pict.providers.FactoUI.getVal('Facto-Conn-Type');
-		let tmpIsFileBased = (tmpType === 'SQLite' || tmpType === 'RocksDB');
-
-		let tmpFilePathWrap = document.getElementById('Facto-Conn-FilePath-Wrap');
-		let tmpHostWrap = document.getElementById('Facto-Conn-Host-Wrap');
-		let tmpPortWrap = document.getElementById('Facto-Conn-Port-Wrap');
-		let tmpUserWrap = document.getElementById('Facto-Conn-User-Wrap');
-		let tmpPasswordWrap = document.getElementById('Facto-Conn-Password-Wrap');
-		let tmpDatabaseWrap = document.getElementById('Facto-Conn-Database-Wrap');
-
-		if (tmpFilePathWrap) tmpFilePathWrap.style.display = tmpIsFileBased ? '' : 'none';
-		if (tmpHostWrap) tmpHostWrap.style.display = tmpIsFileBased ? 'none' : '';
-		if (tmpPortWrap) tmpPortWrap.style.display = tmpIsFileBased ? 'none' : '';
-		if (tmpUserWrap) tmpUserWrap.style.display = tmpIsFileBased ? 'none' : '';
-		if (tmpPasswordWrap) tmpPasswordWrap.style.display = tmpIsFileBased ? 'none' : '';
-		if (tmpDatabaseWrap) tmpDatabaseWrap.style.display = tmpIsFileBased ? 'none' : '';
 	}
 
 	refreshConnectionList()
@@ -229,41 +205,31 @@ class FactoFullConnectionsView extends libPictView
 	addConnection()
 	{
 		let tmpName = this.pict.providers.FactoUI.getVal('Facto-Conn-Name');
-		let tmpType = this.pict.providers.FactoUI.getVal('Facto-Conn-Type');
-
 		if (!tmpName)
 		{
 			this.pict.views['Pict-Section-Modal'].toast('Connection name is required.', {type: 'warning'});
 			return;
 		}
 
-		let tmpIsFileBased = (tmpType === 'SQLite' || tmpType === 'RocksDB');
-		let tmpConfig = {};
+		// Pull Type + Config straight from the shared schema-driven view.
+		// That view handles SQLite vs server-style providers, MSSQL retry
+		// tuning, etc., uniformly via its schema definitions.
+		let tmpFormView = this.pict.views['PictSection-ConnectionForm'];
+		let tmpConnInfo = (tmpFormView && typeof(tmpFormView.getProviderConfig) === 'function')
+			? tmpFormView.getProviderConfig()
+			: { Provider: '', Config: {} };
 
-		if (tmpIsFileBased)
+		if (!tmpConnInfo.Provider)
 		{
-			tmpConfig.SQLiteFilePath = this.pict.providers.FactoUI.getVal('Facto-Conn-FilePath');
-			if (!tmpConfig.SQLiteFilePath)
-			{
-				this.pict.views['Pict-Section-Modal'].toast('File path is required for ' + tmpType + ' connections.', {type: 'warning'});
-				return;
-			}
-		}
-		else
-		{
-			tmpConfig.host = this.pict.providers.FactoUI.getVal('Facto-Conn-Host');
-			tmpConfig.server = tmpConfig.host;
-			tmpConfig.port = parseInt(this.pict.providers.FactoUI.getVal('Facto-Conn-Port')) || 0;
-			tmpConfig.user = this.pict.providers.FactoUI.getVal('Facto-Conn-User');
-			tmpConfig.password = this.pict.providers.FactoUI.getVal('Facto-Conn-Password');
-			tmpConfig.database = this.pict.providers.FactoUI.getVal('Facto-Conn-Database');
+			this.pict.views['Pict-Section-Modal'].toast('Pick a provider type.', {type: 'warning'});
+			return;
 		}
 
 		this.pict.providers.Facto.createStoreConnection(
 		{
-			Name: tmpName,
-			Type: tmpType,
-			Config: tmpConfig
+			Name:   tmpName,
+			Type:   tmpConnInfo.Provider,
+			Config: tmpConnInfo.Config || {}
 		}).then(
 			(pResponse) =>
 			{
@@ -277,16 +243,17 @@ class FactoFullConnectionsView extends libPictView
 				this.pict.providers.Facto.loadStoreConnections().then(
 					(pResult) =>
 					{
-						
+
 						this.refreshConnectionList();
 						this.toggleConnectionForm();
 
-						// Clear form
-						let tmpFields = ['Name', 'Host', 'Port', 'User', 'Password', 'Database', 'FilePath'];
-						for (let i = 0; i < tmpFields.length; i++)
+						// Clear name input + reset the shared schema-driven
+						// form back to its default (first provider, default values).
+						let tmpNameEl = document.getElementById('Facto-Conn-Name');
+						if (tmpNameEl) tmpNameEl.value = '';
+						if (tmpFormView && typeof(tmpFormView.clear) === 'function')
 						{
-							let tmpEl = document.getElementById('Facto-Conn-' + tmpFields[i]);
-							if (tmpEl) tmpEl.value = '';
+							tmpFormView.clear();
 						}
 					});
 			});
