@@ -2,7 +2,10 @@
 FROM node:20-slim AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci
+# `npm install`, not `npm ci` — package-lock.json is gitignored per
+# the Quackage convention shared across the retold ecosystem, so the
+# build context never has it. See BUILDING-AND-PUBLISHING.md.
+RUN npm install
 COPY .quackage.json ./
 COPY source/ source/
 COPY bin/ bin/
@@ -16,7 +19,7 @@ RUN cp node_modules/pict/dist/pict.min.js source/services/web-app/web/pict.min.j
 FROM node:20-slim
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN npm install --omit=dev
 COPY --from=builder /app/source/ source/
 COPY --from=builder /app/bin/ bin/
 COPY --from=builder /app/test/model/ test/model/

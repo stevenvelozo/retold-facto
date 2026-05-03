@@ -1,6 +1,6 @@
 {
 	"name": "retold-facto",
-	"version": "0.2.0",
+	"version": "1.0.0",
 	"description": "Data warehouse and knowledge graph storage for the Retold ecosystem.",
 	"main": "source/Retold-Facto.js",
 	"bin": {
@@ -15,7 +15,17 @@
 		"build-codemirror": "npx esbuild source/services/web-app/codemirror-entry.js --bundle --outfile=source/services/web-app/web/codemirror-bundle.js --format=iife --global-name=CodeMirrorModules --platform=browser --target=es2018",
 		"build-test-model": "cd test && npx stricture -i model/ddl/Facto.ddl",
 		"docker-build": "docker build -t retold-facto .",
-		"docker-run": "docker run -p 8386:8386 retold-facto"
+		"docker-run": "docker run -p 8386:8386 retold-facto",
+		"prepublishOnly": "npm test",
+		"postversion": "npx quack release postversion",
+		"postpublish": "npx quack release postpublish",
+		"publish:docker": "npx quack release publish --image",
+		"release:patch": "npx quack release patch",
+		"release:minor": "npx quack release minor",
+		"release:major": "npx quack release major",
+		"release:patch:image": "npx quack release patch --image",
+		"release:minor:image": "npx quack release minor --image",
+		"release:major:image": "npx quack release major --image"
 	},
 	"mocha": {
 		"spec": "test/RetoldFacto_tests.js",
@@ -96,7 +106,7 @@
 		"chai": "^6.2.2",
 		"pict-docuserve": "^0.1.5",
 		"puppeteer": "^24.40.0",
-		"quackage": "^1.1.3",
+		"quackage": "^1.2.0",
 		"stricture": "^4.0.2",
 		"supertest": "^7.2.2"
 	},
@@ -115,12 +125,12 @@
 		"meadow-connection-mysql": "^1.0.18",
 		"meadow-endpoints": "^4.0.17",
 		"meadow-integration": "^1.0.38",
-		"orator": "^6.1.0",
+		"orator": "^6.1.1",
 		"orator-serviceserver-restify": "^2.0.10",
 		"orator-static-server": "^2.1.3",
 		"pict": "^1.0.365",
 		"pict-router": "^1.0.9",
-		"pict-section-connection-form": "^0.0.1",
+		"pict-section-connection-form": "^0.0.2",
 		"pict-section-flow": "^0.0.17",
 		"pict-section-histogram": "^1.0.0",
 		"pict-section-markdowneditor": "^1.0.10",
