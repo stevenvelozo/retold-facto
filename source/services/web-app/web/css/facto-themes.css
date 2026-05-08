@@ -416,7 +416,7 @@ body[data-theme="high-contrast"] {
 	--facto-bg-input: #0a0a0a;
 	--facto-bg-code: #0a0a0a;
 
-	--facto-border: #444444;
+	--facto-border: var(--theme-color-text-secondary, #444444);
 	--facto-border-subtle: #2a2a2a;
 	--facto-border-focus: #ffffff;
 

@@ -28,7 +28,7 @@ class FactoIngestView extends libPictView
 		let tmpJobs = this.pict.AppData.Facto.IngestJobs;
 		if (!tmpJobs || tmpJobs.length === 0)
 		{
-			tmpContainer.innerHTML = '<p style="color:#888; font-style:italic;">No ingest jobs yet.</p>';
+			tmpContainer.innerHTML = '<p style="color:var(--theme-color-text-muted, #888); font-style:italic;">No ingest jobs yet.</p>';
 			return;
 		}
 
@@ -197,10 +197,10 @@ module.exports.default_configuration =
 			<span class="accordion-toggle">&#9660;</span>
 		</div>
 		<div class="accordion-body">
-			<p style="margin-bottom:12px; color:#666; font-size:0.9em;">Track data ingest operations from configured sources into datasets.</p>
+			<p style="margin-bottom:12px; color:var(--theme-color-text-secondary, #666); font-size:0.9em;">Track data ingest operations from configured sources into datasets.</p>
 			<div id="facto-ingest-list"></div>
 
-			<h3 style="margin-top:16px; margin-bottom:8px; font-size:1em; color:#444;">Create Ingest Job</h3>
+			<h3 style="margin-top:16px; margin-bottom:8px; font-size:1em; color:var(--theme-color-text-secondary, #444);">Create Ingest Job</h3>
 			<div class="inline-group">
 				<div>
 					<label for="facto-ingest-source">Source ID</label>
@@ -215,8 +215,8 @@ module.exports.default_configuration =
 
 			<pre id="facto-ingest-log" style="display:none; margin-top:12px; padding:12px; background:#f8f9fa; border:1px solid #e9ecef; border-radius:4px; font-size:0.85em; max-height:200px; overflow:auto; white-space:pre-wrap;"></pre>
 
-			<h3 style="margin-top:20px; margin-bottom:8px; font-size:1em; color:#444;">Paste &amp; Ingest</h3>
-			<p style="margin-bottom:8px; color:#666; font-size:0.85em;">Paste CSV or JSON content directly to ingest records.</p>
+			<h3 style="margin-top:20px; margin-bottom:8px; font-size:1em; color:var(--theme-color-text-secondary, #444);">Paste &amp; Ingest</h3>
+			<p style="margin-bottom:8px; color:var(--theme-color-text-secondary, #666); font-size:0.85em;">Paste CSV or JSON content directly to ingest records.</p>
 			<div class="inline-group">
 				<div>
 					<label for="facto-ingest-paste-dataset">Dataset ID</label>
@@ -239,7 +239,7 @@ module.exports.default_configuration =
 					<input type="text" id="facto-ingest-paste-type" placeholder="data">
 				</div>
 			</div>
-			<textarea id="facto-ingest-paste-content" rows="6" style="width:100%; padding:8px 12px; border:1px solid #ccc; border-radius:4px; font-size:0.9em; font-family:monospace; margin-bottom:10px;" placeholder="Paste CSV or JSON data here..."></textarea>
+			<textarea id="facto-ingest-paste-content" rows="6" style="width:100%; padding:8px 12px; border:1px solid var(--theme-color-border-default, #ccc); border-radius:4px; font-size:0.9em; font-family:monospace; margin-bottom:10px;" placeholder="Paste CSV or JSON data here..."></textarea>
 			<button class="primary" onclick="pict.views['Facto-Ingest'].ingestPastedContent()">Ingest</button>
 
 		</div>

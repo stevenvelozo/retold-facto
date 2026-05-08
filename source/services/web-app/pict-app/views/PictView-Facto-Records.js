@@ -28,7 +28,7 @@ class FactoRecordsView extends libPictView
 		let tmpRecords = this.pict.AppData.Facto.Records;
 		if (!tmpRecords || tmpRecords.length === 0)
 		{
-			tmpContainer.innerHTML = '<p style="color:#888; font-style:italic;">No records ingested yet.</p>';
+			tmpContainer.innerHTML = '<p style="color:var(--theme-color-text-muted, #888); font-style:italic;">No records ingested yet.</p>';
 			return;
 		}
 
@@ -58,7 +58,7 @@ class FactoRecordsView extends libPictView
 		{
 			tmpHtml += '<button class="secondary" style="padding:4px 12px; font-size:0.85em;" onclick="pict.views[\'Facto-Records\'].changePage(' + (tmpPage - 1) + ')">&#9664; Previous</button>';
 		}
-		tmpHtml += '<span style="color:#888; font-size:0.85em;">Page ' + (tmpPage + 1) + '</span>';
+		tmpHtml += '<span style="color:var(--theme-color-text-muted, #888); font-size:0.85em;">Page ' + (tmpPage + 1) + '</span>';
 		if (tmpRecords.length >= this.pict.AppData.Facto.RecordPageSize)
 		{
 			tmpHtml += '<button class="secondary" style="padding:4px 12px; font-size:0.85em;" onclick="pict.views[\'Facto-Records\'].changePage(' + (tmpPage + 1) + ')">Next &#9654;</button>';
@@ -307,7 +307,7 @@ module.exports.default_configuration =
 			<span class="accordion-toggle">&#9660;</span>
 		</div>
 		<div class="accordion-body">
-			<p style="margin-bottom:12px; color:#666; font-size:0.9em;">Individual data records with versioning, certainty indices, and temporal metadata.</p>
+			<p style="margin-bottom:12px; color:var(--theme-color-text-secondary, #666); font-size:0.9em;">Individual data records with versioning, certainty indices, and temporal metadata.</p>
 			<div id="facto-records-list"></div>
 		</div>
 	</div>

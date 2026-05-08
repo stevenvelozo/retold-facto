@@ -40,7 +40,7 @@ class FactoScannerView extends libPictView
 
 		if (tmpPaths.length === 0)
 		{
-			tmpContainer.innerHTML = '<p style="color:#888; font-style:italic;">No scan paths configured. Add a folder path to discover datasets.</p>';
+			tmpContainer.innerHTML = '<p style="color:var(--theme-color-text-muted, #888); font-style:italic;">No scan paths configured. Add a folder path to discover datasets.</p>';
 			return;
 		}
 
@@ -71,7 +71,7 @@ class FactoScannerView extends libPictView
 
 		if (tmpDatasets.length === 0)
 		{
-			tmpContainer.innerHTML = '<p style="color:#888; font-style:italic;">No datasets discovered yet. Add a scan path containing dataset folders with README.md files.</p>';
+			tmpContainer.innerHTML = '<p style="color:var(--theme-color-text-muted, #888); font-style:italic;">No datasets discovered yet. Add a scan path containing dataset folders with README.md files.</p>';
 			this.updateSummary(0, 0, 0, 0);
 			return;
 		}
@@ -154,7 +154,7 @@ class FactoScannerView extends libPictView
 			tmpHtml += '</tr>';
 		}
 		tmpHtml += '</tbody></table>';
-		tmpHtml += '<p style="color:#888; font-size:0.85em; margin-top:8px;">Showing ' + tmpFiltered.length + ' of ' + tmpDatasets.length + ' dataset(s)</p>';
+		tmpHtml += '<p style="color:var(--theme-color-text-muted, #888); font-size:0.85em; margin-top:8px;">Showing ' + tmpFiltered.length + ' of ' + tmpDatasets.length + ' dataset(s)</p>';
 
 		tmpContainer.innerHTML = tmpHtml;
 	}
@@ -423,7 +423,7 @@ class FactoScannerView extends libPictView
 		let tmpContainer = document.getElementById('facto-scanner-detail');
 		if (!tmpContainer) return;
 
-		tmpContainer.innerHTML = '<p style="color:#888;">Loading details for ' + this.escapeHtml(pFolderName) + '...</p>';
+		tmpContainer.innerHTML = '<p style="color:var(--theme-color-text-muted, #888);">Loading details for ' + this.escapeHtml(pFolderName) + '...</p>';
 
 		this.pict.providers.Facto.loadScannerDatasetDetail(pFolderName).then(
 			(pDS) =>
@@ -434,9 +434,9 @@ class FactoScannerView extends libPictView
 					return;
 				}
 
-				let tmpHtml = '<div style="border:1px solid #ddd; border-radius:6px; padding:16px; background:#fafafa;">';
+				let tmpHtml = '<div style="border:1px solid var(--theme-color-border-default, #ddd); border-radius:6px; padding:16px; background:var(--theme-color-background-secondary, #fafafa);">';
 				tmpHtml += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">';
-				tmpHtml += '<h3 style="margin:0; font-size:1.1em; color:#333;">' + this.escapeHtml(pDS.Title || pDS.FolderName) + '</h3>';
+				tmpHtml += '<h3 style="margin:0; font-size:1.1em; color:var(--theme-color-text-primary, #333);">' + this.escapeHtml(pDS.Title || pDS.FolderName) + '</h3>';
 				tmpHtml += '<button class="secondary" style="padding:4px 10px; font-size:0.82em;" onclick="document.getElementById(\'facto-scanner-detail\').innerHTML=\'\';">Close</button>';
 				tmpHtml += '</div>';
 
@@ -471,7 +471,7 @@ class FactoScannerView extends libPictView
 				// Description
 				if (pDS.Description)
 				{
-					tmpHtml += '<div style="margin-bottom:12px;"><strong>Description:</strong><div style="color:#555; font-size:0.9em; margin-top:4px; max-height:100px; overflow-y:auto; white-space:pre-wrap;">' + this.escapeHtml(pDS.Description.substring(0, 500)) + '</div></div>';
+					tmpHtml += '<div style="margin-bottom:12px;"><strong>Description:</strong><div style="color:var(--theme-color-text-secondary, #555); font-size:0.9em; margin-top:4px; max-height:100px; overflow-y:auto; white-space:pre-wrap;">' + this.escapeHtml(pDS.Description.substring(0, 500)) + '</div></div>';
 				}
 
 				// Data files
@@ -492,7 +492,7 @@ class FactoScannerView extends libPictView
 					}
 					if (pDS.DataFiles.length > 20)
 					{
-						tmpHtml += '<tr><td colspan="4" style="color:#888;">...and ' + (pDS.DataFiles.length - 20) + ' more file(s)</td></tr>';
+						tmpHtml += '<tr><td colspan="4" style="color:var(--theme-color-text-muted, #888);">...and ' + (pDS.DataFiles.length - 20) + ' more file(s)</td></tr>';
 					}
 					tmpHtml += '</tbody></table></div>';
 				}
@@ -561,10 +561,10 @@ module.exports.default_configuration =
 			<span class="accordion-toggle">&#9660;</span>
 		</div>
 		<div class="accordion-body">
-			<p style="margin-bottom:12px; color:#666; font-size:0.9em;">Point the scanner at folder trees containing dataset research (README.md + data/). Discovered datasets can be provisioned into the database individually or in bulk.</p>
+			<p style="margin-bottom:12px; color:var(--theme-color-text-secondary, #666); font-size:0.9em;">Point the scanner at folder trees containing dataset research (README.md + data/). Discovered datasets can be provisioned into the database individually or in bulk.</p>
 
 			<!-- Summary -->
-			<div id="facto-scanner-summary" style="margin-bottom:12px; padding:8px 12px; background:#e9ecef; border-radius:4px; font-size:0.9em; color:#555;">
+			<div id="facto-scanner-summary" style="margin-bottom:12px; padding:8px 12px; background:#e9ecef; border-radius:4px; font-size:0.9em; color:var(--theme-color-text-secondary, #555);">
 				No datasets loaded
 			</div>
 

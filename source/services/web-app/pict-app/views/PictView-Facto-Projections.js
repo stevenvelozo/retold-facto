@@ -30,7 +30,7 @@ class FactoProjectionsView extends libPictView
 
 				if (pResponse.DatasetsByType)
 				{
-					tmpHtml += '<tr><td colspan="4" style="padding-top:12px; font-weight:600; border-bottom:2px solid #ddd;">Datasets by Type</td></tr>';
+					tmpHtml += '<tr><td colspan="4" style="padding-top:12px; font-weight:600; border-bottom:2px solid var(--theme-color-border-default, #ddd);">Datasets by Type</td></tr>';
 					tmpHtml += '<tr>';
 					tmpHtml += '<td><span class="badge badge-raw">Raw</span></td><td>' + (pResponse.DatasetsByType.Raw || 0) + '</td>';
 					tmpHtml += '<td><span class="badge badge-compositional">Compositional</span></td><td>' + (pResponse.DatasetsByType.Compositional || 0) + '</td>';
@@ -132,7 +132,7 @@ class FactoProjectionsView extends libPictView
 
 		if (!pResponse || !pResponse.Records || pResponse.Records.length === 0)
 		{
-			tmpContainer.innerHTML = '<p style="color:#888; font-style:italic;">No records match the query.</p>';
+			tmpContainer.innerHTML = '<p style="color:var(--theme-color-text-muted, #888); font-style:italic;">No records match the query.</p>';
 			return;
 		}
 
@@ -179,12 +179,12 @@ module.exports.default_configuration =
 			<span class="accordion-toggle">&#9660;</span>
 		</div>
 		<div class="accordion-body">
-			<p style="margin-bottom:12px; color:#666; font-size:0.9em;">Query across datasets, compare data, and view warehouse-wide statistics.</p>
+			<p style="margin-bottom:12px; color:var(--theme-color-text-secondary, #666); font-size:0.9em;">Query across datasets, compare data, and view warehouse-wide statistics.</p>
 
-			<h3 style="margin-bottom:8px; font-size:1em; color:#444;">Warehouse Summary</h3>
-			<div id="facto-projections-summary" style="margin-bottom:16px;"><p style="color:#888; font-style:italic;">Loading...</p></div>
+			<h3 style="margin-bottom:8px; font-size:1em; color:var(--theme-color-text-secondary, #444);">Warehouse Summary</h3>
+			<div id="facto-projections-summary" style="margin-bottom:16px;"><p style="color:var(--theme-color-text-muted, #888); font-style:italic;">Loading...</p></div>
 
-			<h3 style="margin-top:16px; margin-bottom:8px; font-size:1em; color:#444;">Cross-Dataset Query</h3>
+			<h3 style="margin-top:16px; margin-bottom:8px; font-size:1em; color:var(--theme-color-text-secondary, #444);">Cross-Dataset Query</h3>
 			<div class="inline-group">
 				<div>
 					<label for="facto-proj-dataset-ids">Dataset IDs (comma-separated)</label>

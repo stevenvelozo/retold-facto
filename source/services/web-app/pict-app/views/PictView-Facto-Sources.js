@@ -29,7 +29,7 @@ class FactoSourcesView extends libPictView
 		let tmpSources = this.pict.AppData.Facto.Sources;
 		if (!tmpSources || tmpSources.length === 0)
 		{
-			tmpContainer.innerHTML = '<p style="color:#888; font-style:italic;">No sources registered yet.</p>';
+			tmpContainer.innerHTML = '<p style="color:var(--theme-color-text-muted, #888); font-style:italic;">No sources registered yet.</p>';
 			return;
 		}
 
@@ -37,7 +37,7 @@ class FactoSourcesView extends libPictView
 		for (let i = 0; i < tmpSources.length; i++)
 		{
 			let tmpSource = tmpSources[i];
-			let tmpActiveLabel = tmpSource.Active ? '<span style="color:#28a745;">Active</span>' : '<span style="color:#888;">Inactive</span>';
+			let tmpActiveLabel = tmpSource.Active ? '<span style="color:var(--theme-color-status-success, #28a745);">Active</span>' : '<span style="color:var(--theme-color-text-muted, #888);">Inactive</span>';
 			let tmpToggleBtn = tmpSource.Active
 				? '<button class="secondary" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Sources\'].toggleActive(' + tmpSource.IDSource + ', false)">Deactivate</button>'
 				: '<button class="success" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Sources\'].toggleActive(' + tmpSource.IDSource + ', true)">Activate</button>';
@@ -144,10 +144,10 @@ module.exports.default_configuration =
 			<span class="accordion-toggle">&#9660;</span>
 		</div>
 		<div class="accordion-body">
-			<p style="margin-bottom:12px; color:#666; font-size:0.9em;">Data sources describe where ingested data originates -- websites, APIs, FTP servers, OCR results, ML outputs, etc.</p>
+			<p style="margin-bottom:12px; color:var(--theme-color-text-secondary, #666); font-size:0.9em;">Data sources describe where ingested data originates -- websites, APIs, FTP servers, OCR results, ML outputs, etc.</p>
 			<div id="facto-sources-list"></div>
 
-			<h3 style="margin-top:16px; margin-bottom:8px; font-size:1em; color:#444;">Add Source</h3>
+			<h3 style="margin-top:16px; margin-bottom:8px; font-size:1em; color:var(--theme-color-text-secondary, #444);">Add Source</h3>
 			<div class="inline-group">
 				<div>
 					<label for="facto-source-name">Name</label>

@@ -28,7 +28,7 @@ class FactoDatasetsView extends libPictView
 		let tmpDatasets = this.pict.AppData.Facto.Datasets;
 		if (!tmpDatasets || tmpDatasets.length === 0)
 		{
-			tmpContainer.innerHTML = '<p style="color:#888; font-style:italic;">No datasets created yet.</p>';
+			tmpContainer.innerHTML = '<p style="color:var(--theme-color-text-muted, #888); font-style:italic;">No datasets created yet.</p>';
 			return;
 		}
 
@@ -131,10 +131,10 @@ module.exports.default_configuration =
 			<span class="accordion-toggle">&#9660;</span>
 		</div>
 		<div class="accordion-body">
-			<p style="margin-bottom:12px; color:#666; font-size:0.9em;">Datasets are named collections of records. Types: Raw (ingested), Compositional (merged), Projection (flattened), Derived (computed).</p>
+			<p style="margin-bottom:12px; color:var(--theme-color-text-secondary, #666); font-size:0.9em;">Datasets are named collections of records. Types: Raw (ingested), Compositional (merged), Projection (flattened), Derived (computed).</p>
 			<div id="facto-datasets-list"></div>
 
-			<h3 style="margin-top:16px; margin-bottom:8px; font-size:1em; color:#444;">Create Dataset</h3>
+			<h3 style="margin-top:16px; margin-bottom:8px; font-size:1em; color:var(--theme-color-text-secondary, #444);">Create Dataset</h3>
 			<div class="inline-group">
 				<div>
 					<label for="facto-dataset-name">Name</label>

@@ -29,7 +29,7 @@ class FactoCatalogView extends libPictView
 		let tmpEntries = this.pict.AppData.Facto.CatalogEntries;
 		if (!tmpEntries || tmpEntries.length === 0)
 		{
-			tmpContainer.innerHTML = '<p style="color:#888; font-style:italic;">No catalog entries yet. Add sources to your research catalog.</p>';
+			tmpContainer.innerHTML = '<p style="color:var(--theme-color-text-muted, #888); font-style:italic;">No catalog entries yet. Add sources to your research catalog.</p>';
 			return;
 		}
 
@@ -37,7 +37,7 @@ class FactoCatalogView extends libPictView
 		for (let i = 0; i < tmpEntries.length; i++)
 		{
 			let tmpEntry = tmpEntries[i];
-			let tmpVerified = tmpEntry.Verified ? '<span style="color:#28a745;">&#10003;</span>' : '<span style="color:#ccc;">&#10007;</span>';
+			let tmpVerified = tmpEntry.Verified ? '<span style="color:var(--theme-color-status-success, #28a745);">&#10003;</span>' : '<span style="color:var(--theme-color-border-default, #ccc);">&#10007;</span>';
 			tmpHtml += '<tr>';
 			tmpHtml += '<td>' + (tmpEntry.IDSourceCatalogEntry || '') + '</td>';
 			tmpHtml += '<td>' + (tmpEntry.Agency || '') + '</td>';
@@ -171,11 +171,11 @@ class FactoCatalogView extends libPictView
 			(pResponse) =>
 			{
 				let tmpDatasets = (pResponse && pResponse.Datasets) ? pResponse.Datasets : [];
-				let tmpHtml = '<h3 style="margin-bottom:8px; font-size:1em; color:#444;">Dataset Definitions for Entry #' + pIDEntry + '</h3>';
+				let tmpHtml = '<h3 style="margin-bottom:8px; font-size:1em; color:var(--theme-color-text-secondary, #444);">Dataset Definitions for Entry #' + pIDEntry + '</h3>';
 
 				if (tmpDatasets.length === 0)
 				{
-					tmpHtml += '<p style="color:#888; font-style:italic; margin-bottom:8px;">No dataset definitions yet.</p>';
+					tmpHtml += '<p style="color:var(--theme-color-text-muted, #888); font-style:italic; margin-bottom:8px;">No dataset definitions yet.</p>';
 				}
 				else
 				{
@@ -184,8 +184,8 @@ class FactoCatalogView extends libPictView
 					{
 						let tmpDS = tmpDatasets[i];
 						let tmpStatusLabel = tmpDS.Provisioned
-							? '<span style="color:#28a745;">Provisioned (Source #' + tmpDS.IDSource + ', Dataset #' + tmpDS.IDDataset + ')</span>'
-							: '<span style="color:#888;">Not provisioned</span>';
+							? '<span style="color:var(--theme-color-status-success, #28a745);">Provisioned (Source #' + tmpDS.IDSource + ', Dataset #' + tmpDS.IDDataset + ')</span>'
+							: '<span style="color:var(--theme-color-text-muted, #888);">Not provisioned</span>';
 						let tmpActionBtn = '';
 						if (tmpDS.Provisioned)
 						{
@@ -209,7 +209,7 @@ class FactoCatalogView extends libPictView
 				}
 
 				// Add dataset definition form
-				tmpHtml += '<h4 style="margin-top:12px; margin-bottom:8px; font-size:0.95em; color:#555;">Add Dataset Definition</h4>';
+				tmpHtml += '<h4 style="margin-top:12px; margin-bottom:8px; font-size:0.95em; color:var(--theme-color-text-secondary, #555);">Add Dataset Definition</h4>';
 				tmpHtml += '<div class="inline-group">';
 				tmpHtml += '<div><label for="facto-catds-name">Name</label><input type="text" id="facto-catds-name" placeholder="e.g. Monthly Earthquake Feed"></div>';
 				tmpHtml += '<div><label for="facto-catds-format">Format</label>';
@@ -418,7 +418,7 @@ module.exports.default_configuration =
 			<span class="accordion-toggle">&#9660;</span>
 		</div>
 		<div class="accordion-body">
-			<p style="margin-bottom:12px; color:#666; font-size:0.9em;">Research and catalog potential data sources before provisioning them as runtime Sources and Datasets.</p>
+			<p style="margin-bottom:12px; color:var(--theme-color-text-secondary, #666); font-size:0.9em;">Research and catalog potential data sources before provisioning them as runtime Sources and Datasets.</p>
 
 			<!-- Search -->
 			<div class="inline-group" style="margin-bottom:12px;">
@@ -437,7 +437,7 @@ module.exports.default_configuration =
 			<div id="facto-catalog-detail" style="margin-top:12px;"></div>
 
 			<!-- Add entry form -->
-			<h3 style="margin-top:16px; margin-bottom:8px; font-size:1em; color:#444;">Add Catalog Entry</h3>
+			<h3 style="margin-top:16px; margin-bottom:8px; font-size:1em; color:var(--theme-color-text-secondary, #444);">Add Catalog Entry</h3>
 			<div class="inline-group">
 				<div>
 					<label for="facto-catalog-agency">Agency / Organization</label>
@@ -504,8 +504,8 @@ module.exports.default_configuration =
 			<button class="primary" onclick="pict.views['Facto-Catalog'].addEntry()">Add Catalog Entry</button>
 
 			<!-- Import / Export -->
-			<h3 style="margin-top:16px; margin-bottom:8px; font-size:1em; color:#444;">Import / Export</h3>
-			<textarea id="facto-catalog-import-json" rows="4" style="width:100%; font-family:monospace; font-size:0.85em; padding:8px; border:1px solid #ccc; border-radius:4px; margin-bottom:8px;" placeholder="Paste JSON array of catalog entries here..."></textarea>
+			<h3 style="margin-top:16px; margin-bottom:8px; font-size:1em; color:var(--theme-color-text-secondary, #444);">Import / Export</h3>
+			<textarea id="facto-catalog-import-json" rows="4" style="width:100%; font-family:monospace; font-size:0.85em; padding:8px; border:1px solid var(--theme-color-border-default, #ccc); border-radius:4px; margin-bottom:8px;" placeholder="Paste JSON array of catalog entries here..."></textarea>
 			<button class="primary" onclick="pict.views['Facto-Catalog'].importCatalog()">Import JSON</button>
 			<button class="secondary" onclick="pict.views['Facto-Catalog'].exportCatalog()">Export Catalog</button>
 

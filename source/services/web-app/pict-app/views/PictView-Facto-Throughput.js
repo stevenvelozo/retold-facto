@@ -277,7 +277,7 @@ class FactoThroughputView extends libPictView
 
 		if (!pRuns || pRuns.length === 0)
 		{
-			tmpContainer.innerHTML = '<p style="color:#aaa; font-size:0.85em; font-style:italic;">No historical runs found.</p>';
+			tmpContainer.innerHTML = '<p style="color:var(--theme-color-text-muted, #aaa); font-size:0.85em; font-style:italic;">No historical runs found.</p>';
 			return;
 		}
 
@@ -424,7 +424,7 @@ module.exports.default_configuration =
 			<span class="accordion-toggle">&#9660;</span>
 		</div>
 		<div class="accordion-body" id="facto-card-throughput">
-			<p style="margin-bottom:12px; color:#666; font-size:0.9em;">
+			<p style="margin-bottom:12px; color:var(--theme-color-text-secondary, #666); font-size:0.9em;">
 				Temporal histograms showing record flow through extraction, transformation, and storage stages.
 			</p>
 			<div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
@@ -433,7 +433,7 @@ module.exports.default_configuration =
 			</div>
 			<div id="facto-throughput-history" style="margin-bottom:12px;"></div>
 			<div id="facto-throughput-charts">
-				<p style="color:#aaa; font-style:italic;">Click "Start Live Monitoring" for real-time view, or "Browse Run History" to inspect past runs.</p>
+				<p style="color:var(--theme-color-text-muted, #aaa); font-style:italic;">Click "Start Live Monitoring" for real-time view, or "Browse Run History" to inspect past runs.</p>
 			</div>
 			<div id="facto-throughput-datasets" style="margin-top:12px;"></div>
 			<style>

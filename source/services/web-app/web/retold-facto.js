@@ -404,7 +404,7 @@ if(tmpLastIndex<tmpCode.length){let tmpSegment=tmpCode.substring(tmpLastIndex);t
 	font-family: 'SFMono-Regular', 'SF Mono', 'Menlo', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
 	font-size: 14px;
 	line-height: 1.5;
-	border: 1px solid #D0D0D0;
+	border: 1px solid var(--theme-color-border-default, #D0D0D0);
 	border-radius: 4px;
 	overflow: auto;
 }
@@ -416,9 +416,9 @@ if(tmpLastIndex<tmpCode.length){let tmpSegment=tmpCode.substring(tmpLastIndex);t
 	min-width: 40px;
 	padding: 10px 0;
 	text-align: right;
-	background: #F5F5F5;
-	border-right: 1px solid #D0D0D0;
-	color: #999;
+	background: var(--theme-color-background-secondary, #F5F5F5);
+	border-right: 1px solid var(--theme-color-border-default, #D0D0D0);
+	color: var(--theme-color-text-muted, #999);
 	font-size: 13px;
 	line-height: 1.5;
 	user-select: none;
@@ -442,8 +442,8 @@ if(tmpLastIndex<tmpCode.length){let tmpSegment=tmpCode.substring(tmpLastIndex);t
 	tab-size: 4;
 	white-space: pre;
 	overflow-wrap: normal;
-	color: #383A42;
-	background: #FAFAFA;
+	color: var(--theme-color-text-primary, #383A42);
+	background: var(--theme-color-background-secondary, #FAFAFA);
 	caret-color: #526FFF;
 	border-radius: 0 4px 4px 0;
 }
@@ -453,16 +453,16 @@ if(tmpLastIndex<tmpCode.length){let tmpSegment=tmpCode.substring(tmpLastIndex);t
 	border-radius: 4px;
 }
 .pict-code-editor-wrap .pict-code-editor .keyword { color: #A626A4; }
-.pict-code-editor-wrap .pict-code-editor .string { color: #50A14F; }
-.pict-code-editor-wrap .pict-code-editor .number { color: #986801; }
+.pict-code-editor-wrap .pict-code-editor .string { color: var(--theme-color-status-success, #50A14F); }
+.pict-code-editor-wrap .pict-code-editor .number { color: var(--theme-color-status-warning, #986801); }
 .pict-code-editor-wrap .pict-code-editor .comment { color: #A0A1A7; font-style: italic; }
-.pict-code-editor-wrap .pict-code-editor .operator { color: #0184BC; }
-.pict-code-editor-wrap .pict-code-editor .punctuation { color: #383A42; }
-.pict-code-editor-wrap .pict-code-editor .function-name { color: #4078F2; }
-.pict-code-editor-wrap .pict-code-editor .property { color: #E45649; }
-.pict-code-editor-wrap .pict-code-editor .tag { color: #E45649; }
-.pict-code-editor-wrap .pict-code-editor .attr-name { color: #986801; }
-.pict-code-editor-wrap .pict-code-editor .attr-value { color: #50A14F; }
+.pict-code-editor-wrap .pict-code-editor .operator { color: var(--theme-color-status-info, #0184BC); }
+.pict-code-editor-wrap .pict-code-editor .punctuation { color: var(--theme-color-text-primary, #383A42); }
+.pict-code-editor-wrap .pict-code-editor .function-name { color: var(--theme-color-brand-primary, #4078F2); }
+.pict-code-editor-wrap .pict-code-editor .property { color: var(--theme-color-status-error, #E45649); }
+.pict-code-editor-wrap .pict-code-editor .tag { color: var(--theme-color-status-error, #E45649); }
+.pict-code-editor-wrap .pict-code-editor .attr-name { color: var(--theme-color-status-warning, #986801); }
+.pict-code-editor-wrap .pict-code-editor .attr-value { color: var(--theme-color-status-success, #50A14F); }
 `};},{}],11:[function(require,module,exports){const libPictViewClass=require('pict-view');const libCreateHighlighter=require('./Pict-Code-Highlighter.js');const _DefaultConfiguration=require('./Pict-Section-Code-DefaultConfiguration.js');class PictSectionCode extends libPictViewClass{constructor(pFable,pOptions,pServiceHash){let tmpOptions=Object.assign({},_DefaultConfiguration,pOptions);super(pFable,tmpOptions,pServiceHash);this.initialRenderComplete=false;// The CodeJar instance
 this.codeJar=null;// The highlight function (can be overridden)
 this._highlightFunction=null;// The current language
@@ -653,25 +653,25 @@ tmpResult=tmpResult.replace(/\x00CODEINLINE(\d+)\x00/g,(pMatch,pIndex)=>{return 
 		}
 		.pict-content h1 {
 			font-size: 2em;
-			color: #3D3229;
+			color: var(--theme-color-text-primary, #3D3229);
 			border-bottom: 1px solid #DDD6CA;
 			padding-bottom: 0.3em;
 			margin-top: 0;
 		}
 		.pict-content h2 {
 			font-size: 1.5em;
-			color: #3D3229;
+			color: var(--theme-color-text-primary, #3D3229);
 			border-bottom: 1px solid #EAE3D8;
 			padding-bottom: 0.25em;
 			margin-top: 1.5em;
 		}
 		.pict-content h3 {
 			font-size: 1.25em;
-			color: #3D3229;
+			color: var(--theme-color-text-primary, #3D3229);
 			margin-top: 1.25em;
 		}
 		.pict-content h4, .pict-content h5, .pict-content h6 {
-			color: #5E5549;
+			color: var(--theme-color-text-secondary, #5E5549);
 			margin-top: 1em;
 		}
 		.pict-content p {
@@ -694,7 +694,7 @@ tmpResult=tmpResult.replace(/\x00CODEINLINE(\d+)\x00/g,(pMatch,pIndex)=>{return 
 			border-radius: 6px;
 			overflow: auto;
 			margin: 1em 0;
-			background: #3D3229;
+			background: var(--theme-color-text-primary, #3D3229);
 		}
 		.pict-content-code-wrap .pict-content-code-line-numbers {
 			position: absolute;
@@ -718,7 +718,7 @@ tmpResult=tmpResult.replace(/\x00CODEINLINE(\d+)\x00/g,(pMatch,pIndex)=>{return 
 		}
 		.pict-content-code-wrap pre {
 			margin: 0;
-			background: #3D3229;
+			background: var(--theme-color-text-primary, #3D3229);
 			color: #E8E0D4;
 			padding: 1.25em 1.25em 1.25em 52px;
 			border-radius: 6px;
@@ -745,7 +745,7 @@ tmpResult=tmpResult.replace(/\x00CODEINLINE(\d+)\x00/g,(pMatch,pIndex)=>{return 
 		.pict-content-code-wrap .attr-name { color: #D19A66; }
 		.pict-content-code-wrap .attr-value { color: #98C379; }
 		.pict-content pre {
-			background: #3D3229;
+			background: var(--theme-color-text-primary, #3D3229);
 			color: #E8E0D4;
 			padding: 1.25em;
 			border-radius: 6px;
@@ -754,7 +754,7 @@ tmpResult=tmpResult.replace(/\x00CODEINLINE(\d+)\x00/g,(pMatch,pIndex)=>{return 
 			font-size: 0.9em;
 		}
 		.pict-content code {
-			background: #F0ECE4;
+			background: var(--theme-color-background-secondary, #F0ECE4);
 			padding: 0.15em 0.4em;
 			border-radius: 3px;
 			font-size: 0.9em;
@@ -771,7 +771,7 @@ tmpResult=tmpResult.replace(/\x00CODEINLINE(\d+)\x00/g,(pMatch,pIndex)=>{return 
 			margin: 1em 0;
 			padding: 0.5em 1em;
 			background: #F7F5F0;
-			color: #5E5549;
+			color: var(--theme-color-text-secondary, #5E5549);
 		}
 		.pict-content blockquote p {
 			margin: 0.25em 0;
@@ -800,7 +800,7 @@ tmpResult=tmpResult.replace(/\x00CODEINLINE(\d+)\x00/g,(pMatch,pIndex)=>{return 
 			padding: 0.6em 0.8em;
 			text-align: left;
 			font-weight: 600;
-			color: #3D3229;
+			color: var(--theme-color-text-primary, #3D3229);
 		}
 		.pict-content table td {
 			border: 1px solid #DDD6CA;
@@ -815,8 +815,8 @@ tmpResult=tmpResult.replace(/\x00CODEINLINE(\d+)\x00/g,(pMatch,pIndex)=>{return 
 			height: auto;
 		}
 		.pict-content pre.mermaid {
-			background: #fff;
-			color: #3D3229;
+			background: var(--theme-color-background-panel, #fff);
+			color: var(--theme-color-text-primary, #3D3229);
 			text-align: center;
 			padding: 1em;
 		}
@@ -961,7 +961,7 @@ let tmpDisplayElements=tmpContentBody.querySelectorAll('.pict-content-katex-disp
 .pict-histogram-value-label
 {
 	text-align: center;
-	color: #666;
+	color: var(--theme-color-text-secondary, #666);
 	font-size: 11px;
 	padding: 2px 0;
 	white-space: nowrap;
@@ -973,7 +973,7 @@ let tmpDisplayElements=tmpContentBody.querySelectorAll('.pict-content-katex-disp
 .pict-histogram-bin-label
 {
 	text-align: center;
-	color: #333;
+	color: var(--theme-color-text-primary, #333);
 	font-size: 11px;
 	padding: 4px 2px 0 2px;
 	white-space: nowrap;
@@ -1008,7 +1008,7 @@ let tmpDisplayElements=tmpContentBody.querySelectorAll('.pict-content-katex-disp
 	left: 0;
 	right: 0;
 	height: 4px;
-	background: #E0E0E0;
+	background: var(--theme-color-border-default, #E0E0E0);
 	border-radius: 2px;
 }
 .pict-histogram-horizontal .pict-histogram-range-track
@@ -1041,7 +1041,7 @@ let tmpDisplayElements=tmpContentBody.querySelectorAll('.pict-content-katex-disp
 	top: 4px;
 	width: 16px;
 	height: 16px;
-	background: #fff;
+	background: var(--theme-color-background-panel, #fff);
 	border: 2px solid #4A90D9;
 	border-radius: 50%;
 	cursor: grab;
@@ -1314,25 +1314,25 @@ function padLeft(pStr,pLen){let tmpStr=String(pStr);while(tmpStr.length<pLen){tm
 		}
 		.pict-content h1 {
 			font-size: 2em;
-			color: #3D3229;
+			color: var(--theme-color-text-primary, #3D3229);
 			border-bottom: 1px solid #DDD6CA;
 			padding-bottom: 0.3em;
 			margin-top: 0;
 		}
 		.pict-content h2 {
 			font-size: 1.5em;
-			color: #3D3229;
+			color: var(--theme-color-text-primary, #3D3229);
 			border-bottom: 1px solid #EAE3D8;
 			padding-bottom: 0.25em;
 			margin-top: 1.5em;
 		}
 		.pict-content h3 {
 			font-size: 1.25em;
-			color: #3D3229;
+			color: var(--theme-color-text-primary, #3D3229);
 			margin-top: 1.25em;
 		}
 		.pict-content h4, .pict-content h5, .pict-content h6 {
-			color: #5E5549;
+			color: var(--theme-color-text-secondary, #5E5549);
 			margin-top: 1em;
 		}
 		.pict-content p {
@@ -1348,7 +1348,7 @@ function padLeft(pStr,pLen){let tmpStr=String(pStr);while(tmpStr.length<pLen){tm
 			text-decoration: underline;
 		}
 		.pict-content pre {
-			background: #3D3229;
+			background: var(--theme-color-text-primary, #3D3229);
 			color: #E8E0D4;
 			padding: 1.25em;
 			border-radius: 6px;
@@ -1357,7 +1357,7 @@ function padLeft(pStr,pLen){let tmpStr=String(pStr);while(tmpStr.length<pLen){tm
 			font-size: 0.9em;
 		}
 		.pict-content code {
-			background: #F0ECE4;
+			background: var(--theme-color-background-secondary, #F0ECE4);
 			padding: 0.15em 0.4em;
 			border-radius: 3px;
 			font-size: 0.9em;
@@ -1372,7 +1372,7 @@ function padLeft(pStr,pLen){let tmpStr=String(pStr);while(tmpStr.length<pLen){tm
 			border-radius: 6px;
 			overflow: auto;
 			margin: 1em 0;
-			background: #3D3229;
+			background: var(--theme-color-text-primary, #3D3229);
 		}
 		.pict-content-code-wrap .pict-content-code-line-numbers {
 			position: sticky;
@@ -1397,7 +1397,7 @@ function padLeft(pStr,pLen){let tmpStr=String(pStr);while(tmpStr.length<pLen){tm
 		}
 		.pict-content-code-wrap pre {
 			margin: 0;
-			background: #3D3229;
+			background: var(--theme-color-text-primary, #3D3229);
 			color: #E8E0D4;
 			padding: 1.25em 1.25em 1.25em 8px;
 			border-radius: 0 6px 6px 0;
@@ -1436,7 +1436,7 @@ function padLeft(pStr,pLen){let tmpStr=String(pStr);while(tmpStr.length<pLen){tm
 			margin: 1em 0;
 			padding: 0.5em 1em;
 			background: #F7F5F0;
-			color: #5E5549;
+			color: var(--theme-color-text-secondary, #5E5549);
 		}
 		.pict-content blockquote p {
 			margin: 0.25em 0;
@@ -1465,7 +1465,7 @@ function padLeft(pStr,pLen){let tmpStr=String(pStr);while(tmpStr.length<pLen){tm
 			padding: 0.6em 0.8em;
 			text-align: left;
 			font-weight: 600;
-			color: #3D3229;
+			color: var(--theme-color-text-primary, #3D3229);
 		}
 		.pict-content table td {
 			border: 1px solid #DDD6CA;
@@ -1480,8 +1480,8 @@ function padLeft(pStr,pLen){let tmpStr=String(pStr);while(tmpStr.length<pLen){tm
 			height: auto;
 		}
 		.pict-content pre.mermaid {
-			background: #fff;
-			color: #3D3229;
+			background: var(--theme-color-background-panel, #fff);
+			color: var(--theme-color-text-primary, #3D3229);
 			text-align: center;
 			padding: 1em;
 		}
@@ -2002,7 +2002,7 @@ let tmpContentContainer=tmpContainer.querySelector(`#${tmpRenderedViewID} .pict-
 	cursor: pointer;
 	font-size: 12px;
 	padding: 0;
-	color: #888;
+	color: var(--theme-color-text-muted, #888);
 	line-height: 1;
 	font-family: inherit;
 	opacity: 0;
@@ -2015,11 +2015,11 @@ let tmpContentContainer=tmpContainer.querySelector(`#${tmpRenderedViewID} .pict-
 }
 .pict-mde-left-btn:hover
 {
-	color: #222;
+	color: var(--theme-color-text-primary, #222);
 }
 .pict-mde-btn-remove:hover
 {
-	color: #CC3333;
+	color: var(--theme-color-status-error, #CC3333);
 }
 .pict-mde-btn-linenums
 {
@@ -2046,7 +2046,7 @@ let tmpContentContainer=tmpContainer.querySelector(`#${tmpRenderedViewID} .pict-
 /* Dim preview button when mode is off */
 .pict-mde.pict-mde-preview-off .pict-mde-btn-preview
 {
-	color: #CCC;
+	color: var(--theme-color-border-default, #CCC);
 }
 
 /* ---- Drag handle (simple grey bar) ---- */
@@ -2054,7 +2054,7 @@ let tmpContentContainer=tmpContainer.querySelector(`#${tmpRenderedViewID} .pict-
 {
 	flex: 0 0 8px;
 	cursor: grab;
-	background: #EDEDED;
+	background: var(--theme-color-background-tertiary, #EDEDED);
 	transition: background-color 0.15s ease;
 	user-select: none;
 }
@@ -2073,7 +2073,7 @@ let tmpContentContainer=tmpContainer.querySelector(`#${tmpRenderedViewID} .pict-
 	flex: 1 1 0%;
 	min-width: 0;
 	overflow: hidden;
-	background: #FFFFFF;
+	background: var(--theme-color-background-panel, #FFFFFF);
 	transition: background-color 0.15s ease;
 }
 .pict-mde-segment-editor
@@ -2092,16 +2092,16 @@ let tmpContentContainer=tmpContainer.querySelector(`#${tmpRenderedViewID} .pict-
 	flex-wrap: wrap;
 	gap: 8px;
 	padding: 8px 12px;
-	border-top: 1px solid #EDEDED;
+	border-top: 1px solid var(--theme-color-background-tertiary, #EDEDED);
 }
 .pict-mde-image-preview img
 {
 	max-width: 200px;
 	max-height: 150px;
 	border-radius: 3px;
-	border: 1px solid #E0E0E0;
+	border: 1px solid var(--theme-color-border-default, #E0E0E0);
 	object-fit: contain;
-	background: #F8F8F8;
+	background: var(--theme-color-background-secondary, #F8F8F8);
 }
 .pict-mde-image-preview-item
 {
@@ -2112,7 +2112,7 @@ let tmpContentContainer=tmpContainer.querySelector(`#${tmpRenderedViewID} .pict-
 {
 	display: block;
 	font-size: 10px;
-	color: #999;
+	color: var(--theme-color-text-muted, #999);
 	margin-top: 2px;
 	max-width: 200px;
 	overflow: hidden;
@@ -2128,8 +2128,8 @@ let tmpContentContainer=tmpContainer.querySelector(`#${tmpRenderedViewID} .pict-
 .pict-mde-rich-preview.pict-mde-has-rich-preview
 {
 	display: block;
-	border-top: 1px solid #EDEDED;
-	background: #FCFCFC;
+	border-top: 1px solid var(--theme-color-background-tertiary, #EDEDED);
+	background: var(--theme-color-background-panel, #FCFCFC);
 	overflow: hidden;
 }
 /* Constrain images in the rich preview even if pict-section-content CSS loads late */
@@ -2149,8 +2149,8 @@ let tmpContentContainer=tmpContainer.querySelector(`#${tmpRenderedViewID} .pict-
 {
 	display: flex;
 	gap: 0;
-	border-bottom: 1px solid #EDEDED;
-	background: #F8F8F8;
+	border-bottom: 1px solid var(--theme-color-background-tertiary, #EDEDED);
+	background: var(--theme-color-background-secondary, #F8F8F8);
 }
 .pict-mde-tab
 {
@@ -2159,13 +2159,13 @@ let tmpContentContainer=tmpContainer.querySelector(`#${tmpRenderedViewID} .pict-
 	background: transparent;
 	cursor: pointer;
 	font-size: 12px;
-	color: #888;
+	color: var(--theme-color-text-muted, #888);
 	border-bottom: 2px solid transparent;
 	font-family: inherit;
 }
 .pict-mde-tab:hover
 {
-	color: #222;
+	color: var(--theme-color-text-primary, #222);
 }
 .pict-mde-tab.pict-mde-tab-active
 {
@@ -2212,7 +2212,7 @@ let tmpContentContainer=tmpContainer.querySelector(`#${tmpRenderedViewID} .pict-
 	flex: 1 1 50%;
 	min-width: 0;
 	overflow: auto;
-	border-left: 1px solid #EDEDED;
+	border-left: 1px solid var(--theme-color-background-tertiary, #EDEDED);
 }
 /* Side-by-side: remove top borders since preview is beside, not below */
 .pict-mde.pict-mde-preview-side .pict-mde-rich-preview.pict-mde-has-rich-preview
@@ -2279,7 +2279,7 @@ let tmpContentContainer=tmpContainer.querySelector(`#${tmpRenderedViewID} .pict-
 .pict-mde-rendered-view
 {
 	padding: 16px 20px;
-	background: #FFFFFF;
+	background: var(--theme-color-background-panel, #FFFFFF);
 	min-height: 120px;
 }
 .pict-mde-rendered-view .pict-content
@@ -2393,13 +2393,13 @@ let tmpContentContainer=tmpContainer.querySelector(`#${tmpRenderedViewID} .pict-
 	font-size: 12px;
 	padding: 0;
 	border-radius: 3px;
-	color: #666;
+	color: var(--theme-color-text-secondary, #666);
 	line-height: 1;
 	font-family: inherit;
 }
 .pict-mde-sidebar-btn:hover
 {
-	color: #222;
+	color: var(--theme-color-text-primary, #222);
 }
 .pict-mde-sidebar-btn b
 {
@@ -2428,10 +2428,10 @@ let tmpContentContainer=tmpContainer.querySelector(`#${tmpRenderedViewID} .pict-
 	display: block;
 	width: 100%;
 	padding: 7px;
-	border: 2px dashed #D0D0D0;
+	border: 2px dashed var(--theme-color-border-default, #D0D0D0);
 	border-radius: 4px;
 	background: transparent;
-	color: #999;
+	color: var(--theme-color-text-muted, #999);
 	font-size: 12px;
 	font-weight: 600;
 	cursor: pointer;
@@ -2489,21 +2489,21 @@ let tmpContentContainer=tmpContainer.querySelector(`#${tmpRenderedViewID} .pict-
 }
 .pict-mde-segment-editor .cm-editor .cm-gutters
 {
-	background: #F8F8F8;
-	border-right: 1px solid #E8E8E8;
-	color: #BBB;
+	background: var(--theme-color-background-secondary, #F8F8F8);
+	border-right: 1px solid var(--theme-color-border-light, #E8E8E8);
+	color: var(--theme-color-text-muted, #BBB);
 }
 
 /* ---- Collapsed data URI widget ---- */
 .pict-mde-data-uri-collapsed
 {
 	display: inline;
-	background: #F0F0F0;
-	color: #888;
+	background: var(--theme-color-background-tertiary, #F0F0F0);
+	color: var(--theme-color-text-muted, #888);
 	font-size: 11px;
 	padding: 1px 4px;
 	border-radius: 3px;
-	border: 1px solid #E0E0E0;
+	border: 1px solid var(--theme-color-border-default, #E0E0E0);
 	font-family: 'SFMono-Regular', 'SF Mono', 'Menlo', monospace;
 	cursor: default;
 	white-space: nowrap;
@@ -2605,7 +2605,7 @@ let tmpContentContainer=tmpContainer.querySelector(`#${tmpRenderedViewID} .pict-
 	.pict-mde.pict-mde-preview-side .pict-mde-preview-pane
 	{
 		border-left: none;
-		border-top: 1px solid #EDEDED;
+		border-top: 1px solid var(--theme-color-background-tertiary, #EDEDED);
 	}
 
 	/* Tab bar: smaller on tablet */
@@ -2656,8 +2656,8 @@ let tmpContentContainer=tmpContainer.querySelector(`#${tmpRenderedViewID} .pict-
 		gap: 2px;
 		padding: 3px 4px;
 		order: -1;
-		background: #F5F5F5;
-		border-bottom: 1px solid #EDEDED;
+		background: var(--theme-color-background-secondary, #F5F5F5);
+		border-bottom: 1px solid var(--theme-color-background-tertiary, #EDEDED);
 	}
 	.pict-mde-left-btn
 	{
@@ -2990,8 +2990,8 @@ IndentPixels:20,CSS:/*css*/`
 	font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'JetBrains Mono', Consolas, monospace;
 	font-size: 13px;
 	line-height: 1.5;
-	color: #3D3229;
-	background: #FDFCFA;
+	color: var(--theme-color-text-primary, #3D3229);
+	background: var(--theme-color-background-panel, #FDFCFA);
 	border: 1px solid #E8E3DA;
 	border-radius: 6px;
 	padding: 8px 0;
@@ -3028,7 +3028,7 @@ IndentPixels:20,CSS:/*css*/`
 .pict-oe-toggle:hover
 {
 	background: #E8E3DA;
-	color: #3D3229;
+	color: var(--theme-color-text-primary, #3D3229);
 }
 .pict-oe-spacer
 {
@@ -3094,7 +3094,7 @@ IndentPixels:20,CSS:/*css*/`
 	font-size: 9px;
 	padding: 0 4px;
 	border-radius: 3px;
-	background: #F0ECE4;
+	background: var(--theme-color-background-secondary, #F0ECE4);
 	color: #8A7F72;
 	margin-left: 6px;
 	line-height: 16px;
@@ -3102,7 +3102,7 @@ IndentPixels:20,CSS:/*css*/`
 }
 .pict-oe-value-input
 {
-	background: #FFF;
+	background: var(--theme-color-background-panel, #FFF);
 	border: 1px solid #2E7D74;
 	border-radius: 3px;
 	padding: 1px 4px;
@@ -3165,7 +3165,7 @@ IndentPixels:20,CSS:/*css*/`
 {
 	background: #E8E3DA;
 	border-color: #C5BFAE;
-	color: #3D3229;
+	color: var(--theme-color-text-primary, #3D3229);
 }
 .pict-oe-action-remove
 {
@@ -3203,7 +3203,7 @@ IndentPixels:20,CSS:/*css*/`
 }
 .pict-oe-key-input
 {
-	background: #FFF;
+	background: var(--theme-color-background-panel, #FFF);
 	border: 1px solid #9E6B47;
 	border-radius: 3px;
 	padding: 1px 4px;
@@ -3221,13 +3221,13 @@ IndentPixels:20,CSS:/*css*/`
 }
 .pict-oe-type-select
 {
-	background: #FFF;
+	background: var(--theme-color-background-panel, #FFF);
 	border: 1px solid #C5BFAE;
 	border-radius: 3px;
 	padding: 1px 4px;
 	font-family: inherit;
 	font-size: inherit;
-	color: #3D3229;
+	color: var(--theme-color-text-primary, #3D3229);
 	outline: none;
 	margin-left: 6px;
 	cursor: pointer;
@@ -6436,11 +6436,11 @@ loadSourceDocumentation:function(pIDSource){return this.api('GET',`/facto/source
 // Source Catalog Context
 // ================================================================
 loadSourceCatalogContext:function(pIDSource){return this.api('GET',`/facto/source/${pIDSource}/catalog-context`);},loadCatalogSourceLinks:function(){return this.api('GET','/facto/catalog/source-links');}};},{}],79:[function(require,module,exports){const libPictView=require('pict-view');class FactoCatalogView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(){// Load catalog entries from API on first render
-this.pict.providers.Facto.loadCatalogEntries().then(()=>{this.refreshList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error loading catalog: '+pError.message,{type:'error'});});}refreshList(){let tmpContainer=document.getElementById('facto-catalog-list');if(!tmpContainer)return;let tmpEntries=this.pict.AppData.Facto.CatalogEntries;if(!tmpEntries||tmpEntries.length===0){tmpContainer.innerHTML='<p style="color:#888; font-style:italic;">No catalog entries yet. Add sources to your research catalog.</p>';return;}let tmpHtml='<table><thead><tr><th>ID</th><th>Agency</th><th>Name</th><th>Type</th><th>Category</th><th>Region</th><th>Verified</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpEntries.length;i++){let tmpEntry=tmpEntries[i];let tmpVerified=tmpEntry.Verified?'<span style="color:#28a745;">&#10003;</span>':'<span style="color:#ccc;">&#10007;</span>';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpEntry.IDSourceCatalogEntry||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Agency||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Name||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Type||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Category||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Region||'')+'</td>';tmpHtml+='<td style="text-align:center;">'+tmpVerified+'</td>';tmpHtml+='<td>';tmpHtml+='<button class="primary" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Catalog\'].viewEntry('+tmpEntry.IDSourceCatalogEntry+')">Datasets</button> ';tmpHtml+='<button class="danger" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Catalog\'].deleteEntry('+tmpEntry.IDSourceCatalogEntry+')">Delete</button>';tmpHtml+='</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}searchCatalog(){let tmpQuery=this.pict.providers.FactoUI.getVal('facto-catalog-search');if(!tmpQuery){// Reload all entries
+this.pict.providers.Facto.loadCatalogEntries().then(()=>{this.refreshList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error loading catalog: '+pError.message,{type:'error'});});}refreshList(){let tmpContainer=document.getElementById('facto-catalog-list');if(!tmpContainer)return;let tmpEntries=this.pict.AppData.Facto.CatalogEntries;if(!tmpEntries||tmpEntries.length===0){tmpContainer.innerHTML='<p style="color:var(--theme-color-text-muted, #888); font-style:italic;">No catalog entries yet. Add sources to your research catalog.</p>';return;}let tmpHtml='<table><thead><tr><th>ID</th><th>Agency</th><th>Name</th><th>Type</th><th>Category</th><th>Region</th><th>Verified</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpEntries.length;i++){let tmpEntry=tmpEntries[i];let tmpVerified=tmpEntry.Verified?'<span style="color:var(--theme-color-status-success, #28a745);">&#10003;</span>':'<span style="color:var(--theme-color-border-default, #ccc);">&#10007;</span>';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpEntry.IDSourceCatalogEntry||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Agency||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Name||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Type||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Category||'')+'</td>';tmpHtml+='<td>'+(tmpEntry.Region||'')+'</td>';tmpHtml+='<td style="text-align:center;">'+tmpVerified+'</td>';tmpHtml+='<td>';tmpHtml+='<button class="primary" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Catalog\'].viewEntry('+tmpEntry.IDSourceCatalogEntry+')">Datasets</button> ';tmpHtml+='<button class="danger" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Catalog\'].deleteEntry('+tmpEntry.IDSourceCatalogEntry+')">Delete</button>';tmpHtml+='</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}searchCatalog(){let tmpQuery=this.pict.providers.FactoUI.getVal('facto-catalog-search');if(!tmpQuery){// Reload all entries
 this.pict.providers.Facto.loadCatalogEntries().then(()=>{this.refreshList();});return;}this.pict.providers.Facto.searchCatalog(tmpQuery).then(()=>{this.refreshList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Search error: '+pError.message,{type:'error'});});}addEntry(){let tmpAgency=this.pict.providers.FactoUI.getVal('facto-catalog-agency');let tmpName=this.pict.providers.FactoUI.getVal('facto-catalog-name');let tmpType=this.pict.providers.FactoUI.getVal('facto-catalog-type');let tmpURL=this.pict.providers.FactoUI.getVal('facto-catalog-url');let tmpProtocol=this.pict.providers.FactoUI.getVal('facto-catalog-protocol');let tmpCategory=this.pict.providers.FactoUI.getVal('facto-catalog-category');let tmpRegion=this.pict.providers.FactoUI.getVal('facto-catalog-region');let tmpUpdateFrequency=this.pict.providers.FactoUI.getVal('facto-catalog-frequency');let tmpDescription=this.pict.providers.FactoUI.getVal('facto-catalog-description');if(!tmpAgency&&!tmpName){this.pict.views['Pict-Section-Modal'].toast('Agency or Name is required',{type:'warning'});return;}this.pict.providers.Facto.createCatalogEntry({Agency:tmpAgency,Name:tmpName,Type:tmpType,URL:tmpURL,Protocol:tmpProtocol,Category:tmpCategory,Region:tmpRegion,UpdateFrequency:tmpUpdateFrequency,Description:tmpDescription}).then(pResponse=>{if(pResponse&&pResponse.Success){this.pict.views['Pict-Section-Modal'].toast('Catalog entry created: '+(tmpAgency||tmpName),{type:'success'});// Clear form
 let tmpFields=['agency','name','url','description'];for(let i=0;i<tmpFields.length;i++){let tmpEl=document.getElementById('facto-catalog-'+tmpFields[i]);if(tmpEl)tmpEl.value='';}// Reload list
-return this.pict.providers.Facto.loadCatalogEntries();}else{this.pict.views['Pict-Section-Modal'].toast('Error: '+(pResponse&&pResponse.Error||'Unknown error'),{type:'error'});}}).then(()=>{this.refreshList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}async deleteEntry(pIDEntry){let tmpConfirmed=await this.pict.views['Pict-Section-Modal'].confirm('Remove this catalog entry?',{title:'Remove Entry',confirmLabel:'Remove',dangerous:true});if(!tmpConfirmed)return;this.pict.providers.Facto.deleteCatalogEntry(pIDEntry).then(()=>{return this.pict.providers.Facto.loadCatalogEntries();}).then(()=>{this.refreshList();this.pict.views['Pict-Section-Modal'].toast('Entry removed',{type:'success'});}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}viewEntry(pIDEntry){let tmpDetailContainer=document.getElementById('facto-catalog-detail');if(!tmpDetailContainer)return;this.pict.providers.Facto.loadCatalogEntryDatasets(pIDEntry).then(pResponse=>{let tmpDatasets=pResponse&&pResponse.Datasets?pResponse.Datasets:[];let tmpHtml='<h3 style="margin-bottom:8px; font-size:1em; color:#444;">Dataset Definitions for Entry #'+pIDEntry+'</h3>';if(tmpDatasets.length===0){tmpHtml+='<p style="color:#888; font-style:italic; margin-bottom:8px;">No dataset definitions yet.</p>';}else{tmpHtml+='<table><thead><tr><th>ID</th><th>Name</th><th>Format</th><th>Endpoint URL</th><th>Version Policy</th><th>Status</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpDatasets.length;i++){let tmpDS=tmpDatasets[i];let tmpStatusLabel=tmpDS.Provisioned?'<span style="color:#28a745;">Provisioned (Source #'+tmpDS.IDSource+', Dataset #'+tmpDS.IDDataset+')</span>':'<span style="color:#888;">Not provisioned</span>';let tmpActionBtn='';if(tmpDS.Provisioned){tmpActionBtn='<button class="primary" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Catalog\'].fetchDataset('+tmpDS.IDCatalogDatasetDefinition+', '+pIDEntry+')">Fetch</button>';}else{tmpActionBtn='<button class="success" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Catalog\'].provisionDataset('+tmpDS.IDCatalogDatasetDefinition+', '+pIDEntry+')">Provision</button>';}tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpDS.IDCatalogDatasetDefinition||'')+'</td>';tmpHtml+='<td>'+(tmpDS.Name||'')+'</td>';tmpHtml+='<td>'+(tmpDS.Format||'')+'</td>';tmpHtml+='<td style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">'+(tmpDS.EndpointURL||'')+'</td>';tmpHtml+='<td>'+(tmpDS.VersionPolicy||'Append')+'</td>';tmpHtml+='<td>'+tmpStatusLabel+'</td>';tmpHtml+='<td>'+tmpActionBtn+'</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';}// Add dataset definition form
-tmpHtml+='<h4 style="margin-top:12px; margin-bottom:8px; font-size:0.95em; color:#555;">Add Dataset Definition</h4>';tmpHtml+='<div class="inline-group">';tmpHtml+='<div><label for="facto-catds-name">Name</label><input type="text" id="facto-catds-name" placeholder="e.g. Monthly Earthquake Feed"></div>';tmpHtml+='<div><label for="facto-catds-format">Format</label>';tmpHtml+='<select id="facto-catds-format"><option value="csv">CSV</option><option value="json">JSON</option><option value="xml">XML</option><option value="geojson">GeoJSON</option><option value="other">Other</option></select></div>';tmpHtml+='</div>';tmpHtml+='<div class="inline-group">';tmpHtml+='<div><label for="facto-catds-endpoint">Endpoint URL</label><input type="text" id="facto-catds-endpoint" placeholder="https://api.example.gov/data.csv"></div>';tmpHtml+='<div><label for="facto-catds-versionpolicy">Version Policy</label>';tmpHtml+='<select id="facto-catds-versionpolicy"><option value="Append">Append</option><option value="Replace">Replace</option></select></div>';tmpHtml+='</div>';tmpHtml+='<div><label for="facto-catds-description">Description</label><input type="text" id="facto-catds-description" placeholder="Description of the dataset"></div>';tmpHtml+='<button class="primary" onclick="pict.views[\'Facto-Catalog\'].addDatasetDefinition('+pIDEntry+')">Add Dataset Definition</button>';tmpHtml+='<button class="secondary" onclick="document.getElementById(\'facto-catalog-detail\').innerHTML=\'\';">Close</button>';tmpDetailContainer.innerHTML=tmpHtml;}).catch(pError=>{tmpDetailContainer.innerHTML='<p style="color:#dc3545;">Error loading datasets: '+pError.message+'</p>';});}addDatasetDefinition(pIDEntry){let tmpName=this.pict.providers.FactoUI.getVal('facto-catds-name');let tmpFormat=this.pict.providers.FactoUI.getVal('facto-catds-format');let tmpEndpointURL=this.pict.providers.FactoUI.getVal('facto-catds-endpoint');let tmpVersionPolicy=this.pict.providers.FactoUI.getVal('facto-catds-versionpolicy')||'Append';let tmpDescription=this.pict.providers.FactoUI.getVal('facto-catds-description');if(!tmpName){this.pict.views['Pict-Section-Modal'].toast('Dataset name is required',{type:'warning'});return;}this.pict.providers.Facto.addCatalogDataset(pIDEntry,{Name:tmpName,Format:tmpFormat,EndpointURL:tmpEndpointURL,VersionPolicy:tmpVersionPolicy,Description:tmpDescription}).then(pResponse=>{if(pResponse&&pResponse.Success){this.pict.views['Pict-Section-Modal'].toast('Dataset definition added: '+tmpName,{type:'success'});this.viewEntry(pIDEntry);}else{this.pict.views['Pict-Section-Modal'].toast('Error: '+(pResponse&&pResponse.Error||'Unknown error'),{type:'error'});}}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}provisionDataset(pIDCatalogDataset,pIDEntry){this.pict.views['Pict-Section-Modal'].toast('Provisioning...',{type:'info'});this.pict.providers.Facto.provisionCatalogDataset(pIDCatalogDataset).then(pResponse=>{if(pResponse&&pResponse.Success){let tmpMsg='Provisioned! Source #'+pResponse.Source.IDSource+', Dataset #'+pResponse.Dataset.IDDataset;this.pict.views['Pict-Section-Modal'].toast(tmpMsg,{type:'success'});this.viewEntry(pIDEntry);// Refresh sibling views via FactoUIProvider coordination
+return this.pict.providers.Facto.loadCatalogEntries();}else{this.pict.views['Pict-Section-Modal'].toast('Error: '+(pResponse&&pResponse.Error||'Unknown error'),{type:'error'});}}).then(()=>{this.refreshList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}async deleteEntry(pIDEntry){let tmpConfirmed=await this.pict.views['Pict-Section-Modal'].confirm('Remove this catalog entry?',{title:'Remove Entry',confirmLabel:'Remove',dangerous:true});if(!tmpConfirmed)return;this.pict.providers.Facto.deleteCatalogEntry(pIDEntry).then(()=>{return this.pict.providers.Facto.loadCatalogEntries();}).then(()=>{this.refreshList();this.pict.views['Pict-Section-Modal'].toast('Entry removed',{type:'success'});}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}viewEntry(pIDEntry){let tmpDetailContainer=document.getElementById('facto-catalog-detail');if(!tmpDetailContainer)return;this.pict.providers.Facto.loadCatalogEntryDatasets(pIDEntry).then(pResponse=>{let tmpDatasets=pResponse&&pResponse.Datasets?pResponse.Datasets:[];let tmpHtml='<h3 style="margin-bottom:8px; font-size:1em; color:var(--theme-color-text-secondary, #444);">Dataset Definitions for Entry #'+pIDEntry+'</h3>';if(tmpDatasets.length===0){tmpHtml+='<p style="color:var(--theme-color-text-muted, #888); font-style:italic; margin-bottom:8px;">No dataset definitions yet.</p>';}else{tmpHtml+='<table><thead><tr><th>ID</th><th>Name</th><th>Format</th><th>Endpoint URL</th><th>Version Policy</th><th>Status</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpDatasets.length;i++){let tmpDS=tmpDatasets[i];let tmpStatusLabel=tmpDS.Provisioned?'<span style="color:var(--theme-color-status-success, #28a745);">Provisioned (Source #'+tmpDS.IDSource+', Dataset #'+tmpDS.IDDataset+')</span>':'<span style="color:var(--theme-color-text-muted, #888);">Not provisioned</span>';let tmpActionBtn='';if(tmpDS.Provisioned){tmpActionBtn='<button class="primary" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Catalog\'].fetchDataset('+tmpDS.IDCatalogDatasetDefinition+', '+pIDEntry+')">Fetch</button>';}else{tmpActionBtn='<button class="success" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Catalog\'].provisionDataset('+tmpDS.IDCatalogDatasetDefinition+', '+pIDEntry+')">Provision</button>';}tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpDS.IDCatalogDatasetDefinition||'')+'</td>';tmpHtml+='<td>'+(tmpDS.Name||'')+'</td>';tmpHtml+='<td>'+(tmpDS.Format||'')+'</td>';tmpHtml+='<td style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">'+(tmpDS.EndpointURL||'')+'</td>';tmpHtml+='<td>'+(tmpDS.VersionPolicy||'Append')+'</td>';tmpHtml+='<td>'+tmpStatusLabel+'</td>';tmpHtml+='<td>'+tmpActionBtn+'</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';}// Add dataset definition form
+tmpHtml+='<h4 style="margin-top:12px; margin-bottom:8px; font-size:0.95em; color:var(--theme-color-text-secondary, #555);">Add Dataset Definition</h4>';tmpHtml+='<div class="inline-group">';tmpHtml+='<div><label for="facto-catds-name">Name</label><input type="text" id="facto-catds-name" placeholder="e.g. Monthly Earthquake Feed"></div>';tmpHtml+='<div><label for="facto-catds-format">Format</label>';tmpHtml+='<select id="facto-catds-format"><option value="csv">CSV</option><option value="json">JSON</option><option value="xml">XML</option><option value="geojson">GeoJSON</option><option value="other">Other</option></select></div>';tmpHtml+='</div>';tmpHtml+='<div class="inline-group">';tmpHtml+='<div><label for="facto-catds-endpoint">Endpoint URL</label><input type="text" id="facto-catds-endpoint" placeholder="https://api.example.gov/data.csv"></div>';tmpHtml+='<div><label for="facto-catds-versionpolicy">Version Policy</label>';tmpHtml+='<select id="facto-catds-versionpolicy"><option value="Append">Append</option><option value="Replace">Replace</option></select></div>';tmpHtml+='</div>';tmpHtml+='<div><label for="facto-catds-description">Description</label><input type="text" id="facto-catds-description" placeholder="Description of the dataset"></div>';tmpHtml+='<button class="primary" onclick="pict.views[\'Facto-Catalog\'].addDatasetDefinition('+pIDEntry+')">Add Dataset Definition</button>';tmpHtml+='<button class="secondary" onclick="document.getElementById(\'facto-catalog-detail\').innerHTML=\'\';">Close</button>';tmpDetailContainer.innerHTML=tmpHtml;}).catch(pError=>{tmpDetailContainer.innerHTML='<p style="color:#dc3545;">Error loading datasets: '+pError.message+'</p>';});}addDatasetDefinition(pIDEntry){let tmpName=this.pict.providers.FactoUI.getVal('facto-catds-name');let tmpFormat=this.pict.providers.FactoUI.getVal('facto-catds-format');let tmpEndpointURL=this.pict.providers.FactoUI.getVal('facto-catds-endpoint');let tmpVersionPolicy=this.pict.providers.FactoUI.getVal('facto-catds-versionpolicy')||'Append';let tmpDescription=this.pict.providers.FactoUI.getVal('facto-catds-description');if(!tmpName){this.pict.views['Pict-Section-Modal'].toast('Dataset name is required',{type:'warning'});return;}this.pict.providers.Facto.addCatalogDataset(pIDEntry,{Name:tmpName,Format:tmpFormat,EndpointURL:tmpEndpointURL,VersionPolicy:tmpVersionPolicy,Description:tmpDescription}).then(pResponse=>{if(pResponse&&pResponse.Success){this.pict.views['Pict-Section-Modal'].toast('Dataset definition added: '+tmpName,{type:'success'});this.viewEntry(pIDEntry);}else{this.pict.views['Pict-Section-Modal'].toast('Error: '+(pResponse&&pResponse.Error||'Unknown error'),{type:'error'});}}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}provisionDataset(pIDCatalogDataset,pIDEntry){this.pict.views['Pict-Section-Modal'].toast('Provisioning...',{type:'info'});this.pict.providers.Facto.provisionCatalogDataset(pIDCatalogDataset).then(pResponse=>{if(pResponse&&pResponse.Success){let tmpMsg='Provisioned! Source #'+pResponse.Source.IDSource+', Dataset #'+pResponse.Dataset.IDDataset;this.pict.views['Pict-Section-Modal'].toast(tmpMsg,{type:'success'});this.viewEntry(pIDEntry);// Refresh sibling views via FactoUIProvider coordination
 this.pict.providers.FactoUI.refreshDataViews(['sources','datasets']);}else{this.pict.views['Pict-Section-Modal'].toast('Error: '+(pResponse&&pResponse.Error||'Unknown error'),{type:'error'});}}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}fetchDataset(pIDCatalogDataset,pIDEntry){this.pict.views['Pict-Section-Modal'].toast('Fetching data from endpoint...',{type:'info'});this.pict.providers.Facto.fetchCatalogDataset(pIDCatalogDataset).then(pResponse=>{if(pResponse&&pResponse.Success){let tmpMsg='Fetched! '+pResponse.Ingested+' records ingested (v'+pResponse.DatasetVersion+', '+pResponse.Format+')';if(pResponse.IsDuplicate){tmpMsg+=' [duplicate content detected]';}this.pict.views['Pict-Section-Modal'].toast(tmpMsg,{type:'success'});this.viewEntry(pIDEntry);// Refresh records view via FactoUIProvider coordination
 this.pict.providers.FactoUI.refreshDataViews(['records']);}else{this.pict.views['Pict-Section-Modal'].toast('Fetch error: '+(pResponse&&pResponse.Error||'Unknown error'),{type:'error'});}}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Fetch error: '+pError.message,{type:'error'});});}importCatalog(){let tmpTextArea=document.getElementById('facto-catalog-import-json');if(!tmpTextArea||!tmpTextArea.value){this.pict.views['Pict-Section-Modal'].toast('Paste JSON to import',{type:'warning'});return;}let tmpEntries;try{tmpEntries=JSON.parse(tmpTextArea.value);}catch(pParseError){this.pict.views['Pict-Section-Modal'].toast('Invalid JSON: '+pParseError.message,{type:'error'});return;}this.pict.providers.Facto.importCatalog(tmpEntries).then(pResponse=>{if(pResponse&&pResponse.Success){this.pict.views['Pict-Section-Modal'].toast('Imported '+pResponse.EntriesCreated+' entries with '+pResponse.DatasetsCreated+' datasets',{type:'success'});tmpTextArea.value='';return this.pict.providers.Facto.loadCatalogEntries();}else{let tmpError=pResponse&&pResponse.Error||'Unknown';if(tmpError==='Unknown'){try{tmpError='Unexpected response: '+JSON.stringify(pResponse).substring(0,300);}catch(e){/* ignore */}}this.pict.views['Pict-Section-Modal'].toast('Import error: '+tmpError,{type:'error'});}}).then(()=>{this.refreshList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}exportCatalog(){this.pict.providers.Facto.exportCatalog().then(pResponse=>{let tmpTextArea=document.getElementById('facto-catalog-import-json');if(tmpTextArea){tmpTextArea.value=JSON.stringify(pResponse&&pResponse.Entries?pResponse.Entries:pResponse,null,2);}this.pict.views['Pict-Section-Modal'].toast('Catalog exported to JSON text area',{type:'success'});}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}}module.exports=FactoCatalogView;module.exports.default_configuration={ViewIdentifier:'Facto-Catalog',DefaultRenderable:'Facto-Catalog',DefaultDestinationAddress:'#Facto-Section-Catalog',Templates:[{Hash:'Facto-Catalog',Template:/*html*/`
 <div class="accordion-row">
@@ -6452,7 +6452,7 @@ this.pict.providers.FactoUI.refreshDataViews(['records']);}else{this.pict.views[
 			<span class="accordion-toggle">&#9660;</span>
 		</div>
 		<div class="accordion-body">
-			<p style="margin-bottom:12px; color:#666; font-size:0.9em;">Research and catalog potential data sources before provisioning them as runtime Sources and Datasets.</p>
+			<p style="margin-bottom:12px; color:var(--theme-color-text-secondary, #666); font-size:0.9em;">Research and catalog potential data sources before provisioning them as runtime Sources and Datasets.</p>
 
 			<!-- Search -->
 			<div class="inline-group" style="margin-bottom:12px;">
@@ -6471,7 +6471,7 @@ this.pict.providers.FactoUI.refreshDataViews(['records']);}else{this.pict.views[
 			<div id="facto-catalog-detail" style="margin-top:12px;"></div>
 
 			<!-- Add entry form -->
-			<h3 style="margin-top:16px; margin-bottom:8px; font-size:1em; color:#444;">Add Catalog Entry</h3>
+			<h3 style="margin-top:16px; margin-bottom:8px; font-size:1em; color:var(--theme-color-text-secondary, #444);">Add Catalog Entry</h3>
 			<div class="inline-group">
 				<div>
 					<label for="facto-catalog-agency">Agency / Organization</label>
@@ -6538,15 +6538,15 @@ this.pict.providers.FactoUI.refreshDataViews(['records']);}else{this.pict.views[
 			<button class="primary" onclick="pict.views['Facto-Catalog'].addEntry()">Add Catalog Entry</button>
 
 			<!-- Import / Export -->
-			<h3 style="margin-top:16px; margin-bottom:8px; font-size:1em; color:#444;">Import / Export</h3>
-			<textarea id="facto-catalog-import-json" rows="4" style="width:100%; font-family:monospace; font-size:0.85em; padding:8px; border:1px solid #ccc; border-radius:4px; margin-bottom:8px;" placeholder="Paste JSON array of catalog entries here..."></textarea>
+			<h3 style="margin-top:16px; margin-bottom:8px; font-size:1em; color:var(--theme-color-text-secondary, #444);">Import / Export</h3>
+			<textarea id="facto-catalog-import-json" rows="4" style="width:100%; font-family:monospace; font-size:0.85em; padding:8px; border:1px solid var(--theme-color-border-default, #ccc); border-radius:4px; margin-bottom:8px;" placeholder="Paste JSON array of catalog entries here..."></textarea>
 			<button class="primary" onclick="pict.views['Facto-Catalog'].importCatalog()">Import JSON</button>
 			<button class="secondary" onclick="pict.views['Facto-Catalog'].exportCatalog()">Export Catalog</button>
 
 		</div>
 	</div>
 </div>
-`}],Renderables:[{RenderableHash:'Facto-Catalog',TemplateHash:'Facto-Catalog',DestinationAddress:'#Facto-Section-Catalog'}]};},{"pict-view":41}],80:[function(require,module,exports){const libPictView=require('pict-view');class FactoDatasetsView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(){this.pict.providers.Facto.loadDatasets().then(()=>{this.refreshList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error loading datasets: '+pError.message,{type:'error'});});}refreshList(){let tmpContainer=document.getElementById('facto-datasets-list');if(!tmpContainer)return;let tmpDatasets=this.pict.AppData.Facto.Datasets;if(!tmpDatasets||tmpDatasets.length===0){tmpContainer.innerHTML='<p style="color:#888; font-style:italic;">No datasets created yet.</p>';return;}let tmpBadgeClass={Raw:'badge-raw',Compositional:'badge-compositional',Projection:'badge-projection',Derived:'badge-derived'};let tmpHtml='<table><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Description</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpDatasets.length;i++){let tmpDataset=tmpDatasets[i];let tmpBadge=tmpBadgeClass[tmpDataset.Type]||'badge-raw';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpDataset.IDDataset||'')+'</td>';tmpHtml+='<td>'+(tmpDataset.Name||'')+'</td>';tmpHtml+='<td><span class="badge '+tmpBadge+'">'+(tmpDataset.Type||'')+'</span></td>';tmpHtml+='<td style="max-width:300px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">'+(tmpDataset.Description||'')+'</td>';tmpHtml+='<td><button class="secondary" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Datasets\'].viewStats('+tmpDataset.IDDataset+')">Stats</button></td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}viewStats(pIDDataset){this.pict.providers.Facto.loadDatasetStats(pIDDataset).then(pResponse=>{let tmpMsg='Dataset: '+(pResponse.Dataset?pResponse.Dataset.Name:'#'+pIDDataset);tmpMsg+=' | Records: '+(pResponse.RecordCount||0);tmpMsg+=' | Linked Sources: '+(pResponse.SourceCount||0);this.pict.views['Pict-Section-Modal'].toast(tmpMsg,{type:'info'});}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}addDataset(){let tmpName=this.pict.providers.FactoUI.getVal('facto-dataset-name');let tmpType=this.pict.providers.FactoUI.getVal('facto-dataset-type')||'Raw';let tmpDescription=this.pict.providers.FactoUI.getVal('facto-dataset-desc');if(!tmpName){this.pict.views['Pict-Section-Modal'].toast('Name is required',{type:'warning'});return;}this.pict.providers.Facto.createDataset({Name:tmpName,Type:tmpType,Description:tmpDescription}).then(pResponse=>{if(pResponse&&pResponse.IDDataset){this.pict.views['Pict-Section-Modal'].toast('Dataset created: '+pResponse.Name,{type:'success'});if(document.getElementById('facto-dataset-name'))document.getElementById('facto-dataset-name').value='';if(document.getElementById('facto-dataset-desc'))document.getElementById('facto-dataset-desc').value='';return this.pict.providers.Facto.loadDatasets();}else{this.pict.views['Pict-Section-Modal'].toast('Error creating dataset',{type:'error'});}}).then(()=>{this.refreshList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}}module.exports=FactoDatasetsView;module.exports.default_configuration={ViewIdentifier:'Facto-Datasets',DefaultRenderable:'Facto-Datasets',DefaultDestinationAddress:'#Facto-Section-Datasets',Templates:[{Hash:'Facto-Datasets',Template:/*html*/`
+`}],Renderables:[{RenderableHash:'Facto-Catalog',TemplateHash:'Facto-Catalog',DestinationAddress:'#Facto-Section-Catalog'}]};},{"pict-view":41}],80:[function(require,module,exports){const libPictView=require('pict-view');class FactoDatasetsView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(){this.pict.providers.Facto.loadDatasets().then(()=>{this.refreshList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error loading datasets: '+pError.message,{type:'error'});});}refreshList(){let tmpContainer=document.getElementById('facto-datasets-list');if(!tmpContainer)return;let tmpDatasets=this.pict.AppData.Facto.Datasets;if(!tmpDatasets||tmpDatasets.length===0){tmpContainer.innerHTML='<p style="color:var(--theme-color-text-muted, #888); font-style:italic;">No datasets created yet.</p>';return;}let tmpBadgeClass={Raw:'badge-raw',Compositional:'badge-compositional',Projection:'badge-projection',Derived:'badge-derived'};let tmpHtml='<table><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Description</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpDatasets.length;i++){let tmpDataset=tmpDatasets[i];let tmpBadge=tmpBadgeClass[tmpDataset.Type]||'badge-raw';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpDataset.IDDataset||'')+'</td>';tmpHtml+='<td>'+(tmpDataset.Name||'')+'</td>';tmpHtml+='<td><span class="badge '+tmpBadge+'">'+(tmpDataset.Type||'')+'</span></td>';tmpHtml+='<td style="max-width:300px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">'+(tmpDataset.Description||'')+'</td>';tmpHtml+='<td><button class="secondary" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Datasets\'].viewStats('+tmpDataset.IDDataset+')">Stats</button></td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}viewStats(pIDDataset){this.pict.providers.Facto.loadDatasetStats(pIDDataset).then(pResponse=>{let tmpMsg='Dataset: '+(pResponse.Dataset?pResponse.Dataset.Name:'#'+pIDDataset);tmpMsg+=' | Records: '+(pResponse.RecordCount||0);tmpMsg+=' | Linked Sources: '+(pResponse.SourceCount||0);this.pict.views['Pict-Section-Modal'].toast(tmpMsg,{type:'info'});}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}addDataset(){let tmpName=this.pict.providers.FactoUI.getVal('facto-dataset-name');let tmpType=this.pict.providers.FactoUI.getVal('facto-dataset-type')||'Raw';let tmpDescription=this.pict.providers.FactoUI.getVal('facto-dataset-desc');if(!tmpName){this.pict.views['Pict-Section-Modal'].toast('Name is required',{type:'warning'});return;}this.pict.providers.Facto.createDataset({Name:tmpName,Type:tmpType,Description:tmpDescription}).then(pResponse=>{if(pResponse&&pResponse.IDDataset){this.pict.views['Pict-Section-Modal'].toast('Dataset created: '+pResponse.Name,{type:'success'});if(document.getElementById('facto-dataset-name'))document.getElementById('facto-dataset-name').value='';if(document.getElementById('facto-dataset-desc'))document.getElementById('facto-dataset-desc').value='';return this.pict.providers.Facto.loadDatasets();}else{this.pict.views['Pict-Section-Modal'].toast('Error creating dataset',{type:'error'});}}).then(()=>{this.refreshList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}}module.exports=FactoDatasetsView;module.exports.default_configuration={ViewIdentifier:'Facto-Datasets',DefaultRenderable:'Facto-Datasets',DefaultDestinationAddress:'#Facto-Section-Datasets',Templates:[{Hash:'Facto-Datasets',Template:/*html*/`
 <div class="accordion-row">
 	<div class="accordion-number">2</div>
 	<div class="accordion-card open" id="facto-card-datasets">
@@ -6556,10 +6556,10 @@ this.pict.providers.FactoUI.refreshDataViews(['records']);}else{this.pict.views[
 			<span class="accordion-toggle">&#9660;</span>
 		</div>
 		<div class="accordion-body">
-			<p style="margin-bottom:12px; color:#666; font-size:0.9em;">Datasets are named collections of records. Types: Raw (ingested), Compositional (merged), Projection (flattened), Derived (computed).</p>
+			<p style="margin-bottom:12px; color:var(--theme-color-text-secondary, #666); font-size:0.9em;">Datasets are named collections of records. Types: Raw (ingested), Compositional (merged), Projection (flattened), Derived (computed).</p>
 			<div id="facto-datasets-list"></div>
 
-			<h3 style="margin-top:16px; margin-bottom:8px; font-size:1em; color:#444;">Create Dataset</h3>
+			<h3 style="margin-top:16px; margin-bottom:8px; font-size:1em; color:var(--theme-color-text-secondary, #444);">Create Dataset</h3>
 			<div class="inline-group">
 				<div>
 					<label for="facto-dataset-name">Name</label>
@@ -6584,7 +6584,7 @@ this.pict.providers.FactoUI.refreshDataViews(['records']);}else{this.pict.views[
 		</div>
 	</div>
 </div>
-`}],Renderables:[{RenderableHash:'Facto-Datasets',TemplateHash:'Facto-Datasets',DestinationAddress:'#Facto-Section-Datasets'}]};},{"pict-view":41}],81:[function(require,module,exports){const libPictView=require('pict-view');class FactoIngestView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(){this.pict.providers.Facto.loadIngestJobs().then(()=>{this.refreshList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error loading jobs: '+pError.message,{type:'error'});});}refreshList(){let tmpContainer=document.getElementById('facto-ingest-list');if(!tmpContainer)return;let tmpJobs=this.pict.AppData.Facto.IngestJobs;if(!tmpJobs||tmpJobs.length===0){tmpContainer.innerHTML='<p style="color:#888; font-style:italic;">No ingest jobs yet.</p>';return;}let tmpStatusColors={Pending:'#ffc107',Running:'#17a2b8',Completed:'#28a745',Failed:'#dc3545',Cancelled:'#6c757d'};let tmpHtml='<table><thead><tr><th>ID</th><th>Status</th><th>Source</th><th>Dataset</th><th>Processed</th><th>Created</th><th>Errors</th><th>Start</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpJobs.length;i++){let tmpJob=tmpJobs[i];let tmpColor=tmpStatusColors[tmpJob.Status]||'#888';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpJob.IDIngestJob||'')+'</td>';tmpHtml+='<td><span style="color:'+tmpColor+'; font-weight:600;">'+(tmpJob.Status||'')+'</span></td>';tmpHtml+='<td>'+(tmpJob.IDSource||'')+'</td>';tmpHtml+='<td>'+(tmpJob.IDDataset||'')+'</td>';tmpHtml+='<td>'+(tmpJob.RecordsProcessed||0)+'</td>';tmpHtml+='<td>'+(tmpJob.RecordsCreated||0)+'</td>';tmpHtml+='<td>'+(tmpJob.RecordsErrored||0)+'</td>';tmpHtml+='<td>'+(tmpJob.StartDate||'-')+'</td>';tmpHtml+='<td>';if(tmpJob.Status==='Pending'){tmpHtml+='<button class="success" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Ingest\'].startJob('+tmpJob.IDIngestJob+')">Start</button>';}tmpHtml+='<button class="secondary" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Ingest\'].viewLog('+tmpJob.IDIngestJob+')">Log</button>';tmpHtml+='</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}startJob(pIDIngestJob){this.pict.providers.Facto.startIngestJob(pIDIngestJob).then(()=>{this.pict.views['Pict-Section-Modal'].toast('Job #'+pIDIngestJob+' started',{type:'success'});return this.pict.providers.Facto.loadIngestJobs();}).then(()=>{this.refreshList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}viewLog(pIDIngestJob){this.pict.providers.Facto.loadIngestJobDetails(pIDIngestJob).then(pResponse=>{if(pResponse&&pResponse.Job){let tmpLog=pResponse.Job.Log||'(empty)';let tmpLogContainer=document.getElementById('facto-ingest-log');if(tmpLogContainer){tmpLogContainer.textContent='Job #'+pIDIngestJob+' Log:\n'+tmpLog;tmpLogContainer.style.display='block';}}}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}ingestPastedContent(){let tmpIDDataset=parseInt(this.pict.providers.FactoUI.getVal('facto-ingest-paste-dataset'),10)||0;let tmpIDSource=parseInt(this.pict.providers.FactoUI.getVal('facto-ingest-paste-source'),10)||0;let tmpFormat=this.pict.providers.FactoUI.getVal('facto-ingest-paste-format')||'Auto';let tmpType=this.pict.providers.FactoUI.getVal('facto-ingest-paste-type')||'data';let tmpContent=this.pict.providers.FactoUI.getVal('facto-ingest-paste-content');if(!tmpContent.trim()){this.pict.views['Pict-Section-Modal'].toast('Content is required',{type:'warning'});return;}this.pict.views['Pict-Section-Modal'].toast('Ingesting...',{type:'info'});this.pict.providers.Facto.ingestFileContent(tmpIDDataset,tmpIDSource,tmpContent,tmpFormat,tmpType).then(pResponse=>{if(pResponse&&pResponse.Success){this.pict.views['Pict-Section-Modal'].toast('Ingested '+(pResponse.RecordsCreated||0)+' records',{type:'success'});if(document.getElementById('facto-ingest-paste-content')){document.getElementById('facto-ingest-paste-content').value='';}}else{this.pict.views['Pict-Section-Modal'].toast('Ingest error: '+(pResponse&&pResponse.Error||'Unknown'),{type:'error'});}}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}createJob(){let tmpIDSource=parseInt(this.pict.providers.FactoUI.getVal('facto-ingest-source'),10)||0;let tmpIDDataset=parseInt(this.pict.providers.FactoUI.getVal('facto-ingest-dataset'),10)||0;if(!tmpIDSource||!tmpIDDataset){this.pict.views['Pict-Section-Modal'].toast('Source ID and Dataset ID are required',{type:'warning'});return;}this.pict.providers.Facto.createIngestJob(tmpIDSource,tmpIDDataset).then(pResponse=>{if(pResponse&&pResponse.Success){this.pict.views['Pict-Section-Modal'].toast('Ingest job created: #'+pResponse.Job.IDIngestJob,{type:'success'});if(document.getElementById('facto-ingest-source'))document.getElementById('facto-ingest-source').value='';if(document.getElementById('facto-ingest-dataset'))document.getElementById('facto-ingest-dataset').value='';return this.pict.providers.Facto.loadIngestJobs();}else{this.pict.views['Pict-Section-Modal'].toast('Error creating job',{type:'error'});}}).then(()=>{this.refreshList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}}module.exports=FactoIngestView;module.exports.default_configuration={ViewIdentifier:'Facto-Ingest',DefaultRenderable:'Facto-Ingest',DefaultDestinationAddress:'#Facto-Section-Ingest',Templates:[{Hash:'Facto-Ingest',Template:/*html*/`
+`}],Renderables:[{RenderableHash:'Facto-Datasets',TemplateHash:'Facto-Datasets',DestinationAddress:'#Facto-Section-Datasets'}]};},{"pict-view":41}],81:[function(require,module,exports){const libPictView=require('pict-view');class FactoIngestView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(){this.pict.providers.Facto.loadIngestJobs().then(()=>{this.refreshList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error loading jobs: '+pError.message,{type:'error'});});}refreshList(){let tmpContainer=document.getElementById('facto-ingest-list');if(!tmpContainer)return;let tmpJobs=this.pict.AppData.Facto.IngestJobs;if(!tmpJobs||tmpJobs.length===0){tmpContainer.innerHTML='<p style="color:var(--theme-color-text-muted, #888); font-style:italic;">No ingest jobs yet.</p>';return;}let tmpStatusColors={Pending:'#ffc107',Running:'#17a2b8',Completed:'#28a745',Failed:'#dc3545',Cancelled:'#6c757d'};let tmpHtml='<table><thead><tr><th>ID</th><th>Status</th><th>Source</th><th>Dataset</th><th>Processed</th><th>Created</th><th>Errors</th><th>Start</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpJobs.length;i++){let tmpJob=tmpJobs[i];let tmpColor=tmpStatusColors[tmpJob.Status]||'#888';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpJob.IDIngestJob||'')+'</td>';tmpHtml+='<td><span style="color:'+tmpColor+'; font-weight:600;">'+(tmpJob.Status||'')+'</span></td>';tmpHtml+='<td>'+(tmpJob.IDSource||'')+'</td>';tmpHtml+='<td>'+(tmpJob.IDDataset||'')+'</td>';tmpHtml+='<td>'+(tmpJob.RecordsProcessed||0)+'</td>';tmpHtml+='<td>'+(tmpJob.RecordsCreated||0)+'</td>';tmpHtml+='<td>'+(tmpJob.RecordsErrored||0)+'</td>';tmpHtml+='<td>'+(tmpJob.StartDate||'-')+'</td>';tmpHtml+='<td>';if(tmpJob.Status==='Pending'){tmpHtml+='<button class="success" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Ingest\'].startJob('+tmpJob.IDIngestJob+')">Start</button>';}tmpHtml+='<button class="secondary" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Ingest\'].viewLog('+tmpJob.IDIngestJob+')">Log</button>';tmpHtml+='</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}startJob(pIDIngestJob){this.pict.providers.Facto.startIngestJob(pIDIngestJob).then(()=>{this.pict.views['Pict-Section-Modal'].toast('Job #'+pIDIngestJob+' started',{type:'success'});return this.pict.providers.Facto.loadIngestJobs();}).then(()=>{this.refreshList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}viewLog(pIDIngestJob){this.pict.providers.Facto.loadIngestJobDetails(pIDIngestJob).then(pResponse=>{if(pResponse&&pResponse.Job){let tmpLog=pResponse.Job.Log||'(empty)';let tmpLogContainer=document.getElementById('facto-ingest-log');if(tmpLogContainer){tmpLogContainer.textContent='Job #'+pIDIngestJob+' Log:\n'+tmpLog;tmpLogContainer.style.display='block';}}}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}ingestPastedContent(){let tmpIDDataset=parseInt(this.pict.providers.FactoUI.getVal('facto-ingest-paste-dataset'),10)||0;let tmpIDSource=parseInt(this.pict.providers.FactoUI.getVal('facto-ingest-paste-source'),10)||0;let tmpFormat=this.pict.providers.FactoUI.getVal('facto-ingest-paste-format')||'Auto';let tmpType=this.pict.providers.FactoUI.getVal('facto-ingest-paste-type')||'data';let tmpContent=this.pict.providers.FactoUI.getVal('facto-ingest-paste-content');if(!tmpContent.trim()){this.pict.views['Pict-Section-Modal'].toast('Content is required',{type:'warning'});return;}this.pict.views['Pict-Section-Modal'].toast('Ingesting...',{type:'info'});this.pict.providers.Facto.ingestFileContent(tmpIDDataset,tmpIDSource,tmpContent,tmpFormat,tmpType).then(pResponse=>{if(pResponse&&pResponse.Success){this.pict.views['Pict-Section-Modal'].toast('Ingested '+(pResponse.RecordsCreated||0)+' records',{type:'success'});if(document.getElementById('facto-ingest-paste-content')){document.getElementById('facto-ingest-paste-content').value='';}}else{this.pict.views['Pict-Section-Modal'].toast('Ingest error: '+(pResponse&&pResponse.Error||'Unknown'),{type:'error'});}}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}createJob(){let tmpIDSource=parseInt(this.pict.providers.FactoUI.getVal('facto-ingest-source'),10)||0;let tmpIDDataset=parseInt(this.pict.providers.FactoUI.getVal('facto-ingest-dataset'),10)||0;if(!tmpIDSource||!tmpIDDataset){this.pict.views['Pict-Section-Modal'].toast('Source ID and Dataset ID are required',{type:'warning'});return;}this.pict.providers.Facto.createIngestJob(tmpIDSource,tmpIDDataset).then(pResponse=>{if(pResponse&&pResponse.Success){this.pict.views['Pict-Section-Modal'].toast('Ingest job created: #'+pResponse.Job.IDIngestJob,{type:'success'});if(document.getElementById('facto-ingest-source'))document.getElementById('facto-ingest-source').value='';if(document.getElementById('facto-ingest-dataset'))document.getElementById('facto-ingest-dataset').value='';return this.pict.providers.Facto.loadIngestJobs();}else{this.pict.views['Pict-Section-Modal'].toast('Error creating job',{type:'error'});}}).then(()=>{this.refreshList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}}module.exports=FactoIngestView;module.exports.default_configuration={ViewIdentifier:'Facto-Ingest',DefaultRenderable:'Facto-Ingest',DefaultDestinationAddress:'#Facto-Section-Ingest',Templates:[{Hash:'Facto-Ingest',Template:/*html*/`
 <div class="accordion-row">
 	<div class="accordion-number">4</div>
 	<div class="accordion-card" id="facto-card-ingest">
@@ -6594,10 +6594,10 @@ this.pict.providers.FactoUI.refreshDataViews(['records']);}else{this.pict.views[
 			<span class="accordion-toggle">&#9660;</span>
 		</div>
 		<div class="accordion-body">
-			<p style="margin-bottom:12px; color:#666; font-size:0.9em;">Track data ingest operations from configured sources into datasets.</p>
+			<p style="margin-bottom:12px; color:var(--theme-color-text-secondary, #666); font-size:0.9em;">Track data ingest operations from configured sources into datasets.</p>
 			<div id="facto-ingest-list"></div>
 
-			<h3 style="margin-top:16px; margin-bottom:8px; font-size:1em; color:#444;">Create Ingest Job</h3>
+			<h3 style="margin-top:16px; margin-bottom:8px; font-size:1em; color:var(--theme-color-text-secondary, #444);">Create Ingest Job</h3>
 			<div class="inline-group">
 				<div>
 					<label for="facto-ingest-source">Source ID</label>
@@ -6612,8 +6612,8 @@ this.pict.providers.FactoUI.refreshDataViews(['records']);}else{this.pict.views[
 
 			<pre id="facto-ingest-log" style="display:none; margin-top:12px; padding:12px; background:#f8f9fa; border:1px solid #e9ecef; border-radius:4px; font-size:0.85em; max-height:200px; overflow:auto; white-space:pre-wrap;"></pre>
 
-			<h3 style="margin-top:20px; margin-bottom:8px; font-size:1em; color:#444;">Paste &amp; Ingest</h3>
-			<p style="margin-bottom:8px; color:#666; font-size:0.85em;">Paste CSV or JSON content directly to ingest records.</p>
+			<h3 style="margin-top:20px; margin-bottom:8px; font-size:1em; color:var(--theme-color-text-secondary, #444);">Paste &amp; Ingest</h3>
+			<p style="margin-bottom:8px; color:var(--theme-color-text-secondary, #666); font-size:0.85em;">Paste CSV or JSON content directly to ingest records.</p>
 			<div class="inline-group">
 				<div>
 					<label for="facto-ingest-paste-dataset">Dataset ID</label>
@@ -6636,7 +6636,7 @@ this.pict.providers.FactoUI.refreshDataViews(['records']);}else{this.pict.views[
 					<input type="text" id="facto-ingest-paste-type" placeholder="data">
 				</div>
 			</div>
-			<textarea id="facto-ingest-paste-content" rows="6" style="width:100%; padding:8px 12px; border:1px solid #ccc; border-radius:4px; font-size:0.9em; font-family:monospace; margin-bottom:10px;" placeholder="Paste CSV or JSON data here..."></textarea>
+			<textarea id="facto-ingest-paste-content" rows="6" style="width:100%; padding:8px 12px; border:1px solid var(--theme-color-border-default, #ccc); border-radius:4px; font-size:0.9em; font-family:monospace; margin-bottom:10px;" placeholder="Paste CSV or JSON data here..."></textarea>
 			<button class="primary" onclick="pict.views['Facto-Ingest'].ingestPastedContent()">Ingest</button>
 
 		</div>
@@ -6645,11 +6645,11 @@ this.pict.providers.FactoUI.refreshDataViews(['records']);}else{this.pict.views[
 `}],Renderables:[{RenderableHash:'Facto-Ingest',TemplateHash:'Facto-Ingest',DestinationAddress:'#Facto-Section-Ingest'}]};},{"pict-view":41}],82:[function(require,module,exports){const libPictView=require('pict-view');class FactoLayoutView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(){// Render all section views into their containers
 if(this.pict.views['Facto-Throughput'])this.pict.views['Facto-Throughput'].render();this.pict.views['Facto-Scanner'].render();this.pict.views['Facto-Catalog'].render();this.pict.views['Facto-Sources'].render();this.pict.views['Facto-Datasets'].render();this.pict.views['Facto-Records'].render();this.pict.views['Facto-Ingest'].render();this.pict.views['Facto-Projections'].render();this.pict.CSSMap.injectCSS();}toggleSection(pSectionId){let tmpCard=document.getElementById(pSectionId);if(!tmpCard)return;tmpCard.classList.toggle('open');}expandAllSections(){let tmpCards=document.querySelectorAll('.accordion-card');for(let i=0;i<tmpCards.length;i++){tmpCards[i].classList.add('open');}}collapseAllSections(){let tmpCards=document.querySelectorAll('.accordion-card');for(let i=0;i<tmpCards.length;i++){tmpCards[i].classList.remove('open');}}}module.exports=FactoLayoutView;module.exports.default_configuration={ViewIdentifier:'Facto-Layout',DefaultRenderable:'Facto-Layout',DefaultDestinationAddress:'#Facto-Application-Container',CSS:/*css*/`
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; color: #333; padding: 20px; }
-h1 { margin-bottom: 20px; color: #1a1a1a; }
-h2 { margin-bottom: 12px; color: #444; font-size: 1.2em; border-bottom: 2px solid #ddd; padding-bottom: 6px; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--theme-color-background-secondary, #f5f5f5); color: var(--theme-color-text-primary, #333); padding: 20px; }
+h1 { margin-bottom: 20px; color: var(--theme-color-text-primary, #1a1a1a); }
+h2 { margin-bottom: 12px; color: var(--theme-color-text-secondary, #444); font-size: 1.2em; border-bottom: 2px solid var(--theme-color-border-default, #ddd); padding-bottom: 6px; }
 
-.section { background: #fff; border-radius: 8px; padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.section { background: var(--theme-color-background-panel, #fff); border-radius: 8px; padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 
 /* Accordion layout */
 .accordion-row { display: flex; gap: 0; margin-bottom: 16px; align-items: stretch; }
@@ -6659,25 +6659,25 @@ h2 { margin-bottom: 12px; color: #444; font-size: 1.2em; border-bottom: 2px soli
 	user-select: none;
 }
 .accordion-card {
-	flex: 1; background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+	flex: 1; background: var(--theme-color-background-panel, #fff); border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 	overflow: hidden; min-width: 0;
 }
 .accordion-header {
 	display: flex; align-items: center; padding: 14px 20px; cursor: pointer;
 	user-select: none; gap: 12px; transition: background 0.15s; line-height: 1.4;
 }
-.accordion-header:hover { background: #fafafa; }
-.accordion-title { font-weight: 600; color: #333; font-size: 1.05em; white-space: nowrap; }
-.accordion-preview { flex: 1; font-style: italic; color: #888; font-size: 0.9em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.accordion-header:hover { background: var(--theme-color-background-secondary, #fafafa); }
+.accordion-title { font-weight: 600; color: var(--theme-color-text-primary, #333); font-size: 1.05em; white-space: nowrap; }
+.accordion-preview { flex: 1; font-style: italic; color: var(--theme-color-text-muted, #888); font-size: 0.9em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
 .accordion-toggle {
 	flex: 0 0 20px; display: flex; align-items: center; justify-content: center;
-	border-radius: 4px; transition: background 0.15s, transform 0.25s; font-size: 0.7em; color: #888;
+	border-radius: 4px; transition: background 0.15s, transform 0.25s; font-size: 0.7em; color: var(--theme-color-text-muted, #888);
 }
-.accordion-header:hover .accordion-toggle { background: #eee; color: #555; }
+.accordion-header:hover .accordion-toggle { background: var(--theme-color-border-light, #eee); color: var(--theme-color-text-secondary, #555); }
 .accordion-card.open .accordion-toggle { transform: rotate(180deg); }
 .accordion-body { padding: 0 20px 20px; display: none; }
 .accordion-card.open .accordion-body { display: block; }
-.accordion-card.open .accordion-header { border-bottom: 1px solid #eee; }
+.accordion-card.open .accordion-header { border-bottom: 1px solid var(--theme-color-border-light, #eee); }
 .accordion-card.open .accordion-preview { display: none; }
 
 .accordion-controls {
@@ -6685,13 +6685,13 @@ h2 { margin-bottom: 12px; color: #444; font-size: 1.2em; border-bottom: 2px soli
 }
 .accordion-controls button {
 	padding: 4px 10px; font-size: 0.82em; font-weight: 500; background: none;
-	border: 1px solid #ccc; border-radius: 4px; color: #666; cursor: pointer; margin: 0;
+	border: 1px solid var(--theme-color-border-default, #ccc); border-radius: 4px; color: var(--theme-color-text-secondary, #666); cursor: pointer; margin: 0;
 }
-.accordion-controls button:hover { background: #f0f0f0; border-color: #aaa; color: #333; }
+.accordion-controls button:hover { background: var(--theme-color-background-tertiary, #f0f0f0); border-color: var(--theme-color-text-muted, #aaa); color: var(--theme-color-text-primary, #333); }
 
 label { display: block; font-weight: 600; margin-bottom: 4px; font-size: 0.9em; }
 input[type="text"], input[type="password"], input[type="number"] {
-	width: 100%; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px;
+	width: 100%; padding: 8px 12px; border: 1px solid var(--theme-color-border-default, #ccc); border-radius: 4px;
 	font-size: 0.95em; margin-bottom: 10px;
 }
 input[type="text"]:focus, input[type="password"]:focus, input[type="number"]:focus {
@@ -6702,13 +6702,13 @@ button {
 	padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;
 	font-size: 0.9em; font-weight: 600; margin-right: 8px; margin-bottom: 8px;
 }
-button.primary { background: #4a90d9; color: #fff; }
+button.primary { background: #4a90d9; color: var(--theme-color-background-panel, #fff); }
 button.primary:hover { background: #357abd; }
-button.secondary { background: #6c757d; color: #fff; }
+button.secondary { background: #6c757d; color: var(--theme-color-background-panel, #fff); }
 button.secondary:hover { background: #5a6268; }
-button.danger { background: #dc3545; color: #fff; }
+button.danger { background: #dc3545; color: var(--theme-color-background-panel, #fff); }
 button.danger:hover { background: #c82333; }
-button.success { background: #28a745; color: #fff; }
+button.success { background: var(--theme-color-status-success, #28a745); color: var(--theme-color-background-panel, #fff); }
 button.success:hover { background: #218838; }
 button:disabled { opacity: 0.5; cursor: not-allowed; }
 
@@ -6723,12 +6723,12 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 
 a { color: #4a90d9; }
 
-select { background: #fff; width: 100%; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95em; margin-bottom: 10px; }
+select { background: var(--theme-color-background-panel, #fff); width: 100%; padding: 8px 12px; border: 1px solid var(--theme-color-border-default, #ccc); border-radius: 4px; font-size: 0.95em; margin-bottom: 10px; }
 
 table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
-th { text-align: left; font-weight: 600; padding: 8px; border-bottom: 2px solid #ddd; color: #555; }
-td { padding: 8px; border-bottom: 1px solid #eee; }
-tr:hover { background: #fafafa; }
+th { text-align: left; font-weight: 600; padding: 8px; border-bottom: 2px solid var(--theme-color-border-default, #ddd); color: var(--theme-color-text-secondary, #555); }
+td { padding: 8px; border-bottom: 1px solid var(--theme-color-border-light, #eee); }
+tr:hover { background: var(--theme-color-background-secondary, #fafafa); }
 
 .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.8em; font-weight: 600; }
 .badge-raw { background: #d1ecf1; color: #0c5460; }
@@ -6740,10 +6740,10 @@ tr:hover { background: #fafafa; }
 .certainty-fill { height: 100%; border-radius: 4px; }
 .certainty-low { background: #dc3545; }
 .certainty-mid { background: #ffc107; }
-.certainty-high { background: #28a745; }
+.certainty-high { background: var(--theme-color-status-success, #28a745); }
 `,Templates:[{Hash:'Facto-Layout',Template:/*html*/`
 <h1>Retold Facto</h1>
-<p style="color:#666; margin-bottom:20px; font-size:0.95em;">Data Warehouse &amp; Knowledge Graph Storage</p>
+<p style="color:var(--theme-color-text-secondary, #666); margin-bottom:20px; font-size:0.95em;">Data Warehouse &amp; Knowledge Graph Storage</p>
 
 <!-- Expand / Collapse All -->
 <div class="accordion-controls">
@@ -6760,7 +6760,7 @@ tr:hover { background: #fafafa; }
 <div id="Facto-Section-Records"></div>
 <div id="Facto-Section-Ingest"></div>
 <div id="Facto-Section-Projections"></div>
-`}],Renderables:[{RenderableHash:'Facto-Layout',TemplateHash:'Facto-Layout',DestinationAddress:'#Facto-Application-Container'}]};},{"pict-view":41}],83:[function(require,module,exports){const libPictView=require('pict-view');class FactoProjectionsView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(){this.loadSummary();}loadSummary(){this.pict.providers.Facto.loadProjectionSummary().then(pResponse=>{let tmpContainer=document.getElementById('facto-projections-summary');if(!tmpContainer||!pResponse)return;let tmpHtml='<table><tbody>';tmpHtml+='<tr><td style="font-weight:600;">Sources</td><td>'+(pResponse.Sources||0)+'</td>';tmpHtml+='<td style="font-weight:600;">Datasets</td><td>'+(pResponse.Datasets||0)+'</td></tr>';tmpHtml+='<tr><td style="font-weight:600;">Records</td><td>'+(pResponse.Records||0)+'</td>';tmpHtml+='<td style="font-weight:600;">Certainty Indices</td><td>'+(pResponse.CertaintyIndices||0)+'</td></tr>';tmpHtml+='<tr><td style="font-weight:600;">Ingest Jobs</td><td>'+(pResponse.IngestJobs||0)+'</td>';tmpHtml+='<td></td><td></td></tr>';if(pResponse.DatasetsByType){tmpHtml+='<tr><td colspan="4" style="padding-top:12px; font-weight:600; border-bottom:2px solid #ddd;">Datasets by Type</td></tr>';tmpHtml+='<tr>';tmpHtml+='<td><span class="badge badge-raw">Raw</span></td><td>'+(pResponse.DatasetsByType.Raw||0)+'</td>';tmpHtml+='<td><span class="badge badge-compositional">Compositional</span></td><td>'+(pResponse.DatasetsByType.Compositional||0)+'</td>';tmpHtml+='</tr><tr>';tmpHtml+='<td><span class="badge badge-projection">Projection</span></td><td>'+(pResponse.DatasetsByType.Projection||0)+'</td>';tmpHtml+='<td><span class="badge badge-derived">Derived</span></td><td>'+(pResponse.DatasetsByType.Derived||0)+'</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error loading summary: '+pError.message,{type:'error'});});}runQuery(){let tmpDatasetIDsRaw=this.pict.providers.FactoUI.getVal('facto-proj-dataset-ids');let tmpType=this.pict.providers.FactoUI.getVal('facto-proj-type');let tmpCertaintyThreshold=parseFloat(this.pict.providers.FactoUI.getVal('facto-proj-certainty'))||0;let tmpTimeStart=this.pict.providers.FactoUI.getVal('facto-proj-time-start');let tmpTimeStop=this.pict.providers.FactoUI.getVal('facto-proj-time-stop');let tmpDatasetIDs=tmpDatasetIDsRaw.split(',').map(function(s){return parseInt(s.trim(),10);}).filter(function(n){return!isNaN(n)&&n>0;});if(tmpDatasetIDs.length===0){this.pict.views['Pict-Section-Modal'].toast('Enter at least one Dataset ID',{type:'warning'});return;}let tmpParams={DatasetIDs:tmpDatasetIDs,Begin:0,Cap:100};if(tmpType)tmpParams.Type=tmpType;if(tmpCertaintyThreshold>0)tmpParams.CertaintyThreshold=tmpCertaintyThreshold;if(tmpTimeStart)tmpParams.TimeRangeStart=parseInt(tmpTimeStart,10)||0;if(tmpTimeStop)tmpParams.TimeRangeStop=parseInt(tmpTimeStop,10)||0;this.pict.views['Pict-Section-Modal'].toast('Querying...',{type:'info'});this.pict.providers.Facto.queryRecords(tmpParams).then(pResponse=>{this.refreshResults(pResponse);}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Query error: '+pError.message,{type:'error'});});}runCompare(){let tmpDatasetIDsRaw=this.pict.providers.FactoUI.getVal('facto-proj-dataset-ids');let tmpDatasetIDs=tmpDatasetIDsRaw.split(',').map(function(s){return parseInt(s.trim(),10);}).filter(function(n){return!isNaN(n)&&n>0;});if(tmpDatasetIDs.length===0){this.pict.views['Pict-Section-Modal'].toast('Enter at least one Dataset ID',{type:'warning'});return;}this.pict.views['Pict-Section-Modal'].toast('Comparing...',{type:'info'});this.pict.providers.Facto.compareDatasets(tmpDatasetIDs).then(pResponse=>{let tmpContainer=document.getElementById('facto-projections-results');if(!tmpContainer||!pResponse||!pResponse.Datasets)return;let tmpHtml='<h4 style="margin:12px 0 8px; font-size:0.95em;">Dataset Comparison</h4>';tmpHtml+='<table><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Records</th><th>Sources</th></tr></thead><tbody>';for(let i=0;i<pResponse.Datasets.length;i++){let tmpDS=pResponse.Datasets[i];let tmpTypeLower=(tmpDS.Type||'').toLowerCase();tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpDS.IDDataset||'')+'</td>';tmpHtml+='<td>'+(tmpDS.Name||'')+'</td>';tmpHtml+='<td><span class="badge badge-'+tmpTypeLower+'">'+(tmpDS.Type||'')+'</span></td>';tmpHtml+='<td>'+(tmpDS.RecordCount||0)+'</td>';tmpHtml+='<td>'+(tmpDS.SourceCount||0)+'</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Compare error: '+pError.message,{type:'error'});});}refreshResults(pResponse){let tmpContainer=document.getElementById('facto-projections-results');if(!tmpContainer)return;if(!pResponse||!pResponse.Records||pResponse.Records.length===0){tmpContainer.innerHTML='<p style="color:#888; font-style:italic;">No records match the query.</p>';return;}let tmpHtml='<h4 style="margin:12px 0 8px; font-size:0.95em;">Query Results ('+(pResponse.Count||pResponse.Records.length)+' records)</h4>';tmpHtml+='<table><thead><tr><th>ID</th><th>Dataset</th><th>Source</th><th>Type</th><th>Version</th><th>Ingest Date</th><th>Content</th></tr></thead><tbody>';for(let i=0;i<pResponse.Records.length;i++){let tmpRecord=pResponse.Records[i];let tmpContent=tmpRecord.Content||'';if(tmpContent.length>80)tmpContent=tmpContent.substring(0,80)+'...';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpRecord.IDRecord||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.IDDataset||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.IDSource||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.Type||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.Version||1)+'</td>';tmpHtml+='<td>'+(tmpRecord.IngestDate||'-')+'</td>';tmpHtml+='<td style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">'+tmpContent+'</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}}module.exports=FactoProjectionsView;module.exports.default_configuration={ViewIdentifier:'Facto-Projections',DefaultRenderable:'Facto-Projections',DefaultDestinationAddress:'#Facto-Section-Projections',Templates:[{Hash:'Facto-Projections',Template:/*html*/`
+`}],Renderables:[{RenderableHash:'Facto-Layout',TemplateHash:'Facto-Layout',DestinationAddress:'#Facto-Application-Container'}]};},{"pict-view":41}],83:[function(require,module,exports){const libPictView=require('pict-view');class FactoProjectionsView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(){this.loadSummary();}loadSummary(){this.pict.providers.Facto.loadProjectionSummary().then(pResponse=>{let tmpContainer=document.getElementById('facto-projections-summary');if(!tmpContainer||!pResponse)return;let tmpHtml='<table><tbody>';tmpHtml+='<tr><td style="font-weight:600;">Sources</td><td>'+(pResponse.Sources||0)+'</td>';tmpHtml+='<td style="font-weight:600;">Datasets</td><td>'+(pResponse.Datasets||0)+'</td></tr>';tmpHtml+='<tr><td style="font-weight:600;">Records</td><td>'+(pResponse.Records||0)+'</td>';tmpHtml+='<td style="font-weight:600;">Certainty Indices</td><td>'+(pResponse.CertaintyIndices||0)+'</td></tr>';tmpHtml+='<tr><td style="font-weight:600;">Ingest Jobs</td><td>'+(pResponse.IngestJobs||0)+'</td>';tmpHtml+='<td></td><td></td></tr>';if(pResponse.DatasetsByType){tmpHtml+='<tr><td colspan="4" style="padding-top:12px; font-weight:600; border-bottom:2px solid var(--theme-color-border-default, #ddd);">Datasets by Type</td></tr>';tmpHtml+='<tr>';tmpHtml+='<td><span class="badge badge-raw">Raw</span></td><td>'+(pResponse.DatasetsByType.Raw||0)+'</td>';tmpHtml+='<td><span class="badge badge-compositional">Compositional</span></td><td>'+(pResponse.DatasetsByType.Compositional||0)+'</td>';tmpHtml+='</tr><tr>';tmpHtml+='<td><span class="badge badge-projection">Projection</span></td><td>'+(pResponse.DatasetsByType.Projection||0)+'</td>';tmpHtml+='<td><span class="badge badge-derived">Derived</span></td><td>'+(pResponse.DatasetsByType.Derived||0)+'</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error loading summary: '+pError.message,{type:'error'});});}runQuery(){let tmpDatasetIDsRaw=this.pict.providers.FactoUI.getVal('facto-proj-dataset-ids');let tmpType=this.pict.providers.FactoUI.getVal('facto-proj-type');let tmpCertaintyThreshold=parseFloat(this.pict.providers.FactoUI.getVal('facto-proj-certainty'))||0;let tmpTimeStart=this.pict.providers.FactoUI.getVal('facto-proj-time-start');let tmpTimeStop=this.pict.providers.FactoUI.getVal('facto-proj-time-stop');let tmpDatasetIDs=tmpDatasetIDsRaw.split(',').map(function(s){return parseInt(s.trim(),10);}).filter(function(n){return!isNaN(n)&&n>0;});if(tmpDatasetIDs.length===0){this.pict.views['Pict-Section-Modal'].toast('Enter at least one Dataset ID',{type:'warning'});return;}let tmpParams={DatasetIDs:tmpDatasetIDs,Begin:0,Cap:100};if(tmpType)tmpParams.Type=tmpType;if(tmpCertaintyThreshold>0)tmpParams.CertaintyThreshold=tmpCertaintyThreshold;if(tmpTimeStart)tmpParams.TimeRangeStart=parseInt(tmpTimeStart,10)||0;if(tmpTimeStop)tmpParams.TimeRangeStop=parseInt(tmpTimeStop,10)||0;this.pict.views['Pict-Section-Modal'].toast('Querying...',{type:'info'});this.pict.providers.Facto.queryRecords(tmpParams).then(pResponse=>{this.refreshResults(pResponse);}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Query error: '+pError.message,{type:'error'});});}runCompare(){let tmpDatasetIDsRaw=this.pict.providers.FactoUI.getVal('facto-proj-dataset-ids');let tmpDatasetIDs=tmpDatasetIDsRaw.split(',').map(function(s){return parseInt(s.trim(),10);}).filter(function(n){return!isNaN(n)&&n>0;});if(tmpDatasetIDs.length===0){this.pict.views['Pict-Section-Modal'].toast('Enter at least one Dataset ID',{type:'warning'});return;}this.pict.views['Pict-Section-Modal'].toast('Comparing...',{type:'info'});this.pict.providers.Facto.compareDatasets(tmpDatasetIDs).then(pResponse=>{let tmpContainer=document.getElementById('facto-projections-results');if(!tmpContainer||!pResponse||!pResponse.Datasets)return;let tmpHtml='<h4 style="margin:12px 0 8px; font-size:0.95em;">Dataset Comparison</h4>';tmpHtml+='<table><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Records</th><th>Sources</th></tr></thead><tbody>';for(let i=0;i<pResponse.Datasets.length;i++){let tmpDS=pResponse.Datasets[i];let tmpTypeLower=(tmpDS.Type||'').toLowerCase();tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpDS.IDDataset||'')+'</td>';tmpHtml+='<td>'+(tmpDS.Name||'')+'</td>';tmpHtml+='<td><span class="badge badge-'+tmpTypeLower+'">'+(tmpDS.Type||'')+'</span></td>';tmpHtml+='<td>'+(tmpDS.RecordCount||0)+'</td>';tmpHtml+='<td>'+(tmpDS.SourceCount||0)+'</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Compare error: '+pError.message,{type:'error'});});}refreshResults(pResponse){let tmpContainer=document.getElementById('facto-projections-results');if(!tmpContainer)return;if(!pResponse||!pResponse.Records||pResponse.Records.length===0){tmpContainer.innerHTML='<p style="color:var(--theme-color-text-muted, #888); font-style:italic;">No records match the query.</p>';return;}let tmpHtml='<h4 style="margin:12px 0 8px; font-size:0.95em;">Query Results ('+(pResponse.Count||pResponse.Records.length)+' records)</h4>';tmpHtml+='<table><thead><tr><th>ID</th><th>Dataset</th><th>Source</th><th>Type</th><th>Version</th><th>Ingest Date</th><th>Content</th></tr></thead><tbody>';for(let i=0;i<pResponse.Records.length;i++){let tmpRecord=pResponse.Records[i];let tmpContent=tmpRecord.Content||'';if(tmpContent.length>80)tmpContent=tmpContent.substring(0,80)+'...';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpRecord.IDRecord||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.IDDataset||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.IDSource||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.Type||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.Version||1)+'</td>';tmpHtml+='<td>'+(tmpRecord.IngestDate||'-')+'</td>';tmpHtml+='<td style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">'+tmpContent+'</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}}module.exports=FactoProjectionsView;module.exports.default_configuration={ViewIdentifier:'Facto-Projections',DefaultRenderable:'Facto-Projections',DefaultDestinationAddress:'#Facto-Section-Projections',Templates:[{Hash:'Facto-Projections',Template:/*html*/`
 <div class="accordion-row">
 	<div class="accordion-number">5</div>
 	<div class="accordion-card" id="facto-card-projections">
@@ -6770,12 +6770,12 @@ tr:hover { background: #fafafa; }
 			<span class="accordion-toggle">&#9660;</span>
 		</div>
 		<div class="accordion-body">
-			<p style="margin-bottom:12px; color:#666; font-size:0.9em;">Query across datasets, compare data, and view warehouse-wide statistics.</p>
+			<p style="margin-bottom:12px; color:var(--theme-color-text-secondary, #666); font-size:0.9em;">Query across datasets, compare data, and view warehouse-wide statistics.</p>
 
-			<h3 style="margin-bottom:8px; font-size:1em; color:#444;">Warehouse Summary</h3>
-			<div id="facto-projections-summary" style="margin-bottom:16px;"><p style="color:#888; font-style:italic;">Loading...</p></div>
+			<h3 style="margin-bottom:8px; font-size:1em; color:var(--theme-color-text-secondary, #444);">Warehouse Summary</h3>
+			<div id="facto-projections-summary" style="margin-bottom:16px;"><p style="color:var(--theme-color-text-muted, #888); font-style:italic;">Loading...</p></div>
 
-			<h3 style="margin-top:16px; margin-bottom:8px; font-size:1em; color:#444;">Cross-Dataset Query</h3>
+			<h3 style="margin-top:16px; margin-bottom:8px; font-size:1em; color:var(--theme-color-text-secondary, #444);">Cross-Dataset Query</h3>
 			<div class="inline-group">
 				<div>
 					<label for="facto-proj-dataset-ids">Dataset IDs (comma-separated)</label>
@@ -6808,8 +6808,8 @@ tr:hover { background: #fafafa; }
 		</div>
 	</div>
 </div>
-`}],Renderables:[{RenderableHash:'Facto-Projections',TemplateHash:'Facto-Projections',DestinationAddress:'#Facto-Section-Projections'}]};},{"pict-view":41}],84:[function(require,module,exports){const libPictView=require('pict-view');class FactoRecordsView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(){this.pict.providers.Facto.loadRecords(0).then(()=>{this.refreshList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error loading records: '+pError.message,{type:'error'});});}refreshList(){let tmpContainer=document.getElementById('facto-records-list');if(!tmpContainer)return;let tmpRecords=this.pict.AppData.Facto.Records;if(!tmpRecords||tmpRecords.length===0){tmpContainer.innerHTML='<p style="color:#888; font-style:italic;">No records ingested yet.</p>';return;}let tmpHtml='<table><thead><tr><th>ID</th><th>Type</th><th>Dataset</th><th>Source</th><th>Version</th><th>Ingest Date</th><th>Content Preview</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpRecords.length;i++){let tmpRecord=tmpRecords[i];let tmpPreview=(tmpRecord.Content||'').substring(0,60);if((tmpRecord.Content||'').length>60)tmpPreview+='...';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpRecord.IDRecord||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.Type||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.IDDataset||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.IDSource||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.Version||'1')+'</td>';tmpHtml+='<td>'+(tmpRecord.IngestDate||'')+'</td>';tmpHtml+='<td style="max-width:250px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:monospace; font-size:0.85em;">'+tmpPreview+'</td>';tmpHtml+='<td><button class="secondary" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Records\'].viewCertainty('+tmpRecord.IDRecord+')">Certainty</button></td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';// Pagination controls
-let tmpPage=this.pict.AppData.Facto.RecordPage||0;tmpHtml+='<div style="margin-top:12px; display:flex; gap:8px; align-items:center;">';if(tmpPage>0){tmpHtml+='<button class="secondary" style="padding:4px 12px; font-size:0.85em;" onclick="pict.views[\'Facto-Records\'].changePage('+(tmpPage-1)+')">&#9664; Previous</button>';}tmpHtml+='<span style="color:#888; font-size:0.85em;">Page '+(tmpPage+1)+'</span>';if(tmpRecords.length>=this.pict.AppData.Facto.RecordPageSize){tmpHtml+='<button class="secondary" style="padding:4px 12px; font-size:0.85em;" onclick="pict.views[\'Facto-Records\'].changePage('+(tmpPage+1)+')">Next &#9654;</button>';}tmpHtml+='</div>';tmpContainer.innerHTML=tmpHtml;}changePage(pPage){this.pict.AppData.Facto.RecordPage=pPage;this.pict.providers.Facto.loadRecords(pPage).then(()=>{this.refreshList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}viewCertainty(pIDRecord){this.pict.providers.Facto.loadRecordCertainty(pIDRecord).then(pResponse=>{let tmpPanel=document.getElementById('facto-certainty-panel');if(!pResponse||!pResponse.CertaintyIndices||pResponse.CertaintyIndices.length===0){if(tmpPanel)tmpPanel.innerHTML=this._renderCertaintyEmpty(pIDRecord);else this.pict.views['Pict-Section-Modal'].toast('No certainty data for record #'+pIDRecord,{type:'info'});return;}let tmpHtml=this._renderCertaintyPanel(pIDRecord,pResponse.CertaintyIndices);if(tmpPanel){tmpPanel.innerHTML=tmpHtml;tmpPanel.style.display='block';}else{// Insert panel after the records list
+`}],Renderables:[{RenderableHash:'Facto-Projections',TemplateHash:'Facto-Projections',DestinationAddress:'#Facto-Section-Projections'}]};},{"pict-view":41}],84:[function(require,module,exports){const libPictView=require('pict-view');class FactoRecordsView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(){this.pict.providers.Facto.loadRecords(0).then(()=>{this.refreshList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error loading records: '+pError.message,{type:'error'});});}refreshList(){let tmpContainer=document.getElementById('facto-records-list');if(!tmpContainer)return;let tmpRecords=this.pict.AppData.Facto.Records;if(!tmpRecords||tmpRecords.length===0){tmpContainer.innerHTML='<p style="color:var(--theme-color-text-muted, #888); font-style:italic;">No records ingested yet.</p>';return;}let tmpHtml='<table><thead><tr><th>ID</th><th>Type</th><th>Dataset</th><th>Source</th><th>Version</th><th>Ingest Date</th><th>Content Preview</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpRecords.length;i++){let tmpRecord=tmpRecords[i];let tmpPreview=(tmpRecord.Content||'').substring(0,60);if((tmpRecord.Content||'').length>60)tmpPreview+='...';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpRecord.IDRecord||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.Type||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.IDDataset||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.IDSource||'')+'</td>';tmpHtml+='<td>'+(tmpRecord.Version||'1')+'</td>';tmpHtml+='<td>'+(tmpRecord.IngestDate||'')+'</td>';tmpHtml+='<td style="max-width:250px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:monospace; font-size:0.85em;">'+tmpPreview+'</td>';tmpHtml+='<td><button class="secondary" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Records\'].viewCertainty('+tmpRecord.IDRecord+')">Certainty</button></td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';// Pagination controls
+let tmpPage=this.pict.AppData.Facto.RecordPage||0;tmpHtml+='<div style="margin-top:12px; display:flex; gap:8px; align-items:center;">';if(tmpPage>0){tmpHtml+='<button class="secondary" style="padding:4px 12px; font-size:0.85em;" onclick="pict.views[\'Facto-Records\'].changePage('+(tmpPage-1)+')">&#9664; Previous</button>';}tmpHtml+='<span style="color:var(--theme-color-text-muted, #888); font-size:0.85em;">Page '+(tmpPage+1)+'</span>';if(tmpRecords.length>=this.pict.AppData.Facto.RecordPageSize){tmpHtml+='<button class="secondary" style="padding:4px 12px; font-size:0.85em;" onclick="pict.views[\'Facto-Records\'].changePage('+(tmpPage+1)+')">Next &#9654;</button>';}tmpHtml+='</div>';tmpContainer.innerHTML=tmpHtml;}changePage(pPage){this.pict.AppData.Facto.RecordPage=pPage;this.pict.providers.Facto.loadRecords(pPage).then(()=>{this.refreshList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}viewCertainty(pIDRecord){this.pict.providers.Facto.loadRecordCertainty(pIDRecord).then(pResponse=>{let tmpPanel=document.getElementById('facto-certainty-panel');if(!pResponse||!pResponse.CertaintyIndices||pResponse.CertaintyIndices.length===0){if(tmpPanel)tmpPanel.innerHTML=this._renderCertaintyEmpty(pIDRecord);else this.pict.views['Pict-Section-Modal'].toast('No certainty data for record #'+pIDRecord,{type:'info'});return;}let tmpHtml=this._renderCertaintyPanel(pIDRecord,pResponse.CertaintyIndices);if(tmpPanel){tmpPanel.innerHTML=tmpHtml;tmpPanel.style.display='block';}else{// Insert panel after the records list
 let tmpList=document.getElementById('facto-records-list');if(tmpList){let tmpDiv=document.createElement('div');tmpDiv.id='facto-certainty-panel';tmpDiv.innerHTML=tmpHtml;tmpList.parentNode.insertBefore(tmpDiv,tmpList.nextSibling);}}}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}closeCertaintyPanel(){let tmpPanel=document.getElementById('facto-certainty-panel');if(tmpPanel){tmpPanel.style.display='none';}}_renderCertaintyEmpty(pIDRecord){return/*html*/`
 			<div style="border:1px solid var(--facto-border); border-radius:6px; padding:16px; margin-top:16px; background:var(--facto-bg-surface);">
 				<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
@@ -6879,22 +6879,22 @@ let tmpHtml=/*html*/`
 			<span class="accordion-toggle">&#9660;</span>
 		</div>
 		<div class="accordion-body">
-			<p style="margin-bottom:12px; color:#666; font-size:0.9em;">Individual data records with versioning, certainty indices, and temporal metadata.</p>
+			<p style="margin-bottom:12px; color:var(--theme-color-text-secondary, #666); font-size:0.9em;">Individual data records with versioning, certainty indices, and temporal metadata.</p>
 			<div id="facto-records-list"></div>
 		</div>
 	</div>
 </div>
 `}],Renderables:[{RenderableHash:'Facto-Records',TemplateHash:'Facto-Records',DestinationAddress:'#Facto-Section-Records'}]};},{"pict-view":41}],85:[function(require,module,exports){const libPictView=require('pict-view');class FactoScannerView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(){this.loadScannerState();}loadScannerState(){// Load scan paths and discovered datasets
-Promise.all([this.pict.providers.Facto.loadScannerPaths(),this.pict.providers.Facto.loadScannerDatasets()]).then(()=>{this.refreshPathsList();this.refreshDatasetsList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error loading scanner state: '+pError.message,{type:'error'});});}refreshPathsList(){let tmpContainer=document.getElementById('facto-scanner-paths-list');if(!tmpContainer)return;let tmpPaths=this.pict.AppData.Facto.ScannerPaths||[];if(tmpPaths.length===0){tmpContainer.innerHTML='<p style="color:#888; font-style:italic;">No scan paths configured. Add a folder path to discover datasets.</p>';return;}let tmpHtml='<table><thead><tr><th>Path</th><th>Datasets</th><th>Last Scanned</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpPaths.length;i++){let tmpPath=tmpPaths[i];let tmpLastScanned=tmpPath.LastScannedAt?new Date(tmpPath.LastScannedAt).toLocaleString():'Never';tmpHtml+='<tr>';tmpHtml+='<td style="font-family:monospace; font-size:0.85em;">'+this.escapeHtml(tmpPath.Path)+'</td>';tmpHtml+='<td>'+(tmpPath.DatasetCount||0)+'</td>';tmpHtml+='<td>'+tmpLastScanned+'</td>';tmpHtml+='<td>';tmpHtml+='<button class="danger" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Scanner\'].removePath(\''+this.escapeAttr(tmpPath.Path)+'\')">Remove</button>';tmpHtml+='</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}refreshDatasetsList(){let tmpContainer=document.getElementById('facto-scanner-datasets-list');if(!tmpContainer)return;let tmpDatasets=this.pict.AppData.Facto.ScannerDatasets||[];if(tmpDatasets.length===0){tmpContainer.innerHTML='<p style="color:#888; font-style:italic;">No datasets discovered yet. Add a scan path containing dataset folders with README.md files.</p>';this.updateSummary(0,0,0,0);return;}// Compute summary stats
+Promise.all([this.pict.providers.Facto.loadScannerPaths(),this.pict.providers.Facto.loadScannerDatasets()]).then(()=>{this.refreshPathsList();this.refreshDatasetsList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error loading scanner state: '+pError.message,{type:'error'});});}refreshPathsList(){let tmpContainer=document.getElementById('facto-scanner-paths-list');if(!tmpContainer)return;let tmpPaths=this.pict.AppData.Facto.ScannerPaths||[];if(tmpPaths.length===0){tmpContainer.innerHTML='<p style="color:var(--theme-color-text-muted, #888); font-style:italic;">No scan paths configured. Add a folder path to discover datasets.</p>';return;}let tmpHtml='<table><thead><tr><th>Path</th><th>Datasets</th><th>Last Scanned</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpPaths.length;i++){let tmpPath=tmpPaths[i];let tmpLastScanned=tmpPath.LastScannedAt?new Date(tmpPath.LastScannedAt).toLocaleString():'Never';tmpHtml+='<tr>';tmpHtml+='<td style="font-family:monospace; font-size:0.85em;">'+this.escapeHtml(tmpPath.Path)+'</td>';tmpHtml+='<td>'+(tmpPath.DatasetCount||0)+'</td>';tmpHtml+='<td>'+tmpLastScanned+'</td>';tmpHtml+='<td>';tmpHtml+='<button class="danger" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Scanner\'].removePath(\''+this.escapeAttr(tmpPath.Path)+'\')">Remove</button>';tmpHtml+='</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}refreshDatasetsList(){let tmpContainer=document.getElementById('facto-scanner-datasets-list');if(!tmpContainer)return;let tmpDatasets=this.pict.AppData.Facto.ScannerDatasets||[];if(tmpDatasets.length===0){tmpContainer.innerHTML='<p style="color:var(--theme-color-text-muted, #888); font-style:italic;">No datasets discovered yet. Add a scan path containing dataset folders with README.md files.</p>';this.updateSummary(0,0,0,0);return;}// Compute summary stats
 let tmpDiscovered=0;let tmpProvisioned=0;let tmpIngested=0;let tmpWithData=0;for(let i=0;i<tmpDatasets.length;i++){if(tmpDatasets[i].Status==='Discovered')tmpDiscovered++;if(tmpDatasets[i].Status==='Provisioned')tmpProvisioned++;if(tmpDatasets[i].Status==='Ingested')tmpIngested++;if(tmpDatasets[i].HasData)tmpWithData++;}this.updateSummary(tmpDatasets.length,tmpDiscovered,tmpProvisioned,tmpWithData);// Apply search filter
-let tmpSearchEl=document.getElementById('facto-scanner-search');let tmpSearchTerm=tmpSearchEl?tmpSearchEl.value.toLowerCase():'';let tmpStatusFilter=document.getElementById('facto-scanner-status-filter');let tmpStatusValue=tmpStatusFilter?tmpStatusFilter.value:'';let tmpFiltered=tmpDatasets;if(tmpSearchTerm){tmpFiltered=tmpFiltered.filter(pDS=>{let tmpText=((pDS.FolderName||'')+' '+(pDS.Title||'')+' '+(pDS.Provider||'')).toLowerCase();return tmpText.indexOf(tmpSearchTerm)>-1;});}if(tmpStatusValue){tmpFiltered=tmpFiltered.filter(pDS=>{return pDS.Status===tmpStatusValue;});}let tmpHtml='<table><thead><tr>';tmpHtml+='<th><input type="checkbox" id="facto-scanner-select-all" onclick="pict.views[\'Facto-Scanner\'].toggleSelectAll(this.checked)"></th>';tmpHtml+='<th>Name</th><th>Title</th><th>Provider</th><th>Format</th><th>Data</th><th>Status</th><th>Actions</th>';tmpHtml+='</tr></thead><tbody>';for(let i=0;i<tmpFiltered.length;i++){let tmpDS=tmpFiltered[i];let tmpStatusClass=this.getStatusBadgeClass(tmpDS.Status);let tmpDataInfo=tmpDS.HasData?tmpDS.DataFileCount+' file'+(tmpDS.DataFileCount!==1?'s':'')+' ('+(tmpDS.TotalDataSizeFormatted||'0 B')+')':'<span style="color:#dc3545;">No data</span>';let tmpFormat=tmpDS.DataFormat?tmpDS.DataFormat.Format||'unknown':'unknown';tmpHtml+='<tr>';tmpHtml+='<td><input type="checkbox" class="facto-scanner-checkbox" data-folder="'+this.escapeAttr(tmpDS.FolderName)+'"></td>';tmpHtml+='<td style="font-family:monospace; font-size:0.85em;">'+this.escapeHtml(tmpDS.FolderName)+'</td>';tmpHtml+='<td>'+this.escapeHtml((tmpDS.Title||'').substring(0,50))+'</td>';tmpHtml+='<td>'+this.escapeHtml((tmpDS.Provider||'').substring(0,30))+'</td>';tmpHtml+='<td>'+tmpFormat+'</td>';tmpHtml+='<td>'+tmpDataInfo+'</td>';tmpHtml+='<td><span class="badge '+tmpStatusClass+'">'+tmpDS.Status+'</span></td>';tmpHtml+='<td>';let tmpEscFolder=this.escapeAttr(tmpDS.FolderName);tmpHtml+='<div class="facto-row-actions" id="facto-row-actions-'+tmpEscFolder+'">';tmpHtml+='<button class="facto-row-actions-trigger" onclick="pict.views[\'Facto-Scanner\'].toggleRowMenu(event, \''+tmpEscFolder+'\')" title="Actions">&#8942;</button>';tmpHtml+='<div class="facto-row-actions-menu">';tmpHtml+='<button onclick="pict.views[\'Facto-Scanner\'].viewDetail(\''+tmpEscFolder+'\'); pict.views[\'Facto-Scanner\'].closeRowMenus();">Detail</button>';if(tmpDS.Status==='Discovered'){tmpHtml+='<button class="facto-action-success" onclick="pict.views[\'Facto-Scanner\'].provisionOne(\''+tmpEscFolder+'\'); pict.views[\'Facto-Scanner\'].closeRowMenus();">Provision</button>';}tmpHtml+='</div>';tmpHtml+='</div>';tmpHtml+='</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpHtml+='<p style="color:#888; font-size:0.85em; margin-top:8px;">Showing '+tmpFiltered.length+' of '+tmpDatasets.length+' dataset(s)</p>';tmpContainer.innerHTML=tmpHtml;}updateSummary(pTotal,pDiscovered,pProvisioned,pWithData){let tmpEl=document.getElementById('facto-scanner-summary');if(!tmpEl)return;tmpEl.innerHTML='<strong>'+pTotal+'</strong> discovered &nbsp;|&nbsp; <strong>'+pProvisioned+'</strong> provisioned &nbsp;|&nbsp; <strong>'+pWithData+'</strong> with data';}getStatusBadgeClass(pStatus){if(pStatus==='Discovered')return'badge-raw';if(pStatus==='Provisioned')return'badge-compositional';if(pStatus==='Ingested')return'badge-projection';if(pStatus==='Error')return'badge-derived';return'';}escapeHtml(pStr){if(!pStr)return'';return pStr.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}escapeAttr(pStr){if(!pStr)return'';return pStr.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;');}// ================================================================
+let tmpSearchEl=document.getElementById('facto-scanner-search');let tmpSearchTerm=tmpSearchEl?tmpSearchEl.value.toLowerCase():'';let tmpStatusFilter=document.getElementById('facto-scanner-status-filter');let tmpStatusValue=tmpStatusFilter?tmpStatusFilter.value:'';let tmpFiltered=tmpDatasets;if(tmpSearchTerm){tmpFiltered=tmpFiltered.filter(pDS=>{let tmpText=((pDS.FolderName||'')+' '+(pDS.Title||'')+' '+(pDS.Provider||'')).toLowerCase();return tmpText.indexOf(tmpSearchTerm)>-1;});}if(tmpStatusValue){tmpFiltered=tmpFiltered.filter(pDS=>{return pDS.Status===tmpStatusValue;});}let tmpHtml='<table><thead><tr>';tmpHtml+='<th><input type="checkbox" id="facto-scanner-select-all" onclick="pict.views[\'Facto-Scanner\'].toggleSelectAll(this.checked)"></th>';tmpHtml+='<th>Name</th><th>Title</th><th>Provider</th><th>Format</th><th>Data</th><th>Status</th><th>Actions</th>';tmpHtml+='</tr></thead><tbody>';for(let i=0;i<tmpFiltered.length;i++){let tmpDS=tmpFiltered[i];let tmpStatusClass=this.getStatusBadgeClass(tmpDS.Status);let tmpDataInfo=tmpDS.HasData?tmpDS.DataFileCount+' file'+(tmpDS.DataFileCount!==1?'s':'')+' ('+(tmpDS.TotalDataSizeFormatted||'0 B')+')':'<span style="color:#dc3545;">No data</span>';let tmpFormat=tmpDS.DataFormat?tmpDS.DataFormat.Format||'unknown':'unknown';tmpHtml+='<tr>';tmpHtml+='<td><input type="checkbox" class="facto-scanner-checkbox" data-folder="'+this.escapeAttr(tmpDS.FolderName)+'"></td>';tmpHtml+='<td style="font-family:monospace; font-size:0.85em;">'+this.escapeHtml(tmpDS.FolderName)+'</td>';tmpHtml+='<td>'+this.escapeHtml((tmpDS.Title||'').substring(0,50))+'</td>';tmpHtml+='<td>'+this.escapeHtml((tmpDS.Provider||'').substring(0,30))+'</td>';tmpHtml+='<td>'+tmpFormat+'</td>';tmpHtml+='<td>'+tmpDataInfo+'</td>';tmpHtml+='<td><span class="badge '+tmpStatusClass+'">'+tmpDS.Status+'</span></td>';tmpHtml+='<td>';let tmpEscFolder=this.escapeAttr(tmpDS.FolderName);tmpHtml+='<div class="facto-row-actions" id="facto-row-actions-'+tmpEscFolder+'">';tmpHtml+='<button class="facto-row-actions-trigger" onclick="pict.views[\'Facto-Scanner\'].toggleRowMenu(event, \''+tmpEscFolder+'\')" title="Actions">&#8942;</button>';tmpHtml+='<div class="facto-row-actions-menu">';tmpHtml+='<button onclick="pict.views[\'Facto-Scanner\'].viewDetail(\''+tmpEscFolder+'\'); pict.views[\'Facto-Scanner\'].closeRowMenus();">Detail</button>';if(tmpDS.Status==='Discovered'){tmpHtml+='<button class="facto-action-success" onclick="pict.views[\'Facto-Scanner\'].provisionOne(\''+tmpEscFolder+'\'); pict.views[\'Facto-Scanner\'].closeRowMenus();">Provision</button>';}tmpHtml+='</div>';tmpHtml+='</div>';tmpHtml+='</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpHtml+='<p style="color:var(--theme-color-text-muted, #888); font-size:0.85em; margin-top:8px;">Showing '+tmpFiltered.length+' of '+tmpDatasets.length+' dataset(s)</p>';tmpContainer.innerHTML=tmpHtml;}updateSummary(pTotal,pDiscovered,pProvisioned,pWithData){let tmpEl=document.getElementById('facto-scanner-summary');if(!tmpEl)return;tmpEl.innerHTML='<strong>'+pTotal+'</strong> discovered &nbsp;|&nbsp; <strong>'+pProvisioned+'</strong> provisioned &nbsp;|&nbsp; <strong>'+pWithData+'</strong> with data';}getStatusBadgeClass(pStatus){if(pStatus==='Discovered')return'badge-raw';if(pStatus==='Provisioned')return'badge-compositional';if(pStatus==='Ingested')return'badge-projection';if(pStatus==='Error')return'badge-derived';return'';}escapeHtml(pStr){if(!pStr)return'';return pStr.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}escapeAttr(pStr){if(!pStr)return'';return pStr.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;');}// ================================================================
 // Actions
 // ================================================================
 addPath(){let tmpPathInput=document.getElementById('facto-scanner-path-input');let tmpPath=tmpPathInput?tmpPathInput.value.trim():'';if(!tmpPath){this.pict.views['Pict-Section-Modal'].toast('Enter a folder path to scan',{type:'warning'});return;}this.pict.views['Pict-Section-Modal'].toast('Scanning '+tmpPath+'...',{type:'info'});this.pict.providers.Facto.addScannerPath(tmpPath).then(pResponse=>{if(pResponse&&pResponse.Error){this.pict.views['Pict-Section-Modal'].toast('Error: '+pResponse.Error,{type:'error'});return;}let tmpResult=pResponse.ScanResult||{};this.pict.views['Pict-Section-Modal'].toast('Scanned! Found '+(tmpResult.DatasetsFound||0)+' dataset(s) in '+(tmpResult.FoldersScanned||0)+' folder(s)',{type:'success'});if(tmpPathInput)tmpPathInput.value='';this.loadScannerState();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}async removePath(pPath){let tmpConfirmed=await this.pict.views['Pict-Section-Modal'].confirm('Remove scan path and its discovered datasets?\n\n'+pPath,{title:'Remove Path',confirmLabel:'Remove',dangerous:true});if(!tmpConfirmed)return;this.pict.providers.Facto.removeScannerPath(pPath).then(pResponse=>{if(pResponse&&pResponse.Error){this.pict.views['Pict-Section-Modal'].toast('Error: '+pResponse.Error,{type:'error'});return;}this.pict.views['Pict-Section-Modal'].toast('Path removed',{type:'success'});this.loadScannerState();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}rescanAll(){this.pict.views['Pict-Section-Modal'].toast('Re-scanning all paths...',{type:'info'});this.pict.providers.Facto.rescanPaths().then(pResponse=>{if(pResponse&&pResponse.Error){this.pict.views['Pict-Section-Modal'].toast('Error: '+pResponse.Error,{type:'error'});return;}this.pict.views['Pict-Section-Modal'].toast('Re-scan complete',{type:'success'});this.loadScannerState();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}filterDatasets(){this.refreshDatasetsList();}toggleSelectAll(pChecked){let tmpCheckboxes=document.querySelectorAll('.facto-scanner-checkbox');for(let i=0;i<tmpCheckboxes.length;i++){tmpCheckboxes[i].checked=pChecked;}}getSelectedFolderNames(){let tmpCheckboxes=document.querySelectorAll('.facto-scanner-checkbox:checked');let tmpNames=[];for(let i=0;i<tmpCheckboxes.length;i++){tmpNames.push(tmpCheckboxes[i].getAttribute('data-folder'));}return tmpNames;}provisionOne(pFolderName){this.pict.views['Pict-Section-Modal'].toast('Provisioning '+pFolderName+'...',{type:'info'});this.pict.providers.Facto.provisionScannerDataset(pFolderName).then(pResponse=>{if(pResponse&&pResponse.Error){this.pict.views['Pict-Section-Modal'].toast('Error: '+pResponse.Error,{type:'error'});return;}this.pict.views['Pict-Section-Modal'].toast('Provisioned '+pFolderName+' (Source #'+(pResponse.Source?pResponse.Source.IDSource:'?')+', Dataset #'+(pResponse.Dataset?pResponse.Dataset.IDDataset:'?')+')',{type:'success'});this.loadScannerState();// Refresh sources/datasets views
-this.pict.providers.FactoUI.refreshDataViews(['sources','datasets']);}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}async provisionSelected(){let tmpSelected=this.getSelectedFolderNames();if(tmpSelected.length===0){this.pict.views['Pict-Section-Modal'].toast('Select datasets to provision using the checkboxes',{type:'warning'});return;}let tmpConfirmed=await this.pict.views['Pict-Section-Modal'].confirm('Provision '+tmpSelected.length+' selected dataset(s)?',{title:'Provision Selected',confirmLabel:'Provision'});if(!tmpConfirmed)return;this.provisionBatch(tmpSelected,0,0,0);}async provisionAll(){let tmpConfirmed=await this.pict.views['Pict-Section-Modal'].confirm('Provision ALL discovered datasets?',{title:'Provision All',confirmLabel:'Provision All',dangerous:true});if(!tmpConfirmed)return;this.pict.views['Pict-Section-Modal'].toast('Provisioning all datasets...',{type:'info'});this.pict.providers.Facto.provisionAllScannerDatasets().then(pResponse=>{if(pResponse&&pResponse.Error){this.pict.views['Pict-Section-Modal'].toast('Error: '+pResponse.Error,{type:'error'});return;}this.pict.views['Pict-Section-Modal'].toast('Provisioned '+pResponse.Provisioned+' of '+pResponse.Total+' ('+pResponse.Errors+' error(s))',{type:'success'});this.loadScannerState();this.pict.providers.FactoUI.refreshDataViews(['sources','datasets']);}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}provisionBatch(pFolderNames,pIndex,pSuccessCount,pErrorCount){if(pIndex>=pFolderNames.length){this.pict.views['Pict-Section-Modal'].toast('Provisioned '+pSuccessCount+' of '+pFolderNames.length+' ('+pErrorCount+' error(s))',{type:'success'});this.loadScannerState();this.pict.providers.FactoUI.refreshDataViews(['sources','datasets']);return;}let tmpName=pFolderNames[pIndex];this.pict.views['Pict-Section-Modal'].toast('Provisioning '+(pIndex+1)+'/'+pFolderNames.length+': '+tmpName+'...',{type:'info'});this.pict.providers.Facto.provisionScannerDataset(tmpName).then(pResponse=>{if(pResponse&&pResponse.Error){this.provisionBatch(pFolderNames,pIndex+1,pSuccessCount,pErrorCount+1);}else{this.provisionBatch(pFolderNames,pIndex+1,pSuccessCount+1,pErrorCount);}}).catch(()=>{this.provisionBatch(pFolderNames,pIndex+1,pSuccessCount,pErrorCount+1);});}toggleRowMenu(pEvent,pFolderName){pEvent.stopPropagation();let tmpEl=document.getElementById('facto-row-actions-'+pFolderName);if(!tmpEl)return;let tmpWasOpen=tmpEl.classList.contains('open');this.closeRowMenus();if(!tmpWasOpen){tmpEl.classList.add('open');let tmpCloseHandler=pCloseEvent=>{if(!tmpEl.contains(pCloseEvent.target)){tmpEl.classList.remove('open');document.removeEventListener('click',tmpCloseHandler);}};setTimeout(()=>{document.addEventListener('click',tmpCloseHandler);},0);}}closeRowMenus(){let tmpOpenMenus=document.querySelectorAll('.facto-row-actions.open');for(let i=0;i<tmpOpenMenus.length;i++){tmpOpenMenus[i].classList.remove('open');}}viewDetail(pFolderName){let tmpContainer=document.getElementById('facto-scanner-detail');if(!tmpContainer)return;tmpContainer.innerHTML='<p style="color:#888;">Loading details for '+this.escapeHtml(pFolderName)+'...</p>';this.pict.providers.Facto.loadScannerDatasetDetail(pFolderName).then(pDS=>{if(pDS&&pDS.Error){tmpContainer.innerHTML='<p style="color:#dc3545;">'+pDS.Error+'</p>';return;}let tmpHtml='<div style="border:1px solid #ddd; border-radius:6px; padding:16px; background:#fafafa;">';tmpHtml+='<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">';tmpHtml+='<h3 style="margin:0; font-size:1.1em; color:#333;">'+this.escapeHtml(pDS.Title||pDS.FolderName)+'</h3>';tmpHtml+='<button class="secondary" style="padding:4px 10px; font-size:0.82em;" onclick="document.getElementById(\'facto-scanner-detail\').innerHTML=\'\';">Close</button>';tmpHtml+='</div>';// Metadata grid
+this.pict.providers.FactoUI.refreshDataViews(['sources','datasets']);}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}async provisionSelected(){let tmpSelected=this.getSelectedFolderNames();if(tmpSelected.length===0){this.pict.views['Pict-Section-Modal'].toast('Select datasets to provision using the checkboxes',{type:'warning'});return;}let tmpConfirmed=await this.pict.views['Pict-Section-Modal'].confirm('Provision '+tmpSelected.length+' selected dataset(s)?',{title:'Provision Selected',confirmLabel:'Provision'});if(!tmpConfirmed)return;this.provisionBatch(tmpSelected,0,0,0);}async provisionAll(){let tmpConfirmed=await this.pict.views['Pict-Section-Modal'].confirm('Provision ALL discovered datasets?',{title:'Provision All',confirmLabel:'Provision All',dangerous:true});if(!tmpConfirmed)return;this.pict.views['Pict-Section-Modal'].toast('Provisioning all datasets...',{type:'info'});this.pict.providers.Facto.provisionAllScannerDatasets().then(pResponse=>{if(pResponse&&pResponse.Error){this.pict.views['Pict-Section-Modal'].toast('Error: '+pResponse.Error,{type:'error'});return;}this.pict.views['Pict-Section-Modal'].toast('Provisioned '+pResponse.Provisioned+' of '+pResponse.Total+' ('+pResponse.Errors+' error(s))',{type:'success'});this.loadScannerState();this.pict.providers.FactoUI.refreshDataViews(['sources','datasets']);}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}provisionBatch(pFolderNames,pIndex,pSuccessCount,pErrorCount){if(pIndex>=pFolderNames.length){this.pict.views['Pict-Section-Modal'].toast('Provisioned '+pSuccessCount+' of '+pFolderNames.length+' ('+pErrorCount+' error(s))',{type:'success'});this.loadScannerState();this.pict.providers.FactoUI.refreshDataViews(['sources','datasets']);return;}let tmpName=pFolderNames[pIndex];this.pict.views['Pict-Section-Modal'].toast('Provisioning '+(pIndex+1)+'/'+pFolderNames.length+': '+tmpName+'...',{type:'info'});this.pict.providers.Facto.provisionScannerDataset(tmpName).then(pResponse=>{if(pResponse&&pResponse.Error){this.provisionBatch(pFolderNames,pIndex+1,pSuccessCount,pErrorCount+1);}else{this.provisionBatch(pFolderNames,pIndex+1,pSuccessCount+1,pErrorCount);}}).catch(()=>{this.provisionBatch(pFolderNames,pIndex+1,pSuccessCount,pErrorCount+1);});}toggleRowMenu(pEvent,pFolderName){pEvent.stopPropagation();let tmpEl=document.getElementById('facto-row-actions-'+pFolderName);if(!tmpEl)return;let tmpWasOpen=tmpEl.classList.contains('open');this.closeRowMenus();if(!tmpWasOpen){tmpEl.classList.add('open');let tmpCloseHandler=pCloseEvent=>{if(!tmpEl.contains(pCloseEvent.target)){tmpEl.classList.remove('open');document.removeEventListener('click',tmpCloseHandler);}};setTimeout(()=>{document.addEventListener('click',tmpCloseHandler);},0);}}closeRowMenus(){let tmpOpenMenus=document.querySelectorAll('.facto-row-actions.open');for(let i=0;i<tmpOpenMenus.length;i++){tmpOpenMenus[i].classList.remove('open');}}viewDetail(pFolderName){let tmpContainer=document.getElementById('facto-scanner-detail');if(!tmpContainer)return;tmpContainer.innerHTML='<p style="color:var(--theme-color-text-muted, #888);">Loading details for '+this.escapeHtml(pFolderName)+'...</p>';this.pict.providers.Facto.loadScannerDatasetDetail(pFolderName).then(pDS=>{if(pDS&&pDS.Error){tmpContainer.innerHTML='<p style="color:#dc3545;">'+pDS.Error+'</p>';return;}let tmpHtml='<div style="border:1px solid var(--theme-color-border-default, #ddd); border-radius:6px; padding:16px; background:var(--theme-color-background-secondary, #fafafa);">';tmpHtml+='<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">';tmpHtml+='<h3 style="margin:0; font-size:1.1em; color:var(--theme-color-text-primary, #333);">'+this.escapeHtml(pDS.Title||pDS.FolderName)+'</h3>';tmpHtml+='<button class="secondary" style="padding:4px 10px; font-size:0.82em;" onclick="document.getElementById(\'facto-scanner-detail\').innerHTML=\'\';">Close</button>';tmpHtml+='</div>';// Metadata grid
 tmpHtml+='<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px 20px; font-size:0.9em; margin-bottom:12px;">';tmpHtml+='<div><strong>Folder:</strong> <span style="font-family:monospace;">'+this.escapeHtml(pDS.FolderName)+'</span></div>';tmpHtml+='<div><strong>Status:</strong> <span class="badge '+this.getStatusBadgeClass(pDS.Status)+'">'+(pDS.Status||'')+'</span></div>';tmpHtml+='<div><strong>Provider:</strong> '+this.escapeHtml(pDS.Provider||'Unknown')+'</div>';tmpHtml+='<div><strong>License:</strong> '+this.escapeHtml(pDS.License||'Unknown')+'</div>';if(pDS.SourceURL){tmpHtml+='<div><strong>Source:</strong> <a href="'+this.escapeHtml(pDS.SourceURL)+'" target="_blank">'+this.escapeHtml(pDS.SourceURL.substring(0,60))+'</a></div>';}if(pDS.UpdateFrequency){tmpHtml+='<div><strong>Update Frequency:</strong> '+this.escapeHtml(pDS.UpdateFrequency.substring(0,100))+'</div>';}if(pDS.RecordCount){tmpHtml+='<div><strong>Record Count:</strong> '+this.escapeHtml(pDS.RecordCount.substring(0,100))+'</div>';}if(pDS.IDSource){tmpHtml+='<div><strong>Source ID:</strong> #'+pDS.IDSource+'</div>';}if(pDS.IDDataset){tmpHtml+='<div><strong>Dataset ID:</strong> #'+pDS.IDDataset+'</div>';}tmpHtml+='</div>';// Description
-if(pDS.Description){tmpHtml+='<div style="margin-bottom:12px;"><strong>Description:</strong><div style="color:#555; font-size:0.9em; margin-top:4px; max-height:100px; overflow-y:auto; white-space:pre-wrap;">'+this.escapeHtml(pDS.Description.substring(0,500))+'</div></div>';}// Data files
-if(pDS.DataFiles&&pDS.DataFiles.length>0){tmpHtml+='<div style="margin-bottom:12px;"><strong>Data Files ('+pDS.DataFiles.length+'):</strong>';tmpHtml+='<table style="margin-top:4px; font-size:0.85em;"><thead><tr><th>File</th><th>Format</th><th>Size</th><th>Compressed</th></tr></thead><tbody>';for(let i=0;i<pDS.DataFiles.length&&i<20;i++){let tmpFile=pDS.DataFiles[i];let tmpSize=this.formatSize(tmpFile.Size||0);tmpHtml+='<tr>';tmpHtml+='<td style="font-family:monospace; font-size:0.9em;">'+this.escapeHtml(tmpFile.FileName)+'</td>';tmpHtml+='<td>'+(tmpFile.Format||'unknown')+'</td>';tmpHtml+='<td>'+tmpSize+'</td>';tmpHtml+='<td>'+(tmpFile.Compressed?'Yes':'No')+'</td>';tmpHtml+='</tr>';}if(pDS.DataFiles.length>20){tmpHtml+='<tr><td colspan="4" style="color:#888;">...and '+(pDS.DataFiles.length-20)+' more file(s)</td></tr>';}tmpHtml+='</tbody></table></div>';}else{tmpHtml+='<p style="color:#dc3545; font-size:0.9em; margin-bottom:12px;"><strong>No data files.</strong> Download needed.</p>';}// Errors
+if(pDS.Description){tmpHtml+='<div style="margin-bottom:12px;"><strong>Description:</strong><div style="color:var(--theme-color-text-secondary, #555); font-size:0.9em; margin-top:4px; max-height:100px; overflow-y:auto; white-space:pre-wrap;">'+this.escapeHtml(pDS.Description.substring(0,500))+'</div></div>';}// Data files
+if(pDS.DataFiles&&pDS.DataFiles.length>0){tmpHtml+='<div style="margin-bottom:12px;"><strong>Data Files ('+pDS.DataFiles.length+'):</strong>';tmpHtml+='<table style="margin-top:4px; font-size:0.85em;"><thead><tr><th>File</th><th>Format</th><th>Size</th><th>Compressed</th></tr></thead><tbody>';for(let i=0;i<pDS.DataFiles.length&&i<20;i++){let tmpFile=pDS.DataFiles[i];let tmpSize=this.formatSize(tmpFile.Size||0);tmpHtml+='<tr>';tmpHtml+='<td style="font-family:monospace; font-size:0.9em;">'+this.escapeHtml(tmpFile.FileName)+'</td>';tmpHtml+='<td>'+(tmpFile.Format||'unknown')+'</td>';tmpHtml+='<td>'+tmpSize+'</td>';tmpHtml+='<td>'+(tmpFile.Compressed?'Yes':'No')+'</td>';tmpHtml+='</tr>';}if(pDS.DataFiles.length>20){tmpHtml+='<tr><td colspan="4" style="color:var(--theme-color-text-muted, #888);">...and '+(pDS.DataFiles.length-20)+' more file(s)</td></tr>';}tmpHtml+='</tbody></table></div>';}else{tmpHtml+='<p style="color:#dc3545; font-size:0.9em; margin-bottom:12px;"><strong>No data files.</strong> Download needed.</p>';}// Errors
 if(pDS.Errors&&pDS.Errors.length>0){tmpHtml+='<div style="margin-bottom:12px; padding:8px; background:#f8d7da; border-radius:4px; font-size:0.85em; color:#721c24;"><strong>Errors:</strong><ul style="margin:4px 0 0 16px;">';for(let i=0;i<pDS.Errors.length;i++){tmpHtml+='<li>'+this.escapeHtml(pDS.Errors[i])+'</li>';}tmpHtml+='</ul></div>';}// Action buttons
 tmpHtml+='<div>';if(pDS.Status==='Discovered'){tmpHtml+='<button class="success" onclick="pict.views[\'Facto-Scanner\'].provisionOne(\''+this.escapeAttr(pDS.FolderName)+'\')">Provision</button>';}tmpHtml+='</div>';tmpHtml+='</div>';tmpContainer.innerHTML=tmpHtml;}).catch(pError=>{tmpContainer.innerHTML='<p style="color:#dc3545;">Error: '+pError.message+'</p>';});}formatSize(pBytes){if(pBytes===0)return'0 B';let tmpUnits=['B','KB','MB','GB','TB'];let tmpIndex=Math.floor(Math.log(pBytes)/Math.log(1024));return(pBytes/Math.pow(1024,tmpIndex)).toFixed(1)+' '+tmpUnits[tmpIndex];}}module.exports=FactoScannerView;module.exports.default_configuration={ViewIdentifier:'Facto-Scanner',DefaultRenderable:'Facto-Scanner',DefaultDestinationAddress:'#Facto-Section-Scanner',Templates:[{Hash:'Facto-Scanner',Template:/*html*/`
 <div class="accordion-row">
@@ -6906,10 +6906,10 @@ tmpHtml+='<div>';if(pDS.Status==='Discovered'){tmpHtml+='<button class="success"
 			<span class="accordion-toggle">&#9660;</span>
 		</div>
 		<div class="accordion-body">
-			<p style="margin-bottom:12px; color:#666; font-size:0.9em;">Point the scanner at folder trees containing dataset research (README.md + data/). Discovered datasets can be provisioned into the database individually or in bulk.</p>
+			<p style="margin-bottom:12px; color:var(--theme-color-text-secondary, #666); font-size:0.9em;">Point the scanner at folder trees containing dataset research (README.md + data/). Discovered datasets can be provisioned into the database individually or in bulk.</p>
 
 			<!-- Summary -->
-			<div id="facto-scanner-summary" style="margin-bottom:12px; padding:8px 12px; background:#e9ecef; border-radius:4px; font-size:0.9em; color:#555;">
+			<div id="facto-scanner-summary" style="margin-bottom:12px; padding:8px 12px; background:#e9ecef; border-radius:4px; font-size:0.9em; color:var(--theme-color-text-secondary, #555);">
 				No datasets loaded
 			</div>
 
@@ -6956,7 +6956,7 @@ tmpHtml+='<div>';if(pDS.Status==='Discovered'){tmpHtml+='<button class="success"
 	</div>
 </div>
 `}],Renderables:[{RenderableHash:'Facto-Scanner',TemplateHash:'Facto-Scanner',DestinationAddress:'#Facto-Section-Scanner'}]};},{"pict-view":41}],86:[function(require,module,exports){const libPictView=require('pict-view');class FactoSourcesView extends libPictView{constructor(pFable,pOptions,pServiceHash){super(pFable,pOptions,pServiceHash);}onAfterRender(){// Load sources from API on first render
-this.pict.providers.Facto.loadSources().then(()=>{this.refreshList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error loading sources: '+pError.message,{type:'error'});});}refreshList(){let tmpContainer=document.getElementById('facto-sources-list');if(!tmpContainer)return;let tmpSources=this.pict.AppData.Facto.Sources;if(!tmpSources||tmpSources.length===0){tmpContainer.innerHTML='<p style="color:#888; font-style:italic;">No sources registered yet.</p>';return;}let tmpHtml='<table><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>URL</th><th>Active</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpSources.length;i++){let tmpSource=tmpSources[i];let tmpActiveLabel=tmpSource.Active?'<span style="color:#28a745;">Active</span>':'<span style="color:#888;">Inactive</span>';let tmpToggleBtn=tmpSource.Active?'<button class="secondary" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Sources\'].toggleActive('+tmpSource.IDSource+', false)">Deactivate</button>':'<button class="success" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Sources\'].toggleActive('+tmpSource.IDSource+', true)">Activate</button>';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpSource.IDSource||'')+'</td>';tmpHtml+='<td>'+(tmpSource.Name||'')+'</td>';tmpHtml+='<td>'+(tmpSource.Type||'')+'</td>';tmpHtml+='<td style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">'+(tmpSource.URL||'')+'</td>';tmpHtml+='<td>'+tmpActiveLabel+'</td>';tmpHtml+='<td>'+tmpToggleBtn+'</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}toggleActive(pIDSource,pActivate){let tmpPromise=pActivate?this.pict.providers.Facto.activateSource(pIDSource):this.pict.providers.Facto.deactivateSource(pIDSource);tmpPromise.then(()=>{return this.pict.providers.Facto.loadSources();}).then(()=>{this.refreshList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}addSource(){let tmpName=this.pict.providers.FactoUI.getVal('facto-source-name');let tmpType=this.pict.providers.FactoUI.getVal('facto-source-type');let tmpURL=this.pict.providers.FactoUI.getVal('facto-source-url');let tmpProtocol=this.pict.providers.FactoUI.getVal('facto-source-protocol');if(!tmpName){this.pict.views['Pict-Section-Modal'].toast('Name is required',{type:'warning'});return;}this.pict.providers.Facto.createSource({Name:tmpName,Type:tmpType,URL:tmpURL,Protocol:tmpProtocol,Active:1}).then(pResponse=>{if(pResponse&&pResponse.IDSource){this.pict.views['Pict-Section-Modal'].toast('Source created: '+pResponse.Name,{type:'success'});// Clear form
+this.pict.providers.Facto.loadSources().then(()=>{this.refreshList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error loading sources: '+pError.message,{type:'error'});});}refreshList(){let tmpContainer=document.getElementById('facto-sources-list');if(!tmpContainer)return;let tmpSources=this.pict.AppData.Facto.Sources;if(!tmpSources||tmpSources.length===0){tmpContainer.innerHTML='<p style="color:var(--theme-color-text-muted, #888); font-style:italic;">No sources registered yet.</p>';return;}let tmpHtml='<table><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>URL</th><th>Active</th><th>Actions</th></tr></thead><tbody>';for(let i=0;i<tmpSources.length;i++){let tmpSource=tmpSources[i];let tmpActiveLabel=tmpSource.Active?'<span style="color:var(--theme-color-status-success, #28a745);">Active</span>':'<span style="color:var(--theme-color-text-muted, #888);">Inactive</span>';let tmpToggleBtn=tmpSource.Active?'<button class="secondary" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Sources\'].toggleActive('+tmpSource.IDSource+', false)">Deactivate</button>':'<button class="success" style="padding:4px 8px; font-size:0.8em;" onclick="pict.views[\'Facto-Sources\'].toggleActive('+tmpSource.IDSource+', true)">Activate</button>';tmpHtml+='<tr>';tmpHtml+='<td>'+(tmpSource.IDSource||'')+'</td>';tmpHtml+='<td>'+(tmpSource.Name||'')+'</td>';tmpHtml+='<td>'+(tmpSource.Type||'')+'</td>';tmpHtml+='<td style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">'+(tmpSource.URL||'')+'</td>';tmpHtml+='<td>'+tmpActiveLabel+'</td>';tmpHtml+='<td>'+tmpToggleBtn+'</td>';tmpHtml+='</tr>';}tmpHtml+='</tbody></table>';tmpContainer.innerHTML=tmpHtml;}toggleActive(pIDSource,pActivate){let tmpPromise=pActivate?this.pict.providers.Facto.activateSource(pIDSource):this.pict.providers.Facto.deactivateSource(pIDSource);tmpPromise.then(()=>{return this.pict.providers.Facto.loadSources();}).then(()=>{this.refreshList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}addSource(){let tmpName=this.pict.providers.FactoUI.getVal('facto-source-name');let tmpType=this.pict.providers.FactoUI.getVal('facto-source-type');let tmpURL=this.pict.providers.FactoUI.getVal('facto-source-url');let tmpProtocol=this.pict.providers.FactoUI.getVal('facto-source-protocol');if(!tmpName){this.pict.views['Pict-Section-Modal'].toast('Name is required',{type:'warning'});return;}this.pict.providers.Facto.createSource({Name:tmpName,Type:tmpType,URL:tmpURL,Protocol:tmpProtocol,Active:1}).then(pResponse=>{if(pResponse&&pResponse.IDSource){this.pict.views['Pict-Section-Modal'].toast('Source created: '+pResponse.Name,{type:'success'});// Clear form
 if(document.getElementById('facto-source-name'))document.getElementById('facto-source-name').value='';if(document.getElementById('facto-source-url'))document.getElementById('facto-source-url').value='';// Reload list
 return this.pict.providers.Facto.loadSources();}else{this.pict.views['Pict-Section-Modal'].toast('Error creating source',{type:'error'});}}).then(()=>{this.refreshList();}).catch(pError=>{this.pict.views['Pict-Section-Modal'].toast('Error: '+pError.message,{type:'error'});});}}module.exports=FactoSourcesView;module.exports.default_configuration={ViewIdentifier:'Facto-Sources',DefaultRenderable:'Facto-Sources',DefaultDestinationAddress:'#Facto-Section-Sources',Templates:[{Hash:'Facto-Sources',Template:/*html*/`
 <div class="accordion-row">
@@ -6968,10 +6968,10 @@ return this.pict.providers.Facto.loadSources();}else{this.pict.views['Pict-Secti
 			<span class="accordion-toggle">&#9660;</span>
 		</div>
 		<div class="accordion-body">
-			<p style="margin-bottom:12px; color:#666; font-size:0.9em;">Data sources describe where ingested data originates -- websites, APIs, FTP servers, OCR results, ML outputs, etc.</p>
+			<p style="margin-bottom:12px; color:var(--theme-color-text-secondary, #666); font-size:0.9em;">Data sources describe where ingested data originates -- websites, APIs, FTP servers, OCR results, ML outputs, etc.</p>
 			<div id="facto-sources-list"></div>
 
-			<h3 style="margin-top:16px; margin-bottom:8px; font-size:1em; color:#444;">Add Source</h3>
+			<h3 style="margin-top:16px; margin-bottom:8px; font-size:1em; color:var(--theme-color-text-secondary, #444);">Add Source</h3>
 			<div class="inline-group">
 				<div>
 					<label for="facto-source-name">Name</label>
@@ -7034,7 +7034,7 @@ if(pData.activeRun){let tmpElapsed=((Date.now()-pData.activeRun.startTime)/1000)
 tmpHtml+='<div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">';tmpHtml+=this._renderSingleHistogram('Extracted','extracted',tmpBuckets,tmpMaxValue);tmpHtml+=this._renderSingleHistogram('Transformed','transformed',tmpBuckets,tmpMaxValue);tmpHtml+=this._renderSingleHistogram('Written','written',tmpBuckets,tmpMaxValue);tmpHtml+=this._renderStackedHistogram('Combined',tmpBuckets,tmpStackedMax);tmpHtml+='</div>';tmpContainer.innerHTML=tmpHtml;}_renderTotalBadge(pLabel,pCount,pColor){return'<div style="display:flex; align-items:center; gap:6px;">'+'<div style="width:12px; height:12px; border-radius:2px; background:'+pColor+';"></div>'+'<span style="font-weight:600; font-size:0.9em;">'+pLabel+':</span>'+'<span style="font-size:0.9em; color:var(--facto-text-secondary);">'+pCount.toLocaleString()+'</span>'+'</div>';}_renderSingleHistogram(pTitle,pStage,pBuckets,pMaxValue){let tmpColor=STAGE_COLORS[pStage];let tmpBarsHtml='';let tmpMax=Math.max(pMaxValue,1);for(let i=0;i<pBuckets.length;i++){let tmpVal=pBuckets[i][pStage];let tmpPct=tmpVal/tmpMax*100;let tmpBarColor=tmpVal>0?tmpColor.bar:'transparent';tmpBarsHtml+='<div style="'+'display:inline-block;'+'width:'+BAR_WIDTH+'px;'+'height:'+HISTOGRAM_HEIGHT+'px;'+'margin-right:'+BAR_GAP+'px;'+'position:relative;'+'vertical-align:bottom;'+'">'+'<div style="'+'position:absolute; bottom:0; left:0; right:0;'+'height:'+tmpPct+'%;'+'background:'+tmpBarColor+';'+'border-radius:1px 1px 0 0;'+'transition:height 0.3s;'+'" title="'+tmpVal+' records"></div>'+'</div>';}return'<div style="background:'+tmpColor.bg+'; border-radius:6px; padding:10px;">'+'<div style="font-size:0.8em; font-weight:600; color:'+tmpColor.bar+'; margin-bottom:6px;">'+pTitle+'</div>'+'<div style="overflow-x:auto; white-space:nowrap; display:flex; align-items:flex-end; height:'+HISTOGRAM_HEIGHT+'px; border-bottom:1px solid rgba(0,0,0,0.1);">'+tmpBarsHtml+'</div>'+'</div>';}// ─────────────────────────────────────────────
 //  Historical run browsing
 // ─────────────────────────────────────────────
-loadRunHistory(){fetch('/facto/throughput/runs?limit=10').then(pResponse=>pResponse.json()).then(pRuns=>{this._renderRunHistory(pRuns);}).catch(()=>{});}loadHistoricalRun(pLabel){this._activeHistoricalRun=pLabel;this._activeDatasetFilter=null;fetch('/facto/throughput/run/'+encodeURIComponent(pLabel)).then(pResponse=>pResponse.json()).then(pData=>{pData.historicalRun=pLabel;this._renderHistograms(pData);this._loadDatasetBreakdown(pLabel);}).catch(()=>{});}filterByDataset(pDataset){if(!this._activeHistoricalRun)return;this._activeDatasetFilter=pDataset;let tmpUrl='/facto/throughput/run/'+encodeURIComponent(this._activeHistoricalRun);if(pDataset){tmpUrl+='?dataset='+encodeURIComponent(pDataset);}fetch(tmpUrl).then(pResponse=>pResponse.json()).then(pData=>{pData.historicalRun=this._activeHistoricalRun;pData.datasetFilter=pDataset;this._renderHistograms(pData);}).catch(()=>{});}_loadDatasetBreakdown(pLabel){fetch('/facto/throughput/run/'+encodeURIComponent(pLabel)+'/datasets').then(pResponse=>pResponse.json()).then(pDatasets=>{this._renderDatasetBreakdown(pDatasets);}).catch(()=>{});}_renderRunHistory(pRuns){let tmpContainer=document.getElementById('facto-throughput-history');if(!tmpContainer)return;if(!pRuns||pRuns.length===0){tmpContainer.innerHTML='<p style="color:#aaa; font-size:0.85em; font-style:italic;">No historical runs found.</p>';return;}let tmpHtml='<div style="font-size:0.85em; font-weight:600; color:var(--facto-text-heading); margin-bottom:6px;">Run History</div>';tmpHtml+='<div style="display:flex; flex-wrap:wrap; gap:6px;">';for(let i=0;i<pRuns.length;i++){let tmpRun=pRuns[i];let tmpDate=new Date(tmpRun.startTime).toLocaleString();let tmpDatasets=tmpRun.datasets.length;tmpHtml+='<button class="secondary" style="padding:4px 10px; font-size:0.8em;" '+'onclick="pict.views[\'Facto-Throughput\'].loadHistoricalRun(\''+tmpRun.label.replace(/'/g,"\\'")+'\')" '+'title="'+tmpDate+' — '+tmpRun.eventCount+' events, '+tmpDatasets+' datasets">'+tmpRun.label.substring(0,30)+(tmpRun.label.length>30?'...':'')+'</button>';}tmpHtml+='</div>';tmpContainer.innerHTML=tmpHtml;}_renderDatasetBreakdown(pDatasets){let tmpContainer=document.getElementById('facto-throughput-datasets');if(!tmpContainer)return;if(!pDatasets||pDatasets.length===0){tmpContainer.innerHTML='';return;}// Find max total for scaling
+loadRunHistory(){fetch('/facto/throughput/runs?limit=10').then(pResponse=>pResponse.json()).then(pRuns=>{this._renderRunHistory(pRuns);}).catch(()=>{});}loadHistoricalRun(pLabel){this._activeHistoricalRun=pLabel;this._activeDatasetFilter=null;fetch('/facto/throughput/run/'+encodeURIComponent(pLabel)).then(pResponse=>pResponse.json()).then(pData=>{pData.historicalRun=pLabel;this._renderHistograms(pData);this._loadDatasetBreakdown(pLabel);}).catch(()=>{});}filterByDataset(pDataset){if(!this._activeHistoricalRun)return;this._activeDatasetFilter=pDataset;let tmpUrl='/facto/throughput/run/'+encodeURIComponent(this._activeHistoricalRun);if(pDataset){tmpUrl+='?dataset='+encodeURIComponent(pDataset);}fetch(tmpUrl).then(pResponse=>pResponse.json()).then(pData=>{pData.historicalRun=this._activeHistoricalRun;pData.datasetFilter=pDataset;this._renderHistograms(pData);}).catch(()=>{});}_loadDatasetBreakdown(pLabel){fetch('/facto/throughput/run/'+encodeURIComponent(pLabel)+'/datasets').then(pResponse=>pResponse.json()).then(pDatasets=>{this._renderDatasetBreakdown(pDatasets);}).catch(()=>{});}_renderRunHistory(pRuns){let tmpContainer=document.getElementById('facto-throughput-history');if(!tmpContainer)return;if(!pRuns||pRuns.length===0){tmpContainer.innerHTML='<p style="color:var(--theme-color-text-muted, #aaa); font-size:0.85em; font-style:italic;">No historical runs found.</p>';return;}let tmpHtml='<div style="font-size:0.85em; font-weight:600; color:var(--facto-text-heading); margin-bottom:6px;">Run History</div>';tmpHtml+='<div style="display:flex; flex-wrap:wrap; gap:6px;">';for(let i=0;i<pRuns.length;i++){let tmpRun=pRuns[i];let tmpDate=new Date(tmpRun.startTime).toLocaleString();let tmpDatasets=tmpRun.datasets.length;tmpHtml+='<button class="secondary" style="padding:4px 10px; font-size:0.8em;" '+'onclick="pict.views[\'Facto-Throughput\'].loadHistoricalRun(\''+tmpRun.label.replace(/'/g,"\\'")+'\')" '+'title="'+tmpDate+' — '+tmpRun.eventCount+' events, '+tmpDatasets+' datasets">'+tmpRun.label.substring(0,30)+(tmpRun.label.length>30?'...':'')+'</button>';}tmpHtml+='</div>';tmpContainer.innerHTML=tmpHtml;}_renderDatasetBreakdown(pDatasets){let tmpContainer=document.getElementById('facto-throughput-datasets');if(!tmpContainer)return;if(!pDatasets||pDatasets.length===0){tmpContainer.innerHTML='';return;}// Find max total for scaling
 let tmpMaxTotal=1;for(let i=0;i<pDatasets.length;i++){if(pDatasets[i].total>tmpMaxTotal)tmpMaxTotal=pDatasets[i].total;}let tmpHtml='<div style="font-size:0.85em; font-weight:600; color:var(--facto-text-heading); margin-bottom:8px;">Per-Dataset Breakdown</div>';tmpHtml+='<div style="font-size:0.8em; margin-bottom:4px; color:var(--facto-text-tertiary);">Click a dataset to filter the histogram:</div>';for(let i=0;i<pDatasets.length;i++){let tmpDS=pDatasets[i];let tmpPct=tmpDS.total/tmpMaxTotal*100;let tmpActive=this._activeDatasetFilter===tmpDS.dataset;tmpHtml+='<div style="display:flex; align-items:center; gap:8px; margin-bottom:4px; cursor:pointer; '+(tmpActive?'background:var(--facto-brand-a15); border-radius:4px; padding:2px 6px;':'padding:2px 6px;')+'" onclick="pict.views[\'Facto-Throughput\'].filterByDataset('+(tmpActive?'null':'\''+tmpDS.dataset.replace(/'/g,"\\'")+'\'')+')">';tmpHtml+='<span style="min-width:200px; font-family:monospace; font-size:0.9em; color:var(--facto-text);">'+tmpDS.dataset+'</span>';// Stacked bar
 let tmpEPct=tmpDS.extracted/tmpMaxTotal*100;let tmpTPct=tmpDS.transformed/tmpMaxTotal*100;let tmpWPct=tmpDS.written/tmpMaxTotal*100;tmpHtml+='<div style="flex:1; height:16px; display:flex; border-radius:3px; overflow:hidden; background:var(--facto-bg-elevated);">';if(tmpDS.extracted>0)tmpHtml+='<div style="width:'+tmpEPct+'%; background:'+STAGE_COLORS.extracted.bar+';" title="Extracted: '+tmpDS.extracted+'"></div>';if(tmpDS.transformed>0)tmpHtml+='<div style="width:'+tmpTPct+'%; background:'+STAGE_COLORS.transformed.bar+';" title="Transformed: '+tmpDS.transformed+'"></div>';if(tmpDS.written>0)tmpHtml+='<div style="width:'+tmpWPct+'%; background:'+STAGE_COLORS.written.bar+';" title="Written: '+tmpDS.written+'"></div>';tmpHtml+='</div>';tmpHtml+='<span style="min-width:60px; text-align:right; font-size:0.85em; color:var(--facto-text-secondary);">'+tmpDS.total.toLocaleString()+'</span>';tmpHtml+='</div>';}tmpContainer.innerHTML=tmpHtml;}// ─────────────────────────────────────────────
 //  Histogram rendering
@@ -7050,7 +7050,7 @@ if(tmpW>0){tmpBarsHtml+='<div style="height:'+tmpWPct+'%; background:'+STAGE_COL
 			<span class="accordion-toggle">&#9660;</span>
 		</div>
 		<div class="accordion-body" id="facto-card-throughput">
-			<p style="margin-bottom:12px; color:#666; font-size:0.9em;">
+			<p style="margin-bottom:12px; color:var(--theme-color-text-secondary, #666); font-size:0.9em;">
 				Temporal histograms showing record flow through extraction, transformation, and storage stages.
 			</p>
 			<div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
@@ -7059,7 +7059,7 @@ if(tmpW>0){tmpBarsHtml+='<div style="height:'+tmpWPct+'%; background:'+STAGE_COL
 			</div>
 			<div id="facto-throughput-history" style="margin-bottom:12px;"></div>
 			<div id="facto-throughput-charts">
-				<p style="color:#aaa; font-style:italic;">Click "Start Live Monitoring" for real-time view, or "Browse Run History" to inspect past runs.</p>
+				<p style="color:var(--theme-color-text-muted, #aaa); font-style:italic;">Click "Start Live Monitoring" for real-time view, or "Browse Run History" to inspect past runs.</p>
 			</div>
 			<div id="facto-throughput-datasets" style="margin-top:12px;"></div>
 			<style>
@@ -7340,7 +7340,7 @@ if(this._ViewInstance&&this._OriginalDestination){this._ViewInstance.options.Def
 			--pf-text-placeholder: #95a5a6;
 
 			/* Node */
-			--pf-node-body-fill: #ffffff;
+			--pf-node-body-fill: var(--theme-color-background-panel, #ffffff);
 			--pf-node-body-stroke: #d0d4d8;
 			--pf-node-body-stroke-hover: #b0b8c0;
 			--pf-node-body-stroke-width: 1;
@@ -7349,7 +7349,7 @@ if(this._ViewInstance&&this._OriginalDestination){this._ViewInstance.options.Def
 			--pf-node-shadow-hover: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.15));
 			--pf-node-shadow-selected: drop-shadow(0 2px 8px rgba(52, 152, 219, 0.25));
 			--pf-node-shadow-dragging: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.20));
-			--pf-node-title-fill: #ffffff;
+			--pf-node-title-fill: var(--theme-color-background-panel, #ffffff);
 			--pf-node-title-size: 11.5px;
 			--pf-node-title-weight: 600;
 			--pf-node-title-bar-color: #2c3e50;
@@ -7358,35 +7358,35 @@ if(this._ViewInstance&&this._OriginalDestination){this._ViewInstance.options.Def
 
 			/* Node Variants */
 			--pf-node-start-fill: #eafaf1;
-			--pf-node-start-stroke: #27ae60;
+			--pf-node-start-stroke: var(--theme-color-status-success, #27ae60);
 			--pf-node-end-fill: #e8f8f5;
 			--pf-node-end-stroke: #1abc9c;
 			--pf-node-halt-fill: #fdedec;
-			--pf-node-halt-stroke: #e74c3c;
+			--pf-node-halt-stroke: var(--theme-color-status-error, #e74c3c);
 			--pf-node-decision-fill: #fff9e6;
-			--pf-node-decision-stroke: #f39c12;
+			--pf-node-decision-stroke: var(--theme-color-status-warning, #f39c12);
 
 			/* Ports */
 			--pf-port-input-fill: #3498db;
-			--pf-port-output-fill: #2ecc71;
-			--pf-port-stroke: #ffffff;
+			--pf-port-output-fill: var(--theme-color-status-success, #2ecc71);
+			--pf-port-stroke: var(--theme-color-background-panel, #ffffff);
 			--pf-port-stroke-width: 2;
 			--pf-port-label-bg: rgba(255, 253, 240, 0.5);
 			--pf-port-label-text: #2c3e50;
 
 			/* Port Type Colors */
 			--pf-port-event-in-fill: #3498db;
-			--pf-port-event-out-fill: #2ecc71;
+			--pf-port-event-out-fill: var(--theme-color-status-success, #2ecc71);
 			--pf-port-setting-fill: #e67e22;
 			--pf-port-value-fill: #f1c40f;
-			--pf-port-error-fill: #e74c3c;
+			--pf-port-error-fill: var(--theme-color-status-error, #e74c3c);
 
 			/* Connection Type Colors (match source port) */
 			--pf-connection-event-in-stroke: #3498db;
-			--pf-connection-event-out-stroke: #2ecc71;
+			--pf-connection-event-out-stroke: var(--theme-color-status-success, #2ecc71);
 			--pf-connection-setting-stroke: #e67e22;
 			--pf-connection-value-stroke: #f1c40f;
-			--pf-connection-error-stroke: #e74c3c;
+			--pf-connection-error-stroke: var(--theme-color-status-error, #e74c3c);
 
 			/* Connections */
 			--pf-connection-stroke: #95a5a6;
@@ -7434,7 +7434,7 @@ if(this._ViewInstance&&this._OriginalDestination){this._ViewInstance.options.Def
 
 			/* Toolbar */
 			--pf-toolbar-bg: #ffffff;
-			--pf-toolbar-border: #e0e0e0;
+			--pf-toolbar-border: var(--theme-color-border-default, #e0e0e0);
 
 			/* Palette Cards */
 			--pf-card-border: #d5d8dc;
@@ -7443,7 +7443,7 @@ if(this._ViewInstance&&this._OriginalDestination){this._ViewInstance.options.Def
 
 			/* Canvas */
 			--pf-canvas-bg: #fafafa;
-			--pf-grid-stroke: #e8e8e8;
+			--pf-grid-stroke: var(--theme-color-border-light, #e8e8e8);
 
 			position: relative;
 			width: 100%;
@@ -9402,7 +9402,7 @@ this._Themes['blueprint']={Key:'blueprint',Label:'Blueprint',CSSVariables:{'--pf
 				.pict-flow-toolbar-btn {
 					background-color: rgba(255,255,255,0.05);
 					border-color: rgba(255,255,255,0.2);
-					color: #ffffff;
+					color: var(--theme-color-background-panel, #ffffff);
 				}
 				.pict-flow-toolbar-btn:hover {
 					background-color: rgba(255,255,255,0.1);
@@ -9460,16 +9460,16 @@ this._Themes['retro-90s']={Key:'retro-90s',Label:'90s Retro',CSSVariables:{'--pf
 				.pict-flow-toolbar {
 					background-color: #c0c0c0;
 					border-bottom: 2px solid #808080;
-					border-top: 1px solid #ffffff;
+					border-top: 1px solid var(--theme-color-background-panel, #ffffff);
 				}
 				.pict-flow-toolbar-btn {
 					background-color: #c0c0c0;
 					border: 2px outset #c0c0c0;
 					border-radius: 0;
-					color: #000000;
+					color: var(--theme-color-text-primary, #000000);
 				}
 				.pict-flow-toolbar-btn:hover {
-					background-color: #d0d0d0;
+					background-color: var(--theme-color-border-default, #d0d0d0);
 				}
 				.pict-flow-toolbar-btn:active {
 					border-style: inset;
@@ -9487,10 +9487,10 @@ this._Themes['whiteboard']={Key:'whiteboard',Label:'Whiteboard',CSSVariables:{'-
 					font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
 				}
 				/* Node-type bracket colors — each type gets its own bracket color */
-				.pict-flow-node-start .pict-flow-node-bracket { stroke: #27ae60; }
+				.pict-flow-node-start .pict-flow-node-bracket { stroke: var(--theme-color-status-success, #27ae60); }
 				.pict-flow-node-end .pict-flow-node-bracket { stroke: #1abc9c; }
-				.pict-flow-node-halt .pict-flow-node-bracket { stroke: #e74c3c; }
-				.pict-flow-node-decision .pict-flow-node-bracket { stroke: #f39c12; }
+				.pict-flow-node-halt .pict-flow-node-bracket { stroke: var(--theme-color-status-error, #e74c3c); }
+				.pict-flow-node-decision .pict-flow-node-bracket { stroke: var(--theme-color-status-warning, #f39c12); }
 				.pict-flow-node-default .pict-flow-node-bracket { stroke: #3498db; }
 				.pict-flow-node-action .pict-flow-node-bracket { stroke: #2c3e50; }
 				/* Override variant rules: no fills/strokes on body rects in whiteboard */
@@ -11200,7 +11200,7 @@ MeadowMappingEditorView:libMeadowMappingEditorView,MappingEditorSchemaUtils:libM
 		}
 		.meadow-mapping-btn-primary {
 			background: var(--facto-brand, #18a5a0);
-			color: #fff;
+			color: var(--theme-color-background-panel, #fff);
 			border-color: var(--facto-brand, #18a5a0);
 		}
 		.meadow-mapping-btn-primary:hover {
@@ -11215,9 +11215,9 @@ MeadowMappingEditorView:libMeadowMappingEditorView,MappingEditorSchemaUtils:libM
 			background: var(--facto-border-subtle, #e8ddc8);
 		}
 		.meadow-mapping-btn-danger {
-			background: #e74c3c;
-			color: #fff;
-			border-color: #e74c3c;
+			background: var(--theme-color-status-error, #e74c3c);
+			color: var(--theme-color-background-panel, #fff);
+			border-color: var(--theme-color-status-error, #e74c3c);
 		}
 		.meadow-mapping-btn-danger:hover {
 			opacity: 0.88;
@@ -11241,7 +11241,7 @@ MeadowMappingEditorView:libMeadowMappingEditorView,MappingEditorSchemaUtils:libM
 		}
 		.meadow-schema-mode-tab.active {
 			background: var(--facto-brand, #18a5a0);
-			color: #fff;
+			color: var(--theme-color-background-panel, #fff);
 			border-color: var(--facto-brand, #18a5a0);
 		}
 		.meadow-section-title {
@@ -11417,7 +11417,7 @@ this._doLoadMappings(this._EditingContextID).then(pResult=>{this._CurrentMapping
  *
  * @class FlowCardSolverExpression
  * @extends PictFlowCard
- */class FlowCardSolverExpression extends libPictFlowCard{constructor(pFable,pOptions,pServiceHash){let tmpOptions=Object.assign({},{Title:'Solver Expression',Name:'Solver Expression',Code:'SOL',Category:'Transform',Description:'Apply a Fable solver expression for conditional logic and computed values',TitleBarColor:'#d35400',Width:220,Height:90,Inputs:[{Name:'Whole Record',Side:'left'}],Outputs:[{Name:'Result',Side:'right'}],ShowTypeLabel:true,PortLabelsOnHover:false,PortLabelsOutside:true,LabelsInFront:true,Enabled:true,BodyContent:{ContentType:'html',Template:'<div style="font-size:10px; padding:2px 4px; color:#ccc; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; max-width:200px;">{~D:Record.Data.SolverExpression~}</div>'},PropertiesPanel:{PanelType:'Template',DefaultWidth:420,DefaultHeight:160,Title:'Solver Expression',Configuration:{Template:'<div style="padding:8px;"><label style="display:block; margin-bottom:4px; font-weight:bold; font-size:12px;">Solver Expression</label><textarea id="FlowCard-SOL-{~D:Record.Hash~}" style="width:100%; height:80px; font-family:monospace; font-size:12px; resize:vertical; background:#1a1a2e; color:#e0e0e0; border:1px solid #444; border-radius:4px; padding:6px;" onchange="(function(el){var n=pict.views[\'MeadowMapping-Flow\'];if(n&&n._FlowData){for(var i=0;i<n._FlowData.Nodes.length;i++){if(n._FlowData.Nodes[i].Hash===\'{~D:Record.Hash~}\'){n._FlowData.Nodes[i].Data.SolverExpression=el.value;if(typeof n.renderFlow===\'function\')n.renderFlow();break;}}}})(this)">{~D:Record.Data.SolverExpression~}</textarea><div style="font-size:10px; color:#888; margin-top:4px;">Example: IF(IncomingRecord.Type == \'Premium\', \'GOLD\', \'SILVER\')</div></div>'}}},pOptions);super(pFable,tmpOptions,pServiceHash);this.serviceType='FlowCardSolverExpression';}}module.exports=FlowCardSolverExpression;module.exports.default_configuration={Title:'Solver Expression',Code:'SOL',Category:'Transform',TitleBarColor:'#d35400',Width:220,Height:90};},{"pict-section-flow":92}],135:[function(require,module,exports){const libPictFlowCard=require('pict-section-flow').PictFlowCard;/**
+ */class FlowCardSolverExpression extends libPictFlowCard{constructor(pFable,pOptions,pServiceHash){let tmpOptions=Object.assign({},{Title:'Solver Expression',Name:'Solver Expression',Code:'SOL',Category:'Transform',Description:'Apply a Fable solver expression for conditional logic and computed values',TitleBarColor:'#d35400',Width:220,Height:90,Inputs:[{Name:'Whole Record',Side:'left'}],Outputs:[{Name:'Result',Side:'right'}],ShowTypeLabel:true,PortLabelsOnHover:false,PortLabelsOutside:true,LabelsInFront:true,Enabled:true,BodyContent:{ContentType:'html',Template:'<div style="font-size:10px; padding:2px 4px; color:var(--theme-color-border-default, #ccc); overflow:hidden; white-space:nowrap; text-overflow:ellipsis; max-width:200px;">{~D:Record.Data.SolverExpression~}</div>'},PropertiesPanel:{PanelType:'Template',DefaultWidth:420,DefaultHeight:160,Title:'Solver Expression',Configuration:{Template:'<div style="padding:8px;"><label style="display:block; margin-bottom:4px; font-weight:bold; font-size:12px;">Solver Expression</label><textarea id="FlowCard-SOL-{~D:Record.Hash~}" style="width:100%; height:80px; font-family:monospace; font-size:12px; resize:vertical; background:#1a1a2e; color:var(--theme-color-border-default, #e0e0e0); border:1px solid var(--theme-color-text-secondary, #444); border-radius:4px; padding:6px;" onchange="(function(el){var n=pict.views[\'MeadowMapping-Flow\'];if(n&&n._FlowData){for(var i=0;i<n._FlowData.Nodes.length;i++){if(n._FlowData.Nodes[i].Hash===\'{~D:Record.Hash~}\'){n._FlowData.Nodes[i].Data.SolverExpression=el.value;if(typeof n.renderFlow===\'function\')n.renderFlow();break;}}}})(this)">{~D:Record.Data.SolverExpression~}</textarea><div style="font-size:10px; color:var(--theme-color-text-muted, #888); margin-top:4px;">Example: IF(IncomingRecord.Type == \'Premium\', \'GOLD\', \'SILVER\')</div></div>'}}},pOptions);super(pFable,tmpOptions,pServiceHash);this.serviceType='FlowCardSolverExpression';}}module.exports=FlowCardSolverExpression;module.exports.default_configuration={Title:'Solver Expression',Code:'SOL',Category:'Transform',TitleBarColor:'#d35400',Width:220,Height:90};},{"pict-section-flow":92}],135:[function(require,module,exports){const libPictFlowCard=require('pict-section-flow').PictFlowCard;/**
  * FlowCard-TemplateExpression
  *
  * A transform card that applies a Manyfest template expression to the
@@ -11428,7 +11428,7 @@ this._doLoadMappings(this._EditingContextID).then(pResult=>{this._CurrentMapping
  *
  * @class FlowCardTemplateExpression
  * @extends PictFlowCard
- */class FlowCardTemplateExpression extends libPictFlowCard{constructor(pFable,pOptions,pServiceHash){let tmpOptions=Object.assign({},{Title:'Template Expression',Name:'Template Expression',Code:'TPL',Category:'Transform',Description:'Apply a Manyfest template expression to map source fields to a target column',TitleBarColor:'#8e44ad',Width:220,Height:90,Inputs:[{Name:'Whole Record',Side:'left'}],Outputs:[{Name:'Result',Side:'right'}],ShowTypeLabel:true,PortLabelsOnHover:false,PortLabelsOutside:true,LabelsInFront:true,Enabled:true,BodyContent:{ContentType:'html',Template:'<div style="font-size:10px; padding:2px 4px; color:#ccc; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; max-width:200px;">{~D:Record.Data.TemplateExpression~}</div>'},PropertiesPanel:{PanelType:'Template',DefaultWidth:420,DefaultHeight:160,Title:'Template Expression',Configuration:{Template:'<div style="padding:8px;"><label style="display:block; margin-bottom:4px; font-weight:bold; font-size:12px;">Template Expression</label><textarea id="FlowCard-TPL-{~D:Record.Hash~}" style="width:100%; height:80px; font-family:monospace; font-size:12px; resize:vertical; background:#1a1a2e; color:#e0e0e0; border:1px solid #444; border-radius:4px; padding:6px;" onchange="(function(el){var n=pict.views[\'MeadowMapping-Flow\'];if(n&&n._FlowData){for(var i=0;i<n._FlowData.Nodes.length;i++){if(n._FlowData.Nodes[i].Hash===\'{~D:Record.Hash~}\'){n._FlowData.Nodes[i].Data.TemplateExpression=el.value;if(typeof n.renderFlow===\'function\')n.renderFlow();break;}}}})(this)">{~D:Record.Data.TemplateExpression~}</textarea><div style="font-size:10px; color:#888; margin-top:4px;">Use {~D:Record.FieldName~} syntax. Example: {~D:Record.Name~} in {~D:Record.City~}</div></div>'}}},pOptions);super(pFable,tmpOptions,pServiceHash);this.serviceType='FlowCardTemplateExpression';}}module.exports=FlowCardTemplateExpression;module.exports.default_configuration={Title:'Template Expression',Code:'TPL',Category:'Transform',TitleBarColor:'#8e44ad',Width:220,Height:90};},{"pict-section-flow":92}],136:[function(require,module,exports){arguments[4][1][0].apply(exports,arguments);},{"dup":1}],137:[function(require,module,exports){arguments[4][2][0].apply(exports,arguments);},{"../package.json":136,"dup":2}],138:[function(require,module,exports){arguments[4][40][0].apply(exports,arguments);},{"dup":40}],139:[function(require,module,exports){arguments[4][41][0].apply(exports,arguments);},{"../package.json":138,"dup":41,"fable-serviceproviderbase":137}],140:[function(require,module,exports){/**
+ */class FlowCardTemplateExpression extends libPictFlowCard{constructor(pFable,pOptions,pServiceHash){let tmpOptions=Object.assign({},{Title:'Template Expression',Name:'Template Expression',Code:'TPL',Category:'Transform',Description:'Apply a Manyfest template expression to map source fields to a target column',TitleBarColor:'#8e44ad',Width:220,Height:90,Inputs:[{Name:'Whole Record',Side:'left'}],Outputs:[{Name:'Result',Side:'right'}],ShowTypeLabel:true,PortLabelsOnHover:false,PortLabelsOutside:true,LabelsInFront:true,Enabled:true,BodyContent:{ContentType:'html',Template:'<div style="font-size:10px; padding:2px 4px; color:var(--theme-color-border-default, #ccc); overflow:hidden; white-space:nowrap; text-overflow:ellipsis; max-width:200px;">{~D:Record.Data.TemplateExpression~}</div>'},PropertiesPanel:{PanelType:'Template',DefaultWidth:420,DefaultHeight:160,Title:'Template Expression',Configuration:{Template:'<div style="padding:8px;"><label style="display:block; margin-bottom:4px; font-weight:bold; font-size:12px;">Template Expression</label><textarea id="FlowCard-TPL-{~D:Record.Hash~}" style="width:100%; height:80px; font-family:monospace; font-size:12px; resize:vertical; background:#1a1a2e; color:var(--theme-color-border-default, #e0e0e0); border:1px solid var(--theme-color-text-secondary, #444); border-radius:4px; padding:6px;" onchange="(function(el){var n=pict.views[\'MeadowMapping-Flow\'];if(n&&n._FlowData){for(var i=0;i<n._FlowData.Nodes.length;i++){if(n._FlowData.Nodes[i].Hash===\'{~D:Record.Hash~}\'){n._FlowData.Nodes[i].Data.TemplateExpression=el.value;if(typeof n.renderFlow===\'function\')n.renderFlow();break;}}}})(this)">{~D:Record.Data.TemplateExpression~}</textarea><div style="font-size:10px; color:var(--theme-color-text-muted, #888); margin-top:4px;">Use {~D:Record.FieldName~} syntax. Example: {~D:Record.Name~} in {~D:Record.City~}</div></div>'}}},pOptions);super(pFable,tmpOptions,pServiceHash);this.serviceType='FlowCardTemplateExpression';}}module.exports=FlowCardTemplateExpression;module.exports.default_configuration={Title:'Template Expression',Code:'TPL',Category:'Transform',TitleBarColor:'#8e44ad',Width:220,Height:90};},{"pict-section-flow":92}],136:[function(require,module,exports){arguments[4][1][0].apply(exports,arguments);},{"dup":1}],137:[function(require,module,exports){arguments[4][2][0].apply(exports,arguments);},{"../package.json":136,"dup":2}],138:[function(require,module,exports){arguments[4][40][0].apply(exports,arguments);},{"dup":40}],139:[function(require,module,exports){arguments[4][41][0].apply(exports,arguments);},{"../package.json":138,"dup":41,"fable-serviceproviderbase":137}],140:[function(require,module,exports){/**
  * Pict-Modal-Confirm
  *
  * Builds confirm and double-confirm dialog DOM, returns Promises.
@@ -11665,12 +11665,12 @@ if(typeof pOptions.onOpen==='function'){pOptions.onOpen(pDialog);}}/**
 	/* Dialog */
 	--pict-modal-bg: #ffffff;
 	--pict-modal-fg: #1a1a1a;
-	--pict-modal-border: #e0e0e0;
+	--pict-modal-border: var(--theme-color-border-default, #e0e0e0);
 	--pict-modal-border-radius: 8px;
 	--pict-modal-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
 	--pict-modal-header-bg: #f5f5f5;
 	--pict-modal-header-fg: #1a1a1a;
-	--pict-modal-header-border: #e0e0e0;
+	--pict-modal-header-border: var(--theme-color-border-default, #e0e0e0);
 
 	/* Buttons */
 	--pict-modal-btn-bg: #e0e0e0;

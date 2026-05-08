@@ -140,12 +140,12 @@ button:disabled {
 
 .facto-btn-success, button.success {
 	background: var(--facto-success);
-	color: #fff;
+	color: var(--theme-color-background-panel, #fff);
 }
 
 .facto-btn-danger, button.danger {
 	background: var(--facto-error);
-	color: #fff;
+	color: var(--theme-color-background-panel, #fff);
 	border-color: transparent;
 }
 
@@ -313,10 +313,10 @@ tbody tr:hover {
 	letter-spacing: 0.03em;
 }
 
-.facto-badge-primary { background: var(--facto-brand); color: #fff; }
-.facto-badge-success { background: var(--facto-success); color: #fff; }
-.facto-badge-warning { background: var(--facto-warning); color: #000; }
-.facto-badge-error { background: var(--facto-error); color: #fff; }
+.facto-badge-primary { background: var(--facto-brand); color: var(--theme-color-background-panel, #fff); }
+.facto-badge-success { background: var(--facto-success); color: var(--theme-color-background-panel, #fff); }
+.facto-badge-warning { background: var(--facto-warning); color: var(--theme-color-text-primary, #000); }
+.facto-badge-error { background: var(--facto-error); color: var(--theme-color-background-panel, #fff); }
 .facto-badge-muted { background: var(--facto-bg-elevated); color: var(--facto-text-secondary); }
 
 /* ================================================================
