@@ -18,7 +18,7 @@ const _ViewConfiguration =
 		}
 		.facto-records-pager span {
 			font-size: 0.85em;
-			color: var(--facto-text-secondary);
+			color: var(--theme-color-text-secondary);
 		}
 		.facto-record-data {
 			max-width: 400px;
@@ -27,19 +27,19 @@ const _ViewConfiguration =
 			white-space: nowrap;
 			font-family: 'SF Mono', Consolas, monospace;
 			font-size: 0.8em;
-			color: var(--facto-text-secondary);
+			color: var(--theme-color-text-secondary);
 		}
 		.facto-filter-bar {
-			border: 1px solid var(--facto-border, #333);
+			border: 1px solid var(--theme-color-border-default, #333);
 			border-radius: 6px;
 			padding: 1em;
 			margin-bottom: 1em;
-			background: var(--facto-bg-surface);
+			background: var(--theme-color-background-panel);
 		}
 		.facto-filter-bar h3 {
 			margin: 0 0 0.75em 0;
 			font-size: 0.9em;
-			color: var(--facto-text-secondary);
+			color: var(--theme-color-text-secondary);
 			text-transform: uppercase;
 			letter-spacing: 0.05em;
 		}
@@ -52,23 +52,23 @@ const _ViewConfiguration =
 		.facto-filter-label {
 			display: block;
 			font-size: 0.8em;
-			color: var(--facto-text-secondary);
+			color: var(--theme-color-text-secondary);
 			margin-bottom: 0.4em;
 			font-weight: 600;
 		}
 		.facto-source-toggle {
 			font-size: 0.75em;
-			color: var(--facto-link);
+			color: var(--theme-color-brand-primary);
 			cursor: pointer;
 			margin-left: 0.5em;
 			text-decoration: underline;
 		}
 		.facto-filter-list {
-			border: 1px solid var(--facto-border);
+			border: 1px solid var(--theme-color-border-default);
 			border-radius: 4px;
 			max-height: 200px;
 			overflow-y: auto;
-			background: var(--facto-bg-input);
+			background: var(--theme-color-background-panel);
 		}
 		.facto-filter-list-item {
 			display: flex;
@@ -77,30 +77,30 @@ const _ViewConfiguration =
 			padding: 0.4em 0.75em;
 			cursor: pointer;
 			font-size: 0.85em;
-			color: var(--facto-text);
+			color: var(--theme-color-text-primary);
 			border-left: 3px solid transparent;
 			transition: background-color 0.15s, border-color 0.15s;
 			user-select: none;
 		}
 		.facto-filter-list-item:hover {
-			background: var(--facto-bg-elevated);
+			background: var(--theme-color-background-tertiary);
 		}
 		.facto-filter-list-item.selected {
-			background: color-mix(in srgb, var(--facto-brand) 15%, transparent);
-			border-left-color: var(--facto-brand);
+			background: color-mix(in srgb, var(--theme-color-brand-primary) 15%, transparent);
+			border-left-color: var(--theme-color-brand-primary);
 			font-weight: 600;
 		}
 		.facto-filter-list-item + .facto-filter-list-item {
-			border-top: 1px solid var(--facto-border-subtle, var(--facto-border));
+			border-top: 1px solid var(--theme-color-border-light, var(--theme-color-border-default));
 		}
 		.facto-filter-count {
 			font-size: 0.8em;
-			color: var(--facto-text-tertiary);
+			color: var(--theme-color-text-muted);
 			margin-left: 1em;
 			white-space: nowrap;
 		}
 		.facto-filter-list-item.selected .facto-filter-count {
-			color: var(--facto-text-secondary);
+			color: var(--theme-color-text-secondary);
 		}
 		.facto-date-filters {
 			display: flex;
@@ -111,16 +111,16 @@ const _ViewConfiguration =
 		.facto-date-filters input[type="text"] {
 			padding: 0.35em 0.5em;
 			font-size: 0.85em;
-			border: 1px solid var(--facto-border);
+			border: 1px solid var(--theme-color-border-default);
 			border-radius: 4px;
-			background: var(--facto-bg-input);
-			color: var(--facto-text);
+			background: var(--theme-color-background-panel);
+			color: var(--theme-color-text-primary);
 			width: 160px;
 			margin-bottom: 0;
 		}
 		.facto-date-filters span {
 			font-size: 0.8em;
-			color: var(--facto-text-secondary);
+			color: var(--theme-color-text-secondary);
 		}
 		.facto-filter-actions {
 			display: flex;
@@ -150,7 +150,7 @@ const _ViewConfiguration =
 				<span class="facto-source-toggle" onclick="{~P~}.views['Facto-Full-Records'].toggleAllSources(false)">None</span>
 			</span>
 			<div id="Facto-Full-Records-SourceList" class="facto-filter-list">
-				<div class="facto-filter-list-item" style="color:var(--facto-text-secondary); cursor:default;">Loading sources\u2026</div>
+				<div class="facto-filter-list-item" style="color:var(--theme-color-text-secondary); cursor:default;">Loading sources\u2026</div>
 			</div>
 		</div>
 
@@ -161,7 +161,7 @@ const _ViewConfiguration =
 				<span class="facto-source-toggle" onclick="{~P~}.views['Facto-Full-Records'].toggleAllDatasets(false)">None</span>
 			</span>
 			<div id="Facto-Full-Records-DatasetList" class="facto-filter-list">
-				<div class="facto-filter-list-item" style="color:var(--facto-text-secondary); cursor:default;">Loading datasets\u2026</div>
+				<div class="facto-filter-list-item" style="color:var(--theme-color-text-secondary); cursor:default;">Loading datasets\u2026</div>
 			</div>
 		</div>
 
@@ -298,7 +298,7 @@ class FactoFullRecordsView extends libPictView
 		let tmpSources = this.pict.AppData.Facto.Sources;
 		if (!tmpSources || tmpSources.length === 0)
 		{
-			tmpContainer.innerHTML = '<div class="facto-filter-list-item" style="color:var(--facto-text-secondary); cursor:default;">No sources available.</div>';
+			tmpContainer.innerHTML = '<div class="facto-filter-list-item" style="color:var(--theme-color-text-secondary); cursor:default;">No sources available.</div>';
 			return;
 		}
 
@@ -327,7 +327,7 @@ class FactoFullRecordsView extends libPictView
 		let tmpDatasets = this.pict.AppData.Facto.Datasets;
 		if (!tmpDatasets || tmpDatasets.length === 0)
 		{
-			tmpContainer.innerHTML = '<div class="facto-filter-list-item" style="color:var(--facto-text-secondary); cursor:default;">No datasets available.</div>';
+			tmpContainer.innerHTML = '<div class="facto-filter-list-item" style="color:var(--theme-color-text-secondary); cursor:default;">No datasets available.</div>';
 			return;
 		}
 
@@ -572,7 +572,7 @@ class FactoFullRecordsView extends libPictView
 			tmpHtml += '<td>' + (tmpRec.IDRecord || '') + '</td>';
 			tmpHtml += '<td>' + (tmpRec.IDDataset || '') + '</td>';
 			tmpHtml += '<td>' + (tmpRec.IDSource || '') + '</td>';
-			tmpHtml += '<td style="font-size:0.8em; color:var(--facto-text-tertiary);">' + (tmpRec.GUIDRecord || '').substring(0, 8) + '...</td>';
+			tmpHtml += '<td style="font-size:0.8em; color:var(--theme-color-text-muted);">' + (tmpRec.GUIDRecord || '').substring(0, 8) + '...</td>';
 			tmpHtml += '<td class="facto-record-data">' + tmpData + '</td>';
 			if (tmpRec.Type === 'projection')
 			{

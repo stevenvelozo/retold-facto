@@ -13,8 +13,8 @@ const _ViewConfiguration =
 		.facto-conn-form {
 			display: none;
 			padding: 1em;
-			background: var(--facto-bg-surface, #fcf8f0);
-			border: 1px solid var(--facto-border, #d6c8ae);
+			background: var(--theme-color-background-panel, #fcf8f0);
+			border: 1px solid var(--theme-color-border-default, #d6c8ae);
 			border-radius: 8px;
 			margin-bottom: 1em;
 		}
@@ -29,7 +29,7 @@ const _ViewConfiguration =
 		.facto-conn-form-grid label {
 			font-size: 0.78em;
 			font-weight: 600;
-			color: var(--facto-text-secondary, #786848);
+			color: var(--theme-color-text-secondary, #786848);
 			display: block;
 			margin-bottom: 0.2em;
 		}
@@ -38,10 +38,10 @@ const _ViewConfiguration =
 			width: 100%;
 			padding: 0.4em 0.6em;
 			font-size: 0.85em;
-			border: 1px solid var(--facto-border, #d6c8ae);
+			border: 1px solid var(--theme-color-border-default, #d6c8ae);
 			border-radius: 4px;
-			background: var(--facto-bg-base, #f6f0e4);
-			color: var(--facto-text-primary, #3e2f1a);
+			background: var(--theme-color-background-primary, #f6f0e4);
+			color: var(--theme-color-text-primary, #3e2f1a);
 		}
 		.facto-conn-form-actions {
 			grid-column: span 2;
@@ -174,7 +174,7 @@ class FactoFullConnectionsView extends libPictView
 
 		if (this.pict.AppData.Facto.StoreConnections.length === 0)
 		{
-			tmpContainer.innerHTML = '<div class="facto-card" style="text-align:center; padding:2em; color:var(--facto-text-tertiary);">No connections configured. Add one to get started.</div>';
+			tmpContainer.innerHTML = '<div class="facto-card" style="text-align:center; padding:2em; color:var(--theme-color-text-muted);">No connections configured. Add one to get started.</div>';
 			return;
 		}
 

@@ -2,17 +2,8 @@ const libPictApplication = require('pict-application');
 const libPictRouter = require('pict-router');
 const libPictSectionModal = require('pict-section-modal');
 const libPictSectionConnectionForm = require('pict-section-connection-form');
-
-const THEME_LIST =
-[
-	{ Key: 'turquoise-deluxe', Label: 'Turquoise Deluxe', Colors: ['#f6f0e4', '#18a5a0', '#3a9468', '#c44836', '#12908c'] },
-	{ Key: 'facto-dark', Label: 'Facto Dark', Colors: ['#12151e', '#4a90d9', '#28a745', '#dc3545', '#6366f1'] },
-	{ Key: 'facto-light', Label: 'Facto Light', Colors: ['#f5f6f8', '#3b82f6', '#22c55e', '#ef4444', '#6366f1'] },
-	{ Key: 'midnight-blue', Label: 'Midnight Blue', Colors: ['#0a0e1a', '#3b82f6', '#10b981', '#f87171', '#60a5fa'] },
-	{ Key: 'slate', Label: 'Slate', Colors: ['#1e2228', '#6b8aae', '#5ea37a', '#c85a5a', '#82a0c4'] },
-	{ Key: 'warm-earth', Label: 'Warm Earth', Colors: ['#1a1610', '#c4956a', '#8a9a5a', '#b04050', '#4a9090'] },
-	{ Key: 'high-contrast', Label: 'High Contrast', Colors: ['#000000', '#58a6ff', '#3fb950', '#f85149', '#d29922'] }
-];
+const libPictSectionTheme = require('pict-section-theme');
+const libBrand = require('../Facto-Brand.js');
 
 // Shared providers
 const libProvider = require('../pict-app/providers/Pict-Provider-Facto.js');
@@ -108,13 +99,23 @@ class FactoFullApplication extends libPictApplication
 		this.pict.addView('Facto-Full-SchemaResearch', libViewSchemaResearch.default_configuration, libViewSchemaResearch);
 		this.pict.addView('Facto-Full-SchemaDetail', libViewSchemaDetail.default_configuration, libViewSchemaDetail);
 		this.pict.addView('Facto-Full-SchemaDocEditor', libViewSchemaDocEditor.default_configuration, libViewSchemaDocEditor);
+
+		// Theme-Section — pict-section-theme owns theme catalog, mode toggle,
+		// scale, and localStorage persistence. Facto's TopBar mounts the
+		// Picker/ModeToggle/ScaleSelect into its existing settings panel
+		// (no Theme-TopBar slot — Facto has its own navigation TopBar).
+		this.pict.addProvider('Theme-Section',
+			{
+				ApplyDefault: 'pict-default',
+				DefaultMode:  'system',
+				DefaultScale: 1.0,
+				Brand:        libBrand,
+				Views: ['Picker', 'ModeToggle', 'ScaleSelect']
+			}, libPictSectionTheme);
 	}
 
 	onAfterInitializeAsync(fCallback)
 	{
-		// Apply saved theme before first render
-		this.loadSavedTheme();
-
 		// Initialize application state
 		this.pict.AppData.Facto =
 		{
@@ -143,7 +144,6 @@ class FactoFullApplication extends libPictApplication
 			Schemas: [],
 			SelectedSchema: null,
 			SchemaVersions: [],
-			CurrentTheme: 'turquoise-deluxe',
 			CurrentRoute: ''
 		};
 
@@ -367,38 +367,6 @@ class FactoFullApplication extends libPictApplication
 		}
 	}
 
-	// --- Theme ---
-	applyTheme(pThemeKey)
-	{
-		let tmpThemeKey = pThemeKey || 'turquoise-deluxe';
-
-		if (tmpThemeKey === 'turquoise-deluxe')
-		{
-			delete document.body.dataset.theme;
-		}
-		else
-		{
-			document.body.dataset.theme = tmpThemeKey;
-		}
-
-		localStorage.setItem('facto-theme', tmpThemeKey);
-
-		if (this.pict.AppData.Facto)
-		{
-			this.pict.AppData.Facto.CurrentTheme = tmpThemeKey;
-		}
-	}
-
-	loadSavedTheme()
-	{
-		let tmpSavedTheme = localStorage.getItem('facto-theme') || 'turquoise-deluxe';
-		this.applyTheme(tmpSavedTheme);
-	}
-
-	getThemeList()
-	{
-		return THEME_LIST;
-	}
 }
 
 module.exports = FactoFullApplication;

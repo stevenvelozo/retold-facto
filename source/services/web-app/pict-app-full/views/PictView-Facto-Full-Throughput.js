@@ -11,9 +11,9 @@ const libPictSectionHistogram = require('pict-section-histogram');
 // Histogram definitions — one per pipeline stage plus a combined total
 const HISTOGRAM_DEFS =
 [
-	{ id: 'Facto-Full-Histogram-Extracted',   stage: 'extracted',   color: '#4a90d9', label: 'Extracted' },
-	{ id: 'Facto-Full-Histogram-Transformed', stage: 'transformed', color: '#d09818', label: 'Transformed' },
-	{ id: 'Facto-Full-Histogram-Written',     stage: 'written',     color: '#3a9468', label: 'Written' },
+	{ id: 'Facto-Full-Histogram-Extracted',   stage: 'extracted',   color: 'var(--theme-color-brand-primary, #4a90d9)', label: 'Extracted' },
+	{ id: 'Facto-Full-Histogram-Transformed', stage: 'transformed', color: 'var(--theme-color-status-warning, #d09818)', label: 'Transformed' },
+	{ id: 'Facto-Full-Histogram-Written',     stage: 'written',     color: 'var(--theme-color-status-success, #3a9468)', label: 'Written' },
 	{ id: 'Facto-Full-Histogram-Total',       stage: 'total',       color: '#6366f1', label: 'Total' },
 ];
 
@@ -220,20 +220,20 @@ class FactoFullThroughputView extends libPictView
 		if (tmpHeaderEl)
 		{
 			let tmpHtml = '<div style="display:flex; gap:20px; flex-wrap:wrap; align-items:center;">';
-			tmpHtml += this._badge('Extracted',   tmpTotals.extracted,   '#4a90d9');
-			tmpHtml += this._badge('Transformed', tmpTotals.transformed, '#d09818');
-			tmpHtml += this._badge('Written',     tmpTotals.written,     '#3a9468');
+			tmpHtml += this._badge('Extracted',   tmpTotals.extracted,   'var(--theme-color-brand-primary, #4a90d9)');
+			tmpHtml += this._badge('Transformed', tmpTotals.transformed, 'var(--theme-color-status-warning, #d09818)');
+			tmpHtml += this._badge('Written',     tmpTotals.written,     'var(--theme-color-status-success, #3a9468)');
 
 			if (pData.activeRun)
 			{
 				let tmpElapsed = ((Date.now() - pData.activeRun.startTime) / 1000).toFixed(1);
-				tmpHtml += '<span style="font-size:0.85em; color:var(--facto-text-secondary); display:flex; align-items:center; gap:6px;">'
-					+ '<span style="width:8px; height:8px; border-radius:50%; background:var(--facto-success); animation:pulse 1s infinite;"></span>'
+				tmpHtml += '<span style="font-size:0.85em; color:var(--theme-color-text-secondary); display:flex; align-items:center; gap:6px;">'
+					+ '<span style="width:8px; height:8px; border-radius:50%; background:var(--theme-color-status-success); animation:pulse 1s infinite;"></span>'
 					+ pData.activeRun.label + ' (' + tmpElapsed + 's)</span>';
 			}
 			if (pData.historicalRun)
 			{
-				tmpHtml += '<span style="font-size:0.85em; color:var(--facto-text-secondary);">Viewing: ' + pData.historicalRun
+				tmpHtml += '<span style="font-size:0.85em; color:var(--theme-color-text-secondary);">Viewing: ' + pData.historicalRun
 					+ (pData.datasetFilter ? ' → ' + pData.datasetFilter : '') + '</span>';
 			}
 			tmpHtml += '</div>';
@@ -261,7 +261,7 @@ class FactoFullThroughputView extends libPictView
 		return '<div style="display:flex; align-items:center; gap:6px;">'
 			+ '<div style="width:10px; height:10px; border-radius:2px; background:' + pColor + ';"></div>'
 			+ '<span style="font-weight:600; font-size:0.88em;">' + pLabel + ':</span>'
-			+ '<span style="font-size:0.88em; color:var(--facto-text-secondary);">' + pCount.toLocaleString() + '</span>'
+			+ '<span style="font-size:0.88em; color:var(--theme-color-text-secondary);">' + pCount.toLocaleString() + '</span>'
 			+ '</div>';
 	}
 
@@ -271,11 +271,11 @@ class FactoFullThroughputView extends libPictView
 		if (!tmpEl) return;
 		if (!pRuns || pRuns.length === 0)
 		{
-			tmpEl.innerHTML = '<p style="color:var(--facto-text-tertiary); font-size:0.85em; font-style:italic;">No historical runs yet. Run a pipeline ingest first.</p>';
+			tmpEl.innerHTML = '<p style="color:var(--theme-color-text-muted); font-size:0.85em; font-style:italic;">No historical runs yet. Run a pipeline ingest first.</p>';
 			return;
 		}
 
-		let tmpHtml = '<div style="font-size:0.85em; font-weight:600; color:var(--facto-text-heading); margin-bottom:8px;">Run History</div>'
+		let tmpHtml = '<div style="font-size:0.85em; font-weight:600; color:var(--theme-color-text-primary); margin-bottom:8px;">Run History</div>'
 			+ '<div style="display:flex; flex-wrap:wrap; gap:8px;">';
 		for (let i = 0; i < pRuns.length; i++)
 		{
@@ -302,23 +302,23 @@ class FactoFullThroughputView extends libPictView
 			if (pDatasets[i].total > tmpMaxTotal) tmpMaxTotal = pDatasets[i].total;
 		}
 
-		let tmpHtml = '<div style="font-size:0.85em; font-weight:600; color:var(--facto-text-heading); margin-bottom:8px; margin-top:16px;">Per-Dataset Breakdown</div>';
-		tmpHtml += '<div style="font-size:0.8em; margin-bottom:6px; color:var(--facto-text-tertiary);">Click a dataset to filter the histogram:</div>';
+		let tmpHtml = '<div style="font-size:0.85em; font-weight:600; color:var(--theme-color-text-primary); margin-bottom:8px; margin-top:16px;">Per-Dataset Breakdown</div>';
+		tmpHtml += '<div style="font-size:0.8em; margin-bottom:6px; color:var(--theme-color-text-muted);">Click a dataset to filter the histogram:</div>';
 		for (let i = 0; i < pDatasets.length; i++)
 		{
 			let tmpDS = pDatasets[i];
 			let tmpActive = this._activeDatasetFilter === tmpDS.dataset;
 			let tmpDatasetEsc = tmpDS.dataset.replace(/'/g, "\\'");
 			tmpHtml += '<div style="display:flex; align-items:center; gap:8px; margin-bottom:4px; cursor:pointer; padding:3px 8px; border-radius:4px; '
-				+ (tmpActive ? 'background:var(--facto-brand-a15);' : '') + '" '
+				+ (tmpActive ? 'background:var(var(--facto-brand-a15));' : '') + '" '
 				+ 'onclick="pict.views[\'Facto-Full-Throughput\'].filterByDataset(' + (tmpActive ? 'null' : '\'' + tmpDatasetEsc + '\'') + ')">';
-			tmpHtml += '<span style="min-width:220px; font-family:monospace; font-size:0.9em; color:var(--facto-text);">' + tmpDS.dataset + '</span>';
-			tmpHtml += '<div style="flex:1; height:16px; display:flex; border-radius:3px; overflow:hidden; background:var(--facto-bg-elevated);">';
-			if (tmpDS.extracted   > 0) tmpHtml += '<div style="width:' + ((tmpDS.extracted   / tmpMaxTotal) * 100) + '%; background:#4a90d9;" title="Extracted: '   + tmpDS.extracted   + '"></div>';
-			if (tmpDS.transformed > 0) tmpHtml += '<div style="width:' + ((tmpDS.transformed / tmpMaxTotal) * 100) + '%; background:#d09818;" title="Transformed: ' + tmpDS.transformed + '"></div>';
-			if (tmpDS.written     > 0) tmpHtml += '<div style="width:' + ((tmpDS.written     / tmpMaxTotal) * 100) + '%; background:#3a9468;" title="Written: '     + tmpDS.written     + '"></div>';
+			tmpHtml += '<span style="min-width:220px; font-family:monospace; font-size:0.9em; color:var(--theme-color-text-primary);">' + tmpDS.dataset + '</span>';
+			tmpHtml += '<div style="flex:1; height:16px; display:flex; border-radius:3px; overflow:hidden; background:var(--theme-color-background-tertiary);">';
+			if (tmpDS.extracted   > 0) tmpHtml += '<div style="width:' + ((tmpDS.extracted   / tmpMaxTotal) * 100) + '%; background:var(--theme-color-brand-primary, #4a90d9);" title="Extracted: '   + tmpDS.extracted   + '"></div>';
+			if (tmpDS.transformed > 0) tmpHtml += '<div style="width:' + ((tmpDS.transformed / tmpMaxTotal) * 100) + '%; background:var(--theme-color-status-warning, #d09818);" title="Transformed: ' + tmpDS.transformed + '"></div>';
+			if (tmpDS.written     > 0) tmpHtml += '<div style="width:' + ((tmpDS.written     / tmpMaxTotal) * 100) + '%; background:var(--theme-color-status-success, #3a9468);" title="Written: '     + tmpDS.written     + '"></div>';
 			tmpHtml += '</div>';
-			tmpHtml += '<span style="min-width:60px; text-align:right; font-size:0.85em; color:var(--facto-text-secondary);">' + tmpDS.total.toLocaleString() + '</span></div>';
+			tmpHtml += '<span style="min-width:60px; text-align:right; font-size:0.85em; color:var(--theme-color-text-secondary);">' + tmpDS.total.toLocaleString() + '</span></div>';
 		}
 		tmpEl.innerHTML = tmpHtml;
 	}
@@ -356,7 +356,7 @@ module.exports.default_configuration =
 			Template: /*html*/`
 <div style="max-width:1200px; margin:0 auto;">
 	<h2 style="margin-bottom:4px;">Pipeline Throughput</h2>
-	<p style="color:var(--facto-text-secondary); margin-bottom:12px; font-size:0.9em;">
+	<p style="color:var(--theme-color-text-secondary); margin-bottom:12px; font-size:0.9em;">
 		Temporal histograms showing record flow through extraction, transformation, and storage stages.
 	</p>
 
@@ -373,45 +373,45 @@ module.exports.default_configuration =
 		<div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
 
 			<div style="background:rgba(74,144,217,0.1); border-radius:8px; padding:12px;">
-				<div style="font-size:0.85em; font-weight:600; color:#4a90d9; margin-bottom:6px;">Extracted</div>
+				<div style="font-size:0.85em; font-weight:600; color:var(--theme-color-brand-primary, #4a90d9); margin-bottom:6px;">Extracted</div>
 				<div style="overflow-x:auto;">
 					<div id="Facto-Full-Histogram-Extracted-Container"></div>
 					<div id="Facto-Full-Histogram-Extracted-Axis"
 						style="display:flex; justify-content:space-between; font-size:0.72em; font-family:monospace;
-						       color:var(--facto-text-tertiary); margin-top:3px; padding-top:3px;
+						       color:var(--theme-color-text-muted); margin-top:3px; padding-top:3px;
 						       border-top:1px solid rgba(74,144,217,0.3);"></div>
 				</div>
 			</div>
 
 			<div style="background:rgba(208,152,24,0.1); border-radius:8px; padding:12px;">
-				<div style="font-size:0.85em; font-weight:600; color:#d09818; margin-bottom:6px;">Transformed</div>
+				<div style="font-size:0.85em; font-weight:600; color:var(--theme-color-status-warning, #d09818); margin-bottom:6px;">Transformed</div>
 				<div style="overflow-x:auto;">
 					<div id="Facto-Full-Histogram-Transformed-Container"></div>
 					<div id="Facto-Full-Histogram-Transformed-Axis"
 						style="display:flex; justify-content:space-between; font-size:0.72em; font-family:monospace;
-						       color:var(--facto-text-tertiary); margin-top:3px; padding-top:3px;
+						       color:var(--theme-color-text-muted); margin-top:3px; padding-top:3px;
 						       border-top:1px solid rgba(208,152,24,0.3);"></div>
 				</div>
 			</div>
 
 			<div style="background:rgba(58,148,104,0.1); border-radius:8px; padding:12px;">
-				<div style="font-size:0.85em; font-weight:600; color:#3a9468; margin-bottom:6px;">Written</div>
+				<div style="font-size:0.85em; font-weight:600; color:var(--theme-color-status-success, #3a9468); margin-bottom:6px;">Written</div>
 				<div style="overflow-x:auto;">
 					<div id="Facto-Full-Histogram-Written-Container"></div>
 					<div id="Facto-Full-Histogram-Written-Axis"
 						style="display:flex; justify-content:space-between; font-size:0.72em; font-family:monospace;
-						       color:var(--facto-text-tertiary); margin-top:3px; padding-top:3px;
+						       color:var(--theme-color-text-muted); margin-top:3px; padding-top:3px;
 						       border-top:1px solid rgba(58,148,104,0.3);"></div>
 				</div>
 			</div>
 
-			<div style="background:var(--facto-bg-elevated); border:1px solid var(--facto-border-subtle); border-radius:8px; padding:12px;">
+			<div style="background:var(--theme-color-background-tertiary); border:1px solid var(--theme-color-border-light); border-radius:8px; padding:12px;">
 				<div style="font-size:0.85em; font-weight:600; color:#6366f1; margin-bottom:6px;">Total</div>
 				<div style="overflow-x:auto;">
 					<div id="Facto-Full-Histogram-Total-Container"></div>
 					<div id="Facto-Full-Histogram-Total-Axis"
 						style="display:flex; justify-content:space-between; font-size:0.72em; font-family:monospace;
-						       color:var(--facto-text-tertiary); margin-top:3px; padding-top:3px;
+						       color:var(--theme-color-text-muted); margin-top:3px; padding-top:3px;
 						       border-top:1px solid rgba(99,102,241,0.3);"></div>
 				</div>
 			</div>

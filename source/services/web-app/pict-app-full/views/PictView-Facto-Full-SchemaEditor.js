@@ -35,7 +35,7 @@ const _ViewConfiguration =
 		.facto-schema-mode-tabs {
 			display: flex;
 			gap: 0;
-			border: 1px solid var(--facto-border, #d6c8ae);
+			border: 1px solid var(--theme-color-border-default, #d6c8ae);
 			border-radius: 6px;
 			overflow: hidden;
 		}
@@ -45,15 +45,15 @@ const _ViewConfiguration =
 			cursor: pointer;
 			border: none;
 			background: transparent;
-			color: var(--facto-text-secondary, #786848);
+			color: var(--theme-color-text-secondary, #786848);
 			transition: background 0.15s, color 0.15s;
 		}
 		.facto-schema-mode-tab:not(:last-child) {
-			border-right: 1px solid var(--facto-border, #d6c8ae);
+			border-right: 1px solid var(--theme-color-border-default, #d6c8ae);
 		}
 		.facto-schema-mode-tab.active {
-			background: var(--facto-brand-a12, rgba(24,165,160,0.12));
-			color: var(--facto-brand, #18a5a0);
+			background: var(var(--facto-brand-a12), rgba(24,165,160,0.12));
+			color: var(--theme-color-brand-primary, #18a5a0);
 		}
 
 		/* Column builder table */
@@ -68,13 +68,13 @@ const _ViewConfiguration =
 			font-weight: 600;
 			text-transform: uppercase;
 			letter-spacing: 0.5px;
-			color: var(--facto-text-tertiary, #a09070);
+			color: var(--theme-color-text-muted, #a09070);
 			padding: 0.5em 0.4em;
-			border-bottom: 1px solid var(--facto-border, #d6c8ae);
+			border-bottom: 1px solid var(--theme-color-border-default, #d6c8ae);
 		}
 		.facto-col-builder td {
 			padding: 0.35em 0.4em;
-			border-bottom: 1px solid var(--facto-border-subtle, #e8ddc8);
+			border-bottom: 1px solid var(--theme-color-border-light, #e8ddc8);
 			vertical-align: middle;
 		}
 		.facto-col-builder input,
@@ -82,10 +82,10 @@ const _ViewConfiguration =
 			width: 100%;
 			padding: 0.3em 0.5em;
 			font-size: 0.85em;
-			border: 1px solid var(--facto-border, #d6c8ae);
+			border: 1px solid var(--theme-color-border-default, #d6c8ae);
 			border-radius: 4px;
-			background: var(--facto-bg-input, #fcf8f0);
-			color: var(--facto-text, #3a3020);
+			background: var(--theme-color-background-panel, #fcf8f0);
+			color: var(--theme-color-text-primary, #3a3020);
 		}
 		.facto-col-builder .facto-col-size {
 			width: 80px;
@@ -93,7 +93,7 @@ const _ViewConfiguration =
 		.facto-col-remove-btn {
 			background: transparent;
 			border: none;
-			color: var(--facto-error, #c44836);
+			color: var(--theme-color-status-error, #c44836);
 			cursor: pointer;
 			font-size: 1.1em;
 			padding: 0.2em 0.4em;
@@ -110,10 +110,10 @@ const _ViewConfiguration =
 			font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
 			font-size: 0.85em;
 			padding: 0.75em;
-			border: 1px solid var(--facto-border, #d6c8ae);
+			border: 1px solid var(--theme-color-border-default, #d6c8ae);
 			border-radius: 6px;
-			background: var(--facto-bg-input, #fcf8f0);
-			color: var(--facto-text, #3a3020);
+			background: var(--theme-color-background-panel, #fcf8f0);
+			color: var(--theme-color-text-primary, #3a3020);
 			resize: vertical;
 			tab-size: 4;
 		}
@@ -123,13 +123,13 @@ const _ViewConfiguration =
 			padding: 0.6em 0.8em;
 			font-family: 'SF Mono', 'Fira Code', monospace;
 			font-size: 0.78em;
-			background: var(--facto-bg-code, #f0e8d8);
-			border: 1px solid var(--facto-border-subtle, #e8ddc8);
+			background: var(--theme-color-background-tertiary, #f0e8d8);
+			border: 1px solid var(--theme-color-border-light, #e8ddc8);
 			border-radius: 6px;
 			white-space: pre-wrap;
 			max-height: 200px;
 			overflow: auto;
-			color: var(--facto-text-secondary, #786848);
+			color: var(--theme-color-text-secondary, #786848);
 			margin-top: 0.5em;
 		}
 

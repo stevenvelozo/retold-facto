@@ -78,7 +78,7 @@ class FactoFullProjectionsView extends libPictView
 
 		if (this.pict.AppData.Facto.Projections.length === 0)
 		{
-			tmpContainer.innerHTML = '<div class="facto-card" style="text-align:center; padding:2em; color:var(--facto-text-tertiary);">No projection datasets yet. Create one to get started.</div>';
+			tmpContainer.innerHTML = '<div class="facto-card" style="text-align:center; padding:2em; color:var(--theme-color-text-muted);">No projection datasets yet. Create one to get started.</div>';
 			return;
 		}
 

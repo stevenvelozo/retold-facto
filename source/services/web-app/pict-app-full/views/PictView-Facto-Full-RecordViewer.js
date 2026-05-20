@@ -15,14 +15,14 @@ const _ViewConfiguration =
 			display: inline-flex;
 			align-items: center;
 			gap: 0.35em;
-			color: var(--facto-text-secondary);
+			color: var(--theme-color-text-secondary);
 			cursor: pointer;
 			font-size: 0.85em;
 			margin-bottom: 0.75em;
 			transition: color 0.15s;
 		}
 		.facto-record-viewer-back:hover {
-			color: var(--facto-brand);
+			color: var(--theme-color-brand-primary);
 		}
 		.facto-record-meta {
 			display: grid;
@@ -31,8 +31,8 @@ const _ViewConfiguration =
 			margin-bottom: 1.5em;
 		}
 		.facto-record-meta-card {
-			background: var(--facto-bg-elevated, #1a1e2a);
-			border: 1px solid var(--facto-border-subtle, #2a2e3a);
+			background: var(--theme-color-background-tertiary, #1a1e2a);
+			border: 1px solid var(--theme-color-border-light, #2a2e3a);
 			border-radius: 8px;
 			padding: 1em;
 		}
@@ -41,7 +41,7 @@ const _ViewConfiguration =
 			font-size: 0.75em;
 			text-transform: uppercase;
 			letter-spacing: 0.05em;
-			color: var(--facto-text-tertiary, #888);
+			color: var(--theme-color-text-muted, #888);
 		}
 		.facto-record-meta-row {
 			display: flex;
@@ -51,12 +51,12 @@ const _ViewConfiguration =
 			font-size: 0.85em;
 		}
 		.facto-record-meta-label {
-			color: var(--facto-text-secondary, #aaa);
+			color: var(--theme-color-text-secondary, #aaa);
 			flex-shrink: 0;
 			margin-right: 0.75em;
 		}
 		.facto-record-meta-value {
-			color: var(--facto-text-heading, #eee);
+			color: var(--theme-color-text-primary, #eee);
 			text-align: right;
 			overflow: hidden;
 			text-overflow: ellipsis;
@@ -65,11 +65,11 @@ const _ViewConfiguration =
 			font-size: 0.9em;
 		}
 		.facto-record-meta-value.facto-hash-value {
-			color: var(--facto-brand, #4a90d9);
+			color: var(--theme-color-brand-primary, #4a90d9);
 		}
 		.facto-record-certainty-bar {
 			height: 6px;
-			background: var(--facto-border-subtle, #2a2e3a);
+			background: var(--theme-color-border-light, #2a2e3a);
 			border-radius: 3px;
 			margin-top: 0.35em;
 			overflow: hidden;
@@ -85,24 +85,24 @@ const _ViewConfiguration =
 		.facto-record-content-section h2 {
 			font-size: 1em;
 			margin: 0 0 0.75em;
-			color: var(--facto-text-secondary, #aaa);
+			color: var(--theme-color-text-secondary, #aaa);
 			text-transform: uppercase;
 			letter-spacing: 0.05em;
 		}
 		/* Override ObjectEditor styles for dark theme compatibility */
 		.facto-record-content-section .pict-objecteditor {
-			background: var(--facto-bg-elevated, #1a1e2a);
-			border-color: var(--facto-border-subtle, #2a2e3a);
-			color: var(--facto-text-heading, #eee);
+			background: var(--theme-color-background-tertiary, #1a1e2a);
+			border-color: var(--theme-color-border-light, #2a2e3a);
+			color: var(--theme-color-text-primary, #eee);
 		}
 		.facto-record-content-section .pict-oe-row:hover {
-			background: var(--facto-table-row-hover, #222738);
+			background: var(--theme-color-background-hover, #222738);
 		}
 		.facto-record-content-section .pict-oe-key {
-			color: var(--facto-brand, #4a90d9);
+			color: var(--theme-color-brand-primary, #4a90d9);
 		}
 		.facto-record-content-section .pict-oe-separator {
-			color: var(--facto-text-tertiary, #888);
+			color: var(--theme-color-text-muted, #888);
 		}
 		.facto-record-content-section .pict-oe-value-string {
 			color: #055d40;
@@ -118,24 +118,24 @@ const _ViewConfiguration =
 			color: #ffb347;
 		}
 		.facto-record-content-section .pict-oe-value-null {
-			color: var(--facto-text-tertiary, #666);
+			color: var(--theme-color-text-muted, #666);
 		}
 		.facto-record-content-section .pict-oe-summary {
-			color: var(--facto-text-tertiary, #666);
+			color: var(--theme-color-text-muted, #666);
 		}
 		.facto-record-content-section .pict-oe-toggle {
-			color: var(--facto-text-secondary, #aaa);
+			color: var(--theme-color-text-secondary, #aaa);
 		}
 		.facto-record-content-section .pict-oe-toggle:hover {
-			color: var(--facto-brand, #4a90d9);
-			background: var(--facto-table-row-hover, #222738);
+			color: var(--theme-color-brand-primary, #4a90d9);
+			background: var(--theme-color-background-hover, #222738);
 		}
 		.facto-record-content-section .pict-oe-type-badge {
-			background: var(--facto-table-row-hover, #222738);
-			color: var(--facto-text-tertiary, #888);
+			background: var(--theme-color-background-hover, #222738);
+			color: var(--theme-color-text-muted, #888);
 		}
 		.facto-record-content-section .pict-oe-empty {
-			color: var(--facto-text-tertiary, #666);
+			color: var(--theme-color-text-muted, #666);
 		}
 	`,
 
@@ -153,7 +153,7 @@ const _ViewConfiguration =
 		<h1 id="Facto-RecordViewer-Title">Record</h1>
 	</div>
 
-	<div id="Facto-RecordViewer-Loading" style="color:var(--facto-text-secondary);">Loading record...</div>
+	<div id="Facto-RecordViewer-Loading" style="color:var(--theme-color-text-secondary);">Loading record...</div>
 	<div id="Facto-RecordViewer-Error" class="facto-status facto-status-error" style="display:none;"></div>
 
 	<div id="Facto-RecordViewer-MetaContainer" style="display:none;">
@@ -492,18 +492,18 @@ class FactoFullRecordViewerView extends libPictView
 			{
 				let tmpCI = pCertainty.CertaintyIndices[i];
 				let tmpPct = Math.round((tmpCI.CertaintyValue || 0) * 100);
-				let tmpBarColor = tmpPct >= 70 ? '#28a745' : tmpPct >= 40 ? '#ffc107' : '#dc3545';
+				let tmpBarColor = tmpPct >= 70 ? 'var(--theme-color-status-success, #28a745)' : tmpPct >= 40 ? 'var(--theme-color-status-warning, #ffc107)' : 'var(--theme-color-status-error, #dc3545)';
 				tmpHtml += this._metaRow(tmpCI.Dimension || 'overall', tmpPct + '%');
 				tmpHtml += '<div class="facto-record-certainty-bar"><div class="facto-record-certainty-fill" style="width:' + tmpPct + '%; background:' + tmpBarColor + ';"></div></div>';
 				if (tmpCI.Justification)
 				{
-					tmpHtml += '<div style="font-size:0.75em; color:var(--facto-text-tertiary); margin-top:0.15em;">' + this._escapeHtml(tmpCI.Justification) + '</div>';
+					tmpHtml += '<div style="font-size:0.75em; color:var(--theme-color-text-muted); margin-top:0.15em;">' + this._escapeHtml(tmpCI.Justification) + '</div>';
 				}
 			}
 		}
 		else
 		{
-			tmpHtml += '<div style="color:var(--facto-text-tertiary); font-size:0.85em;">No certainty data</div>';
+			tmpHtml += '<div style="color:var(--theme-color-text-muted); font-size:0.85em;">No certainty data</div>';
 		}
 		tmpHtml += '</div>';
 
@@ -600,7 +600,7 @@ class FactoFullRecordViewerView extends libPictView
 					tmpHtml += this._metaRow('ID', pIDRecord);
 					tmpHtml += this._metaRow('GUID', pRecord['GUID' + pProjectionName] || '\u2014', true);
 					tmpHtml += this._metaRow('Entity', pProjectionName);
-					tmpHtml += this._metaRow('Type', '<span class="facto-badge" style="background:var(--facto-brand-a20); color:var(--facto-brand);">Projection</span>');
+					tmpHtml += this._metaRow('Type', '<span class="facto-badge" style="background:var(var(--facto-brand-a20)); color:var(--theme-color-brand-primary);">Projection</span>');
 					tmpHtml += '</div>';
 
 					// Dataset card

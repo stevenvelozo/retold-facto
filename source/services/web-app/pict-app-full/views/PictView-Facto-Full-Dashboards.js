@@ -28,14 +28,14 @@ const _ViewConfiguration =
 		{
 			font-size: 2em;
 			font-weight: 700;
-			color: var(--facto-text-heading);
+			color: var(--theme-color-text-primary);
 			line-height: 1.2;
 		}
 
 		.facto-dashboards-stat-label
 		{
 			font-size: 0.85em;
-			color: var(--facto-text-secondary);
+			color: var(--theme-color-text-secondary);
 			margin-top: 0.3em;
 		}
 
@@ -57,8 +57,8 @@ const _ViewConfiguration =
 
 		.facto-dashboards-chart-card
 		{
-			background: var(--facto-bg-elevated, var(--facto-bg-surface));
-			border: 1px solid var(--facto-border);
+			background: var(--theme-color-background-tertiary, var(--theme-color-background-panel));
+			border: 1px solid var(--theme-color-border-default);
 			border-radius: 8px;
 			padding: 1.25em;
 			position: relative;
@@ -69,7 +69,7 @@ const _ViewConfiguration =
 		{
 			font-size: 0.95em;
 			font-weight: 600;
-			color: var(--facto-text-heading);
+			color: var(--theme-color-text-primary);
 			margin-bottom: 0.75em;
 		}
 
@@ -88,7 +88,7 @@ const _ViewConfiguration =
 
 		.facto-dashboards-loading
 		{
-			color: var(--facto-text-tertiary);
+			color: var(--theme-color-text-muted);
 			font-size: 0.9em;
 			text-align: center;
 			padding: 4em 0;
@@ -110,7 +110,7 @@ const _ViewConfiguration =
 		.facto-dashboards-updated
 		{
 			font-size: 0.8em;
-			color: var(--facto-text-tertiary);
+			color: var(--theme-color-text-muted);
 		}
 	`,
 
@@ -205,9 +205,9 @@ const _ViewConfiguration =
 // The view also reads theme CSS variables at render time for accents.
 const CHART_PALETTE =
 [
-	'#18a5a0', '#c44836', '#3a9468', '#6366f1', '#e5a036',
+	'var(--theme-color-brand-primary, #18a5a0)', 'var(--theme-color-status-error, #c44836)', 'var(--theme-color-status-success, #3a9468)', '#6366f1', '#e5a036',
 	'#d94882', '#2e86de', '#8b5cf6', '#10b981', '#f59e0b',
-	'#ef4444', '#06b6d4', '#a855f7', '#84cc16', '#f97316'
+	'var(--theme-color-status-error, #ef4444)', '#06b6d4', '#a855f7', '#84cc16', '#f97316'
 ];
 
 class FactoFullDashboardsView extends libPictView
@@ -236,7 +236,7 @@ class FactoFullDashboardsView extends libPictView
 	{
 		let tmpStyle = getComputedStyle(document.body);
 		let tmpVal = tmpStyle.getPropertyValue(pVarName).trim();
-		return tmpVal || pFallback || '#888888';
+		return tmpVal || pFallback || 'var(--theme-color-text-muted, #888888)';
 	}
 
 	getChartPalette(pCount)
@@ -253,10 +253,10 @@ class FactoFullDashboardsView extends libPictView
 	getChartDefaults()
 	{
 		return {
-			textColor: this.getThemeColor('--facto-text', '#cccccc'),
-			textSecondary: this.getThemeColor('--facto-text-secondary', '#999999'),
-			gridColor: this.getThemeColor('--facto-border-subtle', '#333333'),
-			borderColor: this.getThemeColor('--facto-border', '#444444')
+			textColor: this.getThemeColor('--theme-color-text-primary', 'var(--theme-color-border-default, #cccccc)'),
+			textSecondary: this.getThemeColor('--theme-color-text-secondary', 'var(--theme-color-text-muted, #999999)'),
+			gridColor: this.getThemeColor('--theme-color-border-light', 'var(--theme-color-text-primary, #333333)'),
+			borderColor: this.getThemeColor('--theme-color-border-default', '#444444')
 		};
 	}
 
@@ -424,7 +424,7 @@ class FactoFullDashboardsView extends libPictView
 			if (tmpCard)
 			{
 				let tmpWrap = tmpCard.querySelector('.facto-dashboards-chart-wrap');
-				if (tmpWrap) tmpWrap.innerHTML = '<div style="text-align:center; color:var(--facto-text-tertiary); padding:3em 0;">No records associated with datasets yet.</div>';
+				if (tmpWrap) tmpWrap.innerHTML = '<div style="text-align:center; color:var(--theme-color-text-muted); padding:3em 0;">No records associated with datasets yet.</div>';
 			}
 			return;
 		}
@@ -614,9 +614,9 @@ class FactoFullDashboardsView extends libPictView
 
 		let tmpTypeColors =
 		[
-			this.getThemeColor('--facto-brand', '#18a5a0'),
+			this.getThemeColor('--theme-color-brand-primary', 'var(--theme-color-brand-primary, #18a5a0)'),
 			'#6366f1',
-			this.getThemeColor('--facto-success', '#3a9468'),
+			this.getThemeColor('--theme-color-status-success', 'var(--theme-color-status-success, #3a9468)'),
 			'#e5a036'
 		];
 		let tmpDefaults = this.getChartDefaults();
@@ -697,7 +697,7 @@ class FactoFullDashboardsView extends libPictView
 			if (tmpCard)
 			{
 				let tmpWrap = tmpCard.querySelector('.facto-dashboards-chart-wrap');
-				if (tmpWrap) tmpWrap.innerHTML = '<div style="text-align:center; color:var(--facto-text-tertiary); padding:3em 0;">No ingest jobs yet.</div>';
+				if (tmpWrap) tmpWrap.innerHTML = '<div style="text-align:center; color:var(--theme-color-text-muted); padding:3em 0;">No ingest jobs yet.</div>';
 			}
 			return;
 		}
@@ -745,19 +745,19 @@ class FactoFullDashboardsView extends libPictView
 					{
 						label: 'Created',
 						data: tmpCreated,
-						backgroundColor: this.getThemeColor('--facto-success', '#3a9468'),
+						backgroundColor: this.getThemeColor('--theme-color-status-success', 'var(--theme-color-status-success, #3a9468)'),
 						borderRadius: 2
 					},
 					{
 						label: 'Updated',
 						data: tmpUpdated,
-						backgroundColor: this.getThemeColor('--facto-brand', '#18a5a0'),
+						backgroundColor: this.getThemeColor('--theme-color-brand-primary', 'var(--theme-color-brand-primary, #18a5a0)'),
 						borderRadius: 2
 					},
 					{
 						label: 'Errored',
 						data: tmpErrored,
-						backgroundColor: this.getThemeColor('--facto-error', '#c44836'),
+						backgroundColor: this.getThemeColor('--theme-color-status-error', 'var(--theme-color-status-error, #c44836)'),
 						borderRadius: 2
 					}
 				]

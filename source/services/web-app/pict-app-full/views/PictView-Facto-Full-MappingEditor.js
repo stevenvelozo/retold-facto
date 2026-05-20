@@ -42,12 +42,12 @@ const _ViewConfiguration =
 		<div id="MeadowMap-Detail" style="display:none;">
 			<div style="display:flex; gap:0.5em; align-items:center; margin-bottom:0.75em;">
 				<label style="font-size:0.78em; font-weight:600;">Mapping Name</label>
-				<input type="text" id="MeadowMap-Name" placeholder="Mapping name" style="flex:1; padding:0.3em 0.5em; font-size:0.85em; border:1px solid var(--facto-border); border-radius:4px; background:var(--facto-bg-input); color:var(--facto-text);">
+				<input type="text" id="MeadowMap-Name" placeholder="Mapping name" style="flex:1; padding:0.3em 0.5em; font-size:0.85em; border:1px solid var(--theme-color-border-default); border-radius:4px; background:var(--theme-color-background-panel); color:var(--theme-color-text-primary);">
 			</div>
 
 			<div style="display:flex; gap:0.5em; align-items:center; margin-bottom:0.75em;">
 				<label style="font-size:0.78em; font-weight:600;">Source</label>
-				<select id="MeadowMap-Source" style="flex:1; padding:0.3em 0.5em; font-size:0.85em; border:1px solid var(--facto-border); border-radius:4px;"></select>
+				<select id="MeadowMap-Source" style="flex:1; padding:0.3em 0.5em; font-size:0.85em; border:1px solid var(--theme-color-border-default); border-radius:4px;"></select>
 				<button class="meadow-mapping-btn meadow-mapping-btn-secondary meadow-mapping-btn-small" onclick="{~P~}.views['Facto-Full-MappingEditor'].discoverSourceFields()">Discover Fields</button>
 			</div>
 
@@ -60,7 +60,7 @@ const _ViewConfiguration =
 			</div>
 
 			<div style="margin-top:0.75em;">
-				<div style="font-size:0.72em; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--facto-text-tertiary); margin-bottom:0.35em;">Target Stores</div>
+				<div style="font-size:0.72em; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--theme-color-text-muted); margin-bottom:0.35em;">Target Stores</div>
 				<div id="MeadowMap-Stores" class="meadow-mapping-store-checklist"></div>
 			</div>
 

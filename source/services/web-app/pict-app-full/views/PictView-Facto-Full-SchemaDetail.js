@@ -15,32 +15,32 @@ const _ViewConfiguration =
 			display: inline-flex;
 			align-items: center;
 			gap: 0.35em;
-			color: var(--facto-text-secondary);
+			color: var(--theme-color-text-secondary);
 			cursor: pointer;
 			font-size: 0.85em;
 			margin-bottom: 0.75em;
 			transition: color 0.15s;
 		}
 		.facto-schema-detail-back:hover {
-			color: var(--facto-brand);
+			color: var(--theme-color-brand-primary);
 		}
 
 		/* Schema definition display */
 		.facto-schema-ddl-wrap {
-			background: var(--facto-bg-input, #0d1117);
-			border: 1px solid var(--facto-border-subtle);
+			background: var(--theme-color-background-panel, #0d1117);
+			border: 1px solid var(--theme-color-border-light);
 			border-radius: 8px;
 			padding: 1em 1.25em;
 			margin-bottom: 1.5em;
 			font-family: 'SF Mono', Consolas, monospace;
 			font-size: 0.85em;
 			white-space: pre-wrap;
-			color: var(--facto-text);
+			color: var(--theme-color-text-primary);
 			max-height: 300px;
 			overflow-y: auto;
 		}
 		.facto-schema-ddl-empty {
-			color: var(--facto-text-tertiary);
+			color: var(--theme-color-text-muted);
 			font-style: italic;
 		}
 		.facto-schema-edit-section {
@@ -66,7 +66,7 @@ const _ViewConfiguration =
 		.facto-version-history h2 {
 			font-size: 1em;
 			margin: 0 0 0.75em;
-			color: var(--facto-text-secondary);
+			color: var(--theme-color-text-secondary);
 			text-transform: uppercase;
 			letter-spacing: 0.05em;
 		}
@@ -78,7 +78,7 @@ const _ViewConfiguration =
 		.facto-linked-datasets h2 {
 			font-size: 1em;
 			margin: 0 0 0.75em;
-			color: var(--facto-text-secondary);
+			color: var(--theme-color-text-secondary);
 			text-transform: uppercase;
 			letter-spacing: 0.05em;
 		}
@@ -106,7 +106,7 @@ const _ViewConfiguration =
 		.facto-doc-section-header h2 {
 			font-size: 1em;
 			margin: 0;
-			color: var(--facto-text-secondary);
+			color: var(--theme-color-text-secondary);
 			text-transform: uppercase;
 			letter-spacing: 0.05em;
 		}
@@ -119,39 +119,39 @@ const _ViewConfiguration =
 			border-radius: 4px;
 			cursor: pointer;
 			transition: background 0.15s, color 0.15s;
-			border: 1px solid var(--facto-border-subtle);
+			border: 1px solid var(--theme-color-border-light);
 			background: transparent;
-			color: var(--facto-text-tertiary);
+			color: var(--theme-color-text-muted);
 		}
 		.facto-edit-toggle:hover {
-			border-color: var(--facto-brand);
-			color: var(--facto-brand);
+			border-color: var(--theme-color-brand-primary);
+			color: var(--theme-color-brand-primary);
 		}
 		.facto-edit-toggle.active {
-			background: var(--facto-brand-a15);
-			border-color: var(--facto-brand);
-			color: var(--facto-brand);
+			background: var(var(--facto-brand-a15));
+			border-color: var(--theme-color-brand-primary);
+			color: var(--theme-color-brand-primary);
 		}
 
 		/* Doc content */
 		.facto-doc-content-wrap {
-			background: var(--facto-bg-elevated);
-			border: 1px solid var(--facto-border-subtle);
+			background: var(--theme-color-background-tertiary);
+			border: 1px solid var(--theme-color-border-light);
 			border-radius: 8px;
 			padding: 1.5em 2em;
 			min-height: 100px;
 		}
-		.facto-doc-content-wrap h1 { font-size: 1.75em; color: var(--facto-text-heading); border-bottom: 1px solid var(--facto-border-subtle); padding-bottom: 0.3em; margin-top: 0; }
-		.facto-doc-content-wrap h2 { font-size: 1.4em; color: var(--facto-text-heading); border-bottom: 1px solid var(--facto-border-subtle); padding-bottom: 0.25em; margin-top: 1.5em; }
-		.facto-doc-content-wrap h3 { font-size: 1.15em; color: var(--facto-text-heading); margin-top: 1.25em; }
-		.facto-doc-content-wrap p { line-height: 1.7; color: var(--facto-text-secondary); margin: 0.75em 0; }
-		.facto-doc-content-wrap a { color: var(--facto-brand); }
-		.facto-doc-content-wrap code { background: var(--facto-brand-a10); color: var(--facto-brand); padding: 0.15em 0.35em; border-radius: 3px; font-size: 0.9em; }
-		.facto-doc-content-wrap pre { background: var(--facto-bg-input); border: 1px solid var(--facto-border-subtle); border-radius: 6px; padding: 1em; overflow-x: auto; color: var(--facto-text-heading); }
+		.facto-doc-content-wrap h1 { font-size: 1.75em; color: var(--theme-color-text-primary); border-bottom: 1px solid var(--theme-color-border-light); padding-bottom: 0.3em; margin-top: 0; }
+		.facto-doc-content-wrap h2 { font-size: 1.4em; color: var(--theme-color-text-primary); border-bottom: 1px solid var(--theme-color-border-light); padding-bottom: 0.25em; margin-top: 1.5em; }
+		.facto-doc-content-wrap h3 { font-size: 1.15em; color: var(--theme-color-text-primary); margin-top: 1.25em; }
+		.facto-doc-content-wrap p { line-height: 1.7; color: var(--theme-color-text-secondary); margin: 0.75em 0; }
+		.facto-doc-content-wrap a { color: var(--theme-color-brand-primary); }
+		.facto-doc-content-wrap code { background: var(var(--facto-brand-a10)); color: var(--theme-color-brand-primary); padding: 0.15em 0.35em; border-radius: 3px; font-size: 0.9em; }
+		.facto-doc-content-wrap pre { background: var(--theme-color-background-panel); border: 1px solid var(--theme-color-border-light); border-radius: 6px; padding: 1em; overflow-x: auto; color: var(--theme-color-text-primary); }
 		.facto-doc-content-wrap pre code { background: transparent; padding: 0; color: inherit; }
-		.facto-doc-content-wrap blockquote { border-left: 3px solid var(--facto-brand); padding: 0.5em 1em; margin: 1em 0; color: var(--facto-text-tertiary); background: var(--facto-brand-a05); border-radius: 0 4px 4px 0; }
+		.facto-doc-content-wrap blockquote { border-left: 3px solid var(--theme-color-brand-primary); padding: 0.5em 1em; margin: 1em 0; color: var(--theme-color-text-muted); background: var(var(--facto-brand-a05)); border-radius: 0 4px 4px 0; }
 		.facto-doc-content-wrap img { max-width: 100%; height: auto; border-radius: 4px; margin: 0.5em 0; }
-		.facto-doc-content-wrap ul, .facto-doc-content-wrap ol { color: var(--facto-text-secondary); padding-left: 1.5em; line-height: 1.7; }
+		.facto-doc-content-wrap ul, .facto-doc-content-wrap ol { color: var(--theme-color-text-secondary); padding-left: 1.5em; line-height: 1.7; }
 
 		.facto-doc-list {
 			display: flex;
@@ -161,16 +161,16 @@ const _ViewConfiguration =
 		}
 		.facto-doc-item {
 			padding: 0.4em 0.75em;
-			background: var(--facto-bg-elevated);
-			border: 1px solid var(--facto-border-subtle);
+			background: var(--theme-color-background-tertiary);
+			border: 1px solid var(--theme-color-border-light);
 			border-radius: 6px;
 			font-size: 0.85em;
 			cursor: pointer;
-			color: var(--facto-text-secondary);
+			color: var(--theme-color-text-secondary);
 			transition: border-color 0.15s, color 0.15s;
 		}
-		.facto-doc-item:hover { border-color: var(--facto-brand); color: var(--facto-text-heading); }
-		.facto-doc-item.active { border-color: var(--facto-brand); color: var(--facto-brand); background: var(--facto-brand-a10); }
+		.facto-doc-item:hover { border-color: var(--theme-color-brand-primary); color: var(--theme-color-text-primary); }
+		.facto-doc-item.active { border-color: var(--theme-color-brand-primary); color: var(--theme-color-brand-primary); background: var(var(--facto-brand-a10)); }
 		.facto-doc-new-input {
 			display: flex;
 			gap: 0.5em;
@@ -183,8 +183,8 @@ const _ViewConfiguration =
 
 		/* Analyze records panel */
 		.facto-schema-analyze-panel {
-			background: var(--facto-bg-card);
-			border: 1px solid var(--facto-border);
+			background: var(--theme-color-background-panel);
+			border: 1px solid var(--theme-color-border-default);
 			border-radius: 8px;
 			padding: 1.25em;
 			margin-bottom: 1.5em;
@@ -192,7 +192,7 @@ const _ViewConfiguration =
 		.facto-schema-analyze-panel h2 {
 			font-size: 1em;
 			margin: 0 0 0.75em;
-			color: var(--facto-text-secondary);
+			color: var(--theme-color-text-secondary);
 			text-transform: uppercase;
 			letter-spacing: 0.05em;
 		}
@@ -222,15 +222,15 @@ const _ViewConfiguration =
 		.facto-schema-fields-table th {
 			text-align: left;
 			padding: 0.5em 0.6em;
-			border-bottom: 2px solid var(--facto-border);
-			color: var(--facto-text-heading);
+			border-bottom: 2px solid var(--theme-color-border-default);
+			color: var(--theme-color-text-primary);
 			font-size: 0.8em;
 			text-transform: uppercase;
 			letter-spacing: 0.04em;
 		}
 		.facto-schema-fields-table td {
 			padding: 0.4em 0.6em;
-			border-bottom: 1px solid var(--facto-border-subtle);
+			border-bottom: 1px solid var(--theme-color-border-light);
 			vertical-align: middle;
 		}
 		.facto-schema-fields-table input[type="text"] {
@@ -247,12 +247,12 @@ const _ViewConfiguration =
 		.facto-schema-fields-table .facto-field-addr {
 			font-family: 'SF Mono', Consolas, monospace;
 			font-size: 0.9em;
-			color: var(--facto-text);
+			color: var(--theme-color-text-primary);
 		}
 		.facto-schema-fields-table .facto-field-sample {
 			font-family: 'SF Mono', Consolas, monospace;
 			font-size: 0.85em;
-			color: var(--facto-text-tertiary);
+			color: var(--theme-color-text-muted);
 			max-width: 180px;
 			overflow: hidden;
 			text-overflow: ellipsis;
@@ -260,7 +260,7 @@ const _ViewConfiguration =
 		}
 		.facto-schema-fields-table .facto-field-freq {
 			text-align: center;
-			color: var(--facto-text-secondary);
+			color: var(--theme-color-text-secondary);
 		}
 		.facto-schema-analyze-actions {
 			display: flex;
@@ -283,7 +283,7 @@ const _ViewConfiguration =
 		<h1 id="Facto-SchemaDetail-Title">Schema</h1>
 	</div>
 
-	<div id="Facto-SchemaDetail-Loading" style="color:var(--facto-text-secondary);">Loading schema...</div>
+	<div id="Facto-SchemaDetail-Loading" style="color:var(--theme-color-text-secondary);">Loading schema...</div>
 	<div id="Facto-SchemaDetail-Error" class="facto-status facto-status-error" style="display:none;"></div>
 
 	<div id="Facto-SchemaDetail-Container" style="display:none;">
@@ -294,11 +294,11 @@ const _ViewConfiguration =
 		<div class="facto-schema-analyze-panel">
 			<h2>Generate Schema from Records</h2>
 			<div class="facto-schema-analyze-controls">
-				<label style="font-size:0.85em; color:var(--facto-text-secondary);">Dataset:</label>
+				<label style="font-size:0.85em; color:var(--theme-color-text-secondary);">Dataset:</label>
 				<select id="Facto-SchemaDetail-AnalyzeDataset"><option value="">Select dataset...</option></select>
-				<label style="font-size:0.85em; color:var(--facto-text-secondary);">Source:</label>
+				<label style="font-size:0.85em; color:var(--theme-color-text-secondary);">Source:</label>
 				<select id="Facto-SchemaDetail-AnalyzeSource"><option value="">Any source</option></select>
-				<label style="font-size:0.85em; color:var(--facto-text-secondary);">Samples:</label>
+				<label style="font-size:0.85em; color:var(--theme-color-text-secondary);">Samples:</label>
 				<input type="number" id="Facto-SchemaDetail-AnalyzeSampleSize" value="50" min="1" max="200">
 				<button class="facto-btn facto-btn-primary" onclick="pict.views['Facto-Full-SchemaDetail'].analyzeRecords()">Analyze Records</button>
 			</div>
@@ -561,7 +561,7 @@ class FactoFullSchemaDetailView extends libPictView
 		let tmpDDL = pSchema.SchemaDefinition || '';
 		let tmpHtml = '<div class="facto-schema-edit-section">';
 		tmpHtml += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5em;">';
-		tmpHtml += '<h2 style="font-size:1em; margin:0; color:var(--facto-text-secondary); text-transform:uppercase; letter-spacing:0.05em;">Schema Definition (MicroDDL)</h2>';
+		tmpHtml += '<h2 style="font-size:1em; margin:0; color:var(--theme-color-text-secondary); text-transform:uppercase; letter-spacing:0.05em;">Schema Definition (MicroDDL)</h2>';
 		tmpHtml += '<button class="facto-edit-toggle" id="Facto-SchemaDetail-DDLEditToggle" onclick="pict.views[\'Facto-Full-SchemaDetail\'].toggleDDLEdit()">' + (this._DDLEditMode ? '&#10003; Done' : '&#9998; Edit') + '</button>';
 		tmpHtml += '</div>';
 
@@ -917,7 +917,7 @@ class FactoFullSchemaDetailView extends libPictView
 		let tmpTypeOptions = ['String', 'Number', 'Integer', 'Float', 'Boolean', 'DateTime', 'Array', 'Object'];
 		let tmpTotalRecords = this._AnalyzedRecordCount || 1;
 
-		let tmpHtml = '<div style="font-size:0.85em; color:var(--facto-text-secondary); margin-bottom:0.5em;">Discovered <strong>' + tmpFields.length + '</strong> fields across <strong>' + tmpTotalRecords + '</strong> records</div>';
+		let tmpHtml = '<div style="font-size:0.85em; color:var(--theme-color-text-secondary); margin-bottom:0.5em;">Discovered <strong>' + tmpFields.length + '</strong> fields across <strong>' + tmpTotalRecords + '</strong> records</div>';
 		tmpHtml += '<table class="facto-schema-fields-table">';
 		tmpHtml += '<thead><tr>';
 		tmpHtml += '<th style="width:30px;"><input type="checkbox" id="Facto-SchemaDetail-AnalyzeSelectAll" checked onchange="pict.views[\'Facto-Full-SchemaDetail\'].toggleAllAnalyzedFields(this.checked)"></th>';
@@ -1288,7 +1288,7 @@ class FactoFullSchemaDetailView extends libPictView
 
 		if (!this._CurrentDocContent)
 		{
-			tmpDisplayEl.innerHTML = '<p style="color:var(--facto-text-tertiary);">Empty document.</p>';
+			tmpDisplayEl.innerHTML = '<p style="color:var(--theme-color-text-muted);">Empty document.</p>';
 			return;
 		}
 

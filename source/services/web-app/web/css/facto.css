@@ -2,6 +2,22 @@
    Retold Facto — Base Styles
    ================================================================ */
 
+/* Theme-derived overlays + remaining --facto-* aliases.
+   pict-section-theme defines all the --theme-color-* tokens at :root,
+   and these aliases bridge a handful of facto-specific patterns:
+   - --facto-brand-a05..a25: translucent brand overlays (color-mix)
+   - --facto-table-stripe:   one-off zebra row tint */
+:root {
+	--facto-brand-a05: color-mix(in srgb, var(--theme-color-brand-primary, #18a5a0)  5%, transparent);
+	--facto-brand-a08: color-mix(in srgb, var(--theme-color-brand-primary, #18a5a0)  8%, transparent);
+	--facto-brand-a10: color-mix(in srgb, var(--theme-color-brand-primary, #18a5a0) 10%, transparent);
+	--facto-brand-a12: color-mix(in srgb, var(--theme-color-brand-primary, #18a5a0) 12%, transparent);
+	--facto-brand-a15: color-mix(in srgb, var(--theme-color-brand-primary, #18a5a0) 15%, transparent);
+	--facto-brand-a20: color-mix(in srgb, var(--theme-color-brand-primary, #18a5a0) 20%, transparent);
+	--facto-brand-a25: color-mix(in srgb, var(--theme-color-brand-primary, #18a5a0) 25%, transparent);
+	--facto-table-stripe: rgba(0, 0, 0, 0.02);
+}
+
 /* Reset */
 *,
 *::before,
@@ -19,8 +35,8 @@ html {
 
 body {
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-	background: var(--facto-bg-base);
-	color: var(--facto-text);
+	background: var(--theme-color-background-primary);
+	color: var(--theme-color-text-primary);
 	line-height: 1.6;
 	min-height: 100vh;
 }
@@ -52,7 +68,7 @@ body {
    ================================================================ */
 
 h1, h2, h3, h4, h5, h6 {
-	color: var(--facto-text-heading);
+	color: var(--theme-color-text-primary);
 	font-weight: 600;
 	line-height: 1.3;
 }
@@ -63,13 +79,13 @@ h3 { font-size: 1.15em; margin-bottom: 0.3em; }
 h4 { font-size: 1em; margin-bottom: 0.25em; }
 
 a {
-	color: var(--facto-link);
+	color: var(--theme-color-brand-primary);
 	text-decoration: none;
 	cursor: pointer;
 }
 
 a:hover {
-	color: var(--facto-link-hover);
+	color: var(--theme-color-brand-primary-hover);
 }
 
 p {
@@ -82,15 +98,15 @@ code, pre {
 }
 
 pre {
-	background: var(--facto-bg-code);
-	border: 1px solid var(--facto-border-subtle);
+	background: var(--theme-color-background-tertiary);
+	border: 1px solid var(--theme-color-border-light);
 	border-radius: 6px;
 	padding: 1em;
 	overflow-x: auto;
 }
 
 code {
-	background: var(--facto-bg-code);
+	background: var(--theme-color-background-tertiary);
 	padding: 0.15em 0.4em;
 	border-radius: 3px;
 }
@@ -127,24 +143,24 @@ button:disabled {
 }
 
 .facto-btn-primary, button.primary {
-	background: var(--facto-btn-primary-bg);
-	color: var(--facto-btn-primary-text);
-	border-color: var(--facto-btn-primary-bg);
+	background: var(--theme-color-brand-primary);
+	color: var(--theme-color-text-on-brand);
+	border-color: var(--theme-color-brand-primary);
 }
 
 .facto-btn-secondary, button.secondary {
-	background: var(--facto-btn-secondary-bg);
-	color: var(--facto-btn-secondary-text);
-	border-color: var(--facto-border);
+	background: var(--theme-color-background-tertiary);
+	color: var(--theme-color-text-primary);
+	border-color: var(--theme-color-border-default);
 }
 
 .facto-btn-success, button.success {
-	background: var(--facto-success);
+	background: var(--theme-color-status-success);
 	color: var(--theme-color-background-panel, #fff);
 }
 
 .facto-btn-danger, button.danger {
-	background: var(--facto-error);
+	background: var(--theme-color-status-error);
 	color: var(--theme-color-background-panel, #fff);
 	border-color: transparent;
 }
@@ -167,9 +183,9 @@ textarea,
 select {
 	width: 100%;
 	padding: 0.5em 0.75em;
-	background: var(--facto-bg-input);
-	color: var(--facto-text);
-	border: 1px solid var(--facto-border);
+	background: var(--theme-color-background-panel);
+	color: var(--theme-color-text-primary);
+	border: 1px solid var(--theme-color-border-default);
 	border-radius: 6px;
 	font-size: 0.9em;
 	font-family: inherit;
@@ -194,14 +210,14 @@ input:focus,
 textarea:focus,
 select:focus {
 	outline: none;
-	border-color: var(--facto-border-focus);
+	border-color: var(--theme-color-brand-primary);
 }
 
 label {
 	display: block;
 	font-size: 0.85em;
 	font-weight: 500;
-	color: var(--facto-text-secondary);
+	color: var(--theme-color-text-secondary);
 	margin-bottom: 0.25em;
 }
 
@@ -216,21 +232,21 @@ table {
 }
 
 thead {
-	background: var(--facto-table-header-bg);
+	background: var(--theme-color-background-tertiary);
 }
 
 th {
 	text-align: left;
 	padding: 0.6em 0.75em;
 	font-weight: 600;
-	color: var(--facto-text-heading);
-	border-bottom: 2px solid var(--facto-border);
+	color: var(--theme-color-text-primary);
+	border-bottom: 2px solid var(--theme-color-border-default);
 	white-space: nowrap;
 }
 
 td {
 	padding: 0.5em 0.75em;
-	border-bottom: 1px solid var(--facto-border-subtle);
+	border-bottom: 1px solid var(--theme-color-border-light);
 	vertical-align: top;
 }
 
@@ -239,7 +255,7 @@ tbody tr:nth-child(even) {
 }
 
 tbody tr:hover {
-	background: var(--facto-table-row-hover);
+	background: var(--theme-color-background-hover);
 }
 
 /* ================================================================
@@ -247,15 +263,15 @@ tbody tr:hover {
    ================================================================ */
 
 .facto-card {
-	background: var(--facto-bg-surface);
-	border: 1px solid var(--facto-border-subtle);
+	background: var(--theme-color-background-panel);
+	border: 1px solid var(--theme-color-border-light);
 	border-radius: 8px;
 	padding: 1.25em;
 	transition: border-color 0.15s;
 }
 
 .facto-card:hover {
-	border-color: var(--facto-border);
+	border-color: var(--theme-color-border-default);
 }
 
 .facto-card-grid {
@@ -276,27 +292,27 @@ tbody tr:hover {
 }
 
 .facto-status-ok {
-	background: color-mix(in srgb, var(--facto-success) 15%, transparent);
-	color: var(--facto-success);
-	border: 1px solid color-mix(in srgb, var(--facto-success) 30%, transparent);
+	background: color-mix(in srgb, var(--theme-color-status-success) 15%, transparent);
+	color: var(--theme-color-status-success);
+	border: 1px solid color-mix(in srgb, var(--theme-color-status-success) 30%, transparent);
 }
 
 .facto-status-error {
-	background: color-mix(in srgb, var(--facto-error) 15%, transparent);
-	color: var(--facto-error);
-	border: 1px solid color-mix(in srgb, var(--facto-error) 30%, transparent);
+	background: color-mix(in srgb, var(--theme-color-status-error) 15%, transparent);
+	color: var(--theme-color-status-error);
+	border: 1px solid color-mix(in srgb, var(--theme-color-status-error) 30%, transparent);
 }
 
 .facto-status-warn {
-	background: color-mix(in srgb, var(--facto-warning) 15%, transparent);
-	color: var(--facto-warning);
-	border: 1px solid color-mix(in srgb, var(--facto-warning) 30%, transparent);
+	background: color-mix(in srgb, var(--theme-color-status-warning) 15%, transparent);
+	color: var(--theme-color-status-warning);
+	border: 1px solid color-mix(in srgb, var(--theme-color-status-warning) 30%, transparent);
 }
 
 .facto-status-info {
-	background: color-mix(in srgb, var(--facto-info) 15%, transparent);
-	color: var(--facto-info);
-	border: 1px solid color-mix(in srgb, var(--facto-info) 30%, transparent);
+	background: color-mix(in srgb, var(--theme-color-status-info) 15%, transparent);
+	color: var(--theme-color-status-info);
+	border: 1px solid color-mix(in srgb, var(--theme-color-status-info) 30%, transparent);
 }
 
 /* ================================================================
@@ -313,11 +329,11 @@ tbody tr:hover {
 	letter-spacing: 0.03em;
 }
 
-.facto-badge-primary { background: var(--facto-brand); color: var(--theme-color-background-panel, #fff); }
-.facto-badge-success { background: var(--facto-success); color: var(--theme-color-background-panel, #fff); }
-.facto-badge-warning { background: var(--facto-warning); color: var(--theme-color-text-primary, #000); }
-.facto-badge-error { background: var(--facto-error); color: var(--theme-color-background-panel, #fff); }
-.facto-badge-muted { background: var(--facto-bg-elevated); color: var(--facto-text-secondary); }
+.facto-badge-primary { background: var(--theme-color-brand-primary); color: var(--theme-color-background-panel, #fff); }
+.facto-badge-success { background: var(--theme-color-status-success); color: var(--theme-color-background-panel, #fff); }
+.facto-badge-warning { background: var(--theme-color-status-warning); color: var(--theme-color-text-primary, #000); }
+.facto-badge-error { background: var(--theme-color-status-error); color: var(--theme-color-background-panel, #fff); }
+.facto-badge-muted { background: var(--theme-color-background-tertiary); color: var(--theme-color-text-secondary); }
 
 /* ================================================================
    Inline form groups
@@ -346,11 +362,11 @@ tbody tr:hover {
 .facto-content-header {
 	margin-bottom: 1.5em;
 	padding-bottom: 1em;
-	border-bottom: 1px solid var(--facto-border-subtle);
+	border-bottom: 1px solid var(--theme-color-border-light);
 }
 
 .facto-content-header p {
-	color: var(--facto-text-secondary);
+	color: var(--theme-color-text-secondary);
 	margin-bottom: 0;
 }
 
@@ -361,10 +377,10 @@ tbody tr:hover {
 .facto-section-title {
 	font-size: 1em;
 	font-weight: 600;
-	color: var(--facto-text-heading);
+	color: var(--theme-color-text-primary);
 	margin-bottom: 0.75em;
 	padding-bottom: 0.4em;
-	border-bottom: 1px solid var(--facto-border-subtle);
+	border-bottom: 1px solid var(--theme-color-border-light);
 }
 
 /* ================================================================
@@ -374,7 +390,7 @@ tbody tr:hover {
 .facto-empty {
 	text-align: center;
 	padding: 3em 1em;
-	color: var(--facto-text-tertiary);
+	color: var(--theme-color-text-muted);
 	font-style: italic;
 }
 
@@ -388,16 +404,16 @@ tbody tr:hover {
 }
 
 ::-webkit-scrollbar-track {
-	background: var(--facto-scrollbar-track);
+	background: var(--theme-color-scrollbar-track);
 }
 
 ::-webkit-scrollbar-thumb {
-	background: var(--facto-scrollbar-thumb);
+	background: var(--theme-color-scrollbar-thumb);
 	border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-	background: var(--facto-scrollbar-thumb-hover);
+	background: var(--theme-color-scrollbar-hover);
 }
 
 /* ================================================================
@@ -416,10 +432,10 @@ tbody tr:hover {
 	width: 28px;
 	height: 28px;
 	padding: 0;
-	border: 1px solid var(--facto-border);
+	border: 1px solid var(--theme-color-border-default);
 	border-radius: 6px;
-	background: var(--facto-bg-surface);
-	color: var(--facto-text-secondary);
+	background: var(--theme-color-background-panel);
+	color: var(--theme-color-text-secondary);
 	cursor: pointer;
 	font-size: 1em;
 	line-height: 1;
@@ -427,8 +443,8 @@ tbody tr:hover {
 }
 
 .facto-row-actions-trigger:hover {
-	background: var(--facto-bg-hover);
-	border-color: var(--facto-text-secondary);
+	background: var(--theme-color-background-hover);
+	border-color: var(--theme-color-text-secondary);
 }
 
 tr:hover .facto-row-actions-trigger {
@@ -444,8 +460,8 @@ tr:hover .facto-row-actions-trigger {
 	min-width: 140px;
 	margin-top: 2px;
 	padding: 4px 0;
-	background: var(--facto-bg-surface);
-	border: 1px solid var(--facto-border);
+	background: var(--theme-color-background-panel);
+	border: 1px solid var(--theme-color-border-default);
 	border-radius: 6px;
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
@@ -461,7 +477,7 @@ tr:hover .facto-row-actions-trigger {
 	border: none;
 	border-radius: 0;
 	background: transparent;
-	color: var(--facto-text);
+	color: var(--theme-color-text-primary);
 	font-size: 0.82em;
 	font-weight: 500;
 	text-align: left;
@@ -470,16 +486,16 @@ tr:hover .facto-row-actions-trigger {
 }
 
 .facto-row-actions-menu button:hover {
-	background: var(--facto-bg-hover);
+	background: var(--theme-color-background-hover);
 	opacity: 1;
 }
 
 .facto-row-actions-menu button.facto-action-success {
-	color: var(--facto-success);
+	color: var(--theme-color-status-success);
 }
 
 .facto-row-actions-menu button.facto-action-primary {
-	color: var(--facto-brand);
+	color: var(--theme-color-brand-primary);
 }
 
 /* ================================================================

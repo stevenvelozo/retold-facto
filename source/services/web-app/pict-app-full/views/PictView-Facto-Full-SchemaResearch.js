@@ -20,8 +20,8 @@ const _ViewConfiguration =
 			margin-bottom: 0;
 		}
 		.facto-schema-research-add-form {
-			background: var(--facto-bg-card);
-			border: 1px solid var(--facto-border);
+			background: var(--theme-color-background-panel);
+			border: 1px solid var(--theme-color-border-default);
 			border-radius: 8px;
 			padding: 1.25em;
 			margin-bottom: 1.25em;
@@ -39,7 +39,7 @@ const _ViewConfiguration =
 			font-size: 0.8em;
 			font-weight: 600;
 			margin-bottom: 0.25em;
-			color: var(--facto-text-muted);
+			color: var(--theme-color-text-muted);
 		}
 		.facto-schema-research-add-form input,
 		.facto-schema-research-add-form textarea,
@@ -66,9 +66,9 @@ const _ViewConfiguration =
 			font-family: 'SF Mono', Consolas, monospace;
 			font-size: 0.85em;
 			padding: 0.75em;
-			background: var(--facto-bg-input);
-			color: var(--facto-text);
-			border: 1px solid var(--facto-border);
+			background: var(--theme-color-background-panel);
+			color: var(--theme-color-text-primary);
+			border: 1px solid var(--theme-color-border-default);
 			border-radius: 6px;
 			margin-bottom: 0.5em;
 		}

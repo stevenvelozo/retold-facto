@@ -22,22 +22,22 @@ const _ViewConfiguration =
 		.facto-research-detail {
 			margin-top: 1.25em;
 			padding-top: 1.25em;
-			border-top: 1px solid var(--facto-border-subtle);
+			border-top: 1px solid var(--theme-color-border-light);
 		}
 		.facto-research-import textarea {
 			width: 100%;
 			font-family: 'SF Mono', Consolas, monospace;
 			font-size: 0.85em;
 			padding: 0.75em;
-			background: var(--facto-bg-input);
-			color: var(--facto-text);
-			border: 1px solid var(--facto-border);
+			background: var(--theme-color-background-panel);
+			color: var(--theme-color-text-primary);
+			border: 1px solid var(--theme-color-border-default);
 			border-radius: 6px;
 			margin-bottom: 0.5em;
 		}
 		.facto-research-add-form {
-			background: var(--facto-bg-card);
-			border: 1px solid var(--facto-border);
+			background: var(--theme-color-background-panel);
+			border: 1px solid var(--theme-color-border-default);
 			border-radius: 8px;
 			padding: 1.25em;
 			margin-bottom: 1.25em;
@@ -55,7 +55,7 @@ const _ViewConfiguration =
 			font-size: 0.8em;
 			font-weight: 600;
 			margin-bottom: 0.25em;
-			color: var(--facto-text-muted);
+			color: var(--theme-color-text-muted);
 		}
 		.facto-research-add-form input,
 		.facto-research-add-form textarea,
@@ -405,7 +405,7 @@ class FactoFullSourceResearchView extends libPictView
 					if (tmpStatusEl)
 					{
 						tmpStatusEl.className = 'facto-status facto-status-ok';
-						tmpStatusEl.innerHTML = 'Provisioned! Source: ' + (pResponse.Source.Hash || pResponse.Source.Name) + ' (#' + pResponse.Source.IDSource + '), Dataset: ' + (pResponse.Dataset.Hash || pResponse.Dataset.Name) + ' (#' + pResponse.Dataset.IDDataset + ') &mdash; <a href="#/Source/' + pResponse.Source.IDSource + '" style="color:var(--facto-brand);text-decoration:underline;cursor:pointer;">View Source \u2192</a>';
+						tmpStatusEl.innerHTML = 'Provisioned! Source: ' + (pResponse.Source.Hash || pResponse.Source.Name) + ' (#' + pResponse.Source.IDSource + '), Dataset: ' + (pResponse.Dataset.Hash || pResponse.Dataset.Name) + ' (#' + pResponse.Dataset.IDDataset + ') &mdash; <a href="#/Source/' + pResponse.Source.IDSource + '" style="color:var(--theme-color-brand-primary);text-decoration:underline;cursor:pointer;">View Source \u2192</a>';
 						tmpStatusEl.style.display = 'block';
 					}
 					this.viewEntry(pIDEntry);

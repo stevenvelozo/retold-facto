@@ -15,19 +15,19 @@ const _ViewConfiguration =
 			align-items: center;
 			justify-content: space-between;
 			padding: 0.6em 1.25em;
-			background: var(--facto-topbar-bg);
-			border-top: 1px solid var(--facto-border-subtle);
+			background: var(--theme-color-background-secondary);
+			border-top: 1px solid var(--theme-color-border-light);
 			font-size: 0.78em;
-			color: var(--facto-text-tertiary);
+			color: var(--theme-color-text-muted);
 		}
 
 		.facto-bottombar a {
-			color: var(--facto-text-tertiary);
+			color: var(--theme-color-text-muted);
 			text-decoration: none;
 		}
 
 		.facto-bottombar a:hover {
-			color: var(--facto-text-secondary);
+			color: var(--theme-color-text-secondary);
 		}
 	`,
 

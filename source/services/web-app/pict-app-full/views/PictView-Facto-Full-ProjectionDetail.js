@@ -16,14 +16,14 @@ const _ViewConfiguration =
 			display: inline-flex;
 			align-items: center;
 			gap: 0.35em;
-			color: var(--facto-text-secondary);
+			color: var(--theme-color-text-secondary);
 			cursor: pointer;
 			font-size: 0.85em;
 			margin-bottom: 0.75em;
 			transition: color 0.15s;
 		}
 		.facto-proj-detail-back:hover {
-			color: var(--facto-brand);
+			color: var(--theme-color-brand-primary);
 		}
 		.facto-proj-detail-title-row {
 			display: flex;
@@ -45,8 +45,8 @@ const _ViewConfiguration =
 			margin-bottom: 1.5em;
 		}
 		.facto-proj-meta-card {
-			background: var(--facto-bg-card);
-			border: 1px solid var(--facto-border-subtle);
+			background: var(--theme-color-background-panel);
+			border: 1px solid var(--theme-color-border-light);
 			border-radius: 8px;
 			padding: 1em;
 		}
@@ -55,13 +55,13 @@ const _ViewConfiguration =
 			font-weight: 600;
 			text-transform: uppercase;
 			letter-spacing: 0.5px;
-			color: var(--facto-text-tertiary);
+			color: var(--theme-color-text-muted);
 			margin-bottom: 0.35em;
 		}
 		.facto-proj-meta-card-value {
 			font-size: 1.1em;
 			font-weight: 600;
-			color: var(--facto-text-heading);
+			color: var(--theme-color-text-primary);
 		}
 		.facto-proj-section {
 			margin-bottom: 1.5em;
@@ -77,11 +77,11 @@ const _ViewConfiguration =
 			font-size: 1em;
 			text-transform: uppercase;
 			letter-spacing: 0.05em;
-			color: var(--facto-text-secondary);
+			color: var(--theme-color-text-secondary);
 		}
 		.facto-proj-ddl-preview {
-			background: var(--facto-bg-code, #f0e8d8);
-			border: 1px solid var(--facto-border-subtle);
+			background: var(--theme-color-background-tertiary, #f0e8d8);
+			border: 1px solid var(--theme-color-border-light);
 			border-radius: 6px;
 			padding: 0.75em;
 			font-family: 'SF Mono', Consolas, monospace;
@@ -89,13 +89,13 @@ const _ViewConfiguration =
 			white-space: pre-wrap;
 			max-height: 150px;
 			overflow: auto;
-			color: var(--facto-text-secondary);
+			color: var(--theme-color-text-secondary);
 			margin-bottom: 0.75em;
 		}
 		.facto-proj-detail-loading {
 			text-align: center;
 			padding: 3em;
-			color: var(--facto-text-tertiary);
+			color: var(--theme-color-text-muted);
 		}
 		.facto-proj-deploy-form {
 			display: grid;
@@ -103,8 +103,8 @@ const _ViewConfiguration =
 			gap: 0.75em;
 			align-items: end;
 			padding: 1em;
-			background: var(--facto-bg-surface, #fcf8f0);
-			border: 1px solid var(--facto-border, #d6c8ae);
+			background: var(--theme-color-background-panel, #fcf8f0);
+			border: 1px solid var(--theme-color-border-default, #d6c8ae);
 			border-radius: 8px;
 			margin-bottom: 0.75em;
 		}
@@ -114,21 +114,21 @@ const _ViewConfiguration =
 			font-weight: 600;
 			text-transform: uppercase;
 			letter-spacing: 0.5px;
-			color: var(--facto-text-tertiary);
+			color: var(--theme-color-text-muted);
 			margin-bottom: 0.25em;
 		}
 		.facto-proj-deploy-log {
 			font-family: 'SF Mono', monospace;
 			font-size: 0.78em;
 			padding: 0.6em;
-			background: var(--facto-bg-code, #f0e8d8);
-			border: 1px solid var(--facto-border-subtle, #e8ddc8);
+			background: var(--theme-color-background-tertiary, #f0e8d8);
+			border: 1px solid var(--theme-color-border-light, #e8ddc8);
 			border-radius: 6px;
 			white-space: pre-wrap;
 			max-height: 200px;
 			overflow: auto;
 			margin-top: 0.5em;
-			color: var(--facto-text-secondary);
+			color: var(--theme-color-text-secondary);
 		}
 		.facto-proj-import-form {
 			display: grid;
@@ -136,8 +136,8 @@ const _ViewConfiguration =
 			gap: 0.75em;
 			align-items: end;
 			padding: 1em;
-			background: var(--facto-bg-surface, #fcf8f0);
-			border: 1px solid var(--facto-border, #d6c8ae);
+			background: var(--theme-color-background-panel, #fcf8f0);
+			border: 1px solid var(--theme-color-border-default, #d6c8ae);
 			border-radius: 8px;
 			margin-bottom: 0.75em;
 		}
@@ -147,7 +147,7 @@ const _ViewConfiguration =
 			font-weight: 600;
 			text-transform: uppercase;
 			letter-spacing: 0.5px;
-			color: var(--facto-text-tertiary);
+			color: var(--theme-color-text-muted);
 			margin-bottom: 0.25em;
 		}
 		.facto-proj-import-stage-row {
@@ -166,7 +166,7 @@ const _ViewConfiguration =
 			display: inline-block;
 			margin-top: 0.5em;
 			font-size: 0.82em;
-			color: var(--facto-brand);
+			color: var(--theme-color-brand-primary);
 			cursor: pointer;
 			text-decoration: underline;
 		}
@@ -418,7 +418,7 @@ class FactoFullProjectionDetailView extends libPictView
 
 		if (!tmpDDL)
 		{
-			tmpContainer.innerHTML = '<div class="facto-card" style="text-align:center; padding:1.5em; color:var(--facto-text-tertiary);">No schema defined yet. Click "Edit Schema" to create one.</div>';
+			tmpContainer.innerHTML = '<div class="facto-card" style="text-align:center; padding:1.5em; color:var(--theme-color-text-muted);">No schema defined yet. Click "Edit Schema" to create one.</div>';
 			return;
 		}
 
@@ -438,7 +438,7 @@ class FactoFullProjectionDetailView extends libPictView
 
 		if (this._Stores.length === 0)
 		{
-			tmpContainer.innerHTML = '<div class="facto-card" style="text-align:center; padding:1.5em; color:var(--facto-text-tertiary);">No stores deployed yet. Click "+ Deploy to Store" to create one.</div>';
+			tmpContainer.innerHTML = '<div class="facto-card" style="text-align:center; padding:1.5em; color:var(--theme-color-text-muted);">No stores deployed yet. Click "+ Deploy to Store" to create one.</div>';
 			return;
 		}
 
@@ -532,7 +532,7 @@ class FactoFullProjectionDetailView extends libPictView
 
 		if (this._Mappings.length === 0)
 		{
-			tmpContainer.innerHTML = '<div class="facto-card" style="text-align:center; padding:1.5em; color:var(--facto-text-tertiary);">No mappings yet. Create a mapping to link source data to this projection.</div>';
+			tmpContainer.innerHTML = '<div class="facto-card" style="text-align:center; padding:1.5em; color:var(--theme-color-text-muted);">No mappings yet. Create a mapping to link source data to this projection.</div>';
 			return;
 		}
 
@@ -760,7 +760,7 @@ class FactoFullProjectionDetailView extends libPictView
 
 		if (this._Mappings.length === 0 || this._Stores.length === 0)
 		{
-			tmpContainer.innerHTML = '<div class="facto-card" style="text-align:center; padding:1.5em; color:var(--facto-text-tertiary);">Configure at least one mapping and deploy a store before importing data.</div>';
+			tmpContainer.innerHTML = '<div class="facto-card" style="text-align:center; padding:1.5em; color:var(--theme-color-text-muted);">Configure at least one mapping and deploy a store before importing data.</div>';
 			return;
 		}
 

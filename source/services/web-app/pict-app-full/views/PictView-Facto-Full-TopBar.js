@@ -14,9 +14,9 @@ const _ViewConfiguration =
 			display: flex;
 			align-items: center;
 			height: 48px;
-			background: var(--facto-topbar-bg);
+			background: var(--theme-color-background-secondary);
 			padding: 0 1.25em;
-			border-bottom: 1px solid var(--facto-border-subtle);
+			border-bottom: 1px solid var(--theme-color-border-light);
 			position: sticky;
 			top: 0;
 			z-index: 100;
@@ -25,7 +25,7 @@ const _ViewConfiguration =
 		.facto-topbar-brand {
 			font-size: 1.05em;
 			font-weight: 700;
-			color: var(--facto-topbar-hover);
+			color: var(--theme-color-background-hover);
 			cursor: pointer;
 			margin-right: 2em;
 			white-space: nowrap;
@@ -33,7 +33,7 @@ const _ViewConfiguration =
 		}
 
 		.facto-topbar-brand:hover {
-			color: var(--facto-topbar-active);
+			color: var(--theme-color-brand-primary);
 		}
 
 		.facto-topbar-nav {
@@ -48,7 +48,7 @@ const _ViewConfiguration =
 			padding: 0.35em 0.7em;
 			font-size: 0.85em;
 			font-weight: 500;
-			color: var(--facto-topbar-text);
+			color: var(--theme-color-text-secondary);
 			text-decoration: none;
 			border-radius: 5px;
 			white-space: nowrap;
@@ -57,12 +57,12 @@ const _ViewConfiguration =
 		}
 
 		.facto-topbar-nav a:hover {
-			color: var(--facto-topbar-hover);
+			color: var(--theme-color-background-hover);
 			background: rgba(255,255,255,0.06);
 		}
 
 		.facto-topbar-nav a.active {
-			color: var(--facto-topbar-active);
+			color: var(--theme-color-brand-primary);
 			background: rgba(255,255,255,0.08);
 		}
 
@@ -75,7 +75,7 @@ const _ViewConfiguration =
 
 		.facto-topbar-simple-link {
 			font-size: 0.75em;
-			color: var(--facto-topbar-text);
+			color: var(--theme-color-text-secondary);
 			text-decoration: none;
 			opacity: 0.6;
 		}
@@ -94,7 +94,7 @@ const _ViewConfiguration =
 			border: none;
 			padding: 0.3em;
 			cursor: pointer;
-			color: var(--facto-topbar-text);
+			color: var(--theme-color-text-secondary);
 			display: flex;
 			align-items: center;
 			border-radius: 4px;
@@ -102,7 +102,7 @@ const _ViewConfiguration =
 		}
 
 		.facto-settings-gear:hover {
-			color: var(--facto-topbar-hover);
+			color: var(--theme-color-background-hover);
 		}
 
 		.facto-settings-gear svg {
@@ -117,19 +117,19 @@ const _ViewConfiguration =
 			top: 100%;
 			right: 0;
 			margin-top: 0.5em;
-			background: var(--facto-bg-surface);
-			border: 1px solid var(--facto-border);
+			background: var(--theme-color-background-panel);
+			border: 1px solid var(--theme-color-border-default);
 			border-radius: 8px;
 			padding: 1em;
 			min-width: 220px;
-			box-shadow: var(--facto-shadow-heavy);
+			box-shadow: var(--theme-color-shadow-color);
 			z-index: 200;
 		}
 
 		.facto-settings-panel-title {
 			font-size: 0.8em;
 			font-weight: 600;
-			color: var(--facto-text-secondary);
+			color: var(--theme-color-text-secondary);
 			text-transform: uppercase;
 			letter-spacing: 0.05em;
 			margin-bottom: 0.75em;
@@ -152,12 +152,12 @@ const _ViewConfiguration =
 		}
 
 		.facto-theme-swatch:hover {
-			background: var(--facto-bg-elevated);
+			background: var(--theme-color-background-tertiary);
 		}
 
 		.facto-theme-swatch.active {
-			background: var(--facto-bg-elevated);
-			outline: 2px solid var(--facto-brand);
+			background: var(--theme-color-background-tertiary);
+			outline: 2px solid var(--theme-color-brand-primary);
 			outline-offset: -2px;
 		}
 
@@ -175,7 +175,7 @@ const _ViewConfiguration =
 
 		.facto-theme-swatch-label {
 			font-size: 0.82em;
-			color: var(--facto-text);
+			color: var(--theme-color-text-primary);
 		}
 
 		@media (max-width: 900px) {
@@ -216,8 +216,8 @@ const _ViewConfiguration =
 			</button>
 
 			<div class="facto-settings-panel" id="Facto-Full-Settings-Panel" style="display:none;">
-				<div class="facto-settings-panel-title">Theme</div>
-				<div class="facto-theme-grid" id="Facto-Full-Settings-ThemeGrid"></div>
+				<div class="facto-settings-panel-title">Appearance</div>
+				<div id="Facto-Full-Settings-Theme"></div>
 			</div>
 		</div>
 	</div>
@@ -247,7 +247,7 @@ class FactoFullTopBarView extends libPictView
 
 	onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent)
 	{
-		this._renderThemeGrid();
+		this._mountThemeControls();
 
 		// Close theme panel on outside click
 		document.addEventListener('click',
@@ -273,15 +273,10 @@ class FactoFullTopBarView extends libPictView
 
 		this._themePanelOpen = !this._themePanelOpen;
 		tmpPanel.style.display = this._themePanelOpen ? 'block' : 'none';
-	}
 
-	selectTheme(pThemeKey)
-	{
-		this.pict.PictApplication.applyTheme(pThemeKey);
-		this._renderThemeGrid();
-		this._themePanelOpen = false;
-		let tmpPanel = document.getElementById('Facto-Full-Settings-Panel');
-		if (tmpPanel) tmpPanel.style.display = 'none';
+		// Re-mount the theme controls when the panel opens, in case anything
+		// rebuilt the slot since the last mount.
+		if (this._themePanelOpen) { this._mountThemeControls(); }
 	}
 
 	highlightRoute(pRoute)
@@ -303,30 +298,16 @@ class FactoFullTopBarView extends libPictView
 		}
 	}
 
-	_renderThemeGrid()
+	_mountThemeControls()
 	{
-		let tmpGrid = document.getElementById('Facto-Full-Settings-ThemeGrid');
-		if (!tmpGrid) return;
-
-		let tmpThemes = this.pict.PictApplication.getThemeList();
-		let tmpCurrentTheme = this.pict.AppData.Facto.CurrentTheme || 'facto-dark';
-
-		let tmpHtml = '';
-		for (let i = 0; i < tmpThemes.length; i++)
+		let tmpTheme = this.pict.providers && this.pict.providers['Theme-Section'];
+		if (tmpTheme && typeof tmpTheme.mount === 'function')
 		{
-			let tmpTheme = tmpThemes[i];
-			let tmpActiveClass = (tmpTheme.Key === tmpCurrentTheme) ? ' active' : '';
-			tmpHtml += '<div class="facto-theme-swatch' + tmpActiveClass + '" onclick="pict.views[\'Facto-Full-TopBar\'].selectTheme(\'' + tmpTheme.Key + '\')">';
-			tmpHtml += '<div class="facto-theme-swatch-colors">';
-			for (let c = 0; c < tmpTheme.Colors.length; c++)
-			{
-				tmpHtml += '<div class="facto-theme-swatch-dot" style="background:' + tmpTheme.Colors[c] + ';"></div>';
-			}
-			tmpHtml += '</div>';
-			tmpHtml += '<div class="facto-theme-swatch-label">' + tmpTheme.Label + '</div>';
-			tmpHtml += '</div>';
+			tmpTheme.mount({
+				Container: '#Facto-Full-Settings-Theme',
+				Views: ['Picker', 'ModeToggle', 'ScaleSelect']
+			});
 		}
-		tmpGrid.innerHTML = tmpHtml;
 	}
 }
 

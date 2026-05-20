@@ -15,20 +15,20 @@ const _ViewConfiguration =
 			display: inline-flex;
 			align-items: center;
 			gap: 0.35em;
-			color: var(--facto-text-secondary);
+			color: var(--theme-color-text-secondary);
 			cursor: pointer;
 			font-size: 0.85em;
 			margin-bottom: 0.75em;
 			transition: color 0.15s;
 		}
 		.facto-source-detail-back:hover {
-			color: var(--facto-brand);
+			color: var(--theme-color-brand-primary);
 		}
 
 		/* Research context section */
 		.facto-research-context {
-			background: var(--facto-bg-elevated, #1a1e2a);
-			border: 1px solid var(--facto-border-subtle, #2a2e3a);
+			background: var(--theme-color-background-tertiary, #1a1e2a);
+			border: 1px solid var(--theme-color-border-light, #2a2e3a);
 			border-radius: 8px;
 			padding: 1em;
 			margin-bottom: 1.5em;
@@ -38,24 +38,24 @@ const _ViewConfiguration =
 			font-size: 0.75em;
 			text-transform: uppercase;
 			letter-spacing: 0.05em;
-			color: var(--facto-text-tertiary, #888);
+			color: var(--theme-color-text-muted, #888);
 		}
 		.facto-research-context-detail {
 			font-size: 0.85em;
-			color: var(--facto-text-secondary, #aaa);
+			color: var(--theme-color-text-secondary, #aaa);
 			line-height: 1.6;
 		}
 		.facto-research-context-detail strong {
-			color: var(--facto-text-heading, #eee);
+			color: var(--theme-color-text-primary, #eee);
 		}
 		.facto-research-context-note {
 			margin-top: 0.5em;
 			padding: 0.5em 0.75em;
-			background: var(--facto-brand-a08);
-			border-left: 3px solid var(--facto-brand, #4a90d9);
+			background: var(var(--facto-brand-a08));
+			border-left: 3px solid var(--theme-color-brand-primary, #4a90d9);
 			border-radius: 0 4px 4px 0;
 			font-size: 0.85em;
-			color: var(--facto-text-secondary, #aaa);
+			color: var(--theme-color-text-secondary, #aaa);
 		}
 
 		/* Dataset definitions table */
@@ -65,7 +65,7 @@ const _ViewConfiguration =
 		.facto-dataset-defs h2 {
 			font-size: 1em;
 			margin: 0 0 0.75em;
-			color: var(--facto-text-secondary, #aaa);
+			color: var(--theme-color-text-secondary, #aaa);
 			text-transform: uppercase;
 			letter-spacing: 0.05em;
 		}
@@ -83,7 +83,7 @@ const _ViewConfiguration =
 		.facto-doc-section-header h2 {
 			font-size: 1em;
 			margin: 0;
-			color: var(--facto-text-secondary, #aaa);
+			color: var(--theme-color-text-secondary, #aaa);
 			text-transform: uppercase;
 			letter-spacing: 0.05em;
 		}
@@ -96,75 +96,75 @@ const _ViewConfiguration =
 			border-radius: 4px;
 			cursor: pointer;
 			transition: background 0.15s, color 0.15s;
-			border: 1px solid var(--facto-border-subtle, #2a2e3a);
+			border: 1px solid var(--theme-color-border-light, #2a2e3a);
 			background: transparent;
-			color: var(--facto-text-tertiary, #888);
+			color: var(--theme-color-text-muted, #888);
 		}
 		.facto-edit-toggle:hover {
-			border-color: var(--facto-brand, #4a90d9);
-			color: var(--facto-brand, #4a90d9);
+			border-color: var(--theme-color-brand-primary, #4a90d9);
+			color: var(--theme-color-brand-primary, #4a90d9);
 		}
 		.facto-edit-toggle.active {
-			background: var(--facto-brand-a15);
-			border-color: var(--facto-brand, #4a90d9);
-			color: var(--facto-brand, #4a90d9);
+			background: var(var(--facto-brand-a15));
+			border-color: var(--theme-color-brand-primary, #4a90d9);
+			color: var(--theme-color-brand-primary, #4a90d9);
 		}
 
 		/* Read-only rendered content */
 		.facto-doc-content-wrap {
-			background: var(--facto-bg-elevated, #1a1e2a);
-			border: 1px solid var(--facto-border-subtle, #2a2e3a);
+			background: var(--theme-color-background-tertiary, #1a1e2a);
+			border: 1px solid var(--theme-color-border-light, #2a2e3a);
 			border-radius: 8px;
 			padding: 1.5em 2em;
 			min-height: 100px;
 		}
 		.facto-doc-content-wrap h1 {
 			font-size: 1.75em;
-			color: var(--facto-text-heading, #eee);
-			border-bottom: 1px solid var(--facto-border-subtle, #2a2e3a);
+			color: var(--theme-color-text-primary, #eee);
+			border-bottom: 1px solid var(--theme-color-border-light, #2a2e3a);
 			padding-bottom: 0.3em;
 			margin-top: 0;
 		}
 		.facto-doc-content-wrap h2 {
 			font-size: 1.4em;
-			color: var(--facto-text-heading, #eee);
-			border-bottom: 1px solid var(--facto-border-subtle, #2a2e3a);
+			color: var(--theme-color-text-primary, #eee);
+			border-bottom: 1px solid var(--theme-color-border-light, #2a2e3a);
 			padding-bottom: 0.25em;
 			margin-top: 1.5em;
 		}
 		.facto-doc-content-wrap h3 {
 			font-size: 1.15em;
-			color: var(--facto-text-heading, #eee);
+			color: var(--theme-color-text-primary, #eee);
 			margin-top: 1.25em;
 		}
 		.facto-doc-content-wrap h4,
 		.facto-doc-content-wrap h5,
 		.facto-doc-content-wrap h6 {
-			color: var(--facto-text-secondary, #ccc);
+			color: var(--theme-color-text-secondary, #ccc);
 			margin-top: 1em;
 		}
 		.facto-doc-content-wrap p {
 			line-height: 1.7;
-			color: var(--facto-text-secondary, #bbb);
+			color: var(--theme-color-text-secondary, #bbb);
 			margin: 0.75em 0;
 		}
 		.facto-doc-content-wrap a {
-			color: var(--facto-brand, #4a90d9);
+			color: var(--theme-color-brand-primary, #4a90d9);
 		}
 		.facto-doc-content-wrap code {
-			background: var(--facto-brand-a10);
-			color: var(--facto-brand, #4a90d9);
+			background: var(var(--facto-brand-a10));
+			color: var(--theme-color-brand-primary, #4a90d9);
 			padding: 0.15em 0.35em;
 			border-radius: 3px;
 			font-size: 0.9em;
 		}
 		.facto-doc-content-wrap pre {
-			background: var(--facto-bg-input, #0d1117);
-			border: 1px solid var(--facto-border-subtle, #2a2e3a);
+			background: var(--theme-color-background-panel, #0d1117);
+			border: 1px solid var(--theme-color-border-light, #2a2e3a);
 			border-radius: 6px;
 			padding: 1em;
 			overflow-x: auto;
-			color: var(--facto-text-heading, #eee);
+			color: var(--theme-color-text-primary, #eee);
 		}
 		.facto-doc-content-wrap pre code {
 			background: transparent;
@@ -172,11 +172,11 @@ const _ViewConfiguration =
 			color: inherit;
 		}
 		.facto-doc-content-wrap blockquote {
-			border-left: 3px solid var(--facto-brand, #4a90d9);
+			border-left: 3px solid var(--theme-color-brand-primary, #4a90d9);
 			padding: 0.5em 1em;
 			margin: 1em 0;
-			color: var(--facto-text-tertiary, #888);
-			background: var(--facto-brand-a05);
+			color: var(--theme-color-text-muted, #888);
+			background: var(var(--facto-brand-a05));
 			border-radius: 0 4px 4px 0;
 		}
 		.facto-doc-content-wrap table {
@@ -186,12 +186,12 @@ const _ViewConfiguration =
 		}
 		.facto-doc-content-wrap table th,
 		.facto-doc-content-wrap table td {
-			border: 1px solid var(--facto-border-subtle, #2a2e3a);
+			border: 1px solid var(--theme-color-border-light, #2a2e3a);
 			padding: 0.5em 0.75em;
 		}
 		.facto-doc-content-wrap table th {
 			background: rgba(255, 255, 255, 0.03);
-			color: var(--facto-text-heading, #eee);
+			color: var(--theme-color-text-primary, #eee);
 		}
 		.facto-doc-content-wrap img {
 			max-width: 100%;
@@ -201,12 +201,12 @@ const _ViewConfiguration =
 		}
 		.facto-doc-content-wrap hr {
 			border: none;
-			border-top: 1px solid var(--facto-border-subtle, #2a2e3a);
+			border-top: 1px solid var(--theme-color-border-light, #2a2e3a);
 			margin: 1.5em 0;
 		}
 		.facto-doc-content-wrap ul,
 		.facto-doc-content-wrap ol {
-			color: var(--facto-text-secondary, #bbb);
+			color: var(--theme-color-text-secondary, #bbb);
 			padding-left: 1.5em;
 			line-height: 1.7;
 		}
@@ -218,22 +218,22 @@ const _ViewConfiguration =
 		}
 		.facto-doc-item {
 			padding: 0.4em 0.75em;
-			background: var(--facto-bg-elevated, #1a1e2a);
-			border: 1px solid var(--facto-border-subtle, #2a2e3a);
+			background: var(--theme-color-background-tertiary, #1a1e2a);
+			border: 1px solid var(--theme-color-border-light, #2a2e3a);
 			border-radius: 6px;
 			font-size: 0.85em;
 			cursor: pointer;
-			color: var(--facto-text-secondary, #aaa);
+			color: var(--theme-color-text-secondary, #aaa);
 			transition: border-color 0.15s, color 0.15s;
 		}
 		.facto-doc-item:hover {
-			border-color: var(--facto-brand, #4a90d9);
-			color: var(--facto-text-heading, #eee);
+			border-color: var(--theme-color-brand-primary, #4a90d9);
+			color: var(--theme-color-text-primary, #eee);
 		}
 		.facto-doc-item.active {
-			border-color: var(--facto-brand, #4a90d9);
-			color: var(--facto-brand, #4a90d9);
-			background: var(--facto-brand-a10);
+			border-color: var(--theme-color-brand-primary, #4a90d9);
+			color: var(--theme-color-brand-primary, #4a90d9);
+			background: var(var(--facto-brand-a10));
 		}
 		.facto-doc-new-input {
 			display: flex;
@@ -260,7 +260,7 @@ const _ViewConfiguration =
 		<h1 id="Facto-SourceDetail-Title">Source</h1>
 	</div>
 
-	<div id="Facto-SourceDetail-Loading" style="color:var(--facto-text-secondary);">Loading source...</div>
+	<div id="Facto-SourceDetail-Loading" style="color:var(--theme-color-text-secondary);">Loading source...</div>
 	<div id="Facto-SourceDetail-Error" class="facto-status facto-status-error" style="display:none;"></div>
 
 	<div id="Facto-SourceDetail-Container" style="display:none;">
@@ -677,7 +677,7 @@ class FactoFullSourceDetailView extends libPictView
 
 		if (!this._CurrentDocContent)
 		{
-			tmpDisplayEl.innerHTML = '<p style="color:var(--facto-text-tertiary);">Empty document.</p>';
+			tmpDisplayEl.innerHTML = '<p style="color:var(--theme-color-text-muted);">Empty document.</p>';
 			return;
 		}
 

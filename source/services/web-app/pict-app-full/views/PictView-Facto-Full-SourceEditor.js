@@ -13,8 +13,8 @@ const _ViewConfiguration =
 
 	CSS: /*css*/`
 		.facto-doc-editor-wrap {
-			background: var(--facto-bg-elevated, #1a1e2a);
-			border: 1px solid var(--facto-border-subtle, #2a2e3a);
+			background: var(--theme-color-background-tertiary, #1a1e2a);
+			border: 1px solid var(--theme-color-border-light, #2a2e3a);
 			border-radius: 8px;
 			padding: 1em;
 			min-height: 200px;
@@ -28,20 +28,20 @@ const _ViewConfiguration =
 		.facto-doc-name {
 			font-size: 0.9em;
 			font-weight: 600;
-			color: var(--facto-text-heading, #eee);
+			color: var(--theme-color-text-primary, #eee);
 		}
 		.facto-doc-name-input {
 			font-size: 0.9em;
 			font-weight: 600;
-			color: var(--facto-text-heading, #eee);
-			background: var(--facto-bg-input, #0d1117);
-			border: 1px solid var(--facto-border, #3a3e4a);
+			color: var(--theme-color-text-primary, #eee);
+			background: var(--theme-color-background-panel, #0d1117);
+			border: 1px solid var(--theme-color-border-default, #3a3e4a);
 			border-radius: 4px;
 			padding: 0.2em 0.5em;
 			width: 250px;
 		}
 		.facto-doc-name-input:focus {
-			border-color: var(--facto-brand, #4a90d9);
+			border-color: var(--theme-color-brand-primary, #4a90d9);
 			outline: none;
 		}
 
@@ -60,25 +60,25 @@ const _ViewConfiguration =
 			font-size: 0.72em;
 			border-radius: 4px;
 			cursor: pointer;
-			border: 1px solid var(--facto-border-subtle, #2a2e3a);
+			border: 1px solid var(--theme-color-border-light, #2a2e3a);
 			background: transparent;
-			color: var(--facto-text-tertiary, #888);
+			color: var(--theme-color-text-muted, #888);
 			transition: background 0.15s, color 0.15s, border-color 0.15s;
 			white-space: nowrap;
 		}
 		.facto-editor-ctrl-btn:hover {
-			border-color: var(--facto-border, #3a3e4a);
-			color: var(--facto-text-secondary, #aaa);
+			border-color: var(--theme-color-border-default, #3a3e4a);
+			color: var(--theme-color-text-secondary, #aaa);
 		}
 		.facto-editor-ctrl-btn.active {
-			background: var(--facto-brand-a12);
-			border-color: var(--facto-brand, #4a90d9);
-			color: var(--facto-brand, #4a90d9);
+			background: var(var(--facto-brand-a12));
+			border-color: var(--theme-color-brand-primary, #4a90d9);
+			color: var(--theme-color-brand-primary, #4a90d9);
 		}
 		.facto-editor-ctrl-sep {
 			width: 1px;
 			height: 16px;
-			background: var(--facto-border-subtle, #2a2e3a);
+			background: var(--theme-color-border-light, #2a2e3a);
 			margin: 0 0.25em;
 		}
 
@@ -97,12 +97,12 @@ const _ViewConfiguration =
 			align-items: center;
 			justify-content: center;
 			border-radius: 4px;
-			color: var(--facto-text-tertiary, #888);
+			color: var(--theme-color-text-muted, #888);
 			transition: color 0.15s;
 		}
 		.facto-settings-gear:hover,
 		.facto-settings-gear.active {
-			color: var(--facto-brand, #4a90d9);
+			color: var(--theme-color-brand-primary, #4a90d9);
 		}
 		.facto-settings-gear svg {
 			width: 18px;
@@ -126,8 +126,8 @@ const _ViewConfiguration =
 			top: 36px;
 			right: 0;
 			width: 260px;
-			background: var(--facto-bg-elevated, #1a1e2a);
-			border: 1px solid var(--facto-border, #3a3e4a);
+			background: var(--theme-color-background-tertiary, #1a1e2a);
+			border: 1px solid var(--theme-color-border-default, #3a3e4a);
 			border-radius: 8px;
 			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 			z-index: 1000;
@@ -148,9 +148,9 @@ const _ViewConfiguration =
 			right: 10px;
 			width: 10px;
 			height: 10px;
-			background: var(--facto-bg-elevated, #1a1e2a);
-			border-left: 1px solid var(--facto-border, #3a3e4a);
-			border-top: 1px solid var(--facto-border, #3a3e4a);
+			background: var(--theme-color-background-tertiary, #1a1e2a);
+			border-left: 1px solid var(--theme-color-border-default, #3a3e4a);
+			border-top: 1px solid var(--theme-color-border-default, #3a3e4a);
 			transform: rotate(45deg);
 		}
 		.facto-settings-section {
@@ -161,12 +161,12 @@ const _ViewConfiguration =
 			font-weight: 600;
 			text-transform: uppercase;
 			letter-spacing: 0.5px;
-			color: var(--facto-text-tertiary, #888);
+			color: var(--theme-color-text-muted, #888);
 			margin-bottom: 6px;
 		}
 		.facto-settings-divider {
 			height: 1px;
-			background: var(--facto-border-subtle, #2a2e3a);
+			background: var(--theme-color-border-light, #2a2e3a);
 			margin: 2px 8px;
 		}
 		.facto-settings-row {
@@ -182,24 +182,24 @@ const _ViewConfiguration =
 		.facto-settings-checkbox {
 			width: 15px;
 			height: 15px;
-			accent-color: var(--facto-brand, #4a90d9);
+			accent-color: var(--theme-color-brand-primary, #4a90d9);
 			cursor: pointer;
 			flex-shrink: 0;
 		}
 		.facto-settings-checkbox-label {
 			font-size: 0.82rem;
-			color: var(--facto-text-secondary, #aaa);
+			color: var(--theme-color-text-secondary, #aaa);
 			cursor: pointer;
 			user-select: none;
 		}
 		.facto-settings-select {
 			width: 130px;
 			padding: 4px 6px;
-			border: 1px solid var(--facto-border, #3a3e4a);
+			border: 1px solid var(--theme-color-border-default, #3a3e4a);
 			border-radius: 4px;
-			background: var(--facto-bg-input, #0d1117);
+			background: var(--theme-color-background-panel, #0d1117);
 			font-size: 0.78rem;
-			color: var(--facto-text-secondary, #aaa);
+			color: var(--theme-color-text-secondary, #aaa);
 			cursor: pointer;
 		}
 		.facto-settings-select:disabled {
@@ -208,7 +208,7 @@ const _ViewConfiguration =
 		}
 		.facto-settings-select-label {
 			font-size: 0.78rem;
-			color: var(--facto-text-tertiary, #888);
+			color: var(--theme-color-text-muted, #888);
 			white-space: nowrap;
 		}
 
@@ -218,181 +218,181 @@ const _ViewConfiguration =
 			background: transparent;
 		}
 		.facto-doc-editor-wrap .pict-mde-segment {
-			border-color: var(--facto-border-subtle, #2a2e3a);
+			border-color: var(--theme-color-border-light, #2a2e3a);
 		}
 		.facto-doc-editor-wrap .pict-mde-segment-body {
-			background: var(--facto-bg-input, #0d1117);
+			background: var(--theme-color-background-panel, #0d1117);
 		}
 		.facto-doc-editor-wrap .pict-mde-segment.pict-mde-active .pict-mde-segment-body {
-			background: var(--facto-bg-input, #0d1117);
+			background: var(--theme-color-background-panel, #0d1117);
 		}
 
 		/* Drag handle */
 		.facto-doc-editor-wrap .pict-mde-drag-handle {
-			background: var(--facto-border-subtle, #2a2e3a);
+			background: var(--theme-color-border-light, #2a2e3a);
 		}
 		.facto-doc-editor-wrap .pict-mde-drag-handle:hover {
-			background: var(--facto-border, #3a3e4a);
+			background: var(--theme-color-border-default, #3a3e4a);
 		}
 		.facto-doc-editor-wrap .pict-mde-segment.pict-mde-active .pict-mde-drag-handle {
-			background: var(--facto-brand-a25);
+			background: var(var(--facto-brand-a25));
 		}
 
 		/* Left control buttons */
 		.facto-doc-editor-wrap .pict-mde-left-btn {
-			color: var(--facto-text-tertiary, #666);
+			color: var(--theme-color-text-muted, #666);
 		}
 		.facto-doc-editor-wrap .pict-mde-left-btn:hover {
-			color: var(--facto-text-heading, #eee);
+			color: var(--theme-color-text-primary, #eee);
 		}
 		.facto-doc-editor-wrap .pict-mde-btn-remove:hover {
-			color: var(--facto-error, #dc3545);
+			color: var(--theme-color-status-error, #dc3545);
 		}
 
 		/* CodeMirror editor — selectors must include .cm-editor to beat
 		   library's .pict-mde-segment-editor .cm-editor .cm-* specificity */
 		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-editor {
-			background: var(--facto-bg-input, #0d1117);
-			color: var(--facto-text-heading, #eee);
+			background: var(--theme-color-background-panel, #0d1117);
+			color: var(--theme-color-text-primary, #eee);
 		}
 		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-editor .cm-gutters {
-			background: var(--facto-bg-elevated, #1a1e2a);
-			border-color: var(--facto-border-subtle, #2a2e3a);
-			color: var(--facto-text-tertiary, #666);
+			background: var(--theme-color-background-tertiary, #1a1e2a);
+			border-color: var(--theme-color-border-light, #2a2e3a);
+			color: var(--theme-color-text-muted, #666);
 		}
 		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-editor .cm-activeLine {
-			background: var(--facto-brand-a05);
+			background: var(var(--facto-brand-a05));
 		}
 		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-editor .cm-activeLineGutter {
-			background: var(--facto-brand-a10);
+			background: var(var(--facto-brand-a10));
 		}
 		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-editor .cm-cursor {
-			border-left-color: var(--facto-text-heading, #eee);
+			border-left-color: var(--theme-color-text-primary, #eee);
 		}
 		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-editor .cm-selectionBackground {
-			background: var(--facto-brand-a20) !important;
+			background: var(var(--facto-brand-a20)) !important;
 		}
 		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-editor .cm-content {
-			color: var(--facto-text-heading, #eee);
+			color: var(--theme-color-text-primary, #eee);
 		}
 		.facto-doc-editor-wrap .pict-mde-segment-editor .cm-editor .cm-lineNumbers .cm-gutterElement {
-			color: var(--facto-text-tertiary, #555);
+			color: var(--theme-color-text-muted, #555);
 		}
 
 		/* Rich preview — must match library's two-class specificity */
 		.facto-doc-editor-wrap .pict-mde-rich-preview.pict-mde-has-rich-preview {
-			background: var(--facto-bg-surface, #161a24);
-			border-color: var(--facto-border-subtle, #2a2e3a);
-			color: var(--facto-text-secondary, #aaa);
+			background: var(--theme-color-background-panel, #161a24);
+			border-color: var(--theme-color-border-light, #2a2e3a);
+			color: var(--theme-color-text-secondary, #aaa);
 		}
 		.facto-doc-editor-wrap .pict-mde-rich-preview h1,
 		.facto-doc-editor-wrap .pict-mde-rich-preview h2,
 		.facto-doc-editor-wrap .pict-mde-rich-preview h3,
 		.facto-doc-editor-wrap .pict-mde-rich-preview h4 {
-			color: var(--facto-text-heading, #eee);
+			color: var(--theme-color-text-primary, #eee);
 		}
 		.facto-doc-editor-wrap .pict-mde-rich-preview code {
-			background: var(--facto-brand-a10);
-			color: var(--facto-brand, #4a90d9);
+			background: var(var(--facto-brand-a10));
+			color: var(--theme-color-brand-primary, #4a90d9);
 		}
 		.facto-doc-editor-wrap .pict-mde-rich-preview pre {
-			background: var(--facto-bg-input, #0d1117);
-			border: 1px solid var(--facto-border-subtle, #2a2e3a);
-			color: var(--facto-text-heading, #eee);
+			background: var(--theme-color-background-panel, #0d1117);
+			border: 1px solid var(--theme-color-border-light, #2a2e3a);
+			color: var(--theme-color-text-primary, #eee);
 		}
 		.facto-doc-editor-wrap .pict-mde-rich-preview a {
-			color: var(--facto-brand, #4a90d9);
+			color: var(--theme-color-brand-primary, #4a90d9);
 		}
 		.facto-doc-editor-wrap .pict-mde-rich-preview blockquote {
-			border-left-color: var(--facto-brand, #4a90d9);
-			color: var(--facto-text-tertiary, #888);
+			border-left-color: var(--theme-color-brand-primary, #4a90d9);
+			color: var(--theme-color-text-muted, #888);
 		}
 		.facto-doc-editor-wrap .pict-mde-rich-preview table th,
 		.facto-doc-editor-wrap .pict-mde-rich-preview table td {
-			border-color: var(--facto-border-subtle, #2a2e3a);
+			border-color: var(--theme-color-border-light, #2a2e3a);
 		}
 		.facto-doc-editor-wrap .pict-mde-rich-preview hr {
-			border-color: var(--facto-border-subtle, #2a2e3a);
+			border-color: var(--theme-color-border-light, #2a2e3a);
 		}
 
 		/* Image preview */
 		.facto-doc-editor-wrap .pict-mde-image-preview.pict-mde-has-images {
-			border-color: var(--facto-border-subtle, #2a2e3a);
+			border-color: var(--theme-color-border-light, #2a2e3a);
 		}
 		.facto-doc-editor-wrap .pict-mde-image-preview-label {
-			color: var(--facto-text-tertiary, #666);
-			background: var(--facto-bg-surface, #161a24);
+			color: var(--theme-color-text-muted, #666);
+			background: var(--theme-color-background-panel, #161a24);
 		}
 
 		/* Add-segment button */
 		.facto-doc-editor-wrap .pict-mde-btn-add {
-			background: var(--facto-bg-surface, #161a24);
-			border-color: var(--facto-border-subtle, #2a2e3a);
-			color: var(--facto-text-tertiary, #666);
+			background: var(--theme-color-background-panel, #161a24);
+			border-color: var(--theme-color-border-light, #2a2e3a);
+			color: var(--theme-color-text-muted, #666);
 		}
 		.facto-doc-editor-wrap .pict-mde-btn-add:hover {
-			border-color: var(--facto-brand, #4a90d9);
-			color: var(--facto-brand, #4a90d9);
-			background: var(--facto-brand-a05);
+			border-color: var(--theme-color-brand-primary, #4a90d9);
+			color: var(--theme-color-brand-primary, #4a90d9);
+			background: var(var(--facto-brand-a05));
 		}
 
 		/* Sidebar buttons */
 		.facto-doc-editor-wrap .pict-mde-sidebar-btn {
-			background: var(--facto-bg-surface, #161a24);
-			border-color: var(--facto-border-subtle, #2a2e3a);
-			color: var(--facto-text-tertiary, #666);
+			background: var(--theme-color-background-panel, #161a24);
+			border-color: var(--theme-color-border-light, #2a2e3a);
+			color: var(--theme-color-text-muted, #666);
 		}
 		.facto-doc-editor-wrap .pict-mde-sidebar-btn:hover {
-			border-color: var(--facto-brand, #4a90d9);
-			color: var(--facto-brand, #4a90d9);
+			border-color: var(--theme-color-brand-primary, #4a90d9);
+			color: var(--theme-color-brand-primary, #4a90d9);
 		}
 
 		/* Drag-over indicators */
 		.facto-doc-editor-wrap .pict-mde-segment.pict-mde-drag-over-top {
-			border-top-color: var(--facto-brand, #4a90d9);
+			border-top-color: var(--theme-color-brand-primary, #4a90d9);
 		}
 		.facto-doc-editor-wrap .pict-mde-segment.pict-mde-drag-over-bottom {
-			border-bottom-color: var(--facto-brand, #4a90d9);
+			border-bottom-color: var(--theme-color-brand-primary, #4a90d9);
 		}
 
 		/* Rendered view (full-document preview mode) */
 		.facto-doc-editor-wrap .pict-mde-rendered-view {
-			background: var(--facto-bg-surface, #161a24);
-			border-color: var(--facto-border-subtle, #2a2e3a);
-			color: var(--facto-text-secondary, #aaa);
+			background: var(--theme-color-background-panel, #161a24);
+			border-color: var(--theme-color-border-light, #2a2e3a);
+			color: var(--theme-color-text-secondary, #aaa);
 		}
 		.facto-doc-editor-wrap .pict-mde-rendered-view h1,
 		.facto-doc-editor-wrap .pict-mde-rendered-view h2,
 		.facto-doc-editor-wrap .pict-mde-rendered-view h3,
 		.facto-doc-editor-wrap .pict-mde-rendered-view h4 {
-			color: var(--facto-text-heading, #eee);
+			color: var(--theme-color-text-primary, #eee);
 		}
 		.facto-doc-editor-wrap .pict-mde-rendered-view p {
-			color: var(--facto-text-secondary, #bbb);
+			color: var(--theme-color-text-secondary, #bbb);
 		}
 		.facto-doc-editor-wrap .pict-mde-rendered-view a {
-			color: var(--facto-brand, #4a90d9);
+			color: var(--theme-color-brand-primary, #4a90d9);
 		}
 		.facto-doc-editor-wrap .pict-mde-rendered-view code {
-			background: var(--facto-brand-a10);
-			color: var(--facto-brand, #4a90d9);
+			background: var(var(--facto-brand-a10));
+			color: var(--theme-color-brand-primary, #4a90d9);
 		}
 		.facto-doc-editor-wrap .pict-mde-rendered-view pre {
-			background: var(--facto-bg-input, #0d1117);
-			border: 1px solid var(--facto-border-subtle, #2a2e3a);
-			color: var(--facto-text-heading, #eee);
+			background: var(--theme-color-background-panel, #0d1117);
+			border: 1px solid var(--theme-color-border-light, #2a2e3a);
+			color: var(--theme-color-text-primary, #eee);
 		}
 		.facto-doc-editor-wrap .pict-mde-rendered-view pre code {
 			background: transparent;
 			color: inherit;
 		}
 		.facto-doc-editor-wrap .pict-mde-rendered-view blockquote {
-			border-left-color: var(--facto-brand, #4a90d9);
-			color: var(--facto-text-tertiary, #888);
+			border-left-color: var(--theme-color-brand-primary, #4a90d9);
+			color: var(--theme-color-text-muted, #888);
 		}
 		.facto-doc-editor-wrap .pict-mde-rendered-view table th,
 		.facto-doc-editor-wrap .pict-mde-rendered-view table td {
-			border-color: var(--facto-border-subtle, #2a2e3a);
+			border-color: var(--theme-color-border-light, #2a2e3a);
 		}
 		.facto-doc-editor-wrap .pict-mde-rendered-view img {
 			max-width: 100%;

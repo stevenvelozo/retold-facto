@@ -21,7 +21,7 @@ const _ViewConfiguration =
 	</div>
 
 	<div id="Facto-Full-Datasets-List"></div>
-	<div id="Facto-Full-Datasets-Stats" style="display:none; margin-top:1.25em; padding-top:1.25em; border-top:1px solid var(--facto-border-subtle);"></div>
+	<div id="Facto-Full-Datasets-Stats" style="display:none; margin-top:1.25em; padding-top:1.25em; border-top:1px solid var(--theme-color-border-light);"></div>
 
 	<div class="facto-section" style="margin-top:2em;">
 		<div class="facto-section-title">Add Dataset</div>
@@ -123,7 +123,7 @@ class FactoFullDatasetsView extends libPictView
 		let tmpStatsContainer = document.getElementById('Facto-Full-Datasets-Stats');
 		if (!tmpStatsContainer) return;
 		tmpStatsContainer.style.display = 'block';
-		tmpStatsContainer.innerHTML = '<p style="color:var(--facto-text-secondary);">Loading stats for Dataset #' + pIDDataset + '...</p>';
+		tmpStatsContainer.innerHTML = '<p style="color:var(--theme-color-text-secondary);">Loading stats for Dataset #' + pIDDataset + '...</p>';
 
 		this.pict.providers.Facto.loadDatasetStats(pIDDataset).then(
 			(pResponse) =>

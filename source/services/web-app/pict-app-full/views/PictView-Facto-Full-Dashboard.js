@@ -17,13 +17,13 @@ const _ViewConfiguration =
 		.facto-dashboard-stat-value {
 			font-size: 2em;
 			font-weight: 700;
-			color: var(--facto-text-heading);
+			color: var(--theme-color-text-primary);
 			line-height: 1.2;
 		}
 
 		.facto-dashboard-stat-label {
 			font-size: 0.85em;
-			color: var(--facto-text-secondary);
+			color: var(--theme-color-text-secondary);
 			margin-top: 0.3em;
 		}
 
