@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM node:20-slim AS builder
+FROM node:22-slim AS builder
 WORKDIR /app
 COPY package*.json ./
 # `npm install`, not `npm ci` — package-lock.json is gitignored per
@@ -16,7 +16,7 @@ RUN npx quack build
 RUN cp node_modules/pict/dist/pict.min.js source/services/web-app/web/pict.min.js 2>/dev/null || true
 
 # Stage 2: Runtime
-FROM node:20-slim
+FROM node:22-slim
 WORKDIR /app
 COPY package*.json ./
 RUN npm install --omit=dev
