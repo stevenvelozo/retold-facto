@@ -1,130 +1,134 @@
 {
-	"Generated": "2026-04-10T17:27:53.047Z",
+	"Generated": "2026-05-22T05:35:00.239Z",
+	"Mode": "module",
 	"GitHubOrg": "stevenvelozo",
 	"DefaultBranch": "master",
-	"Groups": [
-		{
-			"Name": "Data",
-			"Key": "data",
-			"Description": "",
-			"Modules": [
-				{
-					"Name": "staging",
-					"Repo": "staging",
-					"Group": "data",
-					"Branch": "master",
-					"HasDocs": false,
-					"HasCover": false,
-					"Sidebar": [],
-					"DocFiles": []
-				}
-			]
-		},
-		{
-			"Name": "Dist",
-			"Key": "dist",
-			"Description": "",
-			"Modules": [
-				{
-					"Name": "indoctrinate_content_staging",
-					"Repo": "indoctrinate_content_staging",
-					"Group": "dist",
-					"Branch": "master",
-					"HasDocs": false,
-					"HasCover": false,
-					"Sidebar": [],
-					"DocFiles": []
-				}
-			]
-		},
-		{
-			"Name": "Docs",
-			"Key": "docs",
-			"Description": "",
-			"Modules": [
-				{
-					"Name": "css",
-					"Repo": "css",
-					"Group": "docs",
-					"Branch": "master",
-					"HasDocs": true,
-					"HasCover": false,
-					"Sidebar": [],
-					"DocFiles": [
-						"css/docuserve.css"
-					]
-				},
-				{
-					"Name": "subsystems",
-					"Repo": "subsystems",
-					"Group": "docs",
-					"Branch": "master",
-					"HasDocs": true,
-					"HasCover": false,
-					"Sidebar": [],
-					"DocFiles": [
-						"subsystems/audit.md",
-						"subsystems/connection.md",
-						"subsystems/mapping.md",
-						"subsystems/projection.md",
-						"subsystems/recordset.md"
-					]
-				}
-			]
-		},
-		{
-			"Name": "Source",
-			"Key": "source",
-			"Description": "",
-			"Modules": [
-				{
-					"Name": "services",
-					"Repo": "services",
-					"Group": "source",
-					"Branch": "master",
-					"HasDocs": false,
-					"HasCover": false,
-					"Sidebar": [],
-					"DocFiles": []
-				}
-			]
-		},
-		{
-			"Name": "Test",
-			"Key": "test",
-			"Description": "",
-			"Modules": [
-				{
-					"Name": "fixtures",
-					"Repo": "fixtures",
-					"Group": "test",
-					"Branch": "master",
-					"HasDocs": false,
-					"HasCover": false,
-					"Sidebar": [],
-					"DocFiles": []
-				},
-				{
-					"Name": "model",
-					"Repo": "model",
-					"Group": "test",
-					"Branch": "master",
-					"HasDocs": false,
-					"HasCover": false,
-					"Sidebar": [],
-					"DocFiles": []
-				},
-				{
-					"Name": "screenshots",
-					"Repo": "screenshots",
-					"Group": "test",
-					"Branch": "master",
-					"HasDocs": false,
-					"HasCover": false,
-					"Sidebar": [],
-					"DocFiles": []
-				}
-			]
-		}
-	]
+	"Module": {
+		"Name": "retold-facto",
+		"Repo": "retold-facto",
+		"Group": "",
+		"Branch": "master",
+		"HasDocs": true,
+		"HasCover": true,
+		"Sidebar": [
+			{
+				"Title": "Getting Started",
+				"Children": [
+					{
+						"Title": "Overview",
+						"Path": "README.md"
+					},
+					{
+						"Title": "Quick Start",
+						"Path": "quickstart.md"
+					}
+				]
+			},
+			{
+				"Title": "Reference",
+				"Children": [
+					{
+						"Title": "Architecture",
+						"Path": "architecture.md"
+					},
+					{
+						"Title": "API Reference",
+						"Path": "api-reference.md"
+					},
+					{
+						"Title": "Ultravisor Integration",
+						"Path": "ultravisor-integration.md"
+					}
+				]
+			},
+			{
+				"Title": "Subsystems",
+				"Children": [
+					{
+						"Title": "Recordset",
+						"Path": "subsystems/recordset.md"
+					},
+					{
+						"Title": "Projection",
+						"Path": "subsystems/projection.md"
+					},
+					{
+						"Title": "Mapping",
+						"Path": "subsystems/mapping.md"
+					},
+					{
+						"Title": "Connection",
+						"Path": "subsystems/connection.md"
+					},
+					{
+						"Title": "Audit",
+						"Path": "subsystems/audit.md"
+					}
+				]
+			},
+			{
+				"Title": "Retold Ecosystem",
+				"Children": [
+					{
+						"Title": "Meadow",
+						"Path": "meadow/meadow/README.md"
+					},
+					{
+						"Title": "Meadow Endpoints",
+						"Path": "meadow/meadow-endpoints/README.md"
+					},
+					{
+						"Title": "Meadow Integration",
+						"Path": "meadow/meadow-integration/README.md"
+					},
+					{
+						"Title": "Orator",
+						"Path": "orator/orator/README.md"
+					},
+					{
+						"Title": "Pict",
+						"Path": "pict/pict/README.md"
+					},
+					{
+						"Title": "Stricture",
+						"Path": "utility/stricture/README.md"
+					},
+					{
+						"Title": "Ultravisor",
+						"Path": "apps/ultravisor/README.md"
+					},
+					{
+						"Title": "Ultravisor Beacon",
+						"Path": "utility/ultravisor-beacon/README.md"
+					},
+					{
+						"Title": "Fable",
+						"Path": "fable/fable/README.md"
+					}
+				]
+			}
+		],
+		"DocFiles": [
+			".nojekyll",
+			"README.md",
+			"_brand.json",
+			"_cover.md",
+			"_sidebar.md",
+			"_topbar.md",
+			"_version.json",
+			"api-reference.md",
+			"architecture.md",
+			"index.html",
+			"quickstart.md",
+			"retold-catalog.json",
+			"retold-keyword-index.json",
+			"subsystems/audit.md",
+			"subsystems/connection.md",
+			"subsystems/mapping.md",
+			"subsystems/projection.md",
+			"subsystems/recordset.md",
+			"ultravisor-integration.md"
+		]
+	},
+	"Groups": []
 }
