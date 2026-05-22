@@ -22,6 +22,7 @@ const libRetoldFactoRecordManager = require('./services/Retold-Facto-RecordManag
 const libRetoldFactoDatasetManager = require('./services/Retold-Facto-DatasetManager.js');
 const libRetoldFactoIngestEngine = require('./services/Retold-Facto-IngestEngine.js');
 const libRetoldFactoProjectionEngine = require('./services/Retold-Facto-ProjectionEngine.js');
+const libRetoldFactoBeaconProvider = require('./services/Retold-Facto-BeaconProvider.js');
 const libRetoldFactoCatalogManager = require('./services/Retold-Facto-CatalogManager.js');
 const libRetoldFactoStoreConnectionManager = require('./services/Retold-Facto-StoreConnectionManager.js');
 const libRetoldFactoDataLakeService = require('./services/Retold-Facto-DataLakeService.js');
@@ -352,6 +353,16 @@ class RetoldFacto extends libFableServiceProviderBase
 
 		this.fable.serviceManager.addServiceType('RetoldFactoProjectionEngine', libRetoldFactoProjectionEngine);
 		this.fable.serviceManager.instantiateServiceProvider('RetoldFactoProjectionEngine',
+			{
+				RoutePrefix: this.options.Facto.RoutePrefix
+			});
+
+		// BeaconProvider — exposes connectBeacon() so the CLI can wire
+		// facto into the Ultravisor mesh at startup.  Registering the
+		// type here doesn't initiate a connection; bin/retold-facto.js
+		// invokes connectBeacon() when FACTO_ULTRAVISOR_URL is set.
+		this.fable.serviceManager.addServiceType('RetoldFactoBeaconProvider', libRetoldFactoBeaconProvider);
+		this.fable.serviceManager.instantiateServiceProvider('RetoldFactoBeaconProvider',
 			{
 				RoutePrefix: this.options.Facto.RoutePrefix
 			});

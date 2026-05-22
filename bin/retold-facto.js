@@ -327,6 +327,37 @@ function commandServe()
 			_Fable.log.info(`API:     http://localhost:${_Settings.APIServerPort}/1.0/`);
 			_Fable.log.info(`Facto:   http://localhost:${_Settings.APIServerPort}/facto/`);
 			_Fable.log.info(`Web UI:  http://localhost:${_Settings.APIServerPort}/`);
+
+			// Optional auto-connect to an Ultravisor coordinator.  Only
+			// runs when FACTO_ULTRAVISOR_URL is set; standalone users
+			// with no Ultravisor in the loop see no behavior change.
+			// Failures are logged but don't kill the process — facto
+			// stays useful as a local REST surface.  This also triggers
+			// the beacon-side WebAuth proxy install, which gates the web
+			// UI's session-bearing routes against UV's auth beacon when
+			// the upstream UV is in non-promiscuous mode.
+			let tmpUVUrl = process.env.FACTO_ULTRAVISOR_URL || '';
+			if (tmpUVUrl && _Fable.RetoldFactoBeaconProvider)
+			{
+				let tmpBeaconConfig =
+					{
+						ServerURL:     tmpUVUrl,
+						Name:          process.env.FACTO_BEACON_NAME || 'retold-facto',
+						Password:      process.env.FACTO_BEACON_PASSWORD || '',
+						MaxConcurrent: parseInt(process.env.FACTO_MAX_CONCURRENT || '2', 10)
+					};
+				_Fable.log.info(`Auto-connecting to Ultravisor at ${tmpUVUrl} as "${tmpBeaconConfig.Name}"...`);
+				_Fable.RetoldFactoBeaconProvider.connectBeacon(tmpBeaconConfig,
+					(pConnectError) =>
+					{
+						if (pConnectError)
+						{
+							_Fable.log.error(`Ultravisor auto-connect failed: ${pConnectError.message || pConnectError}`);
+							return;
+						}
+						_Fable.log.info(`Ultravisor auto-connect succeeded — registered as "${tmpBeaconConfig.Name}".`);
+					});
+			}
 		});
 }
 

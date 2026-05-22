@@ -461,8 +461,54 @@ class RetoldFactoBeaconProvider extends libFableServiceProviderBase
 				}
 
 				this.log.info(`RetoldFactoBeaconProvider: beacon connected as ${pBeaconInfo.BeaconID}`);
+				// Install the beacon-side web-UI auth proxy now that
+				// connectBeacon has succeeded.  Same pattern as the
+				// databeacon — see Ultravisor-Beacon-WebAuth.cjs for the
+				// install signature.  Non-fatal if it fails (the beacon
+				// is still useful; the UI just stays open).
+				try { this._installWebAuth(pBeaconConfig); }
+				catch (pWebAuthErr)
+				{
+					this.log.warn(`RetoldFactoBeaconProvider: WebAuth install skipped: ${pWebAuthErr && pWebAuthErr.message}`);
+				}
 				return fCallback(null, pBeaconInfo);
 			});
+	}
+
+	/**
+	 * Wire the SDK's WebAuth helper into facto's Orator server so the
+	 * web UI's login flow proxies through UV's auth beacon.  Idempotent
+	 * — calling twice just re-registers the same routes (the helper's
+	 * internal WeakMap tracks installs).  Gating list scopes the gate
+	 * to facto's own data-mutating routes; static assets + the auth
+	 * routes themselves are always public.
+	 */
+	_installWebAuth(pBeaconConfig)
+	{
+		if (!libBeaconService || !libBeaconService.WebAuth)
+		{
+			return;
+		}
+		if (!this.fable.OratorServiceServer)
+		{
+			this.log.warn('RetoldFactoBeaconProvider: WebAuth install: OratorServiceServer unavailable on fable; skipping.');
+			return;
+		}
+		this._WebAuthHandle = libBeaconService.WebAuth.install(this.fable.OratorServiceServer,
+			{
+				UltravisorURL:     pBeaconConfig.ServerURL,
+				BeaconName:        pBeaconConfig.Name || 'retold-facto',
+				BeaconID:          () => this._BeaconService && this._BeaconService.getBeaconID
+					? this._BeaconService.getBeaconID() : '',
+				CookieName:        'SessionID',
+				RoutePrefix:       '/1.0/',
+				StatusPath:        '/status',
+				// Gate facto's mutation + read endpoints.  Auth + status
+				// + static UI stay public so login itself can render.
+				GatedPathPrefixes: ['/1.0/Source', '/1.0/Dataset', '/1.0/Record', '/1.0/Ingest'],
+				Log:               this.fable.log
+			});
+		this.log.info('RetoldFactoBeaconProvider: WebAuth mounted /1.0/{Authenticate,Deauthenticate,CheckSession} + /status proxy');
 	}
 
 	/**
