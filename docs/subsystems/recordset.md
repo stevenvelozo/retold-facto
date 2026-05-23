@@ -272,7 +272,7 @@ When Facto is running with `--beacon`, the ingest operations are also reachable 
 - `CreateRecord`, `ReadRecords`
 - `UpdateIngestJob`
 
-A workflow can dispatch these in sequence to perform an end-to-end ingest pipeline -- see the [ultravisor-suite-harness](/apps/ultravisor-suite-harness/) for the exact five-step pattern.
+A workflow can dispatch these in sequence to perform an end-to-end ingest pipeline -- see the [ultravisor-suite-harness](https://stevenvelozo.github.io/ultravisor-suite-harness/) for the exact five-step pattern.
 
 ## Cross-References
 

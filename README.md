@@ -1,5 +1,7 @@
 # Retold Facto
 
+> **[&#9654; Read the Retold-Facto Documentation](https://stevenvelozo.github.io/retold-facto/)** &mdash; interactive docs with the full API reference.
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---

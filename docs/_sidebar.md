@@ -19,12 +19,12 @@
 
 - Retold Ecosystem
 
-  - [Meadow](/meadow/meadow/)
-  - [Meadow Endpoints](/meadow/meadow-endpoints/)
-  - [Meadow Integration](/meadow/meadow-integration/)
-  - [Orator](/orator/orator/)
-  - [Pict](/pict/pict/)
-  - [Stricture](/utility/stricture/)
-  - [Ultravisor](/apps/ultravisor/)
-  - [Ultravisor Beacon](/utility/ultravisor-beacon/)
-  - [Fable](/fable/fable/)
+  - [Meadow](https://stevenvelozo.github.io/meadow/)
+  - [Meadow Endpoints](https://stevenvelozo.github.io/meadow-endpoints/)
+  - [Meadow Integration](https://stevenvelozo.github.io/meadow-integration/)
+  - [Orator](https://stevenvelozo.github.io/orator/)
+  - [Pict](https://stevenvelozo.github.io/pict/)
+  - [Stricture](https://stevenvelozo.github.io/stricture/)
+  - [Ultravisor](https://stevenvelozo.github.io/ultravisor/)
+  - [Ultravisor Beacon](https://stevenvelozo.github.io/ultravisor-beacon/)
+  - [Fable](https://stevenvelozo.github.io/fable/)

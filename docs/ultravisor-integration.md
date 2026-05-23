@@ -197,7 +197,7 @@ The workflow has one definition; the deployment topology selects which beacon re
 
 ### Pattern 2: Ingest Then Deploy
 
-A single workflow walks through the five-step pipeline that the [ultravisor-suite-harness](/apps/ultravisor-suite-harness/) uses against Facto:
+A single workflow walks through the five-step pipeline that the [ultravisor-suite-harness](https://stevenvelozo.github.io/ultravisor-suite-harness/) uses against Facto:
 
 ```mermaid
 sequenceDiagram
