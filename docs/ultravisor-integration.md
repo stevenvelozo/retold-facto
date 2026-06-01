@@ -1,6 +1,6 @@
 # Ultravisor Integration
 
-Facto can register as an [Ultravisor](https://github.com/stevenvelozo/ultravisor) beacon and expose its operations as workflow capabilities. This document covers the relationship, the contract, and the deployment patterns that use it.
+Facto can register as an [Ultravisor](https://stevenvelozo.github.io/ultravisor/) beacon and expose its operations as workflow capabilities. This document covers the relationship, the contract, and the deployment patterns that use it.
 
 ## The Relationship, In One Paragraph
 
