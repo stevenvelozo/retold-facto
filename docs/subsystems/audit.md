@@ -176,7 +176,7 @@ The join key is the workflow's correlation id, which Ultravisor passes as an inp
 
 ## Best Practices
 
-- **Never mutate Record rows in place.** Re-ingest instead. This keeps the audit trail clean and leverages dataset versioning.
+- **Never mutate Record rows in place.** Re-ingest instead. This keeps the audit trail clean and uses dataset versioning.
 - **Use distinct dimensions in `CertaintyIndex`.** Separate `overall`, `freshness`, and `coverage` so you can query them independently. See the [Recordset subsystem](recordset.md).
 - **Attach workflow correlation ids.** If you are driving Facto from Ultravisor, put the workflow id in `IngestJob.Configuration` so cross-system queries are possible.
 - **Export `ProjectionCertaintyLog` on deploy.** Before every big deploy, back up the certainty log for the current projection state so you can diff the next deploy against it.
