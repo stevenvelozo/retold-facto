@@ -2,7 +2,7 @@
 
 > **[Read the Retold-Facto Documentation](https://stevenvelozo.github.io/retold-facto/)** - interactive docs with the full API reference.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[Proprietary - All Rights Reserved](LICENSE)
 
 ---
 
