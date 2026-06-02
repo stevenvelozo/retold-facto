@@ -1,0 +1,28 @@
+sequenceDiagram
+	participant Client
+	participant PE as ProjectionEngine
+	participant PM as ProjectionMapping
+	participant TT as TabularTransform
+	participant CA as CertaintyAccumulator
+	participant Conn as StoreConnection
+	participant Target as Target DB
+
+	Client->>PE: POST /facto/projection/:IDDataset/deploy { IDStoreConnection, TargetTableName }
+	PE->>PM: load mappings for dataset
+	PM-->>PE: [{ MappingConfiguration, IDSource, ... }, ...]
+	PE->>PE: load records from dataset
+	loop for each mapping
+		loop for each record
+			PE->>TT: transformRecord(record, MappingConfiguration)
+			TT-->>PE: entity + GUID
+			PE->>PE: merge into comprehension via merge strategy
+			PE->>CA: track certainty, source, action
+		end
+	end
+	PE->>Conn: get StoreConnection by ID
+	Conn-->>PE: connection config
+	PE->>Target: CREATE TABLE IF NOT EXISTS
+	PE->>Target: bulk INSERT comprehension rows
+	Target-->>PE: rows inserted
+	PE->>PE: write ProjectionCertaintyLog entries
+	PE-->>Client: { Success, Rows, Action counts }

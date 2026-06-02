@@ -188,51 +188,15 @@ All four methods are also exposed through REST endpoints -- see below.
 
 ## The Compile Flow
 
-```mermaid
-sequenceDiagram
-	participant Client
-	participant PE as ProjectionEngine
-	participant Meadow
-	participant TT as TabularTransform
-	participant CA as CertaintyAccumulator
-
-	Client->>PE: POST /facto/projection/:IDDataset/deploy
-	PE->>Meadow: load ProjectionMapping rows for IDDataset
-	PE->>Meadow: load Record rows for IDDataset
-	loop for each mapping
-		loop for each record
-			PE->>TT: transformRecord(record, mapping.MappingConfiguration)
-			TT-->>PE: { guid, entity }
-			PE->>PE: merge into comprehension via mergeStrategy
-			PE->>CA: track certainty, source, action
-		end
-	end
-	PE->>PE: serialize comprehension
-	PE->>Meadow: insert ProjectionCertaintyLog entries
-	PE-->>Client: { Success, Comprehension, Rows, Action counts }
-```
+<!-- bespoke diagram: edit diagrams/the-compile-flow.mmd or .hints.json, then: npx pict-renderer-graph build modules/apps/retold-facto/docs/subsystems -->
+![The Compile Flow](diagrams/the-compile-flow.svg)
 
 The core loop is "for each mapping, for each record, transform and merge". `TabularTransform` lives in `meadow-integration` and is the pure function that applies a `MappingConfiguration` to a single record.
 
 ## The Deploy Flow
 
-```mermaid
-sequenceDiagram
-	participant Client
-	participant PE as ProjectionEngine
-	participant Conn as StoreConnection
-	participant Target as Target DB
-
-	Client->>PE: POST /facto/projection/:IDDataset/deploy
-	PE->>PE: compile comprehension (see above)
-	PE->>Conn: load StoreConnection row
-	Conn-->>PE: connection config (password pulled from DB)
-	PE->>Target: CREATE TABLE IF NOT EXISTS (target schema)
-	PE->>Target: bulk INSERT comprehension rows
-	Target-->>PE: rows inserted
-	PE->>Meadow: update ProjectionStore.Status = Deployed, DeployedAt, DeployLog
-	PE-->>Client: { Success, Rows, TargetTableName }
-```
+<!-- bespoke diagram: edit diagrams/the-deploy-flow.mmd or .hints.json, then: npx pict-renderer-graph build modules/apps/retold-facto/docs/subsystems -->
+![The Deploy Flow](diagrams/the-deploy-flow.svg)
 
 Facto uses the Meadow connector for the target database, so any backend Meadow supports is automatically a valid deployment target.
 

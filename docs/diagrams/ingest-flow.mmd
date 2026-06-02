@@ -1,0 +1,26 @@
+sequenceDiagram
+	participant Client
+	participant Engine as IngestEngine
+	participant DS as Dataset
+	participant Job as IngestJob
+	participant Rec as Record
+	participant CI as CertaintyIndex
+
+	Client->>Engine: POST /facto/ingest/file { path, IDDataset, IDSource }
+	Engine->>DS: getNextDatasetVersion(IDDataset)
+	DS-->>Engine: nextVersion
+	Engine->>Engine: computeContentSignature(file)
+	Engine->>Engine: checkDuplicateSignature(IDDataset, sig)
+	alt duplicate
+		Engine-->>Client: { Skipped: true, Reason: 'duplicate' }
+	else not duplicate
+		Engine->>Job: create { Status: Pending, DatasetVersion }
+		Engine->>Engine: parse file (CSV/JSON streaming)
+		loop for each row
+			Engine->>Rec: create { Content, Type, IDDataset, IDSource, IDIngestJob }
+			Engine->>CI: create { IDRecord, CertaintyValue: 0.5, Dimension: overall }
+			Engine->>Engine: RecordsProcessed++
+		end
+		Engine->>Job: update { Status: Completed, counts, Log }
+		Engine-->>Client: { IDIngestJob, Created, Errors }
+	end

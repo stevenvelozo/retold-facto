@@ -1,0 +1,76 @@
+graph TB
+	subgraph "Node Process (retold-facto serve)"
+		CLI["bin/retold-facto.js<br/>CLI entry"]
+		FABLE["Fable<br/>DI container"]
+
+		subgraph "Core"
+			FACTO["RetoldFacto<br/>(fable-serviceproviderbase)"]
+			ORATOR["Orator<br/>HTTP server"]
+			MEADOW["Meadow DAL<br/>(multi-entity)"]
+			ENDPOINTS["MeadowEndpoints<br/>auto CRUD"]
+		end
+
+		subgraph "Subsystem Managers"
+			SRC["SourceManager"]
+			DS["DatasetManager"]
+			REC["RecordManager"]
+			ING["IngestEngine"]
+			PROJ["ProjectionEngine"]
+			CAT["CatalogManager"]
+			CONN["StoreConnectionManager"]
+			SCH["SchemaManager"]
+			SCAN["SourceFolderScanner"]
+			LAKE["DataLakeService"]
+			TP["ThroughputMonitor"]
+			BEACON["BeaconProvider<br/>(optional)"]
+		end
+
+		subgraph "Browser Applications"
+			PICT_APP["pict-app<br/>(compact UI)"]
+			PICT_APP_FULL["pict-app-full<br/>(full UI)"]
+		end
+	end
+
+	subgraph "Persistence"
+		DB[("Warehouse DB<br/>SQLite / MySQL / Postgres")]
+	end
+
+	subgraph "External (Projection Targets)"
+		PG[("Analytics Postgres")]
+		MYSQL[("Reporting MySQL")]
+		SQLITE[("Local SQLite")]
+	end
+
+	subgraph "Ultravisor (optional)"
+		UV["Ultravisor Coordinator"]
+	end
+
+	CLI --> FABLE
+	FABLE --> FACTO
+	FACTO --> ORATOR
+	FACTO --> MEADOW
+	MEADOW --> ENDPOINTS
+	FACTO --> SRC
+	FACTO --> DS
+	FACTO --> REC
+	FACTO --> ING
+	FACTO --> PROJ
+	FACTO --> CAT
+	FACTO --> CONN
+	FACTO --> SCH
+	FACTO --> SCAN
+	FACTO --> LAKE
+	FACTO --> TP
+	FACTO -.->|optional| BEACON
+
+	MEADOW --> DB
+	PROJ -->|deploy| CONN
+	CONN --> PG
+	CONN --> MYSQL
+	CONN --> SQLITE
+
+	ORATOR --> PICT_APP
+	ORATOR --> PICT_APP_FULL
+
+	BEACON -.->|register capabilities| UV
+	UV -.->|dispatch work| BEACON

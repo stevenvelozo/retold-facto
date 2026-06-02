@@ -1,0 +1,15 @@
+graph LR
+	UV["Ultravisor<br/>Coordinator"]
+	F1["Facto Beacon<br/>facto-east-1<br/>(US East)"]
+	F2["Facto Beacon<br/>facto-west-1<br/>(US West)"]
+	F3["Facto Beacon<br/>facto-eu-1<br/>(EU)"]
+	DB1[("Partner DB 1")]
+	DB2[("Partner DB 2")]
+	DB3[("Partner DB 3")]
+
+	UV -->|dispatch| F1
+	UV -->|dispatch| F2
+	UV -->|dispatch| F3
+	F1 --> DB1
+	F2 --> DB2
+	F3 --> DB3

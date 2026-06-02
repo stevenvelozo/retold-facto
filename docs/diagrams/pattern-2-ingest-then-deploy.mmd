@@ -1,0 +1,16 @@
+sequenceDiagram
+	participant UV as Ultravisor Workflow
+	participant Facto as Facto Beacon
+
+	UV->>Facto: FactoData.CreateSource
+	Facto-->>UV: { IDSource }
+	UV->>Facto: FactoData.CreateDataset
+	Facto-->>UV: { IDDataset }
+	UV->>Facto: FactoData.CreateIngestJob
+	Facto-->>UV: { IDIngestJob }
+	UV->>Facto: FactoData.CreateRecord (x N, batched)
+	Facto-->>UV: { IDRecord }
+	UV->>Facto: FactoData.UpdateIngestJob { Status: Completed }
+	Facto-->>UV: { Success }
+	UV->>Facto: FactoDeploy.DeploySchema
+	Facto-->>UV: { Success, Rows }

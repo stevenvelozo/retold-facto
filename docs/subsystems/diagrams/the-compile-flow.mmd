@@ -1,0 +1,21 @@
+sequenceDiagram
+	participant Client
+	participant PE as ProjectionEngine
+	participant Meadow
+	participant TT as TabularTransform
+	participant CA as CertaintyAccumulator
+
+	Client->>PE: POST /facto/projection/:IDDataset/deploy
+	PE->>Meadow: load ProjectionMapping rows for IDDataset
+	PE->>Meadow: load Record rows for IDDataset
+	loop for each mapping
+		loop for each record
+			PE->>TT: transformRecord(record, mapping.MappingConfiguration)
+			TT-->>PE: { guid, entity }
+			PE->>PE: merge into comprehension via mergeStrategy
+			PE->>CA: track certainty, source, action
+		end
+	end
+	PE->>PE: serialize comprehension
+	PE->>Meadow: insert ProjectionCertaintyLog entries
+	PE-->>Client: { Success, Comprehension, Rows, Action counts }

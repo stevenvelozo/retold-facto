@@ -1,0 +1,15 @@
+sequenceDiagram
+	participant Client
+	participant PE as ProjectionEngine
+	participant Conn as StoreConnection
+	participant Target as Target DB
+
+	Client->>PE: POST /facto/projection/:IDDataset/deploy
+	PE->>PE: compile comprehension (see above)
+	PE->>Conn: load StoreConnection row
+	Conn-->>PE: connection config (password pulled from DB)
+	PE->>Target: CREATE TABLE IF NOT EXISTS (target schema)
+	PE->>Target: bulk INSERT comprehension rows
+	Target-->>PE: rows inserted
+	PE->>Meadow: update ProjectionStore.Status = Deployed, DeployedAt, DeployLog
+	PE-->>Client: { Success, Rows, TargetTableName }

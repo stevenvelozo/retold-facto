@@ -4,84 +4,8 @@ Facto is a Fable service provider that hosts an Orator REST server, a Meadow-bac
 
 ## Process Layout
 
-```mermaid
-graph TB
-	subgraph "Node Process (retold-facto serve)"
-		CLI["bin/retold-facto.js<br/>CLI entry"]
-		FABLE["Fable<br/>DI container"]
-
-		subgraph "Core"
-			FACTO["RetoldFacto<br/>(fable-serviceproviderbase)"]
-			ORATOR["Orator<br/>HTTP server"]
-			MEADOW["Meadow DAL<br/>(multi-entity)"]
-			ENDPOINTS["MeadowEndpoints<br/>auto CRUD"]
-		end
-
-		subgraph "Subsystem Managers"
-			SRC["SourceManager"]
-			DS["DatasetManager"]
-			REC["RecordManager"]
-			ING["IngestEngine"]
-			PROJ["ProjectionEngine"]
-			CAT["CatalogManager"]
-			CONN["StoreConnectionManager"]
-			SCH["SchemaManager"]
-			SCAN["SourceFolderScanner"]
-			LAKE["DataLakeService"]
-			TP["ThroughputMonitor"]
-			BEACON["BeaconProvider<br/>(optional)"]
-		end
-
-		subgraph "Browser Applications"
-			PICT_APP["pict-app<br/>(compact UI)"]
-			PICT_APP_FULL["pict-app-full<br/>(full UI)"]
-		end
-	end
-
-	subgraph "Persistence"
-		DB[("Warehouse DB<br/>SQLite / MySQL / Postgres")]
-	end
-
-	subgraph "External (Projection Targets)"
-		PG[("Analytics Postgres")]
-		MYSQL[("Reporting MySQL")]
-		SQLITE[("Local SQLite")]
-	end
-
-	subgraph "Ultravisor (optional)"
-		UV["Ultravisor Coordinator"]
-	end
-
-	CLI --> FABLE
-	FABLE --> FACTO
-	FACTO --> ORATOR
-	FACTO --> MEADOW
-	MEADOW --> ENDPOINTS
-	FACTO --> SRC
-	FACTO --> DS
-	FACTO --> REC
-	FACTO --> ING
-	FACTO --> PROJ
-	FACTO --> CAT
-	FACTO --> CONN
-	FACTO --> SCH
-	FACTO --> SCAN
-	FACTO --> LAKE
-	FACTO --> TP
-	FACTO -.->|optional| BEACON
-
-	MEADOW --> DB
-	PROJ -->|deploy| CONN
-	CONN --> PG
-	CONN --> MYSQL
-	CONN --> SQLITE
-
-	ORATOR --> PICT_APP
-	ORATOR --> PICT_APP_FULL
-
-	BEACON -.->|register capabilities| UV
-	UV -.->|dispatch work| BEACON
-```
+<!-- bespoke diagram: edit diagrams/process-layout.mmd or .hints.json, then: npx pict-renderer-graph build modules/apps/retold-facto/docs -->
+![Process Layout](diagrams/process-layout.svg)
 
 ## Class Hierarchy
 
@@ -196,109 +120,18 @@ classDiagram
 
 ## Startup Sequence
 
-```mermaid
-sequenceDiagram
-	participant CLI as retold-facto CLI
-	participant Fable
-	participant Facto as RetoldFacto
-	participant Meadow
-	participant Orator
-	participant Managers as Subsystem Managers
-	participant Beacon as BeaconProvider
-	participant UV as Ultravisor
-
-	CLI->>Fable: new Fable(settings)
-	CLI->>Fable: instantiateServiceProvider('RetoldFacto')
-	Fable->>Facto: new RetoldFacto(fable, options)
-	Facto->>Facto: onBeforeInitialize
-	Facto->>Facto: loadModelFromFile(MeadowModel-Extended.json)
-	Facto->>Facto: rebuildFullModel
-	Facto->>Meadow: loadFullSchema
-	Meadow-->>Facto: DAL per entity
-	Facto->>Orator: new Orator + ServiceServer(restify)
-	Facto->>Orator: MeadowEndpoints.connect (auto /1.0/* CRUD)
-	Facto->>Managers: instantiate each manager
-	loop for each manager
-		Managers->>Orator: connectRoutes(server)
-	end
-	alt AutoCreateSchema = true
-		Facto->>Meadow: execute FACTO_SCHEMA_SQL (21 tables)
-	end
-	Facto->>Orator: startService()
-	Orator-->>Facto: listening on port
-	alt Beacon.Enabled
-		Facto->>Beacon: connectBeacon(beaconConfig)
-		Beacon->>UV: registerCapability(FactoData)
-		Beacon->>UV: registerCapability(FactoTransform)
-		Beacon->>UV: registerCapability(FactoDeploy)
-		Beacon->>UV: enable (authenticate + start polling)
-	end
-	Facto-->>CLI: ready
-```
+<!-- bespoke diagram: edit diagrams/startup-sequence.mmd or .hints.json, then: npx pict-renderer-graph build modules/apps/retold-facto/docs -->
+![Startup Sequence](diagrams/startup-sequence.svg)
 
 ## Ingest Flow
 
-```mermaid
-sequenceDiagram
-	participant Client
-	participant Engine as IngestEngine
-	participant DS as Dataset
-	participant Job as IngestJob
-	participant Rec as Record
-	participant CI as CertaintyIndex
-
-	Client->>Engine: POST /facto/ingest/file { path, IDDataset, IDSource }
-	Engine->>DS: getNextDatasetVersion(IDDataset)
-	DS-->>Engine: nextVersion
-	Engine->>Engine: computeContentSignature(file)
-	Engine->>Engine: checkDuplicateSignature(IDDataset, sig)
-	alt duplicate
-		Engine-->>Client: { Skipped: true, Reason: 'duplicate' }
-	else not duplicate
-		Engine->>Job: create { Status: Pending, DatasetVersion }
-		Engine->>Engine: parse file (CSV/JSON streaming)
-		loop for each row
-			Engine->>Rec: create { Content, Type, IDDataset, IDSource, IDIngestJob }
-			Engine->>CI: create { IDRecord, CertaintyValue: 0.5, Dimension: overall }
-			Engine->>Engine: RecordsProcessed++
-		end
-		Engine->>Job: update { Status: Completed, counts, Log }
-		Engine-->>Client: { IDIngestJob, Created, Errors }
-	end
-```
+<!-- bespoke diagram: edit diagrams/ingest-flow.mmd or .hints.json, then: npx pict-renderer-graph build modules/apps/retold-facto/docs -->
+![Ingest Flow](diagrams/ingest-flow.svg)
 
 ## Projection Compile + Deploy Flow
 
-```mermaid
-sequenceDiagram
-	participant Client
-	participant PE as ProjectionEngine
-	participant PM as ProjectionMapping
-	participant TT as TabularTransform
-	participant CA as CertaintyAccumulator
-	participant Conn as StoreConnection
-	participant Target as Target DB
-
-	Client->>PE: POST /facto/projection/:IDDataset/deploy { IDStoreConnection, TargetTableName }
-	PE->>PM: load mappings for dataset
-	PM-->>PE: [{ MappingConfiguration, IDSource, ... }, ...]
-	PE->>PE: load records from dataset
-	loop for each mapping
-		loop for each record
-			PE->>TT: transformRecord(record, MappingConfiguration)
-			TT-->>PE: entity + GUID
-			PE->>PE: merge into comprehension via merge strategy
-			PE->>CA: track certainty, source, action
-		end
-	end
-	PE->>Conn: get StoreConnection by ID
-	Conn-->>PE: connection config
-	PE->>Target: CREATE TABLE IF NOT EXISTS
-	PE->>Target: bulk INSERT comprehension rows
-	Target-->>PE: rows inserted
-	PE->>PE: write ProjectionCertaintyLog entries
-	PE-->>Client: { Success, Rows, Action counts }
-```
+<!-- bespoke diagram: edit diagrams/projection-compile-deploy-flow.mmd or .hints.json, then: npx pict-renderer-graph build modules/apps/retold-facto/docs -->
+![Projection Compile + Deploy Flow](diagrams/projection-compile-deploy-flow.svg)
 
 ## Ultravisor Relationship
 

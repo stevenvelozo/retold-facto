@@ -1,0 +1,37 @@
+sequenceDiagram
+	participant CLI as retold-facto CLI
+	participant Fable
+	participant Facto as RetoldFacto
+	participant Meadow
+	participant Orator
+	participant Managers as Subsystem Managers
+	participant Beacon as BeaconProvider
+	participant UV as Ultravisor
+
+	CLI->>Fable: new Fable(settings)
+	CLI->>Fable: instantiateServiceProvider('RetoldFacto')
+	Fable->>Facto: new RetoldFacto(fable, options)
+	Facto->>Facto: onBeforeInitialize
+	Facto->>Facto: loadModelFromFile(MeadowModel-Extended.json)
+	Facto->>Facto: rebuildFullModel
+	Facto->>Meadow: loadFullSchema
+	Meadow-->>Facto: DAL per entity
+	Facto->>Orator: new Orator + ServiceServer(restify)
+	Facto->>Orator: MeadowEndpoints.connect (auto /1.0/* CRUD)
+	Facto->>Managers: instantiate each manager
+	loop for each manager
+		Managers->>Orator: connectRoutes(server)
+	end
+	alt AutoCreateSchema = true
+		Facto->>Meadow: execute FACTO_SCHEMA_SQL (21 tables)
+	end
+	Facto->>Orator: startService()
+	Orator-->>Facto: listening on port
+	alt Beacon.Enabled
+		Facto->>Beacon: connectBeacon(beaconConfig)
+		Beacon->>UV: registerCapability(FactoData)
+		Beacon->>UV: registerCapability(FactoTransform)
+		Beacon->>UV: registerCapability(FactoDeploy)
+		Beacon->>UV: enable (authenticate + start polling)
+	end
+	Facto-->>CLI: ready

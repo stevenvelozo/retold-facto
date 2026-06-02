@@ -175,23 +175,8 @@ Each action is a plain function `(pInput, fCallback)` that calls into the approp
 
 Ultravisor dispatches file-ingest operations to several Facto beacons running close to their data sources. Each beacon sees only the data partner it is deployed alongside.
 
-```mermaid
-graph LR
-	UV["Ultravisor<br/>Coordinator"]
-	F1["Facto Beacon<br/>facto-east-1<br/>(US East)"]
-	F2["Facto Beacon<br/>facto-west-1<br/>(US West)"]
-	F3["Facto Beacon<br/>facto-eu-1<br/>(EU)"]
-	DB1[("Partner DB 1")]
-	DB2[("Partner DB 2")]
-	DB3[("Partner DB 3")]
-
-	UV -->|dispatch| F1
-	UV -->|dispatch| F2
-	UV -->|dispatch| F3
-	F1 --> DB1
-	F2 --> DB2
-	F3 --> DB3
-```
+<!-- bespoke diagram: edit diagrams/pattern-1-distributed-ingest-fan-out.mmd or .hints.json, then: npx pict-renderer-graph build modules/apps/retold-facto/docs -->
+![Pattern 1: Distributed Ingest Fan-Out](diagrams/pattern-1-distributed-ingest-fan-out.svg)
 
 The workflow has one definition; the deployment topology selects which beacon receives each dispatch via tags.
 
@@ -199,24 +184,8 @@ The workflow has one definition; the deployment topology selects which beacon re
 
 A single workflow walks through the five-step pipeline that the [ultravisor-suite-harness](https://stevenvelozo.github.io/ultravisor-suite-harness/) uses against Facto:
 
-```mermaid
-sequenceDiagram
-	participant UV as Ultravisor Workflow
-	participant Facto as Facto Beacon
-
-	UV->>Facto: FactoData.CreateSource
-	Facto-->>UV: { IDSource }
-	UV->>Facto: FactoData.CreateDataset
-	Facto-->>UV: { IDDataset }
-	UV->>Facto: FactoData.CreateIngestJob
-	Facto-->>UV: { IDIngestJob }
-	UV->>Facto: FactoData.CreateRecord (x N, batched)
-	Facto-->>UV: { IDRecord }
-	UV->>Facto: FactoData.UpdateIngestJob { Status: Completed }
-	Facto-->>UV: { Success }
-	UV->>Facto: FactoDeploy.DeploySchema
-	Facto-->>UV: { Success, Rows }
-```
+<!-- bespoke diagram: edit diagrams/pattern-2-ingest-then-deploy.mmd or .hints.json, then: npx pict-renderer-graph build modules/apps/retold-facto/docs -->
+![Pattern 2: Ingest Then Deploy](diagrams/pattern-2-ingest-then-deploy.svg)
 
 The workflow is a linear pipeline; Ultravisor handles retry, tracing, and observability across the steps.
 
