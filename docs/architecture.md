@@ -153,51 +153,8 @@ See [Ultravisor Integration](ultravisor-integration.md) for the full capability 
 
 ## File Layout
 
-```
-retold-facto/
-├── README.md
-├── package.json
-├── bin/
-│   └── retold-facto.js                          # CLI entry point
-├── source/
-│   ├── Retold-Facto.js                          # main service provider
-│   └── services/
-│       ├── Retold-Facto-BeaconProvider.js       # Ultravisor beacon
-│       ├── Retold-Facto-RecordManager.js
-│       ├── Retold-Facto-IngestEngine.js
-│       ├── Retold-Facto-ProjectionEngine.js     # largest subsystem
-│       ├── Retold-Facto-SourceManager.js
-│       ├── Retold-Facto-DatasetManager.js
-│       ├── Retold-Facto-CatalogManager.js
-│       ├── Retold-Facto-StoreConnectionManager.js
-│       ├── Retold-Facto-SchemaManager.js
-│       ├── Retold-Facto-SourceFolderScanner.js
-│       ├── Retold-Facto-DataLakeService.js
-│       ├── Retold-Facto-ThroughputMonitor.js
-│       └── web-app/
-│           ├── pict-app/                         # compact UI
-│           └── pict-app-full/                    # full UI
-├── test/
-│   ├── RetoldFacto_tests.js                     # Mocha TDD
-│   ├── Facto_Browser_Integration_tests.js       # Puppeteer
-│   └── model/
-│       ├── MeadowModel-Extended.json            # schema
-│       └── ddl/Facto.ddl
-├── documentation/
-│   └── source_research/                          # example research READMEs
-└── docs/
-	├── README.md, _cover.md, _sidebar.md, _topbar.md
-	├── quickstart.md
-	├── architecture.md
-	├── api-reference.md
-	├── ultravisor-integration.md
-	└── subsystems/
-		├── recordset.md
-		├── projection.md
-		├── mapping.md
-		├── connection.md
-		└── audit.md
-```
+<!-- bespoke diagram: edit diagrams/file-layout.mmd or .hints.json, then: npx pict-renderer-graph build modules/apps/retold-facto/docs -->
+![File Layout](diagrams/file-layout.svg)
 
 ## Core Schema (21 Tables)
 
