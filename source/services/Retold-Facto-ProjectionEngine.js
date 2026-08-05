@@ -3797,48 +3797,60 @@ class RetoldFactoProjectionEngine extends libFableServiceProviderBase
 
 					tmpLog.push(`[${new Date().toISOString()}] Pushing ${tmpRecordGUIDs.length} records via IntegrationAdapter to ${tmpServerURL}${tmpTargetEntityName}/Upsert`);
 
-					tmpAdapter.marshalSourceRecords(
-						(pMarshalError) =>
+					// Marshaling checks composed GUIDs against the entity's GUID column width, which the
+					// adapter only knows once it has the schema.  integrateRecords() does this itself; this
+					// path drives marshal + push directly, so it has to ask.
+					tmpAdapter.loadSchema(
+						(pSchemaError) =>
 						{
-							if (pMarshalError)
+							if (pSchemaError)
 							{
-								tmpLog.push(`[${new Date().toISOString()}] Marshal error: ${pMarshalError.message}`);
-								return fCallback(pMarshalError,
-								{
-									Error: `Marshal error: ${pMarshalError.message}`,
-									PipelineStepResults: tmpStepResults,
-									StagingFile: tmpStagingFile,
-									Log: tmpLog.join('\n')
-								});
+								tmpLog.push(`[${new Date().toISOString()}] Schema load error: ${pSchemaError.message}`);
 							}
 
-							let tmpMarshaledCount = Object.keys(tmpAdapter._MarshaledRecords).length;
-							tmpLog.push(`[${new Date().toISOString()}] Marshaled ${tmpMarshaledCount} records; pushing to server...`);
-
-							tmpAdapter.pushRecordsToServer(
-								(pPushError) =>
+							tmpAdapter.marshalSourceRecords(
+								(pMarshalError) =>
 								{
-									if (pPushError)
+									if (pMarshalError)
 									{
-										tmpLog.push(`[${new Date().toISOString()}] Push error: ${pPushError.message}`);
+										tmpLog.push(`[${new Date().toISOString()}] Marshal error: ${pMarshalError.message}`);
+										return fCallback(pMarshalError,
+										{
+											Error: `Marshal error: ${pMarshalError.message}`,
+											PipelineStepResults: tmpStepResults,
+											StagingFile: tmpStagingFile,
+											Log: tmpLog.join('\n')
+										});
 									}
 
-									tmpLog.push(`[${new Date().toISOString()}] Multi-set import complete: ${tmpTotalRecords} unique, ${tmpMarshaledCount} upserted`);
+									let tmpMarshaledCount = Object.keys(tmpAdapter._MarshaledRecords).length;
+									tmpLog.push(`[${new Date().toISOString()}] Marshaled ${tmpMarshaledCount} records; pushing to server...`);
 
-									// Write certainty logs
-									this._writeCertaintyLogs(tmpCertaintyLogs, tmpLog,
-										() =>
+									tmpAdapter.pushRecordsToServer(
+										(pPushError) =>
 										{
-											return fCallback(pPushError ? pPushError : null,
+											if (pPushError)
 											{
-												Success: !pPushError,
-												RecordsTotal: tmpTotalRecords,
-												RecordsUpserted: tmpMarshaledCount,
-												PipelineStepResults: tmpStepResults,
-												StagingFile: tmpStagingFile,
-												CertaintyLogCount: tmpCertaintyLogs.length,
-												Log: tmpLog.join('\n')
-											});
+												tmpLog.push(`[${new Date().toISOString()}] Push error: ${pPushError.message}`);
+											}
+
+											tmpLog.push(`[${new Date().toISOString()}] Multi-set import complete: ${tmpTotalRecords} unique, ${tmpMarshaledCount} upserted`);
+
+											// Write certainty logs
+											this._writeCertaintyLogs(tmpCertaintyLogs, tmpLog,
+												() =>
+												{
+													return fCallback(pPushError ? pPushError : null,
+													{
+														Success: !pPushError,
+														RecordsTotal: tmpTotalRecords,
+														RecordsUpserted: tmpMarshaledCount,
+														PipelineStepResults: tmpStepResults,
+														StagingFile: tmpStagingFile,
+														CertaintyLogCount: tmpCertaintyLogs.length,
+														Log: tmpLog.join('\n')
+													});
+												});
 										});
 								});
 						});
