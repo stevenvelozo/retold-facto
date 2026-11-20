@@ -137,7 +137,7 @@ npm run build-codemirror
 
 ## License
 
-MIT
+Proprietary. Copyright (c) 2026 Steven Velozo, all rights reserved. See [LICENSE](LICENSE).
 
 ## Contributing
 
